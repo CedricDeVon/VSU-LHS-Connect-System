@@ -1,23 +1,22 @@
 <template>
   <div>
-    <!--<NuxtRouteAnnouncer />
-    <NuxtWelcome />-->
-    <LoginForm/>
-
+      <main>
+          <NuxtPage />
+      </main>
   </div>
 </template>
 
 <script>
-import LoginForm from './components/LoginForm.vue';
-import './assets/css/tailwind.css'
-
 export default {
-  name: 'App',
-  components: {
-    LoginForm
-  }
-}
-
-
+  
+};
 </script>
 
+<style>
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f4f8;
+}
+</style>

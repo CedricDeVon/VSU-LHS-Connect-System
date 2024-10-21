@@ -50,9 +50,11 @@
               <div class="text-center text-gray-500 my-2">OR</div>
               <button
                 type="button"
+                @click="goBack"
                 class="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-500 transition duration-300"
               >
-                BACK
+              BACK
+              
               </button>
             </form>
           </div>
@@ -81,6 +83,9 @@
         console.log('Email:', this.email);
         console.log('Password:', this.password);
         console.log('Confirm Password:', this.confirmPassword);
+      },
+      goBack() {
+        this.$router.push('/');
       }
     }
   };

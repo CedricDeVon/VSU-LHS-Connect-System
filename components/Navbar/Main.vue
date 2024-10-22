@@ -22,13 +22,13 @@
   </template>
   
   <script setup lang="ts">
-    import { signOut } from "firebase/auth";
+    // import { signOut } from "firebase/auth";
   
-    const user = useCurrentUser();
-    const auth = useFirebaseAuth()!;
-    const logout = async () => {
-      await signOut(auth);
-      navigateTo("/");
-    };
+    // const user = useCurrentUser();
+    // const auth = useFirebaseAuth()!;
+    // const logout = async () => {
+    //   await signOut(auth);
+    //   navigateTo("/");
+    // };
   </script>
   

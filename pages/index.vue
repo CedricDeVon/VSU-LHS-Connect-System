@@ -10,7 +10,7 @@ console.log(database)
 
 <template>
   <div>
-    <h1>Back-end Testing</h1>
+    <h1>Back-end</h1>
   </div>
 </template>
 <template>

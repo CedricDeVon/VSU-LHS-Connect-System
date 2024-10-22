@@ -1,5 +1,5 @@
 import { db } from './firebase';
-import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, addDocs, deleteDoc, doc } from 'firebase/firestore';
 
 const itemsCollection = collection(db, 'items');
 

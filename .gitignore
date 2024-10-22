@@ -4,6 +4,7 @@
 .nuxt
 .nitro
 .cache
+.sandbox
 dist
 
 # Node dependencies
@@ -22,5 +23,12 @@ logs
 .env
 .env.*
 !.env.example
+<<<<<<< HEAD
 sa.json
 
+=======
+
+sa.json
+notes.txt
+sandbox
+>>>>>>> b9c49d4 (Implemented configuration handling)

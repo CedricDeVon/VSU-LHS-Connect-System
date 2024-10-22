@@ -1,3 +1,18 @@
+<script setup lang="ts">
+
+import * as firestore from 'firebase/firestore';
+import { getApp } from 'firebase/app';
+
+const database = firestore.getFirestore(getApp());
+console.log(database)
+
+</script>
+
+<template>
+  <div>
+    <h1>Back-end Testing</h1>
+  </div>
+</template>
 <template>
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
         <div class="bg-white shadow-md rounded-lg p-8 max-w-md w-full">

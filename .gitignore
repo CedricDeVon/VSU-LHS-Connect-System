@@ -4,6 +4,7 @@
 .nuxt
 .nitro
 .cache
+.sandbox
 dist
 
 # Node dependencies
@@ -22,3 +23,7 @@ logs
 .env
 .env.*
 !.env.example
+
+sa.json
+notes.txt
+sandbox

@@ -5,4 +5,4 @@ export const uploadFile = async (file, path) => {
     const storageRef = ref(storage, path);
     await uploadBytes(storageRef, file);
     return getDownloadURL(storageRef);
-}
+};

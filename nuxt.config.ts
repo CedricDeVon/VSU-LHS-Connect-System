@@ -47,13 +47,13 @@ export default defineNuxtConfig({
       enabled: true
     },
     config: {
-      apiKey: Configuration.get('NUXT_PUBLIC_API_KEY'),
-      authDomain: Configuration.get('NUXT_PUBLIC_AUTH_DOMAIN'),
-      projectId: Configuration.get('NUXT_PUBLIC_PROJECT_ID'),
-      storageBucket: Configuration.get('NUXT_PUBLIC_STORAGE_BUCKET'),
-      messagingSenderId: Configuration.get('NUXT_PUBLIC_MESSAGING_SENDER_ID'),
-      appId: Configuration.get('NUXT_PUBLIC_APP_ID'),
-      measurementId: Configuration.get('NUXT_PUBLIC_MEASUREMENT_ID'),
+      apiKey: Configuration.getEnvironmentVariable('NUXT_PUBLIC_API_KEY'),
+      authDomain: Configuration.getEnvironmentVariable('NUXT_PUBLIC_AUTH_DOMAIN'),
+      projectId: Configuration.getEnvironmentVariable('NUXT_PUBLIC_PROJECT_ID'),
+      storageBucket: Configuration.getEnvironmentVariable('NUXT_PUBLIC_STORAGE_BUCKET'),
+      messagingSenderId: Configuration.getEnvironmentVariable('NUXT_PUBLIC_MESSAGING_SENDER_ID'),
+      appId: Configuration.getEnvironmentVariable('NUXT_PUBLIC_APP_ID'),
+      measurementId: Configuration.getEnvironmentVariable('NUXT_PUBLIC_MEASUREMENT_ID'),
     },
   },
 
@@ -70,6 +70,13 @@ export default defineNuxtConfig({
         src: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/vfs_fonts.min.js",
         defer: true
       }]
+    }
+  },
+
+  runtimeConfig: {
+    privateKey: "private",
+    public: {
+      publicKey: "public"
     }
   }
 });

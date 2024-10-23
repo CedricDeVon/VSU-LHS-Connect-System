@@ -1,4 +1,5 @@
-<script lang="ts" setup>
+<script setup lang="ts">
+console.log("app");
 
 </script>
 

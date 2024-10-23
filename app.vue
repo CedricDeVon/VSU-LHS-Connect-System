@@ -1,4 +1,5 @@
-<script lang="ts" setup>
+<script setup lang="ts">
+console.log("app");
 
 </script>
 
@@ -10,19 +11,3 @@
     </NuxtLayout>
   </div>
 </template>
-
-<script>
-export default {
-  
-};
-
-</script>
-
-<style>
-
-body {
-  margin: 0;
-  font-family: 'Century Gothic', Arial, sans-serif;
-  background-color: #f0f4f8;
-}
-</style>

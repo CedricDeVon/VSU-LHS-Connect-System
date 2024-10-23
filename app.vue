@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 
 </script>
 
@@ -47,9 +47,7 @@ body {
 </style>
 
 <script>
-export default {
-  
-};
+
 
 </script>
 

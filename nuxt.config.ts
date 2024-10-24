@@ -1,4 +1,4 @@
-import { Configuration } from './library/utilities/configuration'
+import { EnvironmentConfigurationReader } from "./library/configurationReaders/environmentConfigurationReader";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@vee-validate/nuxt",
     "@morev/vue-transitions/nuxt",
-    'nuxt-vuefire',
+    "nuxt-vuefire",
     "@samk-dev/nuxt-vcalendar",
   ],
 
@@ -28,55 +28,65 @@ export default defineNuxtConfig({
   typescript: { shim: false },
 
   imports: {
-    imports: [{
-      from: "tailwind-variants",
-      name: "tv",
-    }, {
-      from: "tailwind-variants",
-      name: "VariantProps",
-      type: true,
-    }, {
-      from: "vue-sonner",
-      name: "toast",
-      as: "useSonner"
-    }],
+    imports: [
+      {
+        from: "tailwind-variants",
+        name: "tv",
+      },
+      {
+        from: "tailwind-variants",
+        name: "VariantProps",
+        type: true,
+      },
+      {
+        from: "vue-sonner",
+        name: "toast",
+        as: "useSonner",
+      },
+    ],
   },
 
   vuefire: {
     auth: {
-      enabled: true
+      enabled: true,
     },
     config: {
-      apiKey: Configuration.getEnvironmentVariable('NUXT_PUBLIC_API_KEY'),
-      authDomain: Configuration.getEnvironmentVariable('NUXT_PUBLIC_AUTH_DOMAIN'),
-      projectId: Configuration.getEnvironmentVariable('NUXT_PUBLIC_PROJECT_ID'),
-      storageBucket: Configuration.getEnvironmentVariable('NUXT_PUBLIC_STORAGE_BUCKET'),
-      messagingSenderId: Configuration.getEnvironmentVariable('NUXT_PUBLIC_MESSAGING_SENDER_ID'),
-      appId: Configuration.getEnvironmentVariable('NUXT_PUBLIC_APP_ID'),
-      measurementId: Configuration.getEnvironmentVariable('NUXT_PUBLIC_MEASUREMENT_ID'),
+      apiKey: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_API_KEY"),
+      authDomain: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_AUTH_DOMAIN"),
+      projectId: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_PROJECT_ID"),
+      storageBucket: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_STORAGE_BUCKET"),
+      messagingSenderId: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_MESSAGING_SENDER_ID"),
+      appId: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_APP_ID"),
+      measurementId: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_MEASUREMENT_ID"),
     },
   },
 
   build: {
-    transpile: ["vue-sonner"]
+    transpile: ["vue-sonner"],
   },
 
   app: {
     head: {
-      script: [{
-        src: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/pdfmake.min.js",
-        defer: true
-      }, {
-        src: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/vfs_fonts.min.js",
-        defer: true
-      }]
-    }
+      script: [
+        {
+          src: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/pdfmake.min.js",
+          defer: true,
+        },
+        {
+          src: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/vfs_fonts.min.js",
+          defer: true,
+        },
+      ],
+    },
   },
 
   runtimeConfig: {
-    privateKey: "private",
+    cryptographyKey: EnvironmentConfigurationReader.getValue("NUXT_CRYPTOGRAPHY_KEY"),
+    cryptographyNonce: EnvironmentConfigurationReader.getValue("NUXT_CRYPTOGRAPHY_NONCE"),
     public: {
-      publicKey: "public"
+      environmentName: EnvironmentConfigurationReader.getValue("NUXT_ENVIRONMENT_NAME"),
+      isConsoleLoggingEnabled: EnvironmentConfigurationReader.getValue("NUXT_IS_CONSOLE_LOGGING_ENABLED"),
+      isFileLoggingEnabled: EnvironmentConfigurationReader.getValue("NUXT_IS_FILE_LOGGING_ENABLED"),
     }
-  }
+  },
 });

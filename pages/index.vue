@@ -7,17 +7,21 @@ import { Logger } from '~/library/loggers/logger'
 const database = firestore.getFirestore(getApp());
 console.log(database)
 
-const results = await useFetch('/api/demo');
+async function test() {
+  const results = await useFetch('/api/demo');
+  console.log('CLIENT:');
+  Logger.logDebug(results.data.value);
+  Logger.logDebug(`${results.data.value?.a}`);
+  Logger.logInfo(`${results.data.value?.b}`);
+  Logger.logWarning(`${results.data.value?.c}`);
+  Logger.logError(`${results.data.value?.d}`);
 
-console.log('CLIENT:');
-Logger.logDebug(`${results.data.value?.a}`);
-Logger.logInfo(`${results.data.value?.b}`);
-Logger.logWarning(`${results.data.value?.c}`);
-Logger.logError(`${results.data.value?.d}`);
+}
 </script>
 
 <template>
   <div>
+    <button @click=test>Test Me</button>
   </div>
 </template>
 <template>

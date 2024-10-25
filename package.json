@@ -12,6 +12,7 @@
     "endtoend-test": "cypress open"
   },
   "dependencies": {
+    "@vue/runtime-core": "^3.5.12",
     "@vueuse/core": "^11.1.0",
     "argon2": "^0.41.1",
     "class-variance-authority": "^0.7.0",
@@ -22,7 +23,9 @@
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
     "lucide-vue-next": "^0.452.0",
-    "nuxt": "^3.13.0",
+    "nodemailer": "^6.9.15",
+    "nuxt": "^3.13.2",
+    "pdfmake": "^0.2.14",
     "postcss": "^8.4.47",
     "primeicons": "^7.0.0",
     "radix-vue": "^1.9.7",
@@ -30,7 +33,7 @@
     "tailwind-merge": "^2.5.3",
     "tailwindcss": "^3.4.13",
     "tailwindcss-animate": "^1.0.7",
-    "vue": "latest",
+    "vue": "^3.5.12",
     "vue-router": "^4.4.5",
     "winston": "^3.15.0"
   },

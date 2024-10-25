@@ -8,18 +8,18 @@ export default defineEventHandler(async () => {
   const c = Cryptographer.FirstCryptographyFormat.wrap(b);
   const d = Cryptographer.SecondCryptographyFormat.wrap(c);
 
-  console.log('SERVER:');
-  Logger.logDebug(`${a}`);
-  Logger.logInfo(`${b}`);
-  Logger.logWarning(`${c}`);
-  Logger.logError(`${d}`);
+  // console.log('SERVER:');
+  // Logger.logDebug(`${NuxtConfigurationReader.getPublicValue("environmentName")}`);
+  // Logger.logInfo(`${"TheQuickBrownFoxJumpsOverTheLazyDog"}`);
+  // Logger.logWarning(`${Cryptographer.FirstCryptographyFormat.wrap(b)}`);
+  // Logger.logError(`${Cryptographer.SecondCryptographyFormat.wrap(c)}`);
+  // Logger.logWarning(`${Cryptographer.FirstCryptographyFormat.unwrap(b, c)}`);
+  // Logger.logError(`${Cryptographer.SecondCryptographyFormat.unwrap(d)}`);
 
   return {
     a,
     b,
     c,
     d,
-    e: Cryptographer.FirstCryptographyFormat.unwrap(b, c),
-    f: Cryptographer.SecondCryptographyFormat.unwrap(d)
   };
 });

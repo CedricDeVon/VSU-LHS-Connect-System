@@ -13,9 +13,16 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@vee-validate/nuxt",
     "@morev/vue-transitions/nuxt",
-    "nuxt-vuefire",
     "@samk-dev/nuxt-vcalendar",
+    "nuxt-vuefire",
+    "nuxt-file-storage",
+    "@nuxt/image",
   ],
+  
+  fileStorage: {
+    // enter the absolute path to the location of your storage
+    mount: '/files',
+},
 
   tailwindcss: {
     exposeConfig: true,
@@ -89,4 +96,8 @@ export default defineNuxtConfig({
       isFileLoggingEnabled: EnvironmentConfigurationReader.getValue("NUXT_IS_FILE_LOGGING_ENABLED"),
     }
   },
+
+  image: {
+    // Options
+  }
 });

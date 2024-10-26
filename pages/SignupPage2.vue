@@ -75,7 +75,7 @@
 
 
             <button type="submit"
-              class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2">
+              class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2" @click="goToRegistrationSuccessPage">
               PROCEED
             </button>
             <div class="text-center text-gray-500 my-2">OR</div>
@@ -96,11 +96,25 @@
 
 <script>
 
+import { useRouter } from 'vue-router';
+import { handleBackClick } from '~/composables/navigation';
+
 import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
 
 export default {
+  name: 'SignupPage2',
   components: {
     DatePickerInput
+  },
+  setup() {
+    const router = useRouter();
+    const goToRegistrationSuccessPage = () => {
+      router.push({ name: 'RegistrationSuccessful' });
+    };
+
+    return {
+      goToRegistrationSuccessPage
+    }
   },
   data() {
     return {

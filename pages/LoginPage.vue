@@ -20,7 +20,7 @@
         </button>
         <div class="text-center mt-4">
           <p class="text-gray-500">OR</p>
-          <nuxt-link to="/signup-page-1" class="text-blue-500 hover:underline">Register Here</nuxt-link>
+          <NuxtLink to="/SignupPage1" class="text-blue-500 hover:underline">Register Here</NuxtLink>
         </div>
       </form>
     </div>

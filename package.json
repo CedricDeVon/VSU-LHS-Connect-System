@@ -12,6 +12,7 @@
     "endtoend-test": "cypress open"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@vue/runtime-core": "^3.5.12",
     "@vueuse/core": "^11.1.0",
     "argon2": "^0.41.1",
@@ -19,6 +20,7 @@
     "clsx": "^2.1.1",
     "config": "^3.3.12",
     "dotenv": "^16.4.5",
+    "emailjs-com": "^3.2.0",
     "firebase": "^10.14.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",

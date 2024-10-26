@@ -9,12 +9,6 @@
           <div id="app">
             <SendEmail />
           </div>
-        <!--
-           <div>
-            <h1>Send Email</h1>
-            <EmailForm/>
-          </div>
-          -->
       </main>
   </div>
 </template>

@@ -13,6 +13,14 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: './components/ui'
-  }
+  },
+
+  runtimeConfig: {
+    public: {
+      serviceId: process.env.NUXT_PUBLIC_SERVICE_ID,
+      templateId: process.env.NUXT_PUBLIC_TEMPLATE_ID,
+      publicKey: process.env.NUXT_PUBLIC_PUBLIC_KEY,
+    },
+  },
 
 })

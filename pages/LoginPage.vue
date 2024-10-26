@@ -20,7 +20,7 @@
         </button>
         <div class="text-center mt-4">
           <p class="text-gray-500">OR</p>
-          <nuxt-link to="/signup" class="text-blue-500 hover:underline">Register Here</nuxt-link>
+          <nuxt-link to="/signup-page-1" class="text-blue-500 hover:underline">Register Here</nuxt-link>
         </div>
       </form>
     </div>
@@ -29,6 +29,7 @@
 
 <script>
 export default {
+  name: 'LoginPage',
   data() {
     return {
       email: '',
@@ -38,7 +39,6 @@ export default {
   },
   methods: {
     handleSubmit() {
-      // Handle form submission
       console.log('Email:', this.email);
       console.log('Password:', this.password);
     }

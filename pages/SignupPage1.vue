@@ -71,6 +71,7 @@
   import  {useRouter} from 'vue-router';
   import { handleBackClick } from '~/composables/navigation';
   export default {
+    name: 'SignupPage1',
     data() {
       return {
         username: '',

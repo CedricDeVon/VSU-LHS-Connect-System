@@ -1,0 +1,86 @@
+
+const section = [
+
+    {
+        id: 'sectionid1',
+        adviserId: 'adviserid1',
+        sectionPopulation: '20',
+        sectionName: 'Javascript',
+        sectionLevel: '7',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid2',
+        adviserId: 'adviserid2',
+        sectionPopulation: '20',
+        sectionName: 'C#',
+        sectionLevel: '7',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid3',
+        adviserId: 'adviserid3',
+        sectionPopulation: '20',
+        sectionName: 'C++',
+        sectionLevel: '7',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid4',
+        adviserId: 'adviserid4',
+        sectionPopulation: '20',
+        sectionName: 'C',
+        sectionLevel: '7',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid5',
+        adviserId: 'adviserid5',
+        sectionPopulation: '20',
+        sectionName: 'Java',
+        sectionLevel: '7',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid6',
+        adviserId: 'adviserid6',
+        sectionPopulation: '20',
+        sectionName: 'Blue',
+        sectionLevel: '11',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid11',
+        adviserId: 'adviserid11',
+        sectionPopulation: '20',
+        sectionName: 'Red',
+        sectionLevel: '11',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid8',
+        adviserId: 'adviserid8',
+        sectionPopulation: '20',
+        sectionName: 'Yellow',
+        sectionLevel: '11',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid9',
+        adviserId: 'adviserid9',
+        sectionPopulation: '20',
+        sectionName: 'Green',
+        sectionLevel: '11',
+        sectionSchoolYear:'2024-2025',
+    },
+    {
+        id: 'sectionid10',
+        adviserId: 'adviserid10',
+        sectionPopulation: '20',
+        sectionName: 'Pink',
+        sectionLevel: '11',
+        sectionSchoolYear:'2024-2025',
+    },
+    
+];
+

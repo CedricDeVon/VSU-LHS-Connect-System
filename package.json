@@ -6,6 +6,7 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "demo": "tsc -t es2022 -m es2022 --moduleResolution node sandbox/main.ts | node sandbox/main.js",
+    "demo": "tsc -t es2022 -m es2022 --moduleResolution node sandbox/main.ts | node sandbox/main.js",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",

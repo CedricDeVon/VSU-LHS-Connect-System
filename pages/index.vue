@@ -24,13 +24,8 @@ async function test() {
     <button @click=test>Test Me</button>
   </div>
 </template>
-<template>
-  <div>
-    <button @click=test>Test Me</button>
-  </div>
-</template>
 
-<script>
+<script lang="ts">
 export default {
     data() {
         return {

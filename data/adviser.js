@@ -6,6 +6,18 @@ export const getFacultyIdBYName = (firstname, lastname) =>{
   if (index !== -1 ){
     return adviser[index].facultyId;
   }
+};
+
+export const getUserId = (firstname, lastname) => {
+  const index = adviser.findIndex((adv)=> adv.firstName === firstname && adv.lastName === lastname );
+ try{
+  if(index !== -1){
+    return adviser[index].userId;
+  }
+ }catch (error){
+  console.error("Error:", error.message);
+ }
+  
 }
 
 export const addadviser = (adv) => {

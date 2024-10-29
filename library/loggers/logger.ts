@@ -1,3 +1,4 @@
+
 import { ConsoleLogger } from './consoleLogger';
 // import { FileLogger } from './fileLogger';
 
@@ -17,8 +18,8 @@ export class Logger {
         // FileLogger.logWarning(value, isLoggingEnabled);
     }
 
-    public static logError(value: string, isLoggingEnabled: boolean = true): void {
-        ConsoleLogger.logError(value, isLoggingEnabled);
-        // FileLogger.logError(value, isLoggingEnabled);
+    public static logError(value: string): void {
+        ConsoleLogger.logError(value);
+        // FileLogger.logError(value);
     }
 }

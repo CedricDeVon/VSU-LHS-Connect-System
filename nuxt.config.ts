@@ -4,8 +4,7 @@ import { EnvironmentConfigurationReader } from "./library/configurationReaders/e
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
   devtools: { enabled: true },
-
-  modules: [
+  modules: [  
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
     "@nuxtjs/color-mode",
@@ -16,6 +15,17 @@ export default defineNuxtConfig({
     "nuxt-vuefire",
     "@samk-dev/nuxt-vcalendar",
   ],
+  shadcn: {
+    /**
+     * Prefix for all the imported component
+     */
+    prefix: '',
+    /**
+     * Directory that the component lives in.
+     * @default "./components/ui"
+     */
+    componentDir: './components/ui'
+  },
 
   tailwindcss: {
     exposeConfig: true,
@@ -87,6 +97,17 @@ export default defineNuxtConfig({
       environmentName: EnvironmentConfigurationReader.getValue("NUXT_ENVIRONMENT_NAME"),
       isConsoleLoggingEnabled: EnvironmentConfigurationReader.getValue("NUXT_IS_CONSOLE_LOGGING_ENABLED"),
       isFileLoggingEnabled: EnvironmentConfigurationReader.getValue("NUXT_IS_FILE_LOGGING_ENABLED"),
-    }
+      serviceId: process.env.NUXT_PUBLIC_SERVICE_ID,
+      templateId: process.env.NUXT_PUBLIC_TEMPLATE_ID,
+      publicKey: process.env.NUXT_PUBLIC_PUBLIC_KEY,
+    },
   },
+
+
+
 });
+
+
+
+
+ 

@@ -44,13 +44,15 @@
               <button
                 type="submit"
                 class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2"
+                @click="goToSignupPage2"
               >
                 PROCEED
               </button>
+              
               <div class="text-center text-gray-500 my-2">OR</div>
               <button
                 type="button"
-                @click="goBack"
+                @click="handleBackClick"
                 class="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-500 transition duration-300"
               >
               BACK
@@ -68,7 +70,10 @@
   </template>
   
   <script>
+  import  {useRouter} from 'vue-router';
+  import { handleBackClick } from '~/composables/navigation';
   export default {
+    name: 'SignupPage1',
     data() {
       return {
         username: '',
@@ -77,6 +82,17 @@
         confirmPassword: ''
       };
     },
+    setup() {
+    const router = useRouter();
+
+    const goToSignupPage2 = () => {
+      router.push({ name: 'SignupPage2' });
+    };
+
+    return {
+      goToSignupPage2
+    };
+  },
     methods: {
       handleSubmit() {
         console.log('Username:', this.username);
@@ -85,7 +101,7 @@
         console.log('Confirm Password:', this.confirmPassword);
       },
       goBack() {
-        this.$router.push('/');
+        handleBackClick();
       }
     }
   };

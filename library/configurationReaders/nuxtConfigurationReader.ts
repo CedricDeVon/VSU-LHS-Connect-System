@@ -1,74 +1,100 @@
+import { Result } from "../results/result";
+import { SuccessfulResult } from "../results/successfulResult";
+import { FailedResult } from "../results/failedResult";
+import { ConfigurationReader } from "./configurationReader";
 
-export class NuxtConfigurationReader {
-    public static getPublicValue(key: string): string {
+export class NuxtConfigurationReader extends ConfigurationReader {
+    public getPublicValue(key: string): Result {
         if (typeof key !== 'string') {
-            throw new Error('Not a string');
+            return new FailedResult(`Error found at NuxtConfigurationReader.getPublicValue(): Argument '${key}' must be a string`);
         }    
 
         const value: string = `${useRuntimeConfig().public[key]}`;
-        if (value === '') {
-            throw new Error(`NuxtConfigurationReader.getPublicValue(): Variable '${key}' does not exist`);
-        }
-        return value;
+        return (value !== '') ? new SuccessfulResult(value) : new FailedResult(`Error found at NuxtConfigurationReader.getPublicValue(): Nuxt configuration variable '${key}' does not exist`);
     }
 
-    public static getPrivateValue(key: string): string {
+    public getPrivateValue(key: string): Result {
         if (typeof key !== 'string') {
-            throw new Error('Not a string');
+            return new FailedResult(`Error found at NuxtConfigurationReader.getPrivateValue(): Argument '${key}' must be a string`);
         }
     
         const value: string = `${useRuntimeConfig()[key]}`;
-        if (value === '') {
-            throw new Error(`NuxtConfigurationReader.getPrivateValue(): Variable '${key}' does not exist`);
-        }
-        return value;
+        return (value !== '') ? new SuccessfulResult(value) : new FailedResult(`Error found at NuxtConfigurationReader.getPrivateValue(): Nuxt configuration variable '${key}' does not exist`);
     }
 
-    public static get CRYPTOGRAPHY_KEY(): string {
-        return NuxtConfigurationReader.getPrivateValue('cryptographyKey');
+    public isEnvironmentName(value: string): boolean {
+        return this.ENVIRONMENT_NAME == value;
     }
 
-    public static get CRYPTOGRAPHY_NONCE(): string {
-        return NuxtConfigurationReader.getPrivateValue('cryptographyNonce');
-    }
-
-    public static get ENVIRONMENT_NAME(): string {
-        return NuxtConfigurationReader.getPublicValue('environmentName');
-    }
-
-    public static get IS_CONSOLE_LOGGING_ENABLED(): boolean {
-        return NuxtConfigurationReader.getPublicValue('isConsoleLoggingEnabled') === 'true';
-    }
-
-    public static get IS_FILE_LOGGING_ENABLED(): boolean {
-        return NuxtConfigurationReader.getPublicValue('isFileLoggingEnabled') === 'true';
-    }
-
-    public static get isEnvironmentNameProduction(): boolean {
+    public get isEnvironmentNameProduction(): boolean {
         return this.isEnvironmentName('production');
     }
 
-    public static get isEnvironmentNameNotProduction(): boolean {
+    public get isEnvironmentNameNotProduction(): boolean {
         return !this.isEnvironmentNameProduction;
     }
 
-    public static get isEnvironmentNameDevelopment(): boolean {
+    public get isEnvironmentNameDevelopment(): boolean {
         return this.isEnvironmentName('development');
     }
 
-    public static get isEnvironmentNameNotDevelopment(): boolean {
+    public get isEnvironmentNameNotDevelopment(): boolean {
         return !this.isEnvironmentNameDevelopment;
     }
 
-    public static get isEnvironmentNameTesting(): boolean {
+    public get isEnvironmentNameTesting(): boolean {
         return this.isEnvironmentName('testing');
     }
 
-    public static get isEnvironmentNameNotTesting(): boolean {
+    public get isEnvironmentNameNotTesting(): boolean {
         return !this.isEnvironmentNameTesting;
     }
 
-    public static isEnvironmentName(value: string): boolean {
-        return this.ENVIRONMENT_NAME == value;
+    public get CRYPTOGRAPHY_KEY(): string {
+        const result: Result = this.getPrivateValue('cryptographyKey');
+        this._throwErrorIfResultIsUnsuccessful(result);
+
+        return result.data;
+    }
+
+    public get CRYPTOGRAPHY_NONCE(): string {
+        const result: Result = this.getPrivateValue('cryptographyNonce');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
+
+    public get FIREBASE_STORAGE_URL(): string {
+        const result: Result = this.getPrivateValue('firebaseStorageUrl');
+        this._throwErrorIfResultIsUnsuccessful(result);
+
+        return result.data;
+    }
+
+    public get ENVIRONMENT_NAME(): string {
+        const result: Result = this.getPublicValue('environmentName');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
+
+    public get IS_CONSOLE_LOGGING_ENABLED(): boolean {
+        const result: Result = this.getPublicValue('isConsoleLoggingEnabled');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data === 'true';
+    }
+
+    public get IS_FILE_LOGGING_ENABLED(): boolean {
+        const result: Result = this.getPublicValue('isFileLoggingEnabled');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data === 'true';
+    }
+
+    private _throwErrorIfResultIsUnsuccessful(result: Result): void {
+        if (result.isNotSuccessful) {
+            throw new Error(result.message);
+        }
     }
 } 

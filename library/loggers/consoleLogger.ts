@@ -1,25 +1,25 @@
+import { Logger } from './logger'
+import { ConfigurationReaders } from '../configurationReaders/configurationReaders'
 
-import { NuxtConfigurationReader } from '../configurationReaders/nuxtConfigurationReader'
-
-export class ConsoleLogger {
-    public static logDebug(message: string, isLoggingEnabled: boolean = true): void {
-        ConsoleLogger.print(message, 'Debug', isLoggingEnabled);
+export class ConsoleLogger extends Logger {
+    public logDebug(message: string, isLoggingEnabled: boolean = true): void {
+        this.print(message, 'Debug', isLoggingEnabled);
     }
 
-    public static logInfo(message: string, isLoggingEnabled: boolean = true): void {
-        ConsoleLogger.print(message, 'Info', isLoggingEnabled);
+    public logInfo(message: string, isLoggingEnabled: boolean = true): void {
+        this.print(message, 'Info', isLoggingEnabled);
     }
 
-    public static logWarning(message: string, isLoggingEnabled: boolean = true): void {
-        ConsoleLogger.print(message, 'Warning', isLoggingEnabled);
+    public logWarning(message: string, isLoggingEnabled: boolean = true): void {
+        this.print(message, 'Warning', isLoggingEnabled);
     }
 
-    public static logError(message: string, isLoggingEnabled: boolean = true): void {
-        ConsoleLogger.print(message, 'Error', isLoggingEnabled);
+    public logError(message: string, isLoggingEnabled: boolean = true): void {
+        this.print(message, 'Error', isLoggingEnabled);
     }
 
-    private static print(message: string, logLevel: string, isLoggingEnabled: boolean = true) {
-        if (NuxtConfigurationReader.IS_CONSOLE_LOGGING_ENABLED && isLoggingEnabled) {
+    public print(message: string, logLevel: string, isLoggingEnabled: boolean = true) {
+        if (ConfigurationReaders.nuxtConfigurationReader.IS_CONSOLE_LOGGING_ENABLED && isLoggingEnabled) {
             console.log(`[${new Date().toISOString()}] - [${logLevel}] - [${message}]`);
         }
     }

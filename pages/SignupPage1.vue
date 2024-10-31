@@ -72,6 +72,7 @@
   <script>
   import  {useRouter} from 'vue-router';
   import { handleBackClick } from '~/composables/navigation';
+
   export default {
     name: 'SignupPage1',
     data() {
@@ -99,6 +100,7 @@
         console.log('Email:', this.email);
         console.log('Password:', this.password);
         console.log('Confirm Password:', this.confirmPassword);
+
       },
       goBack() {
         handleBackClick();

@@ -1,4 +1,4 @@
-import { adviser } from './adviser';
+/*import { adviser } from './adviser';
 
 export const academicYear = [
     {
@@ -8,9 +8,9 @@ export const academicYear = [
         advisers: adviser,
         initialReports: [
             {
-                initId: 'initialReport1';
+                initId: 'initialReport1',
 
             },
         ]
     },
-];
+];*/

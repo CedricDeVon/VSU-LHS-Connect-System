@@ -1,1 +1,1 @@
-import * nuxtmail from 'nuxt-mail'
+// import * nuxtmail from 'nuxt-mail'

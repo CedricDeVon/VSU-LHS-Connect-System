@@ -1,10 +1,11 @@
-import { EnvironmentConfigurationReader } from "./library/configurationReaders/environmentConfigurationReader";
+import { ConfigurationReaders } from "./library/configurationReaders/configurationReaders";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2024-04-03",
-  devtools: { enabled: true },
-  modules: [  
+  devtools: { enabled: false },
+
+  modules: [
     "@nuxtjs/tailwindcss",
     "shadcn-nuxt",
     "@nuxtjs/color-mode",
@@ -12,19 +13,15 @@ export default defineNuxtConfig({
     "@nuxt/icon",
     "@vee-validate/nuxt",
     "@morev/vue-transitions/nuxt",
-    "nuxt-vuefire",
     "@samk-dev/nuxt-vcalendar",
+    "nuxt-vuefire",
+    "nuxt-file-storage",
+    "@nuxt/image",
   ],
-  shadcn: {
-    /**
-     * Prefix for all the imported component
-     */
-    prefix: '',
-    /**
-     * Directory that the component lives in.
-     * @default "./components/ui"
-     */
-    componentDir: './components/ui'
+  
+  fileStorage: {
+    // enter the absolute path to the location of your storage
+    mount: '/files',
   },
 
   tailwindcss: {
@@ -61,13 +58,13 @@ export default defineNuxtConfig({
       enabled: true,
     },
     config: {
-      apiKey: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_API_KEY"),
-      authDomain: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_AUTH_DOMAIN"),
-      projectId: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_PROJECT_ID"),
-      storageBucket: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_STORAGE_BUCKET"),
-      messagingSenderId: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_MESSAGING_SENDER_ID"),
-      appId: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_APP_ID"),
-      measurementId: EnvironmentConfigurationReader.getValue("NUXT_PUBLIC_MEASUREMENT_ID"),
+      apiKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_API_KEY"),
+      authDomain: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_AUTH_DOMAIN"),
+      projectId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_PROJECT_ID"),
+      storageBucket: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_STORAGE_BUCKET"),
+      messagingSenderId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_MESSAGING_SENDER_ID"),
+      appId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_APP_ID"),
+      measurementId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_MEASUREMENT_ID"),
     },
   },
 
@@ -91,20 +88,19 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    cryptographyKey: EnvironmentConfigurationReader.getValue("NUXT_CRYPTOGRAPHY_KEY"),
-    cryptographyNonce: EnvironmentConfigurationReader.getValue("NUXT_CRYPTOGRAPHY_NONCE"),
+    cryptographyKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_CRYPTOGRAPHY_KEY"),
+    cryptographyNonce: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_CRYPTOGRAPHY_NONCE"),
+    firebaseStorageUrl: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_FIREBASE_STORAGE_URL"),
     public: {
-      environmentName: EnvironmentConfigurationReader.getValue("NUXT_ENVIRONMENT_NAME"),
-      isConsoleLoggingEnabled: EnvironmentConfigurationReader.getValue("NUXT_IS_CONSOLE_LOGGING_ENABLED"),
-      isFileLoggingEnabled: EnvironmentConfigurationReader.getValue("NUXT_IS_FILE_LOGGING_ENABLED"),
-      serviceId: process.env.NUXT_PUBLIC_SERVICE_ID,
-      templateId: process.env.NUXT_PUBLIC_TEMPLATE_ID,
-      publicKey: process.env.NUXT_PUBLIC_PUBLIC_KEY,
-    },
+      environmentName: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_ENVIRONMENT_NAME"),
+      isConsoleLoggingEnabled: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_IS_CONSOLE_LOGGING_ENABLED"),
+      isFileLoggingEnabled: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_IS_FILE_LOGGING_ENABLED"),
+    }
   },
 
-
-
+  image: {
+    // Options
+  }
 });
 
 

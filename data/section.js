@@ -53,7 +53,7 @@ export const deleteSection = (id) => {
   }
 };
 
-const section = [
+export const section = [
 
      // Sections for level 7
 {

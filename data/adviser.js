@@ -55,7 +55,7 @@ export const deleteAdviserThruFacID = (id) => {
 };
 
 
-const adviser = [
+export const adviser = [
   {
     id: 'adviserid1',
     userId: 'userid1',

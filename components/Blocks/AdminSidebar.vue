@@ -1,5 +1,5 @@
 <template>
-  <aside class="mwa h-screen w-[300px] border-r bg-[#265630] text-white">
+  <aside class="sidebar mwa h-screen border-r bg-[#265630] text-white">
     <UiScrollArea class="size-full">
       <div class="flex h-screen flex-col pt-7">
         <NuxtLink to="#" class="flex w-full items-center gap-3 px-5">
@@ -85,9 +85,7 @@
   </aside>
 </template>
 
-
 <script lang="ts" setup>
-
 import { useRouter } from 'vue-router';
 import LoginPage from '~/pages/LoginPage.vue';
 
@@ -101,15 +99,15 @@ const user = {
 
 const topNav = [
   { title: "Dashboard", icon: "lucide:home", link: "AdminDashboard" },
+  { title: "Search", icon: "lucide:search", link: "SearchPage" },
   {
     title: "Reports",
     icon: "lucide:bar-chart-3",
     items: [
-      { title: "Incident Reports", link: "#" },
+      { title: "Incident Reports", link: "IncidentsPage" },
       { title: "Anecdotal Reports", link: "#" },
     ],
   },
-  { title: "Students", icon: "lucide:users", link: "#" },
   { title: "Accounts", icon: "lucide:user-cog", link: "AccountsPage" },
   { title: "Archives", icon: "lucide:folder-dot", link: "#" },
 ];
@@ -120,10 +118,13 @@ const bottomNav = [
     link: "#",
   },
 ];
-
 </script>
 
 <style scoped>
+.sidebar {
+  width: 300px; /* Fixed width for the sidebar */
+  flex-shrink: 0; /* Prevent the sidebar from shrinking */
+}
 .mwa {
   font-family: "Century Gothic";
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex h-screen">
+  <div class="general flex h-screen">
     <!-- Sidebar -->
     <AdminSidebar />
 

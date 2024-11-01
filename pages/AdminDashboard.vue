@@ -81,19 +81,35 @@
 <script>
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import { 
+  getAdviserCount, 
+  getPendingAdviserCount
+} from '~/data/adviser';
 
 export default {
   name: 'AdminDashboard',
   components: {
     AdminSidebar,AdminHeader
   },
+  
   data() {
     return {
       reportsCount: 0,
       studentsCount: 0,
       accountsCount: 0
-    }
-  }
+    };
+  },
+  created() {
+      this.advPendCount();
+  },
+
+  methods: {
+     advPendCount() {
+      this.accountsCount = getPendingAdviserCount();
+     },
+  },
+
+
 };
 </script>
 

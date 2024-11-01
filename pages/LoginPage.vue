@@ -39,6 +39,8 @@ export default {
   },
   methods: {
     handleSubmit() {
+      
+
       console.log('Email:', this.email);
       console.log('Password:', this.password);
     }

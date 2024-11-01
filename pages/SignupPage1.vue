@@ -96,7 +96,7 @@
     });
 
     const goToSignupPage2 = () => {
-        router.push({ name: 'SignupPage2' });
+      router.push({ name: 'SignupPage2' });
     };
 
     const handleSubmit = () => {
@@ -131,6 +131,17 @@
       sessionStorage.setItem('email', email.value);
       sessionStorage.setItem('password', password.value);
       sessionStorage.setItem('confirmPassword', confirmPassword.value);
+      
+      const id = getUserCount();
+      let user = {
+      userId: `userid${id+1}`,
+      emailAdd: email.value,
+      username: username.value,
+      password: password.value,
+      canAccess: false,
+      }
+      sessionStorage.setItem('user', JSON.stringify(user));
+
       goToSignupPage2() ;
     };
 
@@ -138,17 +149,7 @@
       handleBackClick();
     };
     return { username, email, password, confirmPassword, goToSignupPage2, handleSubmit, goBack, errorMessage };
-  }
-    
-      /* if (usernameAvailable(this.username) && !existingEmail(this.email)){
-        const id = getUserCount();
-        const user = {
-      userId: `${id+1}`,
-      emailAdd: this.email,
-      username: this.username,
-      password: this.password,
-      canAccess: false,*/
-      
+  }   
   };
   </script>
   

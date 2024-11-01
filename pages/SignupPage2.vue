@@ -75,7 +75,7 @@
 
 
             <button type="submit"
-              class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2" @click="goToRegistrationSuccessPage">
+              class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2" >
               PROCEED
             </button>
             <div class="text-center text-gray-500 my-2">OR</div>
@@ -98,6 +98,8 @@
 
 import { useRouter } from 'vue-router';
 import { handleBackClick } from '~/composables/navigation';
+import { getUserCount, createUser } from '~/data/user';
+import {ref, onMounted} from 'vue';
 
 import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
 
@@ -109,14 +111,69 @@ export default {
   setup() {
     const router = useRouter();
     const goToRegistrationSuccessPage = () => {
-      router.push({ name: 'RegistrationSuccessful' });
+    router.push({ name: 'RegistrationSuccessful' });
     };
 
-    return {
-      goToRegistrationSuccessPage
-    }
+    const firstName = ref('');
+    const middleName = ref('');
+    const lastName = ref('');
+    const suffix = ref('');
+    const bdate = ref('');
+    const facultyID = ref('');
+    const user = ref(null);
+
+   /* let  username =ref('');
+    let email = ref('');
+    let password =ref('');*/
+
+    onMounted(()=>{
+      if(typeof window !== 'undefined'){
+        const userData = sessionStorage.getItem('user');
+        if(userData){
+          user.value =  JSON.parse(userData);
+        }
+        //username = sessionStorage.getItem('username') || '';
+        //email = sessionStorage.getItem('email') || '';
+        //password = sessionStorage.getItem('password') || '';
+      }
+    });
+
+    const handleSubmit = () => {
+     /* console.log('First Name:', this.firstName);
+      console.log('Middle Name:', this.middleName);
+      console.log('Last Name:', this.lastName);
+      console.log('Suffix:', this.suffix);
+      console.log('Birthdate:', this.bdate);
+      console.log('Birthdate:', this.facultyID);*/
+      if(!firstName.value){
+        return;
+      }
+      if (!lastName.value){
+        return;
+      }
+      if(!bdate.value){
+        return;
+      }
+      if(!facultyID.value){
+        return;
+      }
+      console.log(username);
+     // const id = getUserCount();
+      const newUser = {
+      userId: user.value.userId,
+      emailAdd: user.value.emailAdd,
+      username: user.valueusername,
+      password: user.value.password,
+      canAccess: false,
+      }
+    
+        createUser(newUser); // Use user.value instead of this.user
+        goToRegistrationSuccessPage();
+    };
+
+    return { firstName, middleName, lastName, suffix, bdate, facultyID, handleSubmit, goToRegistrationSuccessPage };
   },
-  data() {
+ /* data() {
     return {
       firstName: '',
       middleName: '',
@@ -125,16 +182,8 @@ export default {
       bdate: '',
       facultyID: ''
     };
-  },
+  },*/
   methods: {
-    handleSubmit() {
-      console.log('First Name:', this.firstName);
-      console.log('Middle Name:', this.middleName);
-      console.log('Last Name:', this.lastName);
-      console.log('Suffix:', this.suffix);
-      console.log('Birthdate:', this.bdate);
-      console.log('Birthdate:', this.facultyID);
-    },
     goBack() {
       this.$router.push('/');
     }

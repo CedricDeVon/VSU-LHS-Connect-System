@@ -5,7 +5,7 @@
       <AdminHeader />
       <div class="p-8 pt-0 general min-h-screen max-h-screen flex flex-col w-full">
         <div class="flex justify-start items-center mb-6 max-w-auto">
-          <div class="flex ml-7 items-center w-[80%]">
+          <div class="flex ml-7 items-center w-[90%]">
             <input type="text" placeholder="Search student or section by name, ID, or adviser"
               class="w-full px-4 py-2 h-[40px] border border-gray-300 rounded-l-md focus:outline-none mr-3"
               v-model="searchQuery" />
@@ -16,6 +16,21 @@
               <option value="student">Student</option>
               <option value="section">Section</option>
             </select>
+            <select v-if="selectedSearch === 'section'"
+              class="px-4 py-2 border border-gray-300 rounded-md bg-gray-10 text-gray-700 inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none ml-3"
+              v-model="sortBy">
+              <option value="" disabled>Sort by</option>
+              <option value="sNameSort">Section Name</option>
+              <option value="sGradeSort">Grade Level</option>
+              <option value="recentlyAddedSort">Recently Added</option>
+            </select>
+            <select v-if="selectedSearch === 'student'"
+              class="px-4 py-2 border border-gray-300 rounded-md bg-gray-10 text-gray-700 inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none ml-3"
+              v-model="sortBy">
+              <option value="" disabled>Sort by</option>
+              <option value="surnameSort">Surname</option>
+              <option value="gradeLvlSort">Grade Level</option>
+            </select>
             <button v-if="selectedSearch === 'section'" @click="showAddSectionForm = true"
               class="inline-flex items-center ml-3 h-[40px] px-4 bg-[#728B78] text-white text-sm font-medium rounded-md hover:bg-[#536757] border-none hover:text-white transition-colors duration-200 whitespace-nowrap"
               style="font-size: 0.875rem;">
@@ -24,7 +39,7 @@
           </div>
         </div>
 
-        <div v-if="!selectedSearch" class="text-gray-500 text-center">
+        <div v-if="!selectedSearch" class="text-gray-500 text-center text-xl font-regular">
           Please select a search category to view results.
         </div>
 
@@ -71,9 +86,10 @@
                     <tr v-for="student in filteredStudents" :key="student.id" class="border-b bg-transparent">
                       <td class="px-6 py-4">{{ student.studentId }}</td>
                       <td class="px-6 py-4">{{ student.lastName + ', ' + student.firstName }}</td>
-                      <td class="px-6 py-4">{{ student.sectionGrade }}</td>
+                      <td class="px-6 py-4">{{ 'Grade ' + student.gradeLvl + ' - ' + student.sectionName }}</td>
                       <td class="px-6 py-4">
-                        <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+                        <button
+                          class="bg-green-200 text-green-800 px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
                           View Profile
                         </button>
                       </td>
@@ -102,6 +118,11 @@ export default {
   components: {
     AdminSidebar, AdminHeader, AddSectionForm
   },
+  watch: {
+    searchQuery: _.debounce(function (newQuery) {
+      this.debouncedQuery = newQuery;
+    }, 300) // Debounce with a 300ms delay
+  },
   data() {
     return {
       searchQuery: '',
@@ -109,12 +130,13 @@ export default {
       showAddSectionForm: false,
       sections: section,
       students: student,
+      sortBy: '',
     };
   },
   methods: {
     addNewSection(newSection) {
       this.sections.push({
-        id: this.sections.length + 1, // assuming id is sequential
+        id: this.sections.length + 1, // assuming id is sequential hehe
         sectionName: newSection.sectionName,
         sectionLevel: newSection.sectionLevel,
         adviserId: newSection.adviserId
@@ -123,24 +145,45 @@ export default {
   },
   computed: {
     filteredSections() {
-      if (this.selectedSearch === 'section' && !this.searchQuery) {
-        return this.sections;
+      let filtered = this.sections.filter((section) => {
+        if (!this.debouncedQuery) return true; // Show all if query is empty
+        return (
+          section.sectionName.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||
+          String(section.sectionLevel).includes(this.debouncedQuery) ||
+          (section.adviserId && section.adviserId.toLowerCase().includes(this.debouncedQuery.toLowerCase()))
+        );
+      });
+      if (this.selectedSearch === 'section') {
+        if (this.sortBy === 'sNameSort') {
+          filtered.sort((a, b) => a.sectionName.localeCompare(b.sectionName));
+        } else if (this.sortBy === 'sGradeSort') {
+          filtered.sort((a, b) => a.sectionLevel - b.sectionLevel);
+        } else if (this.sortBy === 'recentlyAddedSort') {
+          filtered.sort((a, b) => b.id - a.id); // TODO: Change to date added if naa na nga attribute
+        }
       }
-      return this.sections.filter((section) =>
-        Object.values(section).some((value) =>
-          String(value).toLowerCase().includes(this.searchQuery.toLowerCase())
-        )
-      );
+
+      return filtered;
     },
     filteredStudents() {
-      if (this.selectedSearch === 'student' && !this.searchQuery) {
-        return this.students;
+      let filtered = this.students.filter((student) => {
+        if (!this.debouncedQuery) return true;
+        return (
+          student.studentId.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||
+          student.lastName.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||
+          student.firstName.toLowerCase().includes(this.debouncedQuery.toLowerCase())
+        );
+      });
+
+      if (this.selectedSearch === 'student') {
+        if (this.sortBy === 'surnameSort') {
+          filtered.sort((a, b) => a.lastName.localeCompare(b.lastName));
+        } else if (this.sortBy === 'gradeLvlSort') {
+          filtered.sort((a, b) => a.gradeLvl - b.gradeLvl);
+        }
       }
-      return this.students.filter((student) =>
-        Object.values(student).some((value) =>
-          String(value).toLowerCase().includes(this.searchQuery.toLowerCase())
-        )
-      );
+
+      return filtered;
     },
   },
 };

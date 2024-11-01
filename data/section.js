@@ -4,12 +4,20 @@ export const getSectionsByLevel = (grade, sy) => {
     return section.filter((sec) => sec.sectionLevel === grade && sec.sectionSchoolYear === sy);
 };
 
+export const getSectionIDByName = (name, sy) => {
+    const index = section.findIndex((sec) => sec.sectionName === name && sec.sectionSchoolYear === sy);
+    if (index !== -1){
+        return (section[index]).id;
+    }
+
+}
+
 
 export const addSection = (sec) => {
   section.push(sec);
 };
 
-export const resetSection = (SY) => {
+/*export const resetSection = (SY) => {
     section.push({
         adviserId: null,
         sectionPopulation: '0',
@@ -17,7 +25,7 @@ export const resetSection = (SY) => {
         sectionLevel: '7',
         sectionSchoolYear: SY,
     });
-}
+}*/
 
 export const updateSectionAdviser= (secID, facID) => {
   const index = section.findIndex((sec) => sec.id === secID);

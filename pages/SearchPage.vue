@@ -83,10 +83,10 @@
                     </tr>
                   </template>
                   <template v-else-if="selectedSearch === 'student'">
-                    <tr v-for="student in filteredStudents" :key="student.id" class="border-b bg-transparent">
+                    <tr v-for="student in filteredStudents" :key="student.studentId" class="border-b bg-transparent">
                       <td class="px-6 py-4">{{ student.studentId }}</td>
                       <td class="px-6 py-4">{{ student.lastName + ', ' + student.firstName }}</td>
-                      <td class="px-6 py-4">{{ 'Grade ' + student.gradeLvl + ' - ' + student.sectionName }}</td>
+                      <td class="px-6 py-4">{{ 'Grade ' + student.sectionLevel + ' - ' + student.sectionName }}</td>
                       <td class="px-6 py-4">
                         <button
                           class="bg-green-200 text-green-800 px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
@@ -103,7 +103,6 @@
       </div>
     </div>
     <AddSectionForm v-if="showAddSectionForm" @close="showAddSectionForm = false" @add-section="addNewSection" />
-
   </div>
 </template>
 
@@ -113,19 +112,21 @@ import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
 import { section } from '~/data/section.js';
 import { student } from '~/data/student.js';
+import debounce from 'lodash/debounce';
 
 export default {
   components: {
     AdminSidebar, AdminHeader, AddSectionForm
   },
   watch: {
-    searchQuery: _.debounce(function (newQuery) {
+    searchQuery: debounce(function (newQuery) {
       this.debouncedQuery = newQuery;
     }, 300) // Debounce with a 300ms delay
   },
   data() {
     return {
       searchQuery: '',
+      debouncedQuery: '',
       selectedSearch: '',
       showAddSectionForm: false,
       sections: section,
@@ -142,6 +143,14 @@ export default {
         adviserId: newSection.adviserId
       });
     },
+    getSectionByStudentId(studentId) {
+      for (const sec of this.sections) {
+        if (sec.sectionStudents.includes(studentId)) {
+          return sec;
+        }
+      }
+      return null;
+    }
   },
   computed: {
     filteredSections() {
@@ -179,16 +188,26 @@ export default {
         if (this.sortBy === 'surnameSort') {
           filtered.sort((a, b) => a.lastName.localeCompare(b.lastName));
         } else if (this.sortBy === 'gradeLvlSort') {
-          filtered.sort((a, b) => a.gradeLvl - b.gradeLvl);
+          filtered.sort((a, b) => {
+            const sectionA = this.getSectionByStudentId(a.studentId);
+            const sectionB = this.getSectionByStudentId(b.studentId);
+            return (sectionA ? sectionA.sectionLevel : 0) - (sectionB ? sectionB.sectionLevel : 0);
+          });
         }
       }
 
-      return filtered;
+      return filtered.map(student => {
+        const section = this.getSectionByStudentId(student.studentId);
+        return {
+          ...student,
+          sectionName: section ? section.sectionName : '---',
+          sectionLevel: section ? section.sectionLevel : '---'
+        };
+      });
     },
   },
 };
 </script>
-
 
 <style scoped>
 thead th {

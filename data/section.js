@@ -185,11 +185,7 @@ export const section = [
         '22-1-10089',
         '22-1-10090',
         '22-1-10091',
-        '22-1-10092',
-        '22-1-10093',
-        '22-1-10094',
-        '22-1-10095',
-        '22-1-10096'
+        '22-1-10092' 
     ],
 },
 {
@@ -208,7 +204,12 @@ export const section = [
     sectionName: 'Cloud Computing',
     sectionLevel: '9',
     sectionSchoolYear: '2024-2025',
-    sectionStudents: [],
+    sectionStudents: [
+        '22-1-10093',
+        '22-1-10094',
+        '22-1-10095',
+        '22-1-10096'
+    ],
 },
 {
     id: 'sectionid15',
@@ -279,7 +280,6 @@ export const section = [
     sectionStudents: [],
 },
 
-// Sections for level 11
 {
     id: 'sectionid21',
     adviserId: 'adviserid21',

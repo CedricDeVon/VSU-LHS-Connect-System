@@ -137,12 +137,6 @@ export default {
     });
 
     const handleSubmit = () => {
-     /* console.log('First Name:', this.firstName);
-      console.log('Middle Name:', this.middleName);
-      console.log('Last Name:', this.lastName);
-      console.log('Suffix:', this.suffix);
-      console.log('Birthdate:', this.bdate);
-      console.log('Birthdate:', this.facultyID);*/
       if(!firstName.value){
         errorMessage.value = 'First Name is Required.';
         return;
@@ -179,7 +173,7 @@ export default {
       canAccess: false,
       }
       createUser(newUser); 
-
+        console.log(gradeLevel.value);
       const secID = getSectionIDByName(sectionName.value, '2024-2025');//This academicYear should be something like default global variable? naa bay ana dinhi? hahhah na machange lng siya when we reset the AY.
       const id = (getAdvisers()).length + 1;
 
@@ -200,18 +194,8 @@ export default {
         goToRegistrationSuccessPage();
     };
 
-    return { user, firstName, middleName, lastName, suffix, bdate, facultyID, handleSubmit, goToRegistrationSuccessPage };
+    return { errorMessage, gradeLevel, sectionName, user, firstName, middleName, lastName, suffix, bdate, facultyID, handleSubmit, goToRegistrationSuccessPage };
   },
- /* data() {
-    return {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      suffix: '',
-      bdate: '',
-      facultyID: ''
-    };
-  },*/
   methods: {
     goBack() {
       this.$router.push('/');

@@ -7,7 +7,7 @@ export const verifyLogin = (userName, pass) =>{
     return false;
 };
 
-export const checkUserNameAvailability = (userName) =>{
+export const usernameAvailable = (userName) =>{
     const index  = user.findIndex((usr)=>usr.username === userName);
     if(index !== -1){
         return false;
@@ -15,12 +15,12 @@ export const checkUserNameAvailability = (userName) =>{
     return true;
 };
 
-export const checkExistingEmail = (email) =>{
+export const existingEmail = (email) =>{
     const index  = user.findIndex((usr)=>usr.emailAdd === email);
     if(index !== -1){
-        return false;
+        return true;
     }
-    return true;
+    return false;
 };
 
 export const blockUserAccess = (id) =>{
@@ -30,6 +30,14 @@ export const blockUserAccess = (id) =>{
         return true;
     }
     return true;
+};
+
+export const createUser = (user) => {
+  this.user.push(user);
+};
+
+export const getUserCount = () => {
+return (user).length;
 };
 
 

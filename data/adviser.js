@@ -54,6 +54,14 @@ export const deleteAdviserThruFacID = (id) => {
   }
 };
 
+export const getAdviserCount = () => {
+  return (adviser.filter((adv)=> adv.status === 'active')).length;
+};
+
+export const getPendingAdviserCount = () => {
+  return (adviser.filter((adv)=> adv.status === 'pending')).length;
+};
+
 
 export const adviser = [
   {

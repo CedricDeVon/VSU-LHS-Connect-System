@@ -1,7 +1,12 @@
+
+export const getReportCount = () => {
+    return (initialReport).length;
+};
+
 export const initialReport = [ 
     {
         initialDocID: 'initialReport1',
-        reportIDRef: '',
+        reportIDRef: 'report01',
         peopleInvolved: [
             'Jade', 'Jedo',
         ],
@@ -11,11 +16,11 @@ export const initialReport = [
         thingsInvolved: 'liqour',
         narrativeReport: 'A student was caught drinking liqour inside the campus.',
         dateReported: 'July 8, 2024',
-        status: 'Unread',
+        status: 'Read',
     },
     {
         initialDocID: 'initialReport2',
-        reportIDRef: '',
+        reportIDRef: 'report02',
         peopleInvolved: [
             'Pawix', 'Pawiz',
         ],
@@ -57,7 +62,7 @@ export const initialReport = [
     },
     {
         initialDocID: 'initialReport5',
-        reportIDRef: '',
+        reportIDRef: 'report05',
         peopleInvolved: [
             'Lisa', 'Chris',
         ],
@@ -85,7 +90,7 @@ export const initialReport = [
     },
     {
         initialDocID: 'initialReport7',
-        reportIDRef: '',
+        reportIDRef: 'report07',
         peopleInvolved: [
             'Emily', 'Jake',
         ],
@@ -113,7 +118,7 @@ export const initialReport = [
     },
     {
         initialDocID: 'initialReport9',
-        reportIDRef: '',
+        reportIDRef: 'report09',
         peopleInvolved: [
             'Kevin', 'Owen',
         ],
@@ -141,7 +146,7 @@ export const initialReport = [
     },
     {
         initialDocID: 'initialReport11',
-        reportIDRef: '',
+        reportIDRef: 'report11',
         peopleInvolved: [
             'Nora', 'Paul',
         ],

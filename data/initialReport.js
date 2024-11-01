@@ -1,3 +1,8 @@
+
+export const getReportCount = () => {
+    return (initialReport).length;
+};
+
 export const initialReport = [ 
     {
         initialDocID: 'initialReport1',

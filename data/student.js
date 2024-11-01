@@ -1,3 +1,7 @@
+export const  getEnrolledStudentsCount = ()=> {
+    return (student.filter((stud)=> stud.isEnrolled)).length;
+};
+
 export const student = [
     {
         studentId: '22-1-10074',
@@ -8,7 +12,7 @@ export const student = [
         gender: 'Male',
         Address: 'Albuera, Leyte',
         contactNum: '09268921698',
-        isEnrolled: true,
+        isEnrolled: false,
         incidentDocIDs: [],
     },
     {

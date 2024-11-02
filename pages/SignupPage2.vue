@@ -165,6 +165,9 @@ export default {
         errorMessage.value = 'Please input the section';
         return;
       }
+      //this may seem duplicating from the previous page but I think These values stored in sessionStorage 
+      //might be used in validation of inputs later on especially in confirming that their facultyID matches the @vsu.edu.ph acct.
+      //and also, to confirm everything before adding to db, that is why I put here the adding of user to dataset instead of adding it right after the 1st page since we have back option in this page2 
       const newUser = {
       userId: user.value.userId,
       emailAdd: user.value.emailAdd,
@@ -173,7 +176,7 @@ export default {
       canAccess: false,
       }
       createUser(newUser); 
-        console.log(gradeLevel.value);
+
       const secID = getSectionIDByName(sectionName.value, '2024-2025');//This academicYear should be something like default global variable? naa bay ana dinhi? hahhah na machange lng siya when we reset the AY.
       const id = (getAdvisers()).length + 1;
 

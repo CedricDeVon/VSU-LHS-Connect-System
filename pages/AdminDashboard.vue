@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
+import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+
+const reportsCount = useState('reportsCount');
+const studentsCount = useState('studentsCount');
+const accountsCount = useState('accountsCount');
+
+reportsCount.value = studentsCount.value = accountsCount.value = 0;
+
+</script>
+
 <template>
   <div class="flex h-screen">
     <!-- Sidebar -->
@@ -77,25 +89,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
-import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-
-export default {
-  name: 'AdminDashboard',
-  components: {
-    AdminSidebar,AdminHeader
-  },
-  data() {
-    return {
-      reportsCount: 0,
-      studentsCount: 0,
-      accountsCount: 0
-    }
-  }
-};
-</script>
 
 <style scoped>
 .dashboard-page {

@@ -1,28 +1,27 @@
 import firebaseApp from "firebase/app";
 import firebaseStorage from "firebase/storage";
 
-import { Database } from "./database";
-import { Result } from "../results/result";
-import { FailedResult } from "../results/failedResult";
-import { SuccessfulResult } from "../results/successfulResult";
-import { ParsedFile } from "../files/parsedFile";
 import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
+import { ParsedFile } from "../files/parsedFile";
+import { FailedResult } from "../results/failedResult";
+import { Result } from "../results/result";
+import { SuccessfulResult } from "../results/successfulResult";
+import { Database } from "./database";
 
-export class FirebaseFileSystem extends Database {
+export class FirebaseStorage extends Database {
   private readonly _folderPath: string;
 
   public constructor(folderPath: string) {
     super();
 
-    this._folderPath = folderPath;
+    this._folderPath = `${ConfigurationReaders.nuxtConfigurationReader.ENVIRONMENT_NAME}/${folderPath}`;
   }
 
   public get folderPath(): string {
     return this._folderPath;
   }
 
-  public async readFileLink(
-    filePath: string): Promise<Result> {
+  public async readFileLink(filePath: string): Promise<Result> {
     try {
       const storage: firebaseStorage.FirebaseStorage = firebaseStorage.getStorage(
         firebaseApp.getApp(),
@@ -30,9 +29,9 @@ export class FirebaseFileSystem extends Database {
       );
       return new SuccessfulResult(
         await firebaseStorage.getDownloadURL(
-          firebaseStorage.ref(storage, this._generateCompleteFilePath(filePath)))
+          firebaseStorage.ref(storage, this._generateCompleteFilePath(filePath))
+        )
       );
-
     } catch (error: any) {
       return new FailedResult(error.message);
     }
@@ -50,7 +49,6 @@ export class FirebaseFileSystem extends Database {
         urlCollection.push(result.data);
       }
       return new SuccessfulResult(urlCollection);
-
     } catch (error: any) {
       return new FailedResult(error.message);
     }
@@ -60,10 +58,11 @@ export class FirebaseFileSystem extends Database {
     parsedFile: ParsedFile,
     snapshotCallback = (snapshot: firebaseStorage.UploadTaskSnapshot) => {},
     completeCallback = () => {},
-    errorCallback = (error: firebaseStorage.StorageError) => {}): Result {
+    errorCallback = (error: firebaseStorage.StorageError) => {}
+  ): Result {
     try {
       if (parsedFile === undefined || parsedFile === null) {
-        throw new Error('Pleas supply a parsedFile');
+        throw new Error("Pleas supply a parsedFile");
       }
       const storage: firebaseStorage.FirebaseStorage = firebaseStorage.getStorage(
         firebaseApp.getApp(),
@@ -72,10 +71,11 @@ export class FirebaseFileSystem extends Database {
       const { name, base64BinaryString, contentType } = parsedFile;
       const uploadTask: firebaseStorage.UploadTask = firebaseStorage.uploadBytesResumable(
         firebaseStorage.ref(storage, this._generateCompleteFilePath(name)),
-        base64BinaryString, { contentType });
-      uploadTask.on('state_changed', snapshotCallback, errorCallback, completeCallback);
+        base64BinaryString,
+        { contentType }
+      );
+      uploadTask.on("state_changed", snapshotCallback, errorCallback, completeCallback);
       return new SuccessfulResult(uploadTask);
-
     } catch (error: any) {
       return new FailedResult(error.message);
     }
@@ -85,7 +85,8 @@ export class FirebaseFileSystem extends Database {
     parsedFiles: ParsedFile[],
     snapshotCallback = (snapshot: firebaseStorage.UploadTaskSnapshot) => {},
     completeCallback = () => {},
-    errorCallback = (error: firebaseStorage.StorageError) => {}): Result {
+    errorCallback = (error: firebaseStorage.StorageError) => {}
+  ): Result {
     try {
       let result: Result;
       let tasks: firebaseStorage.UploadTask[] = [];
@@ -96,7 +97,6 @@ export class FirebaseFileSystem extends Database {
         }
       }
       return new SuccessfulResult();
-
     } catch (error: any) {
       return new FailedResult(error.message);
     }
@@ -109,9 +109,9 @@ export class FirebaseFileSystem extends Database {
         ConfigurationReaders.nuxtConfigurationReader.FIREBASE_STORAGE_URL
       );
       await firebaseStorage.deleteObject(
-        firebaseStorage.ref(storage, this._generateCompleteFilePath(filePath)));
+        firebaseStorage.ref(storage, this._generateCompleteFilePath(filePath))
+      );
       return new SuccessfulResult();
-
     } catch (error: any) {
       return new FailedResult(error.message);
     }
@@ -127,7 +127,6 @@ export class FirebaseFileSystem extends Database {
         }
       }
       return new SuccessfulResult();
-
     } catch (error: any) {
       return new FailedResult(error.message);
     }

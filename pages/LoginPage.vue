@@ -3,6 +3,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { toTypedSchema } from '@vee-validate/yup';
 
 const auth = useFirebaseAuth()!;
+const loginErrorMessage = useState('loginErrorMessage');
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: toTypedSchema(loginSchema),
 });
@@ -14,7 +15,7 @@ const submit = handleSubmit(async (values) => {
 
   try {
     await signInWithEmailAndPassword(auth, values.email, values.password);
-    useSonner.success("Sign in successful", { id: loading });
+    useSonner.success("Successful", { id: loading });
     return navigateTo("/AdminDashboard", { replace: true });
 
   } catch (error: any) {
@@ -42,6 +43,7 @@ const submit = handleSubmit(async (values) => {
             <UiVeeInput type="password" id="password" placeholder="Password" required
               class="w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
+          <div v-if ="errorMessage" class="text-red-500 mb-4">{{  errorMessage }}</div>
           <UiButton type="submit"
             class="w-full bg-blue-500 p-2 text-white rounded-md hover:bg-blue-600 transition duration-300">
             Log In

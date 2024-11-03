@@ -71,11 +71,9 @@
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
                 </div>
               </div>
-         
-
-
+              <div v-if ="errorMessage" class="text-red-500 mb-4">{{  errorMessage }}</div>
             <button type="submit"
-              class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2" @click="goToRegistrationSuccessPage">
+              class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2" >
               PROCEED
             </button>
             <div class="text-center text-gray-500 my-2">OR</div>
@@ -98,8 +96,13 @@
 
 import { useRouter } from 'vue-router';
 import { handleBackClick } from '~/composables/navigation';
+import { getUserCount, createUser } from '~/data/user';
+import { getAdvisers, addadviser } from '~/data/adviser';
+import { getSectionIDByName } from '~/data/section';
+import {ref, onMounted} from 'vue';
 
 import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
+import { section } from '~/data/section';
 
 export default {
   name: 'SignupPage2',
@@ -109,32 +112,94 @@ export default {
   setup() {
     const router = useRouter();
     const goToRegistrationSuccessPage = () => {
-      router.push({ name: 'RegistrationSuccessful' });
+    router.push({ name: 'RegistrationSuccessful' });
     };
 
-    return {
-      goToRegistrationSuccessPage
-    }
-  },
-  data() {
-    return {
-      firstName: '',
-      middleName: '',
-      lastName: '',
-      suffix: '',
-      bdate: '',
-      facultyID: ''
+    const firstName = ref('');
+    const middleName = ref('');
+    const lastName = ref('');
+    const suffix = ref('');
+    const bdate = ref('');
+    const facultyID = ref('');
+    const errorMessage = ref('');
+    const gradeLevel = ref('');
+    const sectionName = ref('');
+    const user = ref(null);
+
+    onMounted(()=>{
+      if(typeof window !== 'undefined'){
+        const userData = sessionStorage.getItem('user');
+        if(userData){
+          user.value =  JSON.parse(userData);
+        }
+      }
+      return user;
+    });
+
+    const handleSubmit = () => {
+      if(!firstName.value){
+        errorMessage.value = 'First Name is Required.';
+        return;
+      }
+      if (!lastName.value){
+        errorMessage.value = 'Last Name is Required.';
+        return;
+      }
+      if(!bdate.value){
+        errorMessage.value = 'Please input your birthdate.';
+        return;
+      }
+      if(!facultyID.value){
+        errorMessage.value = 'faculty ID is Required.';
+        return;
+      }
+      if(!user.value){
+        console.log('user doesn\'t exist');
+        return;
+      }
+      if(!gradeLevel.value){
+        errorMessage.value = 'Please choose year level.';
+        return;
+      }
+      if(!sectionName.value){
+        errorMessage.value = 'Please input the section';
+        return;
+      }
+      //this may seem duplicating from the previous page but I think These values stored in sessionStorage 
+      //might be used in validation of inputs later on especially in confirming that their facultyID matches the @vsu.edu.ph acct.
+      //and also, to confirm everything before adding to db, that is why I put here the adding of user to dataset instead of adding it right after the 1st page since we have back option in this page2 
+      const newUser = {
+      userId: user.value.userId,
+      emailAdd: user.value.emailAdd,
+      username: user.value.username,
+      password: user.value.password,
+      canAccess: false,
+      }
+      createUser(newUser); 
+
+      const secID = getSectionIDByName(sectionName.value, '2024-2025');//This academicYear should be something like default global variable? naa bay ana dinhi? hahhah na machange lng siya when we reset the AY.
+      const id = (getAdvisers()).length + 1;
+
+      const newAdviser = {
+        id: `adviserid${id}`,
+        userId: user.value.userId,
+        sectionId: secID,
+        facultyId: facultyID.value,
+        firstName: firstName.value,
+        lastName: lastName.value,
+        middleName: middleName.value,
+        suffix: suffix.value,
+        bdate: bdate.value,
+        profilePic: null,
+        status: 'pending',
+      }
+        addadviser(newAdviser);
+        goToRegistrationSuccessPage();
     };
+
+    return { errorMessage, gradeLevel, sectionName, user, firstName, middleName, lastName, suffix, bdate, facultyID, handleSubmit, goToRegistrationSuccessPage };
   },
   methods: {
-    handleSubmit() {
-      console.log('First Name:', this.firstName);
-      console.log('Middle Name:', this.middleName);
-      console.log('Last Name:', this.lastName);
-      console.log('Suffix:', this.suffix);
-      console.log('Birthdate:', this.bdate);
-      console.log('Birthdate:', this.facultyID);
-    },
     goBack() {
       this.$router.push('/');
     }

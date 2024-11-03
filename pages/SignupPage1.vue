@@ -41,10 +41,11 @@
                   class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
+              <div v-if ="errorMessage" class="text-red-500 mb-4">{{  errorMessage }}</div>
               <button
                 type="submit"
                 class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2"
-                @click="goToSignupPage2"
+              
               >
                 PROCEED
               </button>
@@ -72,38 +73,83 @@
   <script>
   import  {useRouter} from 'vue-router';
   import { handleBackClick } from '~/composables/navigation';
+  import { usernameAvailable, existingEmail, getUserCount } from '~/data/user';
+  import {ref, onMounted} from 'vue';
+
   export default {
     name: 'SignupPage1',
-    data() {
-      return {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      };
-    },
     setup() {
     const router = useRouter();
+    const username = ref('');
+    const email = ref('');
+    const password = ref('');
+    const confirmPassword = ref ('');
+    const errorMessage = ref('');
+
+    onMounted(()=>{
+      if(typeof window !== 'undefined'){
+        username.value = sessionStorage.getItem('username') || '';
+        email.value = sessionStorage.getItem('email') || '';
+        password.value = sessionStorage.getItem('password') || '';
+        confirmPassword.value = sessionStorage.getItem('confirmPassword') || '';
+      }
+    });
 
     const goToSignupPage2 = () => {
       router.push({ name: 'SignupPage2' });
     };
 
-    return {
-      goToSignupPage2
-    };
-  },
-    methods: {
-      handleSubmit() {
-        console.log('Username:', this.username);
-        console.log('Email:', this.email);
-        console.log('Password:', this.password);
-        console.log('Confirm Password:', this.confirmPassword);
-      },
-      goBack() {
-        handleBackClick();
+    const handleSubmit = () => {
+      errorMessage.value = '';
+
+      if(!username.value){
+        errorMessage.value = 'Username is required.';
+        return;
       }
-    }
+      if(!email.value){
+        errorMessage.value = 'Email Address is required.';
+        return;
+      }
+      if(!password.value){
+        errorMessage.value = 'Password is required.';
+        return;
+      }
+      if(password.value !== confirmPassword.value){
+        errorMessage.value = 'Password do not match.';
+        return;
+      }
+
+      if(!usernameAvailable(username.value)){
+        errorMessage.value = 'Username already taken.';
+        return;
+      }
+      if(existingEmail(email.value)){
+        errorMessage.value = 'Email is already registered.';
+        return;
+      }
+      sessionStorage.setItem('username', username.value);
+      sessionStorage.setItem('email', email.value);
+      sessionStorage.setItem('password', password.value);
+      sessionStorage.setItem('confirmPassword', confirmPassword.value);
+      
+      const id = getUserCount();
+      let user = {
+      userId: `userid${id+1}`,
+      emailAdd: email.value,
+      username: username.value,
+      password: password.value,
+      canAccess: false,
+      }
+      sessionStorage.setItem('user', JSON.stringify(user));
+
+      goToSignupPage2() ;
+    };
+
+    const goBack = () => {
+      handleBackClick();
+    };
+    return { username, email, password, confirmPassword, goToSignupPage2, handleSubmit, goBack, errorMessage };
+  }   
   };
   </script>
   

@@ -55,7 +55,7 @@
               <tbody class="bg-white divide-y divide-gray-200">
                 <tr v-for="adviser in filteredAdvisers" :key="adviser.facultyId">
                   <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words">
-                    {{ adviser.name }}
+                    {{adviser.firstName+ ' '+ adviser.lastName}}
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-500 break-words">
                     {{ adviser.facultyId }}
@@ -73,7 +73,7 @@
                   </td>
                   <td v-else class="px-6 py-4 break-words">
                     <span :class="[ 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                      adviser.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      adviser.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     ]">
                       {{ adviser.status }}
                     </span>
@@ -100,13 +100,16 @@
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import AdviserCSVUploadModal from '../components/Modals/AdviserCSVUploadModal.vue';
+import { getAdvisers } from '~/data/adviser';
+ 
+
 
 export default {
   name: 'AccountsPage',
   components: {
     AdminSidebar,
     AdminHeader,
-    AdviserCSVUploadModal
+    AdviserCSVUploadModal,
   },
   data() {
     return {
@@ -114,31 +117,38 @@ export default {
       showUploadModal: false,
       file: null,
       // Sample data
-      advisers: [
-        { name: 'Brooke', facultyId: 'F-02456', advisory: 'Grade 8 Thriller Bark', status: 'Active' },
-        { name: 'Trafalgar Law', facultyId: 'F-01789', advisory: null, status: 'Inactive' },
-        { name: 'Eustass Kid', facultyId: 'F-0789', advisory: null, status: 'Inactive' },
-        { name: 'Nefertari Vivi', facultyId: 'F-0789', advisory: null, status: 'Inactive' },
-        { name: 'Cutty Flam', facultyId: 'F-01123', advisory: 'Grade 9 Water 7', status: 'Active' },
-        { name: 'Jinbei', facultyId: 'F-00123', advisory: 'Grade 10 Fishman', status: 'Active' },
-        { name: 'BrookeBrooke', facultyId: 'F-02456', advisory: 'Grade 8 Thriller Bark', status: 'Pending' },
-      ],
+      advisers: [],
+    
     };
   },
+
+  created() {
+    // Fetch advisers when the component is created
+    this.fetchAdvisers();
+  },
+
   computed: {
+   
     filteredAdvisers() {
       if (this.selectedAccount === 'all') {
-        return this.advisers.filter(adviser => adviser.status !== 'Pending');;
+        return (this.advisers.filter(adviser => adviser.status !== 'pending')).sort((a,b) => {
+          const order = {active: 1, inActive:2};
+          return (order[a.status] || 3) - (order[b.status] || 3)});
       } else if (this.selectedAccount === 'active') {
-        return this.advisers.filter(adviser => adviser.status === 'Active');
+        return this.advisers.filter(adviser => adviser.status === 'active');
       } else if (this.selectedAccount === 'inactive') {
-        return this.advisers.filter(adviser => adviser.status === 'Inactive');
+        return this.advisers.filter(adviser => adviser.status === 'inActive');
       } else if (this.selectedAccount === 'pending') {
-        return this.advisers.filter(adviser => adviser.status === 'Pending');
+        return this.advisers.filter(adviser => adviser.status === 'pending');
       }
     }
   },
   methods: {
+
+    fetchAdvisers() {
+      this.advisers = getAdvisers(); // Assign the result of getAdvisers to advisers
+    },
+
     handleFileUpload(event) {
       this.file = event.target.files[0];
     },
@@ -148,7 +158,7 @@ export default {
       this.file = null;
     },
     acceptRequest(adviser) {
-      adviser.status = 'Active';
+      adviser.status = 'active';
     },
     rejectRequest(adviser) {
       this.advisers = this.advisers.filter(a => a.facultyId !== adviser.facultyId);

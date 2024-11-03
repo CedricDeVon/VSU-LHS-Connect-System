@@ -1,40 +1,58 @@
 
 export const verifyLogin = (userName, pass) =>{
-    const index  = user.findIndex((usr)=>usr.username === userName && usr.password === pass && usr.canAccess);
+    const index  = users.findIndex((usr)=>usr.username === userName && usr.password === pass && usr.canAccess);
     if(index !== -1){
         return true;
     }
     return false;
 };
 
-export const checkUserNameAvailability = (userName) =>{
-    const index  = user.findIndex((usr)=>usr.username === userName);
+export const usernameAvailable = (userName) =>{
+    const index  = users.findIndex((usr)=>usr.username === userName);
     if(index !== -1){
         return false;
     }
     return true;
 };
 
-export const checkExistingEmail = (email) =>{
-    const index  = user.findIndex((usr)=>usr.emailAdd === email);
+export const existingEmail = (email) =>{
+    const index  = users.findIndex((usr)=>usr.emailAdd === email);
     if(index !== -1){
-        return false;
+        return true;
     }
-    return true;
+    return false;
 };
 
 export const blockUserAccess = (id) =>{
     const index  = user.findIndex((usr)=>usr.userId === id);
     if(index !== -1){
-        user[index].canAccess = false;
+        users[index].canAccess = false;
         return true;
     }
     return true;
 };
 
+export const createUser = (newUser) => {
+  const userExists = users.some(user => user.emailAdd === newUser.emailAdd || user.username === newUser.username);
+  
+  if (userExists) {
+    console.error('User already exists with the same email or username.');
+    return;
+  }
+
+  // Push the new user object into the users array
+  users.push(newUser);
+  console.log('User added successfully:', newUser);
+  console.log(users);
+};
+
+export const getUserCount = () => {
+return (users).length;
+};
 
 
-const user = [
+
+const users = [
     {
       userId: 'userid1',
       emailAdd: '22-1-01056@vsu.edu.ph',
@@ -316,8 +334,6 @@ const user = [
     password: 'LastName40',
     canAccess: true,
   },
-  
-  
   ];
   
   

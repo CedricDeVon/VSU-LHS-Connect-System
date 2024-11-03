@@ -1,5 +1,14 @@
+import { addCollection } from "@iconify/vue/dist/iconify.js";
+
 // CRUD Functions
 export const getAdvisers = () => adviser;
+
+export const getAdviserByName = (firstname, lastname) =>{
+  const index = adviser.findIndex((adv)=>adv.firstName === firstname && adv.lastName === lastname);
+  if(index !== -1){
+    return adviser[index];
+  }
+};
 
 export const getFacultyIdBYName = (firstname, lastname) =>{
   const index = adviser.findIndex((adv) => adv.firstName === firstname && adv.lastName === lastname);
@@ -18,10 +27,11 @@ export const getUserId = (firstname, lastname) => {
   console.error("Error:", error.message);
  }
   
-}
+};
 
 export const addadviser = (adv) => {
   adviser.push(adv);
+  console.log(adviser);
 };
 
 export const updateAdviserThruFacID = (id, newData) => {
@@ -45,7 +55,16 @@ export const deleteAdviserThruFacID = (id) => {
   }
 };
 
-const adviser = [
+export const getAdviserCount = () => {
+  return (adviser.filter((adv)=> adv.status === 'active')).length;
+};
+
+export const getPendingAdviserCount = () => {
+  return (adviser.filter((adv)=> adv.status === 'pending')).length;
+};
+
+
+export const adviser = [
   {
     id: 'adviserid1',
     userId: 'userid1',
@@ -96,7 +115,7 @@ const adviser = [
     suffix: 'Jr.',
     bdate: '07-07-2008',
     profilePic: null,
-    status: 'active',
+    status: 'pending',
 },
 {
     id: 'adviserid5',
@@ -109,7 +128,7 @@ const adviser = [
     suffix: 'III',
     bdate: '07-07-2009',
     profilePic: null,
-    status: 'active',
+    status: 'pending',
 },
 {
     id: 'adviserid6',
@@ -122,7 +141,7 @@ const adviser = [
     suffix: 'II',
     bdate: '07-07-2010',
     profilePic: null,
-    status: 'inActive', // Status is inActive because sectionId is null
+    status: 'inActive', 
 },
 {
     id: 'adviserid7',
@@ -141,7 +160,7 @@ const adviser = [
     id: 'adviserid8',
     userId: 'userid8',
     sectionId: 'sectionid8',
-    facultyId: '22-1-01034',
+    facultyId: '22-1-01035',
     firstName: 'euj',
     lastName: 'Wang',
     middleName: 'Cal',
@@ -232,7 +251,7 @@ const adviser = [
     id: 'adviserid15',
     userId: 'userid15',
     sectionId: null,
-    facultyId: '22-1-01099',
+    facultyId: '22-1-01023',
     firstName: 'FirstName15',
     lastName: 'LastName15',
     middleName: 'MiddleName15',
@@ -395,7 +414,7 @@ const adviser = [
   suffix: 'Jr.',
   bdate: '07-07-2008',
   profilePic: null,
-  status: 'active',
+  status: 'pending',
 },
 {
   id: 'adviserid28',
@@ -487,7 +506,7 @@ const adviser = [
   suffix: 'Sr.',
   bdate: '07-07-2005',
   profilePic: null,
-  status: 'active',
+  status: 'pending',
 },
 {
   id: 'adviserid35',
@@ -526,7 +545,7 @@ const adviser = [
   suffix: 'Jr.',
   bdate: '07-07-2008',
   profilePic: null,
-  status: 'active',
+  status: 'pending',
 },
 {
   id: 'adviserid38',

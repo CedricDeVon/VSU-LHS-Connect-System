@@ -1,4 +1,4 @@
-import { addItem, getItems, updateItem, deleteItem } from './database';
+/*import { addItem, getItems, updateItem, deleteItem } from './database';
 
 async function testAddItem(){
     const newItem = {
@@ -28,4 +28,4 @@ async function testDeleteItem(){
 }
 
 testAddItem();
-testGetItems();
+testGetItems(); */

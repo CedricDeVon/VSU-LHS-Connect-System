@@ -15,6 +15,8 @@ useHead({
   <div>
     <NuxtLayout>
       <NuxtPage/>
-    </NuxtLayout> 
+      <UiVueSonner />
+    </NuxtLayout>
+    <UiSooner/>
   </div>
 </template>

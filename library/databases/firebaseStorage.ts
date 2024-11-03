@@ -1,5 +1,5 @@
-import firebaseApp from "firebase/app";
-import firebaseStorage from "firebase/storage";
+import * as firebaseApp from "firebase/app";
+import * as firebaseStorage from "firebase/storage";
 
 import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
 import { ParsedFile } from "../files/parsedFile";
@@ -14,7 +14,7 @@ export class FirebaseStorage extends Database {
   public constructor(folderPath: string) {
     super();
 
-    this._folderPath = `${ConfigurationReaders.nuxtConfigurationReader.ENVIRONMENT_NAME}/${folderPath}`;
+    this._folderPath = `${folderPath}`;
   }
 
   public get folderPath(): string {
@@ -133,6 +133,6 @@ export class FirebaseStorage extends Database {
   }
 
   private _generateCompleteFilePath(filePath: string): string {
-    return `${this._folderPath}/${filePath}`;
+    return `${ConfigurationReaders.nuxtConfigurationReader.ENVIRONMENT_NAME}/${this._folderPath}/${filePath}`;
   }
 }

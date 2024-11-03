@@ -3,10 +3,11 @@ import { XChaCha20Poly1305CipherCryptographyLayer } from "../cryptographyLayers/
 import { Argon2IdHashCryptographyLayer } from "../cryptographyLayers/argon2IdHashCryptographyLayer";
 
 import { Result } from "../results/result";
+import { EmptyCipherCryptographyLayer } from "../cryptographyLayers/emptyCipherCryptographyLayer";
 
 export class FirstCryptographyFormat extends CryptographyFormat {
   public constructor() {
-    super([new XChaCha20Poly1305CipherCryptographyLayer()], new Argon2IdHashCryptographyLayer());
+    super([new EmptyCipherCryptographyLayer()], new Argon2IdHashCryptographyLayer());
   }
 
   public async unwrap(plainText: string, hashText: string): Promise<Result> {

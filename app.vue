@@ -1,4 +1,5 @@
 <script setup lang="ts">
+
 useHead({
     title: "VSU-IHS Connect System",
     link: [

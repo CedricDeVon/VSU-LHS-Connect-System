@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { handleBackClick } from '~/composables/navigation';
+import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
+import { userSignUpStore } from '~/stores/userSignUp'
+
+const store = userSignUpStore()
+
+const submit = async () => {  
+  const result: any = await $fetch('/api/user/signUpSpecifics', {
+    method: 'POST',
+    body: {
+      firstName: store.firstName,
+      middleName: store.middleName,
+      lastName: store.lastName,
+      suffix: store.suffix,
+      birthdate: store.birthdate,
+      facultyId: store.facultyId,
+      gradeLevel: store.gradeLevel,
+      sectionName: store.sectionName
+    }
+  });
+  
+  if (result.isSuccessful) {
+    return navigateTo("/RegistrationSuccessful", { replace: true });
+
+  } else {
+    store.errorMessage = result.message;
+  }
+};
+
+</script>
+
 <template>
   <div class="flex min-h-screen">
     <div class="w-1/2  flex items-center justify-center bg-left">
@@ -92,125 +126,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-
-const signUpUsername = useState('signUpUsername');
-console.log(signUpUsername.value)
-
-//     const router = useRouter();
-// import { useRouter } from 'vue-router';
-// import { handleBackClick } from '~/composables/navigation';
-// import { getUserCount, createUser } from '~/data/user';
-// import { getAdvisers, addadviser } from '~/data/adviser';
-// import { getSectionIDByName } from '~/data/section';
-// import {ref, onMounted} from 'vue';
-
-// import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
-// import { section } from '~/data/section';
-
-// export default {
-//   name: 'SignupPage2',
-//   components: {
-//     DatePickerInput
-//   },
-//   setup() {
-//     const router = useRouter();
-//     const goToRegistrationSuccessPage = () => {
-//     router.push({ name: 'RegistrationSuccessful' });
-//     };
-
-//     const firstName = ref('');
-//     const middleName = ref('');
-//     const lastName = ref('');
-//     const suffix = ref('');
-//     const bdate = ref('');
-//     const facultyID = ref('');
-//     const errorMessage = ref('');
-//     const gradeLevel = ref('');
-//     const sectionName = ref('');
-//     const user = ref(null);
-
-//     onMounted(()=>{
-//       if(typeof window !== 'undefined'){
-//         const userData = sessionStorage.getItem('user');
-//         if(userData){
-//           user.value =  JSON.parse(userData);
-//         }
-//       }
-//       return user;
-//     });
-
-//     const handleSubmit = () => {
-//       if(!firstName.value){
-//         errorMessage.value = 'First Name is Required.';
-//         return;
-//       }
-//       if (!lastName.value){
-//         errorMessage.value = 'Last Name is Required.';
-//         return;
-//       }
-//       if(!bdate.value){
-//         errorMessage.value = 'Please input your birthdate.';
-//         return;
-//       }
-//       if(!facultyID.value){
-//         errorMessage.value = 'faculty ID is Required.';
-//         return;
-//       }
-//       if(!user.value){
-//         console.log('user doesn\'t exist');
-//         return;
-//       }
-//       if(!gradeLevel.value){
-//         errorMessage.value = 'Please choose year level.';
-//         return;
-//       }
-//       if(!sectionName.value){
-//         errorMessage.value = 'Please input the section';
-//         return;
-//       }
-//       //this may seem duplicating from the previous page but I think These values stored in sessionStorage 
-//       //might be used in validation of inputs later on especially in confirming that their facultyID matches the @vsu.edu.ph acct.
-//       //and also, to confirm everything before adding to db, that is why I put here the adding of user to dataset instead of adding it right after the 1st page since we have back option in this page2 
-//       const newUser = {
-//       userId: user.value.userId,
-//       emailAdd: user.value.emailAdd,
-//       username: user.value.username,
-//       password: user.value.password,
-//       canAccess: false,
-//       }
-//       createUser(newUser); 
-
-//       const secID = getSectionIDByName(sectionName.value, '2024-2025');//This academicYear should be something like default global variable? naa bay ana dinhi? hahhah na machange lng siya when we reset the AY.
-//       const id = (getAdvisers()).length + 1;
-
-//       const newAdviser = {
-//         id: `adviserid${id}`,
-//         userId: user.value.userId,
-//         sectionId: secID,
-//         facultyId: facultyID.value,
-//         firstName: firstName.value,
-//         lastName: lastName.value,
-//         middleName: middleName.value,
-//         suffix: suffix.value,
-//         bdate: bdate.value,
-//         profilePic: null,
-//         status: 'pending',
-//       }
-//         addadviser(newAdviser);
-//         goToRegistrationSuccessPage();
-//     };
-
-//     return { errorMessage, gradeLevel, sectionName, user, firstName, middleName, lastName, suffix, bdate, facultyID, handleSubmit, goToRegistrationSuccessPage };
-//   },
-//   methods: {
-//     goBack() {
-//       this.$router.push('/');
-//     }
-//   }
-// };
-</script>
-
 <style scoped>
 .bg-left {
   background-color: #fffef1;
@@ -229,3 +144,178 @@ console.log(signUpUsername.value)
   background-color: white;
 }
 </style>
+// onMounted(()=>{
+  //   if(typeof window !== 'undefined'){
+  //     const userData = sessionStorage.getItem('user');
+  //     if(userData){
+  //       user.value =  JSON.parse(userData);
+  //     }
+  //   }
+  //   return user;
+  // });
+  
+  // const handleSubmit = () => {
+  //   if(!firstName.value){
+  //     errorMessage.value = 'First Name is Required.';
+  //     return;
+  //   }
+  //   if (!lastName.value){
+  //     errorMessage.value = 'Last Name is Required.';
+  //     return;
+  //   }
+  //   if(!bdate.value){
+  //     errorMessage.value = 'Please input your birthdate.';
+  //     return;
+  //   }
+  //   if(!facultyID.value){
+  //     errorMessage.value = 'faculty ID is Required.';
+  //     return;
+  //   }
+  //   if(!user.value){
+  //     console.log('user doesn\'t exist');
+  //     return;
+  //   }
+  //   if(!gradeLevel.value){
+  //     errorMessage.value = 'Please choose year level.';
+  //     return;
+  //   }
+  //   if(!sectionName.value){
+  //     errorMessage.value = 'Please input the section';
+  //     return;
+  //   }
+  //   //this may seem duplicating from the previous page but I think These values stored in sessionStorage 
+  //   //might be used in validation of inputs later on especially in confirming that their facultyID matches the @vsu.edu.ph acct.
+  //   //and also, to confirm everything before adding to db, that is why I put here the adding of user to dataset instead of adding it right after the 1st page since we have back option in this page2 
+  //   const newUser = {
+  //   userId: user.value.userId,
+  //   emailAdd: user.value.emailAdd,
+  //   username: user.value.username,
+  //   password: user.value.password,
+  //   canAccess: false,
+  //   }
+  //   createUser(newUser); 
+  
+  //   const secID = getSectionIDByName(sectionName.value, '2024-2025');//This academicYear should be something like default global variable? naa bay ana dinhi? hahhah na machange lng siya when we reset the AY.
+  //   const id = (getAdvisers()).length + 1;
+  
+  //   const newAdviser = {
+  //     id: `adviserid${id}`,
+  //     userId: user.value.userId,
+  //     sectionId: secID,
+  //     facultyId: facultyID.value,
+  //     firstName: firstName.value,
+  //     lastName: lastName.value,
+  //     middleName: middleName.value,
+  //     suffix: suffix.value,
+  //     bdate: bdate.value,
+  //     profilePic: null,
+  //     status: 'pending',
+  //   }
+  //     addadviser(newAdviser);
+  //     goToRegistrationSuccessPage();
+  // };
+
+
+
+  
+// export default {
+  //   name: 'SignupPage2',
+  //   components: {
+  //     DatePickerInput
+  //   },
+  //   setup() {
+  //     const router = useRouter();
+  //     const goToRegistrationSuccessPage = () => {
+  //     router.push({ name: 'RegistrationSuccessful' });
+  //     };
+  
+  //     const firstName = ref('');
+  //     const middleName = ref('');
+  //     const lastName = ref('');
+  //     const suffix = ref('');
+  //     const bdate = ref('');
+  //     const facultyID = ref('');
+  //     const errorMessage = ref('');
+  //     const gradeLevel = ref('');
+  //     const sectionName = ref('');
+  //     const user = ref(null);
+  
+  //     onMounted(()=>{
+  //       if(typeof window !== 'undefined'){
+  //         const userData = sessionStorage.getItem('user');
+  //         if(userData){
+  //           user.value =  JSON.parse(userData);
+  //         }
+  //       }
+  //       return user;
+  //     });
+  
+  //     const handleSubmit = () => {
+  //       if(!firstName.value){
+  //         errorMessage.value = 'First Name is Required.';
+  //         return;
+  //       }
+  //       if (!lastName.value){
+  //         errorMessage.value = 'Last Name is Required.';
+  //         return;
+  //       }
+  //       if(!bdate.value){
+  //         errorMessage.value = 'Please input your birthdate.';
+  //         return;
+  //       }
+  //       if(!facultyID.value){
+  //         errorMessage.value = 'faculty ID is Required.';
+  //         return;
+  //       }
+  //       if(!user.value){
+  //         console.log('user doesn\'t exist');
+  //         return;
+  //       }
+  //       if(!gradeLevel.value){
+  //         errorMessage.value = 'Please choose year level.';
+  //         return;
+  //       }
+  //       if(!sectionName.value){
+  //         errorMessage.value = 'Please input the section';
+  //         return;
+  //       }
+  //       //this may seem duplicating from the previous page but I think These values stored in sessionStorage 
+  //       //might be used in validation of inputs later on especially in confirming that their facultyID matches the @vsu.edu.ph acct.
+  //       //and also, to confirm everything before adding to db, that is why I put here the adding of user to dataset instead of adding it right after the 1st page since we have back option in this page2 
+  //       const newUser = {
+  //       userId: user.value.userId,
+  //       emailAdd: user.value.emailAdd,
+  //       username: user.value.username,
+  //       password: user.value.password,
+  //       canAccess: false,
+  //       }
+  //       createUser(newUser); 
+  
+  //       const secID = getSectionIDByName(sectionName.value, '2024-2025');//This academicYear should be something like default global variable? naa bay ana dinhi? hahhah na machange lng siya when we reset the AY.
+  //       const id = (getAdvisers()).length + 1;
+  
+  //       const newAdviser = {
+  //         id: `adviserid${id}`,
+  //         userId: user.value.userId,
+  //         sectionId: secID,
+  //         facultyId: facultyID.value,
+  //         firstName: firstName.value,
+  //         lastName: lastName.value,
+  //         middleName: middleName.value,
+  //         suffix: suffix.value,
+  //         bdate: bdate.value,
+  //         profilePic: null,
+  //         status: 'pending',
+  //       }
+  //         addadviser(newAdviser);
+  //         goToRegistrationSuccessPage();
+  //     };
+  
+  //     return { errorMessage, gradeLevel, sectionName, user, firstName, middleName, lastName, suffix, bdate, facultyID, handleSubmit, goToRegistrationSuccessPage };
+  //   },
+  //   methods: {
+  //     goBack() {
+  //       this.$router.push('/');
+  //     }
+  //   }
+  // };

@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "nuxt-vuefire",
     "nuxt-file-storage",
     "@nuxt/image",
+    "@pinia/nuxt"
   ],
   
   fileStorage: {
@@ -105,8 +106,3 @@ export default defineNuxtConfig({
     // Options
   }
 });
-
-
-
-
- 

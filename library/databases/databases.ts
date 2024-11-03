@@ -1,5 +1,9 @@
 import { FirebaseStorage } from "./firebaseStorage";
 import { FirebaseDatabase } from "./firebaseDatabase";
+import type { Result } from "../results/result";
+import { FailedResult } from "../results/failedResult";
+import { SuccessfulResult } from "../results/successfulResult";
+import { where } from "firebase/firestore";
 
 export class Databases {
     private static readonly _userFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('user');
@@ -36,5 +40,17 @@ export class Databases {
 
     public static get caseConferenceFirebaseStorage(): FirebaseStorage {
         return Databases._caseConferenceFirebaseStorage;
+    }
+
+    public static async getUser(email: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._userFirebaseDatabase.queryOne(
+                where("email", "==", email)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
     }
 }

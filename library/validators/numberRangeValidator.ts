@@ -21,7 +21,7 @@ export class NumberRangeValidator extends Validator {
     return { ...this._configurations };
   }
 
-  public validate(value: any): Result {
+  public async validate(value: any): Promise<Result> {
     return (validator.isNumeric(value, this._configurations)) ?
       new SuccessfulResult(value) :
       new FailedResult(`'${value}' must be greater than or equal to '${this._configurations.min}' and less than or equal to '${this._configurations.max}'`);

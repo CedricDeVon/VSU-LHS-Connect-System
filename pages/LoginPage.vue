@@ -1,30 +1,25 @@
 <script setup lang="ts">
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { toTypedSchema } from '@vee-validate/yup';
+import { userLoginStore } from '@/stores/userLogin'
 
-const auth = useFirebaseAuth()!;
-const loginErrorMessage = useState('loginErrorMessage');
-const { handleSubmit, isSubmitting } = useForm({
-  validationSchema: toTypedSchema(loginSchema),
+const store = userLoginStore()
+
+onMounted(() => {
+  store.reset();
 });
 
-const submit = handleSubmit(async (values) => {
-  const loading = useSonner.loading("Error", {
-    description: "Please re-check your email and password",
+const submit = async () => {  
+  const result: any = await $fetch('/api/user/login', {
+    method: 'POST',
+    body: { email: store.email, password: store.password }
   });
-
-  try {
-    await signInWithEmailAndPassword(auth, values.email, values.password);
-    useSonner.success("Successful", { id: loading });
+  if (result.isSuccessful) {
     return navigateTo("/AdminDashboard", { replace: true });
 
-  } catch (error: any) {
-    useSonner.error("Error", {
-      id: loading,
-      description: error.message
-    });
+  } else {
+    store.errorMessage = result.message;
   }
-});
+};
+
 </script>
 
 <template>
@@ -32,27 +27,25 @@ const submit = handleSubmit(async (values) => {
     <div class="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
       <h1 class="text-2xl font-semibold text-center text-gray-800 mb-6">Log In</h1>
       <form @submit.prevent="submit">
-        <fieldset :disabled="isSubmitting">
-          <div class="mb-4">
+        <div class="mb-4">
             <label for="email" class="block text-gray-700 mb-1">Email</label>
-            <UiVeeInput type="email" id="email" placeholder="Email" required
+            <input v-model="store.email" type="email" id="email" placeholder="Email" required
               class="w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
           <div class="mb-6">
             <label for="password" class="block text-gray-700 mb-1">Password</label>
-            <UiVeeInput type="password" id="password" placeholder="Password" required
+            <input v-model="store.password" type="password" id="password" placeholder="Password" required
               class="w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
           </div>
-          <div v-if ="errorMessage" class="text-red-500 mb-4">{{  errorMessage }}</div>
-          <UiButton type="submit"
+          <div v-if="store.errorMessage" class="text-red-500 mb-4">{{ store.errorMessage }}</div>
+          <button type="submit"
             class="w-full bg-blue-500 p-2 text-white rounded-md hover:bg-blue-600 transition duration-300">
             Log In
-          </UiButton>
+          </button>
           <div class="text-center mt-4">
             <p class="text-gray-500">OR</p>
             <NuxtLink to="/SignupPage1" class="text-blue-500 hover:underline">Register Here</NuxtLink>
           </div>
-        </fieldset>
       </form>
     </div>
   </div>

@@ -5,7 +5,7 @@ import { XChaCha20Poly1305CipherCryptographyLayer } from "../cryptographyLayers/
 
 export class SecondCryptographyFormat extends CryptographyFormat {
   public constructor() {
-    super([new XChaCha20Poly1305CipherCryptographyLayer(), new AesCipherCryptographyLayer()]);
+    super([new XChaCha20Poly1305CipherCryptographyLayer()]);
   }
 
   public async unwrap(hashText: string): Promise<Result> {

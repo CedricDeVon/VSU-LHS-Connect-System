@@ -27,34 +27,34 @@ export class PasswordValidator extends Validator {
     };
   }
 
-  public validate(value: any): Result {
+  public async validate(value: any): Promise<Result> {
     if (typeof value !== 'string') {
       return new FailedResult(`'${value}' must be a string`);
     }
 
-    const { minimumLength, maximumLength, minimumNumberCount, minimumSymbolCount, minimumLowercaseCount, minimumUppercaseCount } = this._configurations;
-    if (!validator.isStrongPassword(value, { minLength: minimumLength })) {
-      return new FailedResult(`Passwords must contain at least '${minimumLength}' characters`);
+    const { minLength, maxLength, minNumbers, minSymbols, minLowercase, minUppercase } = this._configurations;
+    if (!validator.isStrongPassword(value, { minLength })) {
+      return new FailedResult(`Passwords must contain at least '${minLength}' characters`);
     }
 
-    if (value.length > maximumLength) {
-      return new FailedResult(`Passwords must contain at most '${maximumLength}' characters`);
+    if (value.length > maxLength) {
+      return new FailedResult(`Passwords must contain at most '${maxLength}' characters`);
     }
 
-    if (!validator.isStrongPassword(value, { minNumbers: minimumNumberCount })) {
-      return new FailedResult(`Passwords must contain at least '${minimumNumberCount}' numbers`);
+    if (!validator.isStrongPassword(value, { minNumbers })) {
+      return new FailedResult(`Passwords must contain at least '${minNumbers}' numbers`);
     }
 
-    if (!validator.isStrongPassword(value, { minSymbols: minimumSymbolCount })) {
-      return new FailedResult(`Passwords must contain at least '${minimumSymbolCount}' symbols`);
+    if (!validator.isStrongPassword(value, { minSymbols })) {
+      return new FailedResult(`Passwords must contain at least '${minSymbols}' symbols`);
     }
 
-    if (!validator.isStrongPassword(value, { minLowercase: minimumLowercaseCount })) {
-      return new FailedResult(`Passwords must contain at least '${minimumLowercaseCount}' lowercased characters`);
+    if (!validator.isStrongPassword(value, { minLowercase })) {
+      return new FailedResult(`Passwords must contain at least '${minLowercase}' lowercased characters`);
     }
 
-    if (!validator.isStrongPassword(value, { minUppercase: minimumUppercaseCount })) {
-      return new FailedResult(`Passwords must contain at least '${minimumUppercaseCount}' uppercased characters`);
+    if (!validator.isStrongPassword(value, { minUppercase })) {
+      return new FailedResult(`Passwords must contain at least '${minUppercase}' uppercased characters`);
     }
     
     return new SuccessfulResult(value);

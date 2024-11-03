@@ -8,16 +8,14 @@ import { CipherCryptographyLayer } from "./cipherCryptographyLayer";
 import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
 
 export class XChaCha20Poly1305CipherCryptographyLayer extends CipherCryptographyLayer {
-  private static _configurations = xchacha20poly1305(
-    utf8ToBytes(ConfigurationReaders.nuxtConfigurationReader.CRYPTOGRAPHY_KEY),
-    utf8ToBytes(ConfigurationReaders.nuxtConfigurationReader.CRYPTOGRAPHY_NONCE)
-  );
-
   public async wrap(plainText: string): Promise<Result> {
     try {
-      return new SuccessfulResult(bytesToHex(
-        XChaCha20Poly1305CipherCryptographyLayer._configurations.encrypt(utf8ToBytes(plainText))
-      ));
+      const configurations = xchacha20poly1305(
+        utf8ToBytes(ConfigurationReaders.nuxtConfigurationReader.CRYPTOGRAPHY_KEY),
+        utf8ToBytes(ConfigurationReaders.nuxtConfigurationReader.CRYPTOGRAPHY_NONCE)
+      );
+      return new SuccessfulResult(bytesToHex(configurations.encrypt(utf8ToBytes(plainText))
+));
 
     } catch (error: any) {
       return new FailedResult(error.message);
@@ -26,7 +24,11 @@ export class XChaCha20Poly1305CipherCryptographyLayer extends CipherCryptography
 
   public async unwrap(cipherText: string): Promise<Result> {
     try {
-      return new SuccessfulResult(XChaCha20Poly1305CipherCryptographyLayer._configurations.decrypt(hexToBytes(cipherText)));
+      const configurations = xchacha20poly1305(
+        utf8ToBytes(ConfigurationReaders.nuxtConfigurationReader.CRYPTOGRAPHY_KEY),
+        utf8ToBytes(ConfigurationReaders.nuxtConfigurationReader.CRYPTOGRAPHY_NONCE)
+      );
+      return new SuccessfulResult(configurations.decrypt(hexToBytes(cipherText)));
 
     } catch (error: any) {
       return new FailedResult(error.message);

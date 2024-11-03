@@ -2,6 +2,10 @@
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 
+definePageMeta({
+  middleware: ['handle-current-user']
+});
+
 const reportsCount = useState('reportsCount');
 const studentsCount = useState('studentsCount');
 const accountsCount = useState('accountsCount');

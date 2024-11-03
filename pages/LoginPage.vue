@@ -8,8 +8,8 @@ const { handleSubmit, isSubmitting } = useForm({
 });
 
 const submit = handleSubmit(async (values) => {
-  const loading = useSonner.loading("Signing in", {
-    description: "Please wait...",
+  const loading = useSonner.loading("Error", {
+    description: "Please re-check your email and password",
   });
 
   try {
@@ -18,8 +18,9 @@ const submit = handleSubmit(async (values) => {
     return navigateTo("/AdminDashboard", { replace: true });
 
   } catch (error: any) {
-    useSonner.error("Please re-check your email and password", {
+    useSonner.error("Error", {
       id: loading,
+      description: error.message
     });
   }
 });

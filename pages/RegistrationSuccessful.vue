@@ -1,3 +1,7 @@
+<script setup lang="ts">
+
+</script>
+
 <template>
     <div class="relative flex items-center justify-center min-h-screen bg-gray-100 overflow-hidden">
         <!-- Background Image -->
@@ -20,9 +24,3 @@
         </div>
     </div>
 </template>
-
-<script>
-export default {
-    name: "RegistrationSuccessful",
-};
-</script>

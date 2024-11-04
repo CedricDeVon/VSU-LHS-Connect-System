@@ -13,7 +13,7 @@ export class UserExistenceValidator extends Validator {
             if (result.data === undefined) {
                 throw new Error("User Does Not Exist");
             }
-            return new SuccessfulResult(value);
+            return new SuccessfulResult(result.data, "User Already Exists");
 
         } catch (error: any) {
             return new FailedResult(error.message);

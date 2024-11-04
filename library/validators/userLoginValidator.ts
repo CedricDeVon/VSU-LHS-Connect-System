@@ -2,8 +2,6 @@ import { Result } from "../results/result";
 import { FailedResult } from '../results/failedResult';
 import { SuccessfulResult } from "../results/successfulResult";
 import { Validators } from "./validators";
-import { Databases } from "../databases/databases";
-import { CryptographyFormats } from "../cryptographyFormats/cryptographyFormats";
 import { Validator } from "./validator";
 
 export class UserLoginValidator extends Validator {
@@ -19,13 +17,15 @@ export class UserLoginValidator extends Validator {
                 throw new Error(result.message);
             }
             result = await Validators.userExistenceValidator.validate(email);
-            if (result.isSuccessful) {
+            if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
             const userData = result.data
-            result = await CryptographyFormats.firstCryptographyFormat.unwrap(password, result.data.password)
+            result = await Validators.userPasswordHashValidator.validate({
+                rawPassword: password, hashedPassword: userData.password
+            });
             if (result.isNotSuccessful) {
-                throw new Error("User Password Does Not Match");
+                throw new Error(result.message);
             }
             return new SuccessfulResult(userData);
 

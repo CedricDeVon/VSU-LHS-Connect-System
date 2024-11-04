@@ -13,11 +13,12 @@ import { DataURIValidator } from './dataURIValidator';
 import { JSONValidator } from './jsonValidator';
 import { JSONWebTokenValidator } from './jsonWebToken';
 import { UserLoginValidator } from './userLoginValidator';
-import { UserSignUpBaseValidator } './userSignUpBaseValidator';
-import { UserSignUpSpecificsValidator } './userSignUpSpecificsValidator';
+import { UserSignUpBaseValidator } from './userSignUpBaseValidator';
+import { UserSignUpSpecificsValidator } from './userSignUpSpecificsValidator';
 import { UserNameValidator } from './userNameValidator';
 import { ConfirmPasswordValidator } from './confirmPasswordValidator';
 import { UserExistenceValidator } from './userExistenceValidator';
+import { UserPasswordHashValidator } from './userPasswordHashValidator';
 
 export class Validators {
     private static readonly _emptyValidator: EmptyValidator = new EmptyValidator();
@@ -60,6 +61,12 @@ export class Validators {
     
     private static readonly _userSignUpSpecificsValidator: UserSignUpSpecificsValidator = new UserSignUpSpecificsValidator();
     
+    private static readonly _userPasswordHashValidator: UserPasswordHashValidator = new UserPasswordHashValidator();
+
+    public static get userPasswordHashValidator(): UserPasswordHashValidator {
+        return Validators._userPasswordHashValidator;
+    }
+
     public static get userSignUpSpecificsValidator(): UserSignUpSpecificsValidator {
         return Validators._userSignUpSpecificsValidator;
     }

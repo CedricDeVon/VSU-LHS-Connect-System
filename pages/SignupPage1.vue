@@ -1,23 +1,13 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { userSignUpStore } from '~/stores/userSignUp';
 import { handleBackClick } from '~/composables/navigation';
-import { ref, onMounted } from 'vue';
-import { Generators } from '~/library/generators/generators';
-import { userSignUpStore } from '~/stores/userSignUp'
 
 const store = userSignUpStore()
 
 const submit = async () => {  
   const result: any = await $fetch('/api/user/signUpBase', {
-    method: 'POST',
-    body: {
-      userName: store.userName,
-      email: store.email,
-      password: store.password,
-      confirmPassword: store.confirmPassword
-    }
+    method: 'POST', body: store.getUserData()
   });
-
   if (result.isSuccessful) {
     return navigateTo("/SignupPage2", { replace: true });
 
@@ -28,6 +18,7 @@ const submit = async () => {
 
 const goBack = () => {
   handleBackClick();
+  store.resetAllData();
 };
 
 </script>
@@ -86,7 +77,7 @@ const goBack = () => {
             <div class="text-center text-gray-500 my-2">OR</div>
             <button
               type="button"
-              @click="handleBackClick"
+              @click="goBack"
               class="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-500 transition duration-300"
             >
             BACK

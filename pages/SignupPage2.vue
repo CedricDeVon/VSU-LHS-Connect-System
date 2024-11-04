@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { handleBackClick } from '~/composables/navigation';
 import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
 import { userSignUpStore } from '~/stores/userSignUp'
 
@@ -9,19 +6,8 @@ const store = userSignUpStore()
 
 const submit = async () => {  
   const result: any = await $fetch('/api/user/signUpSpecifics', {
-    method: 'POST',
-    body: {
-      firstName: store.firstName,
-      middleName: store.middleName,
-      lastName: store.lastName,
-      suffix: store.suffix,
-      birthdate: store.birthdate,
-      facultyId: store.facultyId,
-      gradeLevel: store.gradeLevel,
-      sectionName: store.sectionName
-    }
+    method: 'POST', body: store.getAdviserData()
   });
-  
   if (result.isSuccessful) {
     return navigateTo("/RegistrationSuccessful", { replace: true });
 
@@ -29,6 +15,14 @@ const submit = async () => {
     store.errorMessage = result.message;
   }
 };
+
+const goBack = () => {
+  return navigateTo("/SignupPage1", { replace: true });
+};
+
+onMounted(() => {
+  store.resetAdviserData();
+});
 
 </script>
 
@@ -38,15 +32,15 @@ const submit = async () => {
       <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden signup-outer-container">
         <div class="w-full p-8 bg-amber-50 signup-container">
           <h2 class="text-2xl font-semibold text-green-800 mb-6">Personal Details</h2>
-          <form @submit.prevent="handleSubmit">
+          <form @submit.prevent="submit">
               <div class="mb-4">
                 <label class="block text-green-800 mb-1">First Name</label>
-                <input type="text" v-model="firstName" placeholder="Enter first name"
+                <input type="text" v-model="store.firstName" placeholder="Enter first name"
                   class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
               </div>
               <div class="mb-4">
                 <label class="block text-green-800 mb-1">Middle Name</label>
-                <input type="text" v-model="middleName" placeholder="Enter middle name"
+                <input type="text" v-model="store.middleName" placeholder="Enter middle name"
                   class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
               </div>
 
@@ -54,33 +48,33 @@ const submit = async () => {
                 <div class="flex items-end space-x-4">
                   <div class="w-3/4">
                     <label class="block text-green-800 mb-1">Last Name</label>
-                    <input type="text" v-model="lastName" placeholder="Enter last name"
+                    <input type="text" v-model="store.lastName" placeholder="Enter last name"
                       class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
                   </div>
 
                   <div class="flex items-center space-x-2">
-                    <input type="checkbox" v-model="hasSuffix"
+                    <input type="checkbox" v-model="store.suffix"
                       class="h-4 w-4 text-green-500 border-gray-300 rounded focus:ring-green-500" />
                     <label class="text-green-800">Add Suffix</label>
                   </div>
                 </div>
 
                 <div class="flex space-x-4 mt-4">
-                  <div v-if="hasSuffix" class="w-1/4">
+                  <div v-if="store.suffix" class="w-1/4">
                     <label class="block text-green-800 mb-1">Suffix</label>
-                    <input type="text" v-model="suffix" placeholder="e.g., Jr., Sr."
+                    <input type="text" v-model="store.suffix" placeholder="e.g., Jr., Sr."
                       class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
                   </div>
 
-                  <div :class="hasSuffix ? 'w-3/4' : 'w-full'">
+                  <div :class="store.suffix ? 'w-3/4' : 'w-full'">
                     <label class="block text-green-800 mb-1">Birthdate</label>
-                    <DatePickerInput v-model="bdate"></DatePickerInput>
+                    <DatePickerInput v-model="store.birthdate"></DatePickerInput>
                   </div>
                 </div>
                 <div class="flex space-x-4 mt-4 mb-6">
                   <div class="w-1/2">
                     <label class="block text-green-800 mb-1">Grade Level</label>
-                    <select v-model="gradeLevel"
+                    <select v-model="store.gradeLevel"
                       class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                       <option value="" disabled>Select Grade Level</option>
                       <option value="7">Grade 7</option>
@@ -94,24 +88,24 @@ const submit = async () => {
 
                   <div class="w-1/2">
                     <label class="block text-green-800 mb-1">Section Name</label>
-                    <input type="text" v-model="sectionName" placeholder="Enter section name"
+                    <input type="text" v-model="store.sectionName" placeholder="Enter section name"
                       class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
                   </div>
                 </div>
               
                 <div >
                   <label class="block text-green-800">Faculty Identification Number</label>
-                  <input type="text" v-model="facultyID" placeholder="Enter faculty ID"
+                  <input type="text" v-model="store.facultyId" placeholder="Enter faculty ID"
                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" />
                 </div>
               </div>
-              <div v-if ="errorMessage" class="text-red-500 mb-4">{{  errorMessage }}</div>
+              <div v-if="store.errorMessage" class="text-red-500 mb-4">{{  store.errorMessage }}</div>
             <button type="submit"
               class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2" >
               PROCEED
             </button>
             <div class="text-center text-gray-500 my-2">OR</div>
-            <button type="button" @click="handleBackClick"
+            <button type="button" @click="goBack"
               class="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-500 transition duration-300">
               BACK
 

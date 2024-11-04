@@ -3,15 +3,8 @@ import { userLoginStore } from '@/stores/userLogin'
 
 const store = userLoginStore()
 
-onMounted(() => {
-  store.reset();
-});
-
 const submit = async () => {  
-  const result: any = await $fetch('/api/user/login', {
-    method: 'POST',
-    body: { email: store.email, password: store.password }
-  });
+  const result: any = await $fetch('/api/user/login', { method: 'POST', body: store.getData() });
   if (result.isSuccessful) {
     return navigateTo("/AdminDashboard", { replace: true });
 
@@ -19,6 +12,10 @@ const submit = async () => {
     store.errorMessage = result.message;
   }
 };
+
+onMounted(() => {
+  store.reset();
+});
 
 </script>
 

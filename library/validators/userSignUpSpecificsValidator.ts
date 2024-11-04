@@ -3,8 +3,9 @@ import { FailedResult } from '../results/failedResult';
 import { SuccessfulResult } from "../results/successfulResult";
 import { Validators } from "./validators";
 import { Databases } from "../databases/databases";
+import { Validator } from "./validator";
 
-export class UserSignUpSpecificsValidator {
+export class UserSignUpSpecificsValidator extends Validator {
     public async validate(value: any): Promise<Result> {
         try {
             const { firstName, middleName, lastName, suffix, birthdate, facultyId, gradeLevel, sectionName } = value;

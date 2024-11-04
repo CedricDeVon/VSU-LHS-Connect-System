@@ -2,9 +2,9 @@ import { Result } from "../results/result";
 import { FailedResult } from '../results/failedResult';
 import { SuccessfulResult } from "../results/successfulResult";
 import { Validators } from "./validators";
-import { Databases } from "../databases/databases";
+import { Validator } from "./validator";
 
-export class UserSignUpBaseValidator {
+export class UserSignUpBaseValidator extends Validator {
     public async validate(value: any): Promise<Result> {
         try {
             const { userName, email, password, confirmPassword } = value;
@@ -16,9 +16,10 @@ export class UserSignUpBaseValidator {
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
-            result = await Databases.getUser(email);
-            if (result.data !== undefined) {
-                throw new Error("User Already Exists");
+            result = await Validators.userExistenceValidator.validate(email);
+            console.log(result);
+            if (result.isSuccessful) {
+                throw new Error(result.message);
             }
             result = await Validators.passwordValidator.validate(password);
             if (result.isNotSuccessful) {

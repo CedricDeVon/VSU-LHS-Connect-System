@@ -15,7 +15,7 @@ reportsCount.value = studentsCount.value = accountsCount.value = 0;
 </script>
 
 <template>
-  <div class="flex h-screen">
+  <div class="general flex h-screen">
     <!-- Sidebar -->
     <AdminSidebar />
 

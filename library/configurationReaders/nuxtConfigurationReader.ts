@@ -113,6 +113,13 @@ export class NuxtConfigurationReader extends ConfigurationReader {
         return result.data === 'true';
     }
 
+    public get USER_TOKEN_DURATION_IN_SECONDS(): number {
+        const result: Result = this.getPrivateValue('userTokenDurationInSeconds');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return parseInt(result.data);
+    }
+
     private _throwErrorIfResultIsUnsuccessful(result: Result): void {
         if (result.isNotSuccessful) {
             throw new Error(result.message);

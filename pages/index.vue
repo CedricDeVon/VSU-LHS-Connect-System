@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 definePageMeta({
-  middleware: ['handle-current-user']
+  middleware: ['validate-user']
 });
 
 </script>

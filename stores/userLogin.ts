@@ -5,15 +5,17 @@ export const userLoginStore = defineStore('userLoginStore', () => {
   const password = ref('');
   const errorMessage = ref('');
 
-  const getData = () => {
-    return { email, password };
+  const getAllData = () => {
+    return {
+      email: email.value,
+      password: password.value };
   }
 
-  function reset() {
+  function resetAllData() {
     email.value = '';
     password.value = '';
     errorMessage.value = '';
   }
 
-  return { email, password, errorMessage, reset, getData };
+  return { email, password, errorMessage, resetAllData, getAllData };
 });

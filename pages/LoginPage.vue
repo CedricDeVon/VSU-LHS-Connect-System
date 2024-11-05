@@ -1,20 +1,53 @@
 <script setup lang="ts">
 import { userLoginStore } from '@/stores/userLogin'
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { FailedResult } from '~/library/results/failedResult';
+import type { Result } from '~/library/results/result';
+import { SuccessfulResult } from '~/library/results/successfulResult';
 
 const store = userLoginStore()
+const auth = useFirebaseAuth()!;
 
 const submit = async () => {  
-  const result: any = await $fetch('/api/user/login', { method: 'POST', body: store.getData() });
-  if (result.isSuccessful) {
-    return navigateTo("/AdminDashboard", { replace: true });
+  const body = store.getAllData();
+  const apiResult: any = await $fetch('/api/user/logIn', { method: 'POST', body });
+  if (!apiResult.isSuccessful) {
+    store.errorMessage = apiResult.message;
+    return;
+  }
+  const firebaseResult = await validateUserPassword();
+  if (firebaseResult.isNotSuccessful) {
+    store.errorMessage = firebaseResult.message;
+    return;
+  }
 
-  } else {
-    store.errorMessage = result.message;
+  store.resetAllData();
+  if (apiResult.isAdmin) { // Admin
+    return navigateTo("/AdminDashboard", { replace: true });
+  }
+  else if (!apiResult.status) { // Adviser
+    return navigateTo("/RegistrationSuccessful", { replace: true });
+  }
+  else {
+    return navigateTo("/RegistrationSuccessful", { replace: true });
   }
 };
 
+
+
+async function validateUserPassword(): Promise<Result> {
+  try {
+    const userData = store.getAllData();
+    await signInWithEmailAndPassword(auth, userData.email, userData.password);
+    return new SuccessfulResult();
+
+  } catch (error: any) {
+    return new FailedResult('User password does not match');
+  }
+}
+
 onMounted(() => {
-  store.reset();
+  store.resetAllData();
 });
 
 </script>

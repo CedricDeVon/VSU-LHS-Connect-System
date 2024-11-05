@@ -77,6 +77,27 @@ export class NuxtConfigurationReader extends ConfigurationReader {
         
         return result.data;
     }
+    
+    public get EMAIL_SERVICE_ID(): string {
+        const result: Result = this.getPrivateValue('emailServiceId');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
+    
+    public get EMAIL_TEMPLATE_ID(): string {
+        const result: Result = this.getPrivateValue('emailTemplateId');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
+
+    public get EMAIL_PUBLIC_KEY(): string {
+        const result: Result = this.getPrivateValue('emailPublicKey');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
 
     public get IS_CONSOLE_LOGGING_ENABLED(): boolean {
         const result: Result = this.getPublicValue('isConsoleLoggingEnabled');

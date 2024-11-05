@@ -31,6 +31,7 @@ export const getUserId = (firstname, lastname) => {
 
 export const addadviser = (adv) => {
   adviser.push(adv);
+  console.log(adviser);
 };
 
 export const updateAdviserThruFacID = (id, newData) => {

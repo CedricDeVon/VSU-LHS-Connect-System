@@ -12,6 +12,13 @@ import { URLValidator } from './urlValidator';
 import { DataURIValidator } from './dataURIValidator';
 import { JSONValidator } from './jsonValidator';
 import { JSONWebTokenValidator } from './jsonWebToken';
+import { UserLoginValidator } from './userLoginValidator';
+import { UserSignUpBaseValidator } from './userSignUpBaseValidator';
+import { UserSignUpSpecificsValidator } from './userSignUpSpecificsValidator';
+import { UserNameValidator } from './userNameValidator';
+import { ConfirmPasswordValidator } from './confirmPasswordValidator';
+import { UserExistenceValidator } from './userExistenceValidator';
+import { UserPasswordHashValidator } from './userPasswordHashValidator';
 
 export class Validators {
     private static readonly _emptyValidator: EmptyValidator = new EmptyValidator();
@@ -42,6 +49,36 @@ export class Validators {
     
     private static readonly _jsonWebTokenValidator: JSONWebTokenValidator = new JSONWebTokenValidator();
 
+    private static readonly _userLoginValidator: UserLoginValidator = new UserLoginValidator();
+
+    private static readonly _userSignUpBaseValidator: UserSignUpBaseValidator = new UserSignUpBaseValidator();
+
+    private static readonly _userNameValidator: UserNameValidator = new UserNameValidator();
+
+    private static readonly _confirmPasswordValidator: ConfirmPasswordValidator = new ConfirmPasswordValidator();
+
+    private static readonly _userExistenceValidator: UserExistenceValidator = new UserExistenceValidator();
+    
+    private static readonly _userSignUpSpecificsValidator: UserSignUpSpecificsValidator = new UserSignUpSpecificsValidator();
+    
+    private static readonly _userPasswordHashValidator: UserPasswordHashValidator = new UserPasswordHashValidator();
+
+    public static get userPasswordHashValidator(): UserPasswordHashValidator {
+        return Validators._userPasswordHashValidator;
+    }
+
+    public static get userSignUpSpecificsValidator(): UserSignUpSpecificsValidator {
+        return Validators._userSignUpSpecificsValidator;
+    }
+
+    public static get userExistenceValidator(): UserExistenceValidator {
+        return Validators._userExistenceValidator;
+    }
+
+    public static get confirmPasswordValidator(): ConfirmPasswordValidator {
+        return Validators._confirmPasswordValidator;
+    }
+    
     public static get emptyValidator(): EmptyValidator {
         return Validators._emptyValidator;
     }
@@ -96,5 +133,17 @@ export class Validators {
     
     public static get jsonWebTokenValidator(): JSONWebTokenValidator {
         return Validators._jsonWebTokenValidator;
+    }
+
+    public static get userLoginValidator(): UserLoginValidator {
+        return Validators._userLoginValidator;
+    }
+
+    public static get userSignupBaseValidator(): UserSignUpBaseValidator {
+        return Validators._userSignUpBaseValidator;
+    }
+
+    public static get userNameValidator(): UserNameValidator {
+        return Validators._userNameValidator;
     }
 }

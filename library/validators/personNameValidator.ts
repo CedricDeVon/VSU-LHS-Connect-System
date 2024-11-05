@@ -6,7 +6,7 @@ import { FailedResult } from '../results/failedResult';
 import { SuccessfulResult } from "../results/successfulResult";
 
 export class PersonNameValidator extends Validator {
-  public validate(value: any): Result {
+  public async validate(value: any): Promise<Result> {
     return (validator.isAlpha(value)) ?
       new SuccessfulResult(value) :
       new FailedResult(`'${value}' is not a valid person name`);

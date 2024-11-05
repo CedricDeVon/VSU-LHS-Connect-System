@@ -6,9 +6,9 @@ import { FailedResult } from '../results/failedResult';
 import { SuccessfulResult } from "../results/successfulResult";
 
 export class EmailValidator extends Validator {
-  public validate(value: any): Result {
+  public async validate(value: any): Promise<Result> {
     return (validator.isEmail(value)) ?
       new SuccessfulResult(value) :
-      new FailedResult(`'${value}' is not a valid email`);
+      new FailedResult(`Email format is invalid`);
   }
 }

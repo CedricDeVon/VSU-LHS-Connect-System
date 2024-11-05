@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     "nuxt-vuefire",
     "nuxt-file-storage",
     "@nuxt/image",
+    "@pinia/nuxt"
   ],
   
   fileStorage: {
@@ -91,6 +92,9 @@ export default defineNuxtConfig({
     cryptographyKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_CRYPTOGRAPHY_KEY"),
     cryptographyNonce: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_CRYPTOGRAPHY_NONCE"),
     firebaseStorageUrl: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_FIREBASE_STORAGE_URL"),
+    emailServiceId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_SERVICE_ID"),
+    emailTemplateId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_TEMPLATE_ID"),
+    emailPublicKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_PUBLIC_KEY"),
     public: {
       environmentName: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_ENVIRONMENT_NAME"),
       isConsoleLoggingEnabled: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_IS_CONSOLE_LOGGING_ENABLED"),
@@ -102,8 +106,3 @@ export default defineNuxtConfig({
     // Options
   }
 });
-
-
-
-
- 

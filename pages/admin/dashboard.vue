@@ -1,3 +1,19 @@
+<script setup lang="ts">
+import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
+import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+
+// definePageMeta({
+//   middleware: ['handle-current-user']
+// });
+
+const reportsCount = useState('reportsCount');
+const studentsCount = useState('studentsCount');
+const accountsCount = useState('accountsCount');
+
+reportsCount.value = studentsCount.value = accountsCount.value = 0;
+
+</script>
+
 <template>
   <div class="general flex h-screen">
     <!-- Sidebar -->
@@ -77,49 +93,6 @@
     </div>
   </div>
 </template>
-
-<script>
-import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
-import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-import { getAdviserCount, getPendingAdviserCount } from '~/data/adviser';
-import { getEnrolledStudentsCount } from '~/data/student';
-import { getReportCount } from '~/data/initialReport';
-
-export default {
-  name: 'AdminDashboard',
-  components: {
-    AdminSidebar,AdminHeader
-  },
-  
-  data() {
-    return {
-      reportsCount: 0,
-      studentsCount: 0,
-      accountsCount: 0
-    };
-  },
-  created() {
-      this.advPendCount();
-      this.studentCount();
-      this.reportCount();
-  },
-
-  methods: {
-     advPendCount() {
-      this.accountsCount = getPendingAdviserCount();
-     },
-
-     studentCount(){
-      this.studentsCount = getEnrolledStudentsCount();
-     },
-     reportCount(){
-      this.reportsCount = getReportCount();
-     },
-  },
-
-
-};
-</script>
 
 <style scoped>
 .dashboard-page {

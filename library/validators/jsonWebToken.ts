@@ -6,7 +6,7 @@ import { FailedResult } from '../results/failedResult';
 import { SuccessfulResult } from "../results/successfulResult";
 
 export class JSONWebTokenValidator extends Validator {
-  public validate(value: any): Result {
+  public async validate(value: any): Promise<Result> {
     return (validator.isJWT(value)) ?
       new SuccessfulResult(value) :
       new FailedResult(`'${value}' is not a valid JSON web token`);

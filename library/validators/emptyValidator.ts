@@ -3,7 +3,7 @@ import { Result } from "../results/result";
 import { SuccessfulResult } from "../results/successfulResult";
 
 export class EmptyValidator extends Validator {
-  public validate(value: any): Result {
+  public async validate(value: any): Promise<Result> {
     return new SuccessfulResult(value);
   }
 }

@@ -1,4 +1,5 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
+
 useHead({
     title: "VSU-IHS Connect System",
     link: [
@@ -9,7 +10,7 @@ useHead({
       },
     ],
   });
-</script> -->
+</script>
 
 <template>
   <div>
@@ -26,7 +27,7 @@ useHead({
   </div>
 </template>
 
-<script>
+<!-- <script>
 import PdfGenerator from './components/PdfGenerator.vue';
 import SendEmail from './components/SendEmail.vue';
 
@@ -41,7 +42,7 @@ export default {
     PdfGenerator, SendEmail, 
   }
 };
-</script>
+</script> -->
 
 <style>
 .general {

@@ -74,7 +74,7 @@
                         <span v-else class="text-gray-500">----</span>
                       </td>
                       <td class="px-6 py-4">
-                        <button
+                        <button @click="navigateToPage(section)"
                           :class="section.adviserId ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'"
                           class="px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
                           {{ section.adviserId ? 'View Details' : 'Add Adviser' }}
@@ -150,6 +150,15 @@ export default {
         }
       }
       return null;
+    },
+    navigateToPage(section) {
+      if (section.adviserId) {
+        this.$router.push({
+          path: `/admin/section/${section.id}`
+        });
+      } else {
+        this.$router.push({ name: 'admin-accounts' });
+      }
     }
   },
   computed: {

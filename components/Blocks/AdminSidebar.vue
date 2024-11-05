@@ -71,7 +71,12 @@
               </div>
               <UiTooltip>
                 <UiTooltipTrigger as-child>
-                  <UiButton :to="LoginPage" class="ml-auto shrink-0 button-hover" size="icon-sm" variant="ghost">
+                  <UiButton 
+                    @click="handleLogout" 
+                    class="ml-auto shrink-0 button-hover" 
+                    size="icon-sm" 
+                    variant="ghost"
+                  >
                     <Icon name="lucide:log-out" class="size-4 icon-hover" />
                   </UiButton>
                 </UiTooltipTrigger>
@@ -87,7 +92,6 @@
 
 <script lang="ts" setup>
 import { useRouter } from 'vue-router';
-import LoginPage from '~/pages/LoginPage.vue';
 
 const router = useRouter();
 
@@ -98,26 +102,55 @@ const user = {
 };
 
 const topNav = [
-  { title: "Dashboard", icon: "lucide:home", link: "AdminDashboard" },
-  { title: "Search", icon: "lucide:search", link: "SearchPage" },
+  { 
+    title: "Dashboard", 
+    icon: "lucide:home", 
+    link: { name: 'admin-dashboard' }
+  },
+  { 
+    title: "Search", 
+    icon: "lucide:search", 
+    link: { name: 'admin-search' }
+  },
   {
     title: "Reports",
     icon: "lucide:bar-chart-3",
     items: [
-      { title: "Incident Reports", link: "IncidentsPage" },
-      { title: "Anecdotal Reports", link: "#" },
+      { 
+        title: "Incident Reports", 
+        link: { name: 'admin-incidental' }
+      },
+      { 
+        title: "Anecdotal Reports", 
+        link: { name: 'admin-anecdotal' }
+      },
     ],
   },
-  { title: "Accounts", icon: "lucide:user-cog", link: "AccountsPage" },
-  { title: "Archives", icon: "lucide:folder-dot", link: "#" },
+  { 
+    title: "Accounts", 
+    icon: "lucide:user-cog", 
+    link: { name: 'admin-accounts' }
+  },
+  { 
+    title: "Archives", 
+    icon: "lucide:folder-dot", 
+    link: { name: 'admin-archives' }
+  },
 ];
+
 const bottomNav = [
   {
     title: "Settings",
     icon: "lucide:settings-2",
-    link: "#",
+    link: { name: 'admin-settings' },
   },
 ];
+
+// Add logout handler
+const handleLogout = () => {
+  localStorage.removeItem('user'); // Adjust based on your auth logic
+  router.push({ name: 'LoginPage' });
+};
 </script>
 
 <style scoped>

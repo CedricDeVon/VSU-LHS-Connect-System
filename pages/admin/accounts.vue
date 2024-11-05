@@ -99,7 +99,7 @@
 <script>
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
-import AdviserCSVUploadModal from '../components/Modals/AdviserCSVUploadModal.vue';
+import AdviserCSVUploadModal from '../../components/Modals/AdviserCSVUploadModal.vue';
 import { getAdvisers } from '~/data/adviser';
  
 

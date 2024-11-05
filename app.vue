@@ -15,7 +15,7 @@ useHead({
   <div>
     <NuxtLayout>
       <NuxtPage/> 
-      <NuxtLink to="/IncidentsPage">Go to Incidents Page</NuxtLink>
+      <NuxtLink to="/admin/search">Search</NuxtLink>
       <!-- <UiVueSonner/> -->
     </NuxtLayout> 
     <!-- <Error404/> -->
@@ -29,7 +29,6 @@ useHead({
 <script>
 import PdfGenerator from './components/PdfGenerator.vue';
 import SendEmail from './components/SendEmail.vue';
-import Error404 from './pages/Error404.vue';
 
 export default {
   name: 'App',
@@ -39,7 +38,7 @@ export default {
     }
   },
   components: {
-    PdfGenerator, SendEmail, Error404
+    PdfGenerator, SendEmail, 
   }
 };
 </script>

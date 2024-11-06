@@ -22,7 +22,7 @@ export class FirebaseDatabase extends Database {
         return this._generateCompleteCollectionPath();
     }
 
-    public async createOneDocument(values: {}, collectionName: string = this._collectionName): Promise<Result> {
+    public async createOneDocument(values: any, collectionName: string = this._collectionName): Promise<Result> {
         try {
             this._handleObjectArgumentValidation(values);
             this._handleStringArgumentValidation(collectionName);
@@ -30,6 +30,22 @@ export class FirebaseDatabase extends Database {
             const database = firestore.getFirestore(getApp());
             await firestore.runTransaction(database, async (transaction: any) => {
                 await firestore.addDoc(firestore.collection(database, this._generateCompleteCollectionPath(collectionName)), values);
+            });
+            return new SuccessfulResult();
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public async createOneDocumentWithId(id: string, values: any, collectionName: string = this._collectionName): Promise<Result> {
+        try {
+            this._handleObjectArgumentValidation(values);
+            this._handleStringArgumentValidation(collectionName);
+
+            const database = firestore.getFirestore(getApp());
+            await firestore.runTransaction(database, async (transaction: any) => {
+                await firestore.setDoc(firestore.doc(database, this._generateCompleteCollectionPath(collectionName), id), values);
             });
             return new SuccessfulResult();
 
@@ -83,13 +99,15 @@ export class FirebaseDatabase extends Database {
         }
     }
 
-    public async countCollectionDocuments(collectionName: string = this._collectionName): Promise<Result> {
+    public async countCollectionDocuments(collectionName: string = this._collectionName, conditions: any = undefined): Promise<Result> {
         try {
             this._handleStringArgumentValidation(collectionName);
 
             const database = firestore.getFirestore(getApp());
             const result = await firestore.runTransaction(database, async (transaction: any) => {
-                return await firestore.getCountFromServer(firestore.collection(database, this._generateCompleteCollectionPath(collectionName)));
+                const collection = firestore.collection(database, this._generateCompleteCollectionPath(collectionName));
+                const query = firestore.query(collection, conditions);
+                return (await firestore.getCountFromServer(query));
             });
             return new SuccessfulResult(result.data().count);
 

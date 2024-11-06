@@ -21,12 +21,8 @@ export class UserLoginValidator extends Validator {
                 throw new Error(result.message);
             }
             const userData = result.data
-            result = await Validators.userPasswordHashValidator.validate({
-                rawPassword: password, hashedPassword: userData.password
-            });
-            if (result.isNotSuccessful) {
-                throw new Error(result.message);
-            }
+            console.log(userData)
+
             return new SuccessfulResult(userData);
 
         } catch (error: any) {

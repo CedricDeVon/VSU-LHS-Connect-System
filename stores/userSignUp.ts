@@ -10,6 +10,7 @@ export const userSignUpStore = defineStore('userSignUpStore', () => {
     const middleName = ref('');
     const lastName = ref('');
     const suffix = ref('');
+    const hasSuffix = ref(false);
     const birthdate = ref('');
     const facultyId = ref('');
     const gradeLevel = ref('');
@@ -30,11 +31,16 @@ export const userSignUpStore = defineStore('userSignUpStore', () => {
             middleName: middleName.value,
             lastName: lastName.value,
             suffix: suffix.value,
+            hasSuffix: hasSuffix.value,
             birthdate: birthdate.value,
             facultyId: facultyId.value,
-            gradeLevel: gradeLevel.value,
+            gradeLevel: parseInt(gradeLevel.value),
             sectionName: sectionName.value
         };
+    }
+
+    const getAllData = () => {
+        return { ...getUserData(), ...getAdviserData() };
     }
 
     function resetUserData() {
@@ -50,6 +56,7 @@ export const userSignUpStore = defineStore('userSignUpStore', () => {
         middleName.value = '';
         lastName.value = '';
         suffix.value = '';
+        hasSuffix.value = false;
         birthdate.value = '';
         facultyId.value = '';
         gradeLevel.value = '';
@@ -62,6 +69,6 @@ export const userSignUpStore = defineStore('userSignUpStore', () => {
         resetAdviserData();
     }
   
-    return { userName, email, password, confirmPassword, errorMessage, firstName, middleName, lastName, suffix, birthdate, facultyId, gradeLevel, sectionName, resetUserData, resetAdviserData, resetAllData, getUserData, getAdviserData };
+    return { userName, email, password, confirmPassword, errorMessage, firstName, middleName, lastName, suffix, hasSuffix, birthdate, facultyId, gradeLevel, sectionName, resetUserData, resetAdviserData, resetAllData, getUserData, getAdviserData, getAllData };
   });
   

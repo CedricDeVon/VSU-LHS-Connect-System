@@ -33,7 +33,7 @@ export class PasswordValidator extends Validator {
     }
 
     const { minLength, maxLength, minNumbers, minSymbols, minLowercase, minUppercase } = this._configurations;
-    if (!validator.isStrongPassword(value, { minLength })) {
+    if (value.length < minLength) {
       return new FailedResult(`Passwords must contain at least '${minLength}' characters`);
     }
 

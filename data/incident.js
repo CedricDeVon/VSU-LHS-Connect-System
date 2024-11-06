@@ -15,7 +15,7 @@ export const incidentReport = [
         others: 'Guidance Facilitator will send a letter to the parents for the case conference.',
         dateReported: 'July 8, 2024',
         lastModified: 'July 10, 2024',
-        hasCaseConference: true,
+        hasCaseConference: true, 
         status: 'Resolved',
     },
     {

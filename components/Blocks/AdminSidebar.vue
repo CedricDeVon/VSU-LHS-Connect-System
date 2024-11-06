@@ -149,7 +149,7 @@ const bottomNav = [
 // Add logout handler
 const handleLogout = () => {
   localStorage.removeItem('user'); // Adjust based on your auth logic
-  router.push({ name: 'LoginPage' });
+  router.push({ name: 'login' });
 };
 </script>
 

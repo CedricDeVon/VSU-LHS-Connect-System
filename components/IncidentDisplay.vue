@@ -12,7 +12,6 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { incidentReport } from '~/data/incident';
 import { Admin } from '~/data/admin';
-import { toUpper } from 'lodash';
 import { initialReport } from '~/data/initialReport';
 import { adviser } from '~/data/adviser';
 

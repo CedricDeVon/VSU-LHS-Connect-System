@@ -1,6 +1,6 @@
 export const Admin = 
     {   
         firstName: 'Jadde',
-        middleName: 'A.',
+        middleName: 'Abadz',
         lastName: 'Jaballz',
     };

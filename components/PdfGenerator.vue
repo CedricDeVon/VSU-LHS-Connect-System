@@ -1,9 +1,7 @@
 <template>
   <div>
-    <h1>PDF Generator Example</h1>
-    <button @click="displayPDF">Generate PDF</button>
-    <h2>--</h2>
-    <h1>--</h1>
+    <!--<h1>PDF Generator Example</h1>
+    <button @click="displayPDF">Generate PDF</button>-->
   </div>
 </template>
 
@@ -25,35 +23,16 @@ export default {
     return {
     incdReport:{},
     reportType: 'INCIDENT REPORT',
-    receivedBy: `${(Admin.firstName).toUpperCase()} ${(Admin.middleName).toUpperCase()} ${(Admin.lastName).toUpperCase()}`,
+    receivedBy: `${(Admin.firstName).toUpperCase()} ${(Admin.middleName).charAt(0).toUpperCase()+'.'} ${(Admin.lastName).toUpperCase()}`,
     reportedBY: '',
-    
-
-      /*incdReport : {
-       // reportType: 'INCIDENT REPORT',
-        peopleInvolved: 'John Doe',
-        witness: [
-          'Jowjow', 'Jawjaw'
-        ],
-        dateOfIncident: 'Friday, September 8 @1:00 PM',
-        dateReported: 'Monday, September 11 @8:00 AM',
-        placeOfIncident: 'DCST',
-        thingsInvolved: 'lapis and sudlay',
-        narrativeReport: 'Da uroy naag duwa rag sudlay ang laki nya gi duslak ug lapis sa babae kay ni gwapo daw ug samot si Jade'.repeat(15),
-        actionTaken: 'We tell jade to be humble in his handsomeness sheesh sana all jade.',
-        reasonOfAction: 'Minor-Offense',
-        others: 'send a letter for kiss conference',
-        //reportedBy: 'Ma\'am Hancock',
-        //receivedBy: 'Ma\'am Mimi',
-      }*/
-      
+ 
     };
   },
 
-  created(){
-    //this.defineIncidentDoc(this.getIncidentByID('report01'));
-    this.initIncidentByID('report01');
-    this.getReporter('report01');
+  async created(){
+    await this.initIncidentByID('report01');
+    await this.getReporter('report01');
+    this.displayPDF();
 
   },
 
@@ -84,9 +63,9 @@ export default {
         {
           columns: 
           [
-          {width:'30%', text: 'Name of People Involved:', style: 'label' },
-          {width:'5%', text:''},
-         // {width: '65%', text: `${this.incdReport.peopleInvolved.join(', ')}`, style: 'content' },
+          {width:'35%', text: 'Name of People Involved:', style: 'label' },
+        //  {width:'5%', text:''},
+          {width: '65%', text: `${this.incdReport.peopleInvolved.join(', ')}`, style: 'content', alignment: 'center' },
           ],
         },
         {
@@ -97,7 +76,7 @@ export default {
           [
           {width: '30%', text: 'Witness:', style: 'label' },
           {width:'5%', text:''},
-          //{width:'65%', text: `${this.incdReport.witness}`, style: 'content' },
+          {width:'65%', text: `${this.incdReport.witness}`, style: 'content', alignment: 'center' },
           ],
         },
         {
@@ -108,7 +87,7 @@ export default {
           [
           {width: '30%', text: 'Date of Incident:', style: 'label' },
           {width:'5%', text:''},
-         // {width:'65%', text: `${this.incdReport.dateOfIncident}`, style: 'content' },
+          {width:'65%', text: `${this.incdReport.dateOfIncident}`, style: 'content', alignment: 'center'  },
           ],
         }, 
         {
@@ -119,7 +98,7 @@ export default {
           [
           {width: '30%', text: 'Date Reported:', style: 'label' },
           {width:'5%', text:''},
-         // {width: '65%', text: `${this.incdReport.dateReported}`, style: 'content' },
+          {width: '65%', text: `${this.incdReport.dateReported}`, style: 'content', alignment: 'center'  },
           ],
         },
         {
@@ -130,7 +109,7 @@ export default {
           [
           {width:'30%', text: 'Place of Incident:', style: 'label' },
           {width:'5%', text:''},
-         // {width:'65%', text: `${this.incdReport.placeOfIncident}`, style: 'content' },
+          {width:'65%', text: `${this.incdReport.placeOfIncident}`, style: 'content', alignment: 'center'  },
           ],
         },
         {
@@ -141,7 +120,7 @@ export default {
           [
           {width:'30%', text: 'Things Involved:', style: 'label' },
           {width:'5%', text:''},
-         // {width: '65%', text: `${this.incdReport.thingsInvolved}`, style: 'content' },
+          {width: '65%', text: `${this.incdReport.thingsInvolved}`, style: 'content', alignment: 'center'  },
           ],
         },
         {
@@ -152,7 +131,7 @@ export default {
           [
           {width:'30%', text: 'Narrative Report:', style: 'label' },
           {width:'5%', text:''},
-         // {width:'65%', text: `${this.incdReport.narrativeReport}`, style: 'content' },
+          {width:'65%', text: `${this.incdReport.narrativeReport}`, style: 'content', alignment: 'center'  },
           ],
         },
         {
@@ -163,7 +142,7 @@ export default {
           [
           { width:'30%', text: 'Action taken:', style: 'label' },
           {width:'5%', text:''},
-         // { width:'65%', text: `${this.incdReport.actionTaken}`, style: 'content' },
+          { width:'65%', text: `${this.incdReport.actionTaken}`, style: 'content', alignment: 'center'  },
           ],
         },
         {
@@ -174,7 +153,7 @@ export default {
           [
           {width: '30%', text: 'Reason Why Action Was Taken:', style: 'label' },
           {width:'5%', text:''},
-         // { width: '65%', text: `${this.incdReport.reasonOfAction}`, style: 'content' },
+          { width: '65%', text: `${this.incdReport.reasonOfAction}`, style: 'content', alignment: 'center'  },
           ],
         },
         {
@@ -185,16 +164,66 @@ export default {
           [
           { width: '30%', text: 'Others \n(filled by the Disciplinary Action Commitee):', style: 'label' },
           {width:'5%', text:''},
-         // { width:'65%', text: `${this.incdReport.others}`, style: 'content' },
+          { width:'65%', text: `${this.incdReport.others}`, style: 'content', alignment: 'center'  },
           ],
         },
         {
           canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }]
         },
 
+        {
+          columns:
+           [
+                { width: '25%', text: 'Reported by: ', style: 'label', margin: [0, 70, 0, 0] },
+                {
+                  width: '30%',
+                  stack: [
+                    {
+                      text: `${this.reportedBy}`,
+                      style: 'content',
+                      alignment: 'center',
+                      margin: [0, 0, 0, 0]
+                    },
+                    {
+                      text: 'Grade 7 "Petunia" Adviser',
+                      style: 'content',
+                      alignment: 'center',
+                      margin: [0, 0, 0, 0]
+                    }
+                  ],
+                  margin: [0, 70, 0, 0]
+                },
+                {width:'45%', text: ''}
+              ]
+        },
+        {
+          columns:
+           [
+                { width: '25%', text: 'Report received by: ', style: 'label', margin: [0, 40, 0, 0] },
+                {
+                  width: '30%',
+                  stack: [
+                    {
+                      text: `${this.receivedBy}`,
+                      style: 'content',
+                      alignment: 'center',
+                      margin: [0, 0, 0, 0]
+                    },
+                    {
+                      text: 'Guidance Facilitator',
+                      style: 'content',
+                      alignment: 'center',
+                      margin: [0, 0, 0, 0]
+                    }
+                  ],
+                  margin: [0, 40, 0, 0]
+                },
+                {width:'45%', text: ''}
+              ]
+        },
+      
 
-        { text: `Reported by: ${this.reportedBy}`, style: 'content', margin:[0,70,0,0] },
-        { text: `Report received by: ${this.receivedBy}`, style: 'content', margin:[0,40,0,0] },
+        
       ],
       styles: {
         header: {
@@ -233,23 +262,19 @@ export default {
 
 
   methods: {
-    fetchIncidentdetails(){
-      const report = this.getIncidentByID()
-    },
 
-    initIncidentByID(id){
-      const index = incidentReport.findIndex((incd) => incd.incidentDocID === id);
-      this.incdReport = incidentReport[index];
+    async initIncidentByID(id){
+      const fetchedObject = incidentReport.find(item => item.reportID === id);
+      if (fetchedObject) {
+        this.incdReport = { ...this.incdReport, ...fetchedObject };
+      }
     },
-
-    getReporter(incidentReportID){
+    async getReporter(incidentReportID){
       let index = initialReport.findIndex((incd) => incd.reportIDRef === incidentReportID);
       const id = initialReport[index].reportedBY;
       index = adviser.findIndex((adv) => adv.id)
-      this.reportedBy =  `${(adviser[index].firstName).toUpperCase()} ${(adviser[index].middleName).toUpperCase()} ${(adviser[index].lastName).toUpperCase()}`;
+      this.reportedBy =  `${(adviser[index].firstName).toUpperCase()} ${(adviser[index].middleName).charAt(0).toUpperCase() + '.'} ${(adviser[index].lastName).toUpperCase()}`;
     },
-    
-
     
 
    /* generatePDF() {
@@ -261,7 +286,7 @@ export default {
 
     displayPDF(){
       pdfMake.createPdf(this.defineIncidentDoc).getBlob((blob) => {
-  const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(blob);
 
   // Display in an iframe
   const iframe = document.createElement('iframe');

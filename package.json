@@ -20,7 +20,7 @@
     "firebase": "^10.14.1",
     "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "lucide-vue-next": "^0.452.0",
+    "lucide-vue-next": "^0.453.0",
     "nuxt": "^3.13.0",
     "postcss": "^8.4.47",
     "primeicons": "^7.0.0",

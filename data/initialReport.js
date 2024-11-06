@@ -7,6 +7,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport1',
         reportIDRef: 'report01',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Jade', 'Jedo',
         ],

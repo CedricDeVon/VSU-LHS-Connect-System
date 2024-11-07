@@ -16,7 +16,7 @@ useHead({
   <div>
     <NuxtLayout>
       <NuxtPage/> 
-      <NuxtLink to="/admin/search">Search</NuxtLink>
+     <!--<NuxtLink to="/admin/search">Search</NuxtLink>--> 
       <!-- <UiVueSonner/> -->
     </NuxtLayout> 
     <!-- <Error404/> -->

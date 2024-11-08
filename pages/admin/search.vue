@@ -89,6 +89,7 @@
                       <td class="px-6 py-4">{{ 'Grade ' + student.sectionLevel + ' - ' + student.sectionName }}</td>
                       <td class="px-6 py-4">
                         <button
+                          @click="viewStudentProfile(student.studentId)"
                           class="bg-green-200 text-green-800 px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
                           View Profile
                         </button>
@@ -159,6 +160,9 @@ export default {
       } else {
         this.$router.push({ name: 'admin-accounts' });
       }
+    },
+    viewStudentProfile(studentId) {
+      this.$router.push(`/admin/student/${studentId}`);
     }
   },
   computed: {

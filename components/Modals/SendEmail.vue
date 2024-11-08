@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="fixed inset-0 z-50">
     <form @submit.prevent="sendEmail">
-      <input type="text" v-model="formData.from_name" placeholder="Your Name" required />
-      <input type="email" v-model="formData.to_email" placeholder="Recipient Email" required />
-      <textarea v-model="formData.message" placeholder="Your Message" required></textarea>
+      <input type="email" v-model="formData.to_email" placeholder="Recipient Email" required 
+      class="border-2" />
+      <textarea class="border-2" v-model="formData.message" placeholder="Your Message" required></textarea>
       <button type="submit">Send Email</button>
     </form>
     <p v-if="feedbackMessage">{{ feedbackMessage }}</p>
@@ -18,7 +18,6 @@ import { useRuntimeConfig } from '#app';
 const config = useRuntimeConfig();
 
 const formData = ref({
-  from_name: '',
   to_email: '',
   message: ''
 });
@@ -31,7 +30,7 @@ const sendEmail = async () => {
     const response = await $fetch('/api/send-email', {
       method: 'POST',
       body: {
-        from_name: formData.value.from_name,
+        from_name: 'Ma\'am Mimi',
         to_email: formData.value.to_email,
         message: formData.value.message
       }

@@ -12,11 +12,11 @@
             <div class="contain ">
                 <div class="grid grid-cols-10">
                    <div class=" m-10 col-span-4 pt-5 ">
-                        <div class="grid-cols-2 pb-5" >
+                        <div class="grid-cols-2 pb-5 ml-6" >
                        
                            
                            <select
-                               class="mr-7 px-10 py-2  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
+                               class="mr-7 pr-24 py-2  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
                                v-model="selectedSort">
                                <option value="" disabled selected hidden>Sort by</option>
                                <option value="surname">Surname</option>
@@ -25,7 +25,7 @@
 
                        
                             <button @click="addStudent" 
-                                    class="px-7 py-3 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none"
+                                    class="px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
                             </button>  
@@ -53,31 +53,37 @@
                             </table>
                         </div>  
                    </div>
-                   <div class="col-span-6 pt-52 flex justify-center ">
-                        <h1 class="text-2xl">Select a student to display their details</h1>
+                   <div class="col-span-6 pt-10">
+                    <div v-if="!showStudentInfo" class="flex justify-center items-center mt-32">
+                        <h1 class="text-2xl">Select a student to display their details</h1>       
+                    </div>
+                        
+                        <StudentBasicInfo v-if="showStudentInfo"/>
+                       
                    </div>
-
+                  
                 </div>
             </div>
         </div>
             <div>
                 <img class="backPic" src="~/assets/images/vsu-main-the-search-for-truth-statue.png" alt="img" >
             </div>
-
     </div>
 </template>
 
 <script>
     import { add } from "lodash";
-import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+    import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+    import StudentBasicInfo from "~/components/Modals/StudentBasicInfo.vue";
 
     export default {
         name: "Advisory",
-        components: {AdviserHeader},
+        components: {AdviserHeader, StudentBasicInfo},
         props: {},
         data() {return {
             selectedSort: "",
             items: [],
+            showStudentInfo: false,
         };},
 
         methods: {
@@ -85,7 +91,7 @@ import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
                 this.items.push({ column1: "2022-00000", column2: "New Student" });
             },
             handleRowClick(item) {
-                console.log(item);
+                this.showStudentInfo = true;
             },
 
             fetchData(){
@@ -97,10 +103,10 @@ import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
                 this.addStudent();
             },
 
-            handleRowClick(item) {
+            /*handleRowClick(item) {
       // Handle row click event
       console.log('Row clicked:', item);
-    }
+    }*/
 
         },
 
@@ -127,6 +133,7 @@ import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
         top: 20px;
         z-index: 0;
     }
+
 
     .AY_Sem {
     color: #000000;

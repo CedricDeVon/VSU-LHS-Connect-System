@@ -87,7 +87,7 @@ export default defineComponent({
                     <div class="grid grid-cols-10 gap-6">
                         <!-- Left Column - Student List -->
                         <div class="col-span-4">
-                            <div class="mb-4 flex items-center">
+                            <div class="mb-4 flex items-start">
                                 <select 
                                     v-model="selectedSort"
                                     class="mr-4 px-10 py-2 border-b-2 border-gray-400 bg-transparent text-black font-medium focus:outline-none">
@@ -98,7 +98,7 @@ export default defineComponent({
                             </div>
 
                             <!-- Student Table -->
-                            <div class  ="overflow-auto max-h-[80%] border border-green-900 text-opacity-50 transition-all duration-300 rounded-lg">
+                            <div class  ="overflow-auto max-h-[80%] text-opacity-50 transition-all duration-300 rounded-lg">
                                 <table class="min-w-full">
                                     <thead class="sticky top-0">
                                         <tr class="bg-[#728B78] text-white">
@@ -123,11 +123,11 @@ export default defineComponent({
                         </div>
 
                         <!-- Right Column - Student Details -->
-                        <div class="col-span-6 overflow-y-auto">
-                            <div v-if="studentData" class="flex flex-col items-center ">
+                        <div class="border border-green-900 col-span-6 overflow-y-auto max-h-[calc(93vh-180px)] rounded-2xl border-opacity-50 p-6">
+                            <div v-if="studentData" class="flex flex-col items-center">
                                 <h2 class="text-3xl font-bold text-green-900 mb-6">Basic Information</h2>
                                 
-                                <img :src="studentData.profilePic || 'default-profile.jpg'"
+                                <img :src="studentData?.profilePic || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS11c2VyLXJvdW5kIj48cGF0aCBkPSJNMTggMjBhNiA2IDAgMCAwLTEyIDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='"
                                      alt="Student profile"
                                      class="w-48 h-48 rounded-full object-cover shadow-md mb-4"/>
                                 
@@ -135,7 +135,7 @@ export default defineComponent({
                                 <p class="text-lg mb-6">ID NO: {{ studentData.studentId }}</p>
 
                                 <!-- Student Details -->
-                                <div class="w-full max-w-md space-y-3 overflow-y-auto max-h-[%]">
+                                <div class="w-full max-w-md space-y-3">
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Grade & Section:</span>
                                         <span>{{ studentSection?.sectionName || 'N/A' }}</span>
@@ -156,12 +156,16 @@ export default defineComponent({
                                         <span class="font-semibold">Contact:</span>
                                         <span>{{ studentData.contactNum || 'N/A' }}</span>
                                     </div>
-                                    <button class="bg-[#265630] hover:bg-[#728B78] w-full text-white px-4 py-2 rounded-md">
-                                        View Anecdotal Report
-                                    </button>
-                                    <button class="bg-[#265630] hover:bg-[#728B78] w-full text-white px-4 py-2 rounded-md">
-                                        View Incident Report
-                                    </button>
+
+                                    <!-- Buttons with adjusted margins -->
+                                    <div class="space-y-2 mt-4">
+                                        <button class="bg-[#728B78] hover:bg-[#728B78] w-full text-white px-4 py-2 rounded-md">
+                                            View Anecdotal Report
+                                        </button>
+                                        <button class="bg-[#728B78] hover:bg-[#728B78] w-full text-white px-4 py-2 rounded-md">
+                                            View Incident Report
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div v-else class="flex justify-center items-center h-full">

@@ -1,25 +1,31 @@
-export const caseConferences = [
-    {
+export const caseConference = [
+       {
         caseConDocID: 'caseConID1',
-        dateAdded: 'July 07, 2023',
-        cicumstance:'mental uneasiness/disturb',
-        discussions:'maam should provide assistance',
+        incidentID: 'incidentID1',
+        studentName: 'Jade, Jedo',
+        gradeAndSection: 'Grade 7 - Javascript',
+        cicumstance: 'mental uneasiness/disturb',
+        discussions: 'maam should provide assistance',
         agreement: 'stop thinking in advance',
-        remarks: ' case resolved ',
+        remarks: 'case resolved',
         conferenceDate: 'July 06, 2023',
     },
     {
         caseConDocID: 'caseConID2',
-        dateAdded: 'June 09, 2024',
-        cicumstance:'mental uneasiness/disturb',
-        discussions:'maam should provide assistance',
+        incidentID: 'incidentID2',
+        studentName: 'Pawix, Pawiz',
+        gradeAndSection: 'Grade 7 - Javascript',
+        cicumstance: 'mental uneasiness/disturb',
+        discussions: 'maam should provide assistance',
         agreement: 'stop thinking in advance',
-        remarks: ' case resolved ',
+        remarks: 'case resolved',
         conferenceDate: 'June 08, 2024',
     },
     {
         caseConDocID: 'caseConID3',
-        dateAdded: 'August 15, 2024',
+        incidentID: 'incidentID5',
+        studentName: 'Lisa, Chris',
+        gradeAndSection: 'Grade 7 - Javascript',
         cicumstance: 'academic performance concerns',
         discussions: 'provide extra tutoring sessions',
         agreement: 'attend all scheduled tutoring sessions',
@@ -28,16 +34,23 @@ export const caseConferences = [
     },
     {
         caseConDocID: 'caseConID4',
-        dateAdded: 'September 01, 2024',
+        incidentID: 'incidentID7',
+        studentName: 'Emily, Jake',
+        gradeAndSection: 'Grade 7 - Javascript',
         cicumstance: 'peer conflict',
         discussions: 'mediate conflict between students',
         agreement: 'engage in a positive dialogue',
         remarks: 'follow-up needed',
         conferenceDate: 'August 31, 2024',
     },
+
+         //mali ning gi comment nako kay 3 raman ang naa caseconference base sa incidents objects
+    /*
     {
         caseConDocID: 'caseConID5',
-        dateAdded: 'October 20, 2024',
+        incidentID: 'incidentID9',
+        studentName: 'Kevin, Owen',
+        gradeAndSection: 'Grade 9 - Machine Learning',
         cicumstance: 'attendance issues',
         discussions: 'establish communication with guardians',
         agreement: 'report absences promptly',
@@ -46,16 +59,21 @@ export const caseConferences = [
     },
     {
         caseConDocID: 'caseConID6',
-        dateAdded: 'November 05, 2024',
+        incidentID: 'incidentID11',
+        studentName: 'Nora, Paul',
+        gradeAndSection: 'Grade 9 - Machine Learning, Grade 9 - Cloud Computing',
         cicumstance: 'behavioral concerns',
         discussions: 'develop a behavioral improvement plan',
         agreement: 'adherence to improvement plan',
         remarks: 'progress monitored',
         conferenceDate: 'November 04, 2024',
     },
-    {
+   
+   {
         caseConDocID: 'caseConID7',
-        dateAdded: 'December 12, 2024',
+        incidentID: 'incidentID3',
+        studentName: 'Vinz',
+        gradeAndSection: 'Grade 7 - Javascript',
         cicumstance: 'emotional distress',
         discussions: 'refer for counseling services',
         agreement: 'attend regular counseling sessions',
@@ -64,7 +82,9 @@ export const caseConferences = [
     },
     {
         caseConDocID: 'caseConID8',
-        dateAdded: 'January 15, 2025',
+        incidentID: 'incidentID4',
+        studentName: 'Alex, Sam',
+        gradeAndSection: 'Grade 7 - Javascript',
         cicumstance: 'family-related issues',
         discussions: 'liaise with family for support',
         agreement: 'regular family check-ins',
@@ -73,7 +93,9 @@ export const caseConferences = [
     },
     {
         caseConDocID: 'caseConID9',
-        dateAdded: 'February 10, 2025',
+        incidentID: 'incidentID6',
+        studentName: 'Mark',
+        gradeAndSection: 'Grade 7 - Javascript',
         cicumstance: 'academic stress',
         discussions: 'provide relaxation and time management strategies',
         agreement: 'practice relaxation techniques',
@@ -82,7 +104,9 @@ export const caseConferences = [
     },
     {
         caseConDocID: 'caseConID10',
-        dateAdded: 'March 18, 2025',
+        incidentID: 'incidentID8',
+        studentName: 'Sarah, Michael',
+        gradeAndSection: 'Grade 9 - Machine Learning',
         cicumstance: 'lack of motivation',
         discussions: 'assign mentor for guidance',
         agreement: 'meet mentor weekly',
@@ -91,7 +115,9 @@ export const caseConferences = [
     },
     {
         caseConDocID: 'caseConID11',
-        dateAdded: 'April 22, 2025',
+        incidentID: 'incidentID10',
+        studentName: 'Grace',
+        gradeAndSection: 'Grade 9 - Machine Learning',
         cicumstance: 'stress due to personal loss',
         discussions: 'offer grief counseling resources',
         agreement: 'attend grief counseling sessions',
@@ -100,11 +126,13 @@ export const caseConferences = [
     },
     {
         caseConDocID: 'caseConID12',
-        dateAdded: 'May 05, 2025',
+        incidentID: 'incidentID12',
+        studentName: 'Roland',
+        gradeAndSection: 'Grade 12 - Advanced Web Development',
         cicumstance: 'disengagement in classroom activities',
         discussions: 'identify areas of interest to re-engage student',
         agreement: 'participate in selected activities',
         remarks: 'monitoring progress',
         conferenceDate: 'May 04, 2025',
-    },
+    }*/
 ];

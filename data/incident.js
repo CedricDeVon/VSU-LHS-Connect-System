@@ -15,7 +15,8 @@ export const incidentReport = [
         others: 'Guidance Facilitator will send a letter to the parents for the case conference.',
         dateReported: 'July 8, 2024',
         lastModified: 'July 10, 2024',
-        hasCaseConference: true,
+        hasCaseConference: true, 
+        AY: '2024-2025',
         status: 'Resolved',
     },
     {
@@ -33,6 +34,7 @@ export const incidentReport = [
         dateReported: 'October 4, 2024',
         lastModified: 'October 5, 2024',
         hasCaseConference: true,
+        AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
     {
@@ -50,6 +52,7 @@ export const incidentReport = [
         dateReported: 'May 8, 2024',
         lastModified: '',
         hasCaseConference: false,
+        AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
     {
@@ -67,6 +70,7 @@ export const incidentReport = [
         dateReported: 'September 16, 2024',
         lastModified: '',
         hasCaseConference: false,
+        AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
     {
@@ -84,6 +88,7 @@ export const incidentReport = [
         dateReported: 'August 21, 2024',
         lastModified: 'August 24, 2024',
         hasCaseConference: true,
+        AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
     {
@@ -101,6 +106,7 @@ export const incidentReport = [
         dateReported: 'June 11, 2024',
         lastModified: '',
         hasCaseConference: false,
+        AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
     {
@@ -118,6 +124,7 @@ export const incidentReport = [
         dateReported: 'April 26, 2024',
         lastModified: 'April 28, 2024',
         hasCaseConference: true,
+        AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
     {
@@ -135,6 +142,7 @@ export const incidentReport = [
         dateReported: 'March 31, 2024',
         lastModified: '',
         hasCaseConference: false,
+        AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
     {
@@ -152,6 +160,7 @@ export const incidentReport = [
         dateReported: 'February 15, 2024',
         lastModified: 'February 16, 2024',
         hasCaseConference: false,
+        AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
     {
@@ -169,6 +178,7 @@ export const incidentReport = [
         dateReported: 'January 6, 2024',
         lastModified: '',
         hasCaseConference: false,
+        AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
     {
@@ -186,6 +196,7 @@ export const incidentReport = [
         dateReported: 'December 13, 2024',
         lastModified: 'December 15, 2024',
         hasCaseConference: false,
+        AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
 ];

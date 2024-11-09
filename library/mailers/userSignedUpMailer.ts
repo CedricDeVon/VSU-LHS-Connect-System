@@ -13,6 +13,7 @@ export class UserSignedUpMailer extends Mailer {
             if (mailContent === undefined || mailContent === null) {
                 throw new Error('MailContent must not be empty');
             }
+            
 
             await emailjs.send(
                 ConfigurationReaders.nuxtConfigurationReader.EMAIL_SERVICE_ID,

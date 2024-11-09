@@ -1,9 +1,10 @@
+import { student } from "./student";
+
 export const anecdotalReport = [
     {
         anecdotalDocID: 'anecdotal1',
-        peopleInvolved: [
-         'Jedo',
-        ],
+        studentID: '22-1-10076',
+        peopleInvolved: 'Jedo Reyes',
         witness: 'pawpaw',
         dateOfIncident: 'July 07, 2024',
         purpose: 'home visitation and INC grade',
@@ -13,12 +14,12 @@ export const anecdotalReport = [
         remarks: 'The home visitation was successful',
         datePrepared: 'July 8, 2024',
         preparedBY: 'Ma\'am MIMI',  
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal2',
-        peopleInvolved: [
-            'Alex',
-        ],
+        studentID: '22-1-10080',
+        peopleInvolved: 'Alex Torres',
         witness: 'Sophie',
         dateOfIncident: 'August 10, 2024',
         purpose: 'student guidance and counseling',
@@ -28,12 +29,12 @@ export const anecdotalReport = [
         remarks: 'The counseling session was constructive.',
         datePrepared: 'August 11, 2024',
         preparedBY: 'Mr. Johnson',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal3',
-        peopleInvolved: [
-            'Emily',
-        ],
+        studentID: '22-1-10085',
+        peopleInvolved:'Emily Robles',
         witness: 'Nina',
         dateOfIncident: 'September 05, 2024',
         purpose: 'academic improvement',
@@ -43,12 +44,12 @@ export const anecdotalReport = [
         remarks: 'The student showed willingness to improve.',
         datePrepared: 'September 06, 2024',
         preparedBY: 'Mrs. Lee',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal4',
-        peopleInvolved: [
-            'Mike', 'Tom',
-        ],
+        studentID: '22-1-10094',
+        peopleInvolved: 'Samantha Villamor',
         witness: 'Sarah',
         dateOfIncident: 'September 15, 2024',
         purpose: 'peer mediation',
@@ -58,12 +59,12 @@ export const anecdotalReport = [
         remarks: 'The session led to a mutual understanding.',
         datePrepared: 'September 16, 2024',
         preparedBY: 'Mr. Smith',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal5',
-        peopleInvolved: [
-            'Jake',
-        ],
+        studentID: '22-1-10086',
+        peopleInvolved: 'Jake Aguilar',
         witness: 'Laura',
         dateOfIncident: 'October 01, 2024',
         purpose: 'family engagement',
@@ -73,12 +74,12 @@ export const anecdotalReport = [
         remarks: 'The family was cooperative and eager to help.',
         datePrepared: 'October 02, 2024',
         preparedBY: 'Ms. Taylor',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal6',
-        peopleInvolved: [
-            'Kevin',
-        ],
+        studentID: '22-1-10089',
+        peopleInvolved: 'Kevin Reyes',
         witness: 'Rita',
         dateOfIncident: 'October 15, 2024',
         purpose: 'behavioral intervention',
@@ -88,12 +89,12 @@ export const anecdotalReport = [
         remarks: 'The intervention was well-received.',
         datePrepared: 'October 16, 2024',
         preparedBY: 'Mr. Brown',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal7',
-        peopleInvolved: [
-            'Grace',
-        ],
+        studentID: '22-1-10091',
+        peopleInvolved:'Grace Castillo',
         witness: 'Ella',
         dateOfIncident: 'November 01, 2024',
         purpose: 'academic support',
@@ -103,12 +104,12 @@ export const anecdotalReport = [
         remarks: 'The student made significant progress.',
         datePrepared: 'November 02, 2024',
         preparedBY: 'Mrs. Wilson',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal8',
-        peopleInvolved: [
-            'Liam', 'Sophia',
-        ],
+        studentID:'22-1-10084',
+        peopleInvolved: 'Mark Espinosa',
         witness: 'Ella',
         dateOfIncident: 'November 15, 2024',
         purpose: 'team collaboration',
@@ -118,12 +119,12 @@ export const anecdotalReport = [
         remarks: 'The students worked well together and achieved a good result.',
         datePrepared: 'November 16, 2024',
         preparedBY: 'Mr. White',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal9',
-        peopleInvolved: [
-            'Pawix',
-        ],
+        studentID: '22-1-10077',
+        peopleInvolved: 'Pawix Mendez',
         witness: 'Tom',
         dateOfIncident: 'December 05, 2024',
         purpose: 'monitoring progress',
@@ -133,12 +134,12 @@ export const anecdotalReport = [
         remarks: 'The student showed improvement in grades.',
         datePrepared: 'December 06, 2024',
         preparedBY: 'Ms. Green',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal10',
-        peopleInvolved: [
-            'Jade',
-        ],
+        studentID: '22-1-10075',
+        peopleInvolved: 'Jade Lopez',
         witness: 'Jack',
         dateOfIncident: 'December 20, 2024',
         purpose: 'parent-teacher conference',
@@ -148,6 +149,7 @@ export const anecdotalReport = [
         remarks: 'The parents were engaged and supportive.',
         datePrepared: 'December 21, 2024',
         preparedBY: 'Mr. Black',
+        AY: '2024-2025',
     },
 
 ];

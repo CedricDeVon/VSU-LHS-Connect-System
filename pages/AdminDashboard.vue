@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-import { signOut } from "firebase/auth";
+import { adminStore } from '@/stores/admin'
 
 definePageMeta({
   middleware: ['validate-user']
 });
 
-const reportsCount = useState('reportsCount');
-const studentsCount = useState('studentsCount');
-const accountsCount = useState('accountsCount');
-
-reportsCount.value = studentsCount.value = accountsCount.value = 0;
+const store = adminStore();
 
 </script>
 
@@ -41,7 +37,7 @@ reportsCount.value = studentsCount.value = accountsCount.value = 0;
                     <img loading="lazy"
                       src="https://cdn.builder.io/api/v1/image/assets/TEMP/7c60d16a8e36909a44f9f80aa566bf7473375c2826a2dd18236b1b237a36b114?placeholderIfAbsent=true&apiKey=a61ecd0d5bec4c4f94bc2ce5eda3f7bc"
                       alt="Incidents icon" class="w-[30px] object-contain" />
-                    <h2> {{ reportsCount }} Reports</h2>
+                    <h2> {{ store.dashBoardReportsCount }} Reports</h2>
                   </div>
                   <p class="short-description">View reports by class advisers and track report progress.</p>
                 </div>
@@ -59,7 +55,7 @@ reportsCount.value = studentsCount.value = accountsCount.value = 0;
                     <img loading="lazy"
                       src="@/assets/icons/reading-book-dark.png"
                       alt="Incidents icon" class="w-[40px] object-contain" />
-                    <h2> {{ studentsCount }} Students</h2>
+                    <h2> {{ store.dashBoardStudentsCount }} Students</h2>
                   </div>
                   <p class="short-description">Search for a student and view relevant information.</p>
                 </div>
@@ -77,7 +73,7 @@ reportsCount.value = studentsCount.value = accountsCount.value = 0;
                     <img loading="lazy"
                       src="@/assets/icons/approved-dark.png"
                       alt="Incidents icon" class="w-[30px] object-contain" />
-                    <h2>{{ accountsCount }} Account Approvals</h2>
+                    <h2>{{ store.dashBoardAccountApprovalsCount }} Account Approvals</h2>
                   </div>
                   <p class="short-description">See pending account approvals by class advisers and track account status.</p>
                 </div>

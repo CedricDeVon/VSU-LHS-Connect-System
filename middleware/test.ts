@@ -1,9 +1,23 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    console.log('test middleware');
     
-    const data = await $fetch('/api/test', {
-        method: 'POST'
-    });
+//   const { advisers } = await $fetch('/api/accountsAdvisers', {
+//     method: 'POST'
+//   })
+//   console.log(advisers);
+    // console.log('test middleware');
+    
+    // const data: any = await $fetch('/api/test', {
+    //     method: 'POST'
+    // });
+    // for (let a in data) {
+    //     console.log(data[a])
+    // }
+});
+
+    //     const data: any = await $fetch('/api/test', {
+    //         method: 'POST'
+    // });
+    // console.log(data)
     
     // console.log(data);
     // try {
@@ -20,5 +34,4 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     // if (window.localStorage.getItem('userAuth') === undefined) {
     //     window.localStorage.setItem('userAuth', JSON.stringify(data));  
     // }  
-  });
   

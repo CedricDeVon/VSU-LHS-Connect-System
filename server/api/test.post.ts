@@ -1,15 +1,27 @@
 import jwt from 'jsonwebtoken';
+import { ConfigurationReaders } from '~/library/configurationReaders/configurationReaders';
 import { Databases } from '~/library/databases/databases';
 
 export default defineEventHandler(async (event) => {
   console.log("TEST POST");
 
+  
+  // console.log(ConfigurationReaders.nuxtConfigurationReader.EMAIL_PUBLIC_KEY)
+  // console.log(ConfigurationReaders.nuxtConfigurationReader.EMAIL_SERVICE_ID)
+  // console.log(ConfigurationReaders.nuxtConfigurationReader.EMAIL_TEMPLATE_ID)
+
+  return {}
   // console.log(`Student Count: ${().data}`);
-  return {
-    studentsCount: await Databases.getAllStudentsCount(),
-    pendingAdvisersCount: await Databases.getAllPendingAdvisersCount(),
-    reportsCount: await Databases.getAllAdminReportsCount('38gI8dbhyXEjNGeXWd0Q'),
-  };
+  // return {
+  //   a: [await Databases.getAllStudentsCount(),
+  //   await Databases.getAllPendingAdvisersCount(),
+  //   await Databases.getAllAdminReportsCount('38gI8dbhyXEjNGeXWd0Q'),
+  //   await Databases.getAllAdvisers(),
+  //   await Databases.getAllUsers(),
+  //   await Databases.getAllStudents(),
+  //   await Databases.getAllSections(),
+  //   await Databases.getMostRecentTimeline()]
+
 
   
   // try {

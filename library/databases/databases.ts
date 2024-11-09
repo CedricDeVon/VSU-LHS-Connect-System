@@ -3,7 +3,7 @@ import { FirebaseDatabase } from "./firebaseDatabase";
 import type { Result } from "../results/result";
 import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
-import { where, and, or } from "firebase/firestore";
+import { where, and, or, orderBy} from "firebase/firestore";
 
 export class Databases {
     private static readonly _userFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('user');
@@ -12,7 +12,11 @@ export class Databases {
 
     private static readonly _adviserFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('adviser');
 
+    private static readonly _studentFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('student');
+
     private static readonly _sectionFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('section');
+
+    private static readonly _timelineFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('timeline');
 
     private static readonly _userIconsFirebaseStorage: FirebaseStorage = new FirebaseStorage('users/icons');
 
@@ -30,12 +34,20 @@ export class Databases {
         return Databases._adviserFirebaseDatabase;
     }
 
+    public static get studentFirebaseDatabase(): FirebaseDatabase {
+        return Databases._studentFirebaseDatabase;
+    }
+
     public static get sectionFirebaseDatabase(): FirebaseDatabase {
         return Databases._sectionFirebaseDatabase;
     }
 
     public static get adminFirebaseDatabase(): FirebaseDatabase {
         return Databases._adminFirebaseDatabase;
+    }
+
+    public static get timelineFirebaseDatabase(): FirebaseDatabase {
+        return Databases._timelineFirebaseDatabase;
     }
 
     public static get userIconsFirebaseStorage(): FirebaseStorage {
@@ -54,6 +66,51 @@ export class Databases {
         return Databases._caseConferenceFirebaseStorage;
     }
 
+    public static async createOneSection(id: string, name: string, level: number, schoolYear: string): Promise<Result> {
+        try {
+            let result: Result = await Databases._sectionFirebaseDatabase.createOneDocumentWithId(id, {
+                name, level, schoolYear
+            });
+            console.log(result);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
+    public static async getMostRecentTimeline(): Promise<Result> {
+        try {
+            let result: Result = await Databases._timelineFirebaseDatabase.queryOne(
+                [orderBy('schoolYear', 'desc'), orderBy('semester', 'desc')]
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
+    public static async deleteAdviserViaId(id: string): Promise<Result> {
+        try {
+            let result: Result = await Databases._adviserFirebaseDatabase.deleteOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
+    public static async deleteUserViaId(id: string): Promise<Result> {
+        try {
+            let result: Result = await Databases._userFirebaseDatabase.deleteOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
     public static async getUser(email: string): Promise<Result> {
         try {
             const result: Result = await Databases._userFirebaseDatabase.queryOne(
@@ -68,11 +125,76 @@ export class Databases {
             return new FailedResult(error);
         }
     }
-    
+
+    public static async getOneUserViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._userFirebaseDatabase.queryUniques(
+                where("id", "==", id)
+            );
+            console.log(result)
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
+    public static async getAllAdvisers(): Promise<Result> {
+        try {
+            const result: Result = await Databases._adviserFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
+    public static async getAllStudents(): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
+    public static async getAllUsers(): Promise<Result> {
+        try {
+            const result: Result = await Databases._userFirebaseDatabase.queryUniques();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
+    public static async getAllSections(): Promise<Result> {
+        try {
+            const result: Result = await Databases._sectionFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
     public static async getSectionViaName(name: string): Promise<Result> {
         try {
             const result: Result = await Databases._adminFirebaseDatabase.queryOne(
                 where("name", "==", name)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error);
+        }
+    }
+
+    public static async getSectionViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._sectionFirebaseDatabase.queryOne(
+                where("id", "==", id)
             );
             return result;
 
@@ -143,13 +265,12 @@ export class Databases {
         } catch (error: any) {
             return new FailedResult(error);
         }
-
     }
 
     public static async getAllPendingAdvisersCount(): Promise<Result> {
         try {
             const result: Result = await Databases._adminFirebaseDatabase.countCollectionDocuments('adviser',
-                where("status", "==", false)
+                where("status", "==", "pending")
             );
             if (result.isNotSuccessful) {
                 throw new Error(result.message);

@@ -1,3 +1,68 @@
+<script setup lang="ts">
+import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
+import AdminHeader from '@/components/Blocks/AdminHeader.vue';
+import AdviserCSVUploadModal from '../components/Modals/AdviserCSVUploadModal.vue';
+import { adminStore } from '@/stores/admin'
+import { componentNames } from '#build/components';
+import { Databases } from '~/library/databases/databases';
+import { IFile } from "../library/files/iFile";
+import { Result } from '~/library/results/result';
+
+const store = adminStore()
+await store.updateAccountsAdvisers();
+
+const handleFileUpload = async (event: any) => {
+  const result: Result = await $fetch('/api/file', {
+    method: 'POST',
+    body: { event }
+  })
+}
+
+const uploadFile = () => {
+  console.log('File ready for upload:', store.accountsFile);
+  store.accountsShowUploadModal = false;
+  store.accountsFile = null;
+}
+
+const acceptRequest = async (adviser: any) => {
+  await $fetch('/api/updateAdviser', {
+    method: 'POST',
+    body: {
+      id: adviser.id,
+      adviserStatus: 'inactive',
+      userStatus: true,
+    }
+  });
+  await store.updateAccountsAdvisers();
+}
+
+const rejectRequest = async (adviser: any) => {
+  await $fetch('/api/deleteAdminUser', {
+    method: 'POST',
+    body: {
+      userId: adviser.data.userId,
+      adviserId: adviser.id
+    }
+  });
+  await store.updateAccountsAdvisers();
+}
+
+const filteredAdvisers = () => {
+  if (store.accountsSelectedAccount === 'all') {
+    return (store.accountsAdvisers.filter((adviser: any) => adviser.data.status !== 'pending')).sort((a: any, b: any) => {
+      const order: any = {active: 1, inActive:2};
+      return (order[a.data.status] || 3) - (order[b.data.status] || 3)});
+  } else if (store.accountsSelectedAccount === 'active') {
+    return store.accountsAdvisers.filter((adviser: any) => adviser.data.status === 'active');
+  } else if (store.accountsSelectedAccount === 'inactive') {
+    return store.accountsAdvisers.filter((adviser: any) => adviser.data.status === 'inActive');
+  } else if (store.accountsSelectedAccount === 'pending') {
+    return store.accountsAdvisers.filter((adviser: any) => adviser.data.status === 'pending');
+  }
+}
+
+</script>
+
 <template>
   <div class="flex h-screen">
     <AdminSidebar />
@@ -13,7 +78,7 @@
               <div class="w-[30%] mr-4">
                 <select
                   class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
-                  v-model="selectedAccount">
+                  v-model="store.accountsSelectedAccount">
                   <option value="all">All Accounts</option>
                   <option value="active">Active Accounts</option>
                   <option value="inactive">Inactive Accounts</option>
@@ -21,7 +86,7 @@
                 </select>
               </div>
               <div>
-                <button @click="showUploadModal = true"
+                <button @click="store.accountsShowUploadModal = true"
                 class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none">
                   Upload CSV for Bulk Registration
                 </button>
@@ -42,7 +107,7 @@
                     class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
                     Faculty ID
                   </th>
-                  <th v-if="selectedAccount === 'pending'" scope="col"
+                  <th v-if="store.accountsSelectedAccount === 'pending'" scope="col"
                     class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
                     Actions
                   </th>
@@ -53,14 +118,14 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="adviser in filteredAdvisers" :key="adviser.facultyId">
+                <tr v-for="adviser in filteredAdvisers()" :key="adviser.data.facultyId">
                   <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words">
-                    {{adviser.firstName+ ' '+ adviser.lastName}}
+                    {{adviser.data.firstName + ' ' + adviser.data.lastName}}
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-500 break-words">
-                    {{ adviser.facultyId }}
+                    {{ adviser.data.facultyId }}
                   </td>
-                  <td v-if="selectedAccount === 'pending'" class="px-6 py-4 break-words">
+                  <td v-if="store.accountsSelectedAccount === 'pending'" class="px-6 py-4 break-words">
                     <button @click="acceptRequest(adviser)"
                       class="px-8 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
                       Accept
@@ -73,9 +138,9 @@
                   </td>
                   <td v-else class="px-6 py-4 break-words">
                     <span :class="[ 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                      adviser.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      adviser.data.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                     ]">
-                      {{ adviser.status }}
+                      {{ adviser.data.status }}
                     </span>
                   </td>
                 </tr>
@@ -87,8 +152,8 @@
 
       <!-- Modal for CSV Upload -->
       <AdviserCSVUploadModal
-        v-if="showUploadModal"
-        @close="showUploadModal = false"
+        v-if="store.accountsShowUploadModal"
+        @close="store.accountsShowUploadModal = false"
         @upload="uploadFile"
         @file-uploaded="handleFileUpload"
       /> 
@@ -96,81 +161,8 @@
   </div>
 </template>
 
-<script>
-import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
-import AdminHeader from '@/components/Blocks/AdminHeader.vue';
-import AdviserCSVUploadModal from '../components/Modals/AdviserCSVUploadModal.vue';
-import { getAdvisers } from '~/data/adviser';
- 
-
-
-export default {
-  name: 'AccountsPage',
-  components: {
-    AdminSidebar,
-    AdminHeader,
-    AdviserCSVUploadModal,
-  },
-  data() {
-    return {
-      selectedAccount: 'all', // Default selected option
-      showUploadModal: false,
-      file: null,
-      // Sample data
-      advisers: [],
-    
-    };
-  },
-
-  created() {
-    // Fetch advisers when the component is created
-    this.fetchAdvisers();
-  },
-
-  computed: {
-   
-    filteredAdvisers() {
-      if (this.selectedAccount === 'all') {
-        return (this.advisers.filter(adviser => adviser.status !== 'pending')).sort((a,b) => {
-          const order = {active: 1, inActive:2};
-          return (order[a.status] || 3) - (order[b.status] || 3)});
-      } else if (this.selectedAccount === 'active') {
-        return this.advisers.filter(adviser => adviser.status === 'active');
-      } else if (this.selectedAccount === 'inactive') {
-        return this.advisers.filter(adviser => adviser.status === 'inActive');
-      } else if (this.selectedAccount === 'pending') {
-        return this.advisers.filter(adviser => adviser.status === 'pending');
-      }
-    }
-  },
-  methods: {
-
-    fetchAdvisers() {
-      this.advisers = getAdvisers(); // Assign the result of getAdvisers to advisers
-    },
-
-    handleFileUpload(event) {
-      this.file = event.target.files[0];
-    },
-    uploadFile() {
-      console.log('File ready for upload:', this.file);
-      this.showUploadModal = false;
-      this.file = null;
-    },
-    acceptRequest(adviser) {
-      adviser.status = 'active';
-    },
-    rejectRequest(adviser) {
-      this.advisers = this.advisers.filter(a => a.facultyId !== adviser.facultyId);
-    }
-  }
-};
-</script>
-
-<style scoped>
-/* (styles remain the same) */
+<style>
 </style>
-
 
 <style scoped>
 .outer-container {
@@ -231,3 +223,36 @@ td {
   overflow-y: auto;
 }
 </style>
+
+
+
+// async function created() {
+//     // Fetch advisers when the component is created
+//   await fetchAdvisers();
+// }
+// export default {
+//   name: 'AccountsPage',
+//   components: {
+//     AdminSidebar,
+//     AdminHeader,
+//     AdviserCSVUploadModal,
+//   },
+//   data() {
+//     return {
+//       accountsSelectedAccount: 'all',
+//       showUploadModal: false,
+//       file: null,
+//       store: adminStore(),
+//       advisers: [],
+//     };
+//   },
+
+//   ,
+
+//   computed: {
+    
+//   },
+//   methods: {
+
+//   }
+// };

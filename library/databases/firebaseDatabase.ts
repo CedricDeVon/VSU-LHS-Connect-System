@@ -43,6 +43,7 @@ export class FirebaseDatabase extends Database {
             this._handleObjectArgumentValidation(values);
             this._handleStringArgumentValidation(collectionName);
 
+            console.log(id, values)
             const database = firestore.getFirestore(getApp());
             await firestore.runTransaction(database, async (transaction: any) => {
                 await firestore.setDoc(firestore.doc(database, this._generateCompleteCollectionPath(collectionName), id), values);
@@ -116,24 +117,7 @@ export class FirebaseDatabase extends Database {
         }
     }
 
-    public async readManyDocuments(collectionName: string = this._collectionName): Promise<Result> {
-        try {
-            if (collectionName === undefined || collectionName === null || collectionName === '') {
-                throw new Error('Argument(s) must neither be undefined or null');
-            }
-
-            const database = firestore.getFirestore(getApp());
-            const result = await firestore.runTransaction(database, async (transaction: any) => {
-                return await firestore.getDocs(firestore.collection(database, this._generateCompleteCollectionPath(collectionName)));
-            });
-            return new SuccessfulResult(result);
-
-        } catch (error: any) {
-            return new FailedResult(error.message);
-        }
-    }
-
-    public async updateOneDocument(documentName: string, values: {}, collectionName: string = this._collectionName): Promise<Result> {
+    public async updateOneDocument(documentName: string, values: any, collectionName: string = this._collectionName): Promise<Result> {
         try {
             this._handleObjectArgumentValidation(values);
             this._handleStringArgumentValidation(documentName);
@@ -177,7 +161,7 @@ export class FirebaseDatabase extends Database {
         }
     }
 
-    public async queryUniques(conditions: any): Promise<Result> {
+    public async queryUniques(conditions: any = undefined): Promise<Result> {
         try {
             const database = firestore.getFirestore(getApp());
             const collection = firestore.collection(database, this._generateCompleteCollectionPath());
@@ -193,7 +177,7 @@ export class FirebaseDatabase extends Database {
         }
     }
 
-    public async queryOne(conditions: any): Promise<Result> {
+    public async queryOne(conditions: any = undefined): Promise<Result> {
         try {
             const database = firestore.getFirestore(getApp());
             const collection = firestore.collection(database, this._generateCompleteCollectionPath());
@@ -209,7 +193,7 @@ export class FirebaseDatabase extends Database {
         }
     }
 
-    public async queryDuplicates(conditions: any): Promise<Result> {
+    public async queryDuplicates(conditions: any = undefined): Promise<Result> {
         try {
             const database = firestore.getFirestore(getApp());
             const collection = firestore.collection(database, this._generateCompleteCollectionPath());

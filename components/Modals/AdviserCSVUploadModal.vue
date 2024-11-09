@@ -1,3 +1,52 @@
+<script setup lang="ts">
+import { adminStore } from '../../stores/admin'
+
+const store = adminStore();
+const successMessage = useState('successMessage')
+
+const handleFileChange = (event: any) => {
+  store.accountsfile = event.target.files[0];
+  successMessage.value = '';
+}
+
+const uploadFile = () => {
+  if (store.accountsfile) {
+    store.accounts$emit('file-uploaded', store.accountsfile);
+    successMessage.value = 'File uploaded successfully!';
+    store.accountsfile = null;
+    setTimeout(() => {
+      // $emit('close');
+    }, 1000);
+  }
+}
+
+// export default {
+//   name: 'AdviserCSVUploadModal',
+//   data() {
+//     return {
+//       file: null,
+//       successMessage: '',
+//     };
+//   },
+//   methods: {
+//     handleFileChange(event) {
+//       this.file = event.target.files[0];
+//       this.successMessage = '';
+//     },
+//     uploadFile() {
+//       if (this.file) {
+//         this.$emit('file-uploaded', this.file);
+//         this.successMessage = 'File uploaded successfully!';
+//         this.file = null;
+//         setTimeout(() => {
+//           this.$emit('close');
+//         }, 1000);
+//       }
+//     },
+//   },
+// };
+</script>
+
 <template>
     <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div class="bg-gray-100 rounded-lg shadow-lg w-full max-w-md p-6 relative">
@@ -41,34 +90,6 @@
       </div>
     </div>
   </template>
-  
-  <script>
-  export default {
-    name: 'AdviserCSVUploadModal',
-    data() {
-      return {
-        file: null,
-        successMessage: '',
-      };
-    },
-    methods: {
-      handleFileChange(event) {
-        this.file = event.target.files[0];
-        this.successMessage = '';
-      },
-      uploadFile() {
-        if (this.file) {
-          this.$emit('file-uploaded', this.file);
-          this.successMessage = 'File uploaded successfully!';
-          this.file = null;
-          setTimeout(() => {
-            this.$emit('close');
-          }, 1000);
-        }
-      },
-    },
-  };
-  </script>
   
   <style scoped>
   .bg-opacity-50 {

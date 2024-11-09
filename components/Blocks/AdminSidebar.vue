@@ -1,3 +1,38 @@
+<script lang="ts" setup>
+import LoginPage from '~/pages/LoginPage.vue';
+import { getAuth, signOut } from "firebase/auth";
+
+const store = adminStore();
+
+const userSignOut = async () => {
+  const auth = getAuth();
+  await signOut(auth);
+  return navigateTo('/LoginPage');
+}
+
+const topNav = [
+  { title: "Dashboard", icon: "lucide:home", link: "AdminDashboard" },
+  { title: "Search", icon: "lucide:search", link: "SearchPage" },
+  {
+    title: "Reports",
+    icon: "lucide:bar-chart-3",
+    items: [
+      { title: "Incident Reports", link: "IncidentsPage" },
+      { title: "Anecdotal Reports", link: "#" },
+    ],
+  },
+  { title: "Accounts", icon: "lucide:user-cog", link: "AccountsPage" },
+  { title: "Archives", icon: "lucide:folder-dot", link: "#" },
+];
+const bottomNav = [
+  {
+    title: "Settings",
+    icon: "lucide:settings-2",
+    link: "#",
+  },
+];
+</script>
+
 <template>
   <aside class="sidebar mwa h-screen border-r bg-[#265630] text-white">
     <UiScrollArea class="size-full">
@@ -65,14 +100,14 @@
             <div class="flex items-center gap-3 pb-8">
               <div class="flex items-center gap-3">
                 <div>
-                  <p class="text-sm font-semibold" v-html="user.username" />
-                  <p class="text-sm text-white" v-html="user.email" />
+                  <p class="text-sm font-semibold" v-html="store.adminName" />
+                  <p class="text-sm text-white" v-html="store.adminEmail" />
                 </div>
               </div>
               <UiTooltip>
                 <UiTooltipTrigger as-child>
                   <UiButton :to="LoginPage" class="ml-auto shrink-0 button-hover" size="icon-sm" variant="ghost">
-                    <Icon name="lucide:log-out" class="size-4 icon-hover" />
+                    <Icon @click="userSignOut" name="lucide:log-out" class="size-4 icon-hover" />
                   </UiButton>
                 </UiTooltipTrigger>
                 <UiTooltipContent side="right" align="center">Logout</UiTooltipContent>
@@ -85,40 +120,6 @@
   </aside>
 </template>
 
-<script lang="ts" setup>
-import { useRouter } from 'vue-router';
-import LoginPage from '~/pages/LoginPage.vue';
-
-const router = useRouter();
-
-const user = {
-  avatar: "https://randomuser.me/api/portraits/med/men/2.jpg",
-  username: "Admin",
-  email: "admin.cs@vsuihs.com",
-};
-
-const topNav = [
-  { title: "Dashboard", icon: "lucide:home", link: "AdminDashboard" },
-  { title: "Search", icon: "lucide:search", link: "SearchPage" },
-  {
-    title: "Reports",
-    icon: "lucide:bar-chart-3",
-    items: [
-      { title: "Incident Reports", link: "IncidentsPage" },
-      { title: "Anecdotal Reports", link: "#" },
-    ],
-  },
-  { title: "Accounts", icon: "lucide:user-cog", link: "AccountsPage" },
-  { title: "Archives", icon: "lucide:folder-dot", link: "#" },
-];
-const bottomNav = [
-  {
-    title: "Settings",
-    icon: "lucide:settings-2",
-    link: "#",
-  },
-];
-</script>
 
 <style scoped>
 .sidebar {

@@ -4,19 +4,22 @@ import { student } from '~/data/student.js';
 import { section } from '~/data/section.js';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
 
 export default defineComponent({
     name: 'StudentInformation',
     components: {
         AdminSidebar,
-        AdminHeader
+        AdminHeader,
+        IncidentReportsModal
     },
     data() {
         return {
             studentData: null,
             studentSection: null,
             selectedSort: '',
-            allSectionStudents: [] // To store all students from the section
+            allSectionStudents: [], // To store all students from the section
+            showIncidentModal: false
         }
     },
     created() {
@@ -54,6 +57,13 @@ export default defineComponent({
             }
             
             return sorted;
+        },
+        hasIncidents() {
+            return this.studentData?.incidentDocIDs?.length > 0;
+        },
+        incidentButtonText() {
+            const count = this.studentData?.incidentDocIDs?.length || 0;
+            return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
         }
     },
     methods: {
@@ -159,11 +169,16 @@ export default defineComponent({
 
                                     <!-- Buttons with adjusted margins -->
                                     <div class="space-y-2 mt-4">
-                                        <button class="bg-[#728B78] hover:bg-[#728B78] w-full text-white px-4 py-2 rounded-md">
+                                        <!-- Secondary Action -->
+                                        <button class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             View Anecdotal Report
                                         </button>
-                                        <button class="bg-[#728B78] hover:bg-[#728B78] w-full text-white px-4 py-2 rounded-md">
-                                            View Incident Report
+
+                                        <!-- Warning/Alert Action - Only show if student has incidents -->
+                                        <button v-if="hasIncidents" 
+                                                @click="showIncidentModal = true"
+                                                class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
+                                            View {{ incidentButtonText }}
                                         </button>
                                     </div>
                                 </div>
@@ -177,6 +192,13 @@ export default defineComponent({
             </main>
         </div>
     </div>
+
+    <!-- Add Modal -->
+    <IncidentReportsModal 
+        :show="showIncidentModal"
+        :student-data="studentData"
+        @close="showIncidentModal = false"
+    />
 </template>
 
 <style scoped>

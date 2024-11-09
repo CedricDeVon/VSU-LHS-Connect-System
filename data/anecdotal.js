@@ -13,6 +13,7 @@ export const anecdotalReport = [
         remarks: 'The home visitation was successful',
         datePrepared: 'July 8, 2024',
         preparedBY: 'Ma\'am MIMI',  
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal2',
@@ -28,6 +29,7 @@ export const anecdotalReport = [
         remarks: 'The counseling session was constructive.',
         datePrepared: 'August 11, 2024',
         preparedBY: 'Mr. Johnson',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal3',
@@ -43,6 +45,7 @@ export const anecdotalReport = [
         remarks: 'The student showed willingness to improve.',
         datePrepared: 'September 06, 2024',
         preparedBY: 'Mrs. Lee',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal4',
@@ -58,6 +61,7 @@ export const anecdotalReport = [
         remarks: 'The session led to a mutual understanding.',
         datePrepared: 'September 16, 2024',
         preparedBY: 'Mr. Smith',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal5',
@@ -73,6 +77,7 @@ export const anecdotalReport = [
         remarks: 'The family was cooperative and eager to help.',
         datePrepared: 'October 02, 2024',
         preparedBY: 'Ms. Taylor',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal6',
@@ -88,6 +93,7 @@ export const anecdotalReport = [
         remarks: 'The intervention was well-received.',
         datePrepared: 'October 16, 2024',
         preparedBY: 'Mr. Brown',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal7',
@@ -103,6 +109,7 @@ export const anecdotalReport = [
         remarks: 'The student made significant progress.',
         datePrepared: 'November 02, 2024',
         preparedBY: 'Mrs. Wilson',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal8',
@@ -118,6 +125,7 @@ export const anecdotalReport = [
         remarks: 'The students worked well together and achieved a good result.',
         datePrepared: 'November 16, 2024',
         preparedBY: 'Mr. White',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal9',
@@ -133,6 +141,7 @@ export const anecdotalReport = [
         remarks: 'The student showed improvement in grades.',
         datePrepared: 'December 06, 2024',
         preparedBY: 'Ms. Green',
+        AY: '2024-2025',
     },
     {
         anecdotalDocID: 'anecdotal10',
@@ -148,6 +157,7 @@ export const anecdotalReport = [
         remarks: 'The parents were engaged and supportive.',
         datePrepared: 'December 21, 2024',
         preparedBY: 'Mr. Black',
+        AY: '2024-2025',
     },
 
 ];

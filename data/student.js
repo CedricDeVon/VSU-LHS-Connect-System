@@ -28,6 +28,8 @@ export const student = [
             birthDate: '2004-01-01',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2004-01-01'),
+            hasAnecdotal: false,
+            sectionID: '',
         },
         {
             studentId: '22-1-10075',
@@ -43,6 +45,7 @@ export const student = [
             birthDate: '2003-05-15',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-05-15'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10076',
@@ -58,6 +61,7 @@ export const student = [
             birthDate: '2002-08-20',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-08-20'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10077',
@@ -73,6 +77,7 @@ export const student = [
             birthDate: '2001-12-05',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-12-05'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10078',
@@ -88,6 +93,7 @@ export const student = [
             birthDate: '2003-03-10',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-03-10'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10079',
@@ -103,6 +109,7 @@ export const student = [
             birthDate: '2002-07-25',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-07-25'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10080',
@@ -118,6 +125,7 @@ export const student = [
             birthDate: '2001-11-30',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-11-30'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10081',
@@ -133,6 +141,7 @@ export const student = [
             birthDate: '2003-06-18',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-06-18'),
+            sectionID: 'sectionid1',
         },
                 {
             studentId: '22-1-10082',
@@ -148,6 +157,7 @@ export const student = [
             birthDate: '2002-09-14',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-09-14'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10083',
@@ -163,6 +173,7 @@ export const student = [
             birthDate: '2001-04-22',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-04-22'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10084',
@@ -178,6 +189,7 @@ export const student = [
             birthDate: '2003-01-30',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-01-30'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10085',
@@ -193,6 +205,7 @@ export const student = [
             birthDate: '2002-05-05',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-05-05'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10086',
@@ -208,6 +221,7 @@ export const student = [
             birthDate: '2001-08-12',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-08-12'),
+            sectionID: 'sectionid1',
         },
         {
             studentId: '22-1-10087',
@@ -223,6 +237,8 @@ export const student = [
             birthDate: '2003-11-09',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-11-09'),
+            sectionID: 'sectionid12',
+
         },
               {
             studentId: '22-1-10088',
@@ -238,6 +254,7 @@ export const student = [
             birthDate: '2002-02-14',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-02-14'),
+            sectionID: 'sectionid12',
         },
         {
             studentId: '22-1-10089',
@@ -253,6 +270,7 @@ export const student = [
             birthDate: '2001-06-25',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-06-25'),
+            sectionID: 'sectionid12',
         },
         {
             studentId: '22-1-10090',
@@ -268,6 +286,7 @@ export const student = [
             birthDate: '2003-04-10',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-04-10'),
+            sectionID: 'sectionid12',
         },
         {
             studentId: '22-1-10091',
@@ -283,6 +302,7 @@ export const student = [
             birthDate: '2002-12-01',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-12-01'),
+            sectionID: 'sectionid12',
         },
         {
             studentId: '22-1-10092',
@@ -298,6 +318,7 @@ export const student = [
             birthDate: '2001-03-15',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-03-15'),
+            sectionID: 'sectionid12',
         },
         {
             studentId: '22-1-10093',
@@ -313,6 +334,7 @@ export const student = [
             birthDate: '2002-07-07',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-07-07'),
+            sectionID: 'sectionid14',
         },
         {
             studentId: '22-1-10094',
@@ -328,6 +350,7 @@ export const student = [
             birthDate: '2003-10-20',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-10-20'),
+            sectionID: 'sectionid14',
         },
         {
             studentId: '22-1-10095',
@@ -343,6 +366,7 @@ export const student = [
             birthDate: '2001-01-18',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-01-18'),
+            sectionID: 'sectionid14',
         },
         {
             studentId: '22-1-10096',
@@ -358,6 +382,7 @@ export const student = [
             birthDate: '2002-11-05',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-11-05'),
+            sectionID: 'sectionid14',
         },
         {
             studentId: '22-1-10097',
@@ -373,6 +398,7 @@ export const student = [
             birthDate: '2003-02-25',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-02-25'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10098',
@@ -388,6 +414,7 @@ export const student = [
             birthDate: '2001-09-30',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-09-30'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10099',
@@ -403,6 +430,7 @@ export const student = [
             birthDate: '2002-04-12',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-04-12'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10100',
@@ -418,8 +446,9 @@ export const student = [
             birthDate: '2003-07-22',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-07-22'),
+            sectionID: 'sectionid16',
         },
-               {
+        {
             studentId: '22-1-10101',
             firstName: 'Gerald',
             lastName: 'Franco',
@@ -433,6 +462,7 @@ export const student = [
             birthDate: '2001-11-09',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2001-11-09'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10102',
@@ -448,6 +478,7 @@ export const student = [
             birthDate: '2003-04-15',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-04-15'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10103',
@@ -463,6 +494,7 @@ export const student = [
             birthDate: '2002-11-22',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-11-22'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10104',
@@ -478,6 +510,7 @@ export const student = [
             birthDate: '2003-01-10',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-01-10'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10105',
@@ -493,6 +526,7 @@ export const student = [
             birthDate: '2002-08-05',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-08-05'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10106',
@@ -508,6 +542,7 @@ export const student = [
             birthDate: '2003-06-25',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-06-25'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10107',
@@ -523,6 +558,7 @@ export const student = [
             birthDate: '2002-12-10',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-12-10'),
+            sectionID: 'sectionid16',
         },
         {
             studentId: '22-1-10108',
@@ -538,6 +574,7 @@ export const student = [
             birthDate: '2003-03-30',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-03-30'),
+            sectionID: 'sectionid26',
         },
         {
             studentId: '22-1-10109',
@@ -553,6 +590,7 @@ export const student = [
             birthDate: '2002-09-18',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-09-18'),
+            sectionID: 'sectionid26',
         },
         {
             studentId: '22-1-10110',
@@ -568,6 +606,7 @@ export const student = [
             birthDate: '2003-07-12',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-07-12'),
+            sectionID: 'sectionid26',
         },
         {
             studentId: '22-1-10111',
@@ -583,6 +622,7 @@ export const student = [
             birthDate: '2002-11-05',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-11-05'),
+            sectionID: 'sectionid26',
         },
         {
             studentId: '22-1-10112',
@@ -598,6 +638,7 @@ export const student = [
             birthDate: '2003-02-20',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2003-02-20'),
+            sectionID: 'sectionid26',
         },
         {
             studentId: '22-1-10113',
@@ -613,5 +654,6 @@ export const student = [
             birthDate: '2002-10-15',
             profilePic: '~/assets/icons/default-profile.png',
             age: calculateAge('2002-10-15'),
+            4sectionID: 'sectionid26',
         }
     ];

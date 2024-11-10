@@ -1,10 +1,10 @@
 <template>
   <div class="flex h-screen">
     <AdminSidebar />
-
+         
     <div class="flex-grow accounts-page">
       <!--Header-->
-      <AdminHeader />
+     
       <div class="flex justify-center p-8">
         <div class="bg-white custom-shadow rounded-lg w-full max-w-4xl">
           <!-- Dropdown Button -->
@@ -92,7 +92,17 @@
         @upload="uploadFile"
         @file-uploaded="handleFileUpload"
       /> 
+       <!-- Modal for Approved Account -->
+       <ApprovedAccountModal
+        v-if="showApprovalModal"
+        @close="showApprovalModal = false"
+        :approvedEmail="propAdviser.email"
+        :adviserName="propAdviser.name"
+        :adviserID="propAdviser.facultyId"
+        :adviserSection="propAdviser.section"/>
+
     </div>
+  
   </div>
 </template>
 
@@ -101,6 +111,9 @@ import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import AdviserCSVUploadModal from '../../components/Modals/AdviserCSVUploadModal.vue';
 import { getAdvisers } from '~/data/adviser';
+import { section } from '~/data/section';
+import {users} from '~/data/user';
+import ApprovedAccountModal from '~/components/Modals/ApprovedAccountModal.vue';
  
 
 
@@ -110,6 +123,7 @@ export default {
     AdminSidebar,
     AdminHeader,
     AdviserCSVUploadModal,
+    ApprovedAccountModal
   },
   data() {
     return {
@@ -118,8 +132,20 @@ export default {
       file: null,
       // Sample data
       advisers: [],
+      showApprovalModal: false,
+      propAdviser:{
+        facultyId: '',
+        name: '',
+        section: '',
+        email: ''
+      }
     
     };
+  },
+  watch: {
+    showApprovalModal(newVal) {
+      console.log('showApprovalModal changed:', newVal);
+    }
   },
 
   created() {
@@ -157,8 +183,52 @@ export default {
       this.showUploadModal = false;
       this.file = null;
     },
+    
+    // I think this approval, assigning of adviser to section and the likes should be temporarily store first locally before writng in db
     acceptRequest(adviser) {
+      try {
+        this.propAdviser.facultyId = adviser.facultyId;
+        this.propAdviser.name = adviser.firstName + ' ' + adviser.lastName;
+        
+          try {
+            const id = section.findIndex(s => s.id === adviser.sectionId);
+            if (id === -1) {
+              throw new Error('Section not found');
+              return;
+            }
+            if(section[id].adviserId !== null && section[id].adviserId !== '' && section[id].adviserId !== undefined){
+              alert('Section already has an adviser. You may remove the existing adviser first before assigning a new one.');
+              return;
+            }
+            section[id].adviserId = adviser.id;
+            this.propAdviser.section = section[id].sectionName;
+          } catch (e) {
+            console.log(e);
+            alert('Error in finding section');
+            return;
+          }
+          try {
+            const id = users.findIndex(u => u.userId === adviser.userId);
+            if (id === -1) {
+              throw new Error('Email not found');
+              return;
+            }
+            this.propAdviser.email =  users[id].emailAdd;
+          } catch (e) {
+            console.log(e);
+            alert('Error in finding email');
+            return;
+          }
+
+        }catch (e) {
+        console.log(e);
+        alert('Error in accepting request');
+        return;
+      }
+      
+      this.showApprovalModal = true;
       adviser.status = 'active';
+
     },
     rejectRequest(adviser) {
       this.advisers = this.advisers.filter(a => a.facultyId !== adviser.facultyId);

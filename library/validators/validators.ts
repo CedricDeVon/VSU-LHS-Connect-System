@@ -13,14 +13,14 @@ import { DataURIValidator } from './dataURIValidator';
 import { JSONValidator } from './jsonValidator';
 import { JSONWebTokenValidator } from './jsonWebToken';
 import { UserLoginValidator } from './userLoginValidator';
-import { UserSignUpBaseValidator } from './userSignUpBaseValidator';
-import { UserSignUpSpecificsValidator } from './userSignUpSpecificsValidator';
+import { UserSignUpSet1Validator } from './userSignUpSet1Validator';
+import { UserSignUpSet2Validator } from './userSignUpSet2Validator';
 import { UserNameValidator } from './userNameValidator';
 import { ConfirmPasswordValidator } from './confirmPasswordValidator';
 import { UserExistenceValidator } from './userExistenceValidator';
 import { UserPasswordHashValidator } from './userPasswordHashValidator';
 import { VSUIssuedIdValidator } from './vsuIssuedIdValidator';
-import { BirthDateValidator } from './birthdateValidator';
+import { BirthDateValidator } from './birthDateValidator';
 
 export class Validators {
     private static readonly _emptyValidator: EmptyValidator = new EmptyValidator();
@@ -53,7 +53,7 @@ export class Validators {
 
     private static readonly _userLoginValidator: UserLoginValidator = new UserLoginValidator();
 
-    private static readonly _userSignUpBaseValidator: UserSignUpBaseValidator = new UserSignUpBaseValidator();
+    private static readonly _userSignUpSet1Validator: UserSignUpSet1Validator = new UserSignUpSet1Validator();
 
     private static readonly _userNameValidator: UserNameValidator = new UserNameValidator();
 
@@ -61,7 +61,7 @@ export class Validators {
 
     private static readonly _userExistenceValidator: UserExistenceValidator = new UserExistenceValidator();
     
-    private static readonly _userSignUpSpecificsValidator: UserSignUpSpecificsValidator = new UserSignUpSpecificsValidator();
+    private static readonly _userSignUpSet2Validator: UserSignUpSet2Validator = new UserSignUpSet2Validator();
     
     private static readonly _userPasswordHashValidator: UserPasswordHashValidator = new UserPasswordHashValidator();
 
@@ -81,8 +81,8 @@ export class Validators {
         return Validators._userPasswordHashValidator;
     }
 
-    public static get userSignUpSpecificsValidator(): UserSignUpSpecificsValidator {
-        return Validators._userSignUpSpecificsValidator;
+    public static get userSignUpSet2Validator(): UserSignUpSet2Validator {
+        return Validators._userSignUpSet2Validator;
     }
 
     public static get userExistenceValidator(): UserExistenceValidator {
@@ -153,8 +153,8 @@ export class Validators {
         return Validators._userLoginValidator;
     }
 
-    public static get userSignupBaseValidator(): UserSignUpBaseValidator {
-        return Validators._userSignUpBaseValidator;
+    public static get userSignUpSet1Validator(): UserSignUpSet1Validator {
+        return Validators._userSignUpSet1Validator;
     }
 
     public static get userNameValidator(): UserNameValidator {

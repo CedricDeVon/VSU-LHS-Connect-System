@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import LoginPage from '~/pages/auth/login.vue';
 import { Result } from '~/library/results/result';
 import { UserSecurity } from '~/library/security/userSecurity';

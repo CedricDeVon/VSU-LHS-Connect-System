@@ -1,23 +1,24 @@
 <script setup lang="ts">
-import { useSignUpStore } from '~/stores/auth/userSignUpStore';
+import { Result } from '~/library/results/result';
 import { goToPreviousPage } from '~/composables/navigation';
+import { UserSecurity } from '~/library/security/userSecurity';
+import { useUserSignUpStore } from '~/stores/auth/userSignUpStore';
 
-const signUpStore = useSignUpStore()
+const userSignUpStore = useUserSignUpStore();
 
 const handleFormSubmit = async () => {  
-  // const result: any = await $fetch('/api/user/signUpBase', {
-  //   method: 'POST', body: signUpStore.getUserData()
-  // });
-  // if (result.isSuccessful) {
-  //   } else {
-  //     signUpStore.errorMessage = result.message;
-  // }
-  return navigateTo("/auth/step2", { replace: true });
+  const result: Result = await UserSecurity.signUpUserViaStep1(userSignUpStore.getStep1Data());
+  if (result.isNotSuccessful) {
+    userSignUpStore.errorMessage = result.message;
+    return;
+  }
+
+  return navigateTo("/auth/signup/step2", { replace: true });
 };
 
 const handleGoingBackToPreviousPage = () => {
   goToPreviousPage();
-  signUpStore.resetAllData();
+  userSignUpStore.resetAllData();
 };
 
 </script>
@@ -32,7 +33,7 @@ const handleGoingBackToPreviousPage = () => {
             <div class="mb-4">
               <input
                 type="text"
-                v-model="signUpStore.userName"
+                v-model="userSignUpStore.userName"
                 placeholder="Enter username"
                 class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
@@ -41,7 +42,7 @@ const handleGoingBackToPreviousPage = () => {
               <label class="block text-green-800 mb-1">VSUIHS-Issued Email</label>
               <input
                 type="email"
-                v-model="signUpStore.email"
+                v-model="userSignUpStore.email"
                 placeholder="Enter email"
                 class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
@@ -50,7 +51,7 @@ const handleGoingBackToPreviousPage = () => {
               <label class="block text-green-800 mb-1">Password</label>
               <input
                 type="password"
-                v-model="signUpStore.password"
+                v-model="userSignUpStore.password"
                 placeholder="Password"
                 class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
@@ -59,12 +60,12 @@ const handleGoingBackToPreviousPage = () => {
               <label class="block text-green-800 mb-1">Confirm Password</label>
               <input
                 type="password"
-                v-model="signUpStore.confirmPassword"
+                v-model="userSignUpStore.confirmPassword"
                 placeholder="Confirm Password"
                 class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
-            <div v-if ="signUpStore.errorMessage" class="text-red-500 mb-4">{{ signUpStore.errorMessage }}</div>
+            <div v-if ="userSignUpStore.errorMessage" class="text-red-500 mb-4">{{ userSignUpStore.errorMessage }}</div>
             <button
               type="handleFormSubmit"
               class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2"

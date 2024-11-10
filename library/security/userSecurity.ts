@@ -1,15 +1,13 @@
 import { FailedResult } from "../results/failedResult";
 import type { Result } from "../results/result";
 import { SuccessfulResult } from "../results/successfulResult";
-import { getAuth, signOut, signInWithEmailAndPassword } from "firebase/auth";
+import { signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { useFirebaseAuth } from "vuefire";
 
 export class UserSecurity {
     public static async logInUser(data: any): Promise<Result> {
         try {
-            if (data === undefined || data === null) {
-                throw new Error('Attributes must neither be undefined or null')
-            }
+            UserSecurity._handleUndefinedOrNullArguments(data);
 
             const { auth, email, password, role } = data;
             await signInWithEmailAndPassword(auth, email, password);
@@ -26,14 +24,65 @@ export class UserSecurity {
     }
 
     public static async signUpUserViaStep1(data: any): Promise<Result> {
-        
+        try {
+            UserSecurity._handleUndefinedOrNullArguments(data);
+
+            const result: any = await $fetch('/api/auth/signUp/adviser/step1', {
+                method: 'POST', body: data
+            });
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
+
+            return new SuccessfulResult();
+
+        } catch (error: any) {
+            return UserSecurity._handleFailedResult(error);
+        }
+    }
+
+    public static async signUpUserViaStep2(data: any): Promise<Result> {
+        try {
+            UserSecurity._handleUndefinedOrNullArguments(data);
+
+            const result: any = await $fetch('/api/auth/signUp/adviser/step2', {
+                method: 'POST', body: data
+            });
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
+
+            return new SuccessfulResult();
+
+        } catch (error: any) {
+            return UserSecurity._handleFailedResult(error);
+        }
+    }
+
+    public static async signUpUser(data: any): Promise<Result> {
+        try {
+            UserSecurity._handleUndefinedOrNullArguments(data);
+
+            await createUserWithEmailAndPassword(data.auth, data.email, data.password);
+            const firebaseCurrentUser = await getCurrentUser();
+            const result: any = await $fetch('/api/auth/signUp/adviser', {
+                method: 'POST', body: {
+                    id: firebaseCurrentUser.uid, ...data
+                }
+            });
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
+            return new SuccessfulResult();
+
+        } catch (error: any) {
+            return UserSecurity._handleFailedResult(error);
+        }
     }
 
     public static async signOutUser(auth: any): Promise<Result> {
         try {
-            if (auth === undefined || auth === null) {
-                throw new Error('Cannot Sign-out user')
-            }
+            UserSecurity._handleUndefinedOrNullArguments(auth);
 
             await signOut(auth);
             return new SuccessfulResult();
@@ -50,7 +99,16 @@ export class UserSecurity {
         else if (error.code === 'auth/invalid-credential') {
             return new FailedResult("Both email and password do not match");
         }
+        else if (error.code === 'auth/email-already-in-use') {
+            return new FailedResult('Email already exists');
+        }
 
         return new FailedResult(error.message);
+    }
+
+    private static _handleUndefinedOrNullArguments(value: any): void {
+        if (value === undefined || value === null) {
+            throw new Error('Attributes must neither be undefined or null')
+        }
     }
 }

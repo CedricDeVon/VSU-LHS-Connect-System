@@ -7,8 +7,8 @@ import { SuccessfulResult } from "../results/successfulResult";
 
 export class BirthDateValidator extends Validator {
   public async validate(value: any): Promise<Result> {
-    return (validator.isDate(value)) ?
+    return (!validator.isEmpty(value)) ?
       new SuccessfulResult(value) :
-      new FailedResult(`'${value}' is not a valid date type`);
+      new FailedResult(`Please supply a date`);
   }
 }

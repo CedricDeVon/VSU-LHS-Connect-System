@@ -1,33 +1,34 @@
+import { Validator } from "./validator";
+import { Validators } from "./validators";
 import { Result } from "../results/result";
 import { FailedResult } from '../results/failedResult';
 import { SuccessfulResult } from "../results/successfulResult";
-import { Validators } from "./validators";
-import { Validator } from "./validator";
 
-export class UserSignUpBaseValidator extends Validator {
+export class UserSignUpSet2Validator extends Validator {
     public async validate(value: any): Promise<Result> {
         try {
-            const { userName, email, password, confirmPassword } = value;
-            let result: Result = await Validators.userNameValidator.validate(userName);
+            const { firstName, middleName, lastName, birthdate, facultyId } = value;
+            let result: Result = await Validators.personNameValidator.validate(firstName);
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
-            result = await Validators.emailValidator.validate(email);
+            result = await Validators.personNameValidator.validate(middleName);
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
-            result = await Validators.userExistenceValidator.validate(email);
-            if (result.isSuccessful) {
-                throw new Error(result.message);
-            }
-            result = await Validators.passwordValidator.validate(password);
+            result = await Validators.personNameValidator.validate(lastName);
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
-            result = await Validators.confirmPasswordValidator.validate({ password, confirmPassword });
+            result = await Validators.birthDateValidator.validate(birthdate);
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
+            result = await Validators.vsuIssuedIdValidator.validate(facultyId);
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
+            
             return new SuccessfulResult();
 
         } catch (error: any) {

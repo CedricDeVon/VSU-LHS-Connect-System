@@ -16,7 +16,7 @@ export const useUserSignUpStore = defineStore('useUserSignUpStore', () => {
     const gradeLevel = ref('');
     const sectionName = ref('');
 
-    const getUserData = () => {
+    const getStep1Data = () => {
         return {
             userName: userName.value,
             email: email.value,
@@ -25,7 +25,7 @@ export const useUserSignUpStore = defineStore('useUserSignUpStore', () => {
         };
     }
 
-    const getAdviserData = () => {
+    const getStep2Data = () => {
         return {
             firstName: firstName.value,
             middleName: middleName.value,
@@ -40,10 +40,10 @@ export const useUserSignUpStore = defineStore('useUserSignUpStore', () => {
     }
 
     const getAllData = () => {
-        return { ...getUserData(), ...getAdviserData() };
+        return { ...getStep1Data(), ...getStep2Data() };
     }
 
-    function resetUserData() {
+    function resetSet1Data() {
         userName.value = '';
         email.value = '';
         password.value = '';
@@ -51,7 +51,7 @@ export const useUserSignUpStore = defineStore('useUserSignUpStore', () => {
         errorMessage.value = '';
     }
 
-    function resetAdviserData() {
+    function resetSet2Data() {
         firstName.value = '';
         middleName.value = '';
         lastName.value = '';
@@ -65,10 +65,10 @@ export const useUserSignUpStore = defineStore('useUserSignUpStore', () => {
     }
   
     function resetAllData() {
-        resetUserData();
-        resetAdviserData();
+        resetSet1Data();
+        resetSet2Data();
     }
   
-    return { userName, email, password, confirmPassword, errorMessage, firstName, middleName, lastName, suffix, hasSuffix, birthdate, facultyId, gradeLevel, sectionName, resetUserData, resetAdviserData, resetAllData, getUserData, getAdviserData, getAllData };
+    return { userName, email, password, confirmPassword, errorMessage, firstName, middleName, lastName, suffix, hasSuffix, birthdate, facultyId, gradeLevel, sectionName, resetSet1Data, resetSet2Data, resetAllData, getStep1Data, getStep2Data, getAllData };
   });
   

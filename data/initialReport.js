@@ -22,6 +22,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport2',
         reportIDRef: 'report02',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Pawix', 'Pawiz',
         ],
@@ -36,6 +37,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport3',
         reportIDRef: '',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Vinz',
         ],
@@ -50,6 +52,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport4',
         reportIDRef: '',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Alex', 'Sam',
         ],
@@ -64,6 +67,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport5',
         reportIDRef: 'report05',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Lisa', 'Chris',
         ],
@@ -78,6 +82,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport6',
         reportIDRef: '',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Mark',
         ],
@@ -92,6 +97,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport7',
         reportIDRef: 'report07',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Emily', 'Jake',
         ],
@@ -106,6 +112,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport8',
         reportIDRef: '',
+        reportedBY: 'adviserid12',
         peopleInvolved: [
             'Sarah', 'Michael',
         ],
@@ -120,6 +127,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport9',
         reportIDRef: 'report09',
+        reportedBY: 'adviserid12',
         peopleInvolved: [
             'Kevin', 'Owen',
         ],
@@ -134,6 +142,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport10',
         reportIDRef: '',
+        reportedBY: 'adviserid12',
         peopleInvolved: [
             'Grace',
         ],
@@ -148,6 +157,7 @@ export const initialReport = [
     {
         initialDocID: 'initialReport11',
         reportIDRef: 'report11',
+        reportedBY: 'adviserid14',
         peopleInvolved: [
             'Nora', 'Paul',
         ],

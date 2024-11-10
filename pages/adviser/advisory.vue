@@ -4,8 +4,8 @@
 
        <div >
 
-        <AddStudentForm/>
-           
+       <!--<AddStudentForm/>-->
+         
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
             </div>
@@ -22,7 +22,7 @@
                         <!--Sort/Add student-->
                         <div class="grid-cols-2 pb-5 ml-6" >
                            <select
-                               class="mr-7 pr-24 py-2  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
+                               class="mr-8 xl:pr-24 lg:mr-5 lg:pr-2 py-2  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
                                v-model="selectedSort">
                                <option value="" disabled selected hidden>Sort by</option>
                                <option value="surname">Surname</option>
@@ -31,7 +31,7 @@
 
                        
                             <button @click="addStudent" 
-                                    class="px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none"
+                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
                             </button>    
@@ -62,11 +62,11 @@
                    </div>
 
                      <!--Student Information-->
-                   <div class="col-span-6 pt-10">
+                   <div class="col-span-6 pt-10 ">
                     <div v-if="!showStudentInfo" class="flex justify-center items-center mt-32">
-                        <h1 class="text-2xl">Select a student to display their details</h1>       
+                        <!--<h1 class="text-2xl">Select a student to display their details</h1>-->
                     </div>
-                        
+                    
                         <StudentBasicInfo v-if="showStudentInfo"/>
                        
                     </div>
@@ -82,7 +82,6 @@
 </template>
 
 <script>
-    import { add } from "lodash";
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
     import StudentBasicInfo from "~/components/Modals/StudentBasicInfo.vue";
     import AddStudentForm from "~/components/Modals/AddStudentForm.vue";

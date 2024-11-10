@@ -1,4 +1,3 @@
-import { profile } from "console";
 
 export const Admin = 
     {   

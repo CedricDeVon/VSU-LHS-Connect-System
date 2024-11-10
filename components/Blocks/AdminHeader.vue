@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { signOut, getAuth } from "firebase/auth";
+import { Result } from "~/library/results/result";
+import { UserSecurity } from "~/library/security/userSecurity";
 
-const userSignOut = async () => {
-  const auth = getAuth();
-  await signOut(auth);
-  return navigateTo('/LoginPage');
+const auth = useFirebaseAuth()
+
+const signOutUser = async () => {
+  const result: Result = await UserSecurity.signOutUser(auth);
+  return navigateTo('/auth/login');
 }
 
 </script>
@@ -15,7 +18,7 @@ const userSignOut = async () => {
           <img loading="lazy"
             src="https://cdn.builder.io/api/v1/image/assets/TEMP/28ac4a43bf80933a5cd7ae9089be6c5d7b9dae50c8259bbef6892eb66f590acf?placeholderIfAbsent=true&apiKey=a61ecd0d5bec4c4f94bc2ce5eda3f7bc"
             alt="User profile" class="w-8 object-contain aspect-square hover:scale-110 cursor-pointer" />
-            <button @click="userSignOut"
+            <button @click="signOutUser"
           class="logout-button px-7 py-3 rounded-lg bg-728B78 text-white hover:bg-neutral-600"
           aria-label="Log out">
           Log out

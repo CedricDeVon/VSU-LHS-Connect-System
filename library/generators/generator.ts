@@ -1,4 +1,4 @@
 
 export abstract class Generator {
-    public abstract generate(): any;
+    public abstract generate(data: any): any;
 }

@@ -1,13 +1,15 @@
 <script lang="ts" setup>
-import LoginPage from '~/pages/LoginPage.vue';
-import { getAuth, signOut } from "firebase/auth";
+import LoginPage from '~/pages/auth/login.vue';
+import { Result } from '~/library/results/result';
+import { UserSecurity } from '~/library/security/userSecurity';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-const store = adminStore();
+const auth = useFirebaseAuth()
+const adminViewStore = useAdminViewStore();
 
-const userSignOut = async () => {
-  const auth = getAuth();
-  await signOut(auth);
-  return navigateTo('/LoginPage');
+const signOutUser = async () => {
+  const result: Result = await UserSecurity.signOutUser(auth);
+  return navigateTo('/auth/login');
 }
 
 const topNav = [
@@ -100,14 +102,14 @@ const bottomNav = [
             <div class="flex items-center gap-3 pb-8">
               <div class="flex items-center gap-3">
                 <div>
-                  <p class="text-sm font-semibold" v-html="store.adminName" />
-                  <p class="text-sm text-white" v-html="store.adminEmail" />
+                  <p class="text-sm font-semibold" v-html="adminViewStore.adminName" />
+                  <p class="text-sm text-white" v-html="adminViewStore.adminEmail" />
                 </div>
               </div>
               <UiTooltip>
                 <UiTooltipTrigger as-child>
                   <UiButton :to="LoginPage" class="ml-auto shrink-0 button-hover" size="icon-sm" variant="ghost">
-                    <Icon @click="userSignOut" name="lucide:log-out" class="size-4 icon-hover" />
+                    <Icon @click="signOutUser" name="lucide:log-out" class="size-4 icon-hover" />
                   </UiButton>
                 </UiTooltipTrigger>
                 <UiTooltipContent side="right" align="center">Logout</UiTooltipContent>

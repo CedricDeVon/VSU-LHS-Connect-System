@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { adminStore } from '../../stores/admin'
+import { adminStore } from '../../stores/views/adminViewStore'
 
 const store = adminStore();
 const successMessage = useState('successMessage')

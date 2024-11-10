@@ -2,7 +2,7 @@
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import AdviserCSVUploadModal from '../components/Modals/AdviserCSVUploadModal.vue';
-import { adminStore } from '@/stores/admin'
+import { adminStore } from '~/stores/views/adminViewStore'
 import { componentNames } from '#build/components';
 import { Databases } from '~/library/databases/databases';
 import { IFile } from "../library/files/iFile";

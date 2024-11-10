@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { getCurrentUser } from 'vuefire';
 
-export const adminStore = defineStore('admin', () => {
+export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const adminName = ref('');
   const adminEmail = ref('');
 

@@ -5,8 +5,8 @@ const goToLogin = (): void => {
   router.push({ name: 'login' });
 };
 
-const handleBackClick = (): void => {
+const goToPreviousPage = (): void => {
   window.history.back();
 };
 
-export { goToLogin, handleBackClick };
+export { goToLogin, goToPreviousPage };

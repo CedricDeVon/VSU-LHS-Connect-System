@@ -1,16 +1,19 @@
 import jwt from 'jsonwebtoken';
 import { ConfigurationReaders } from '~/library/configurationReaders/configurationReaders';
 import { Databases } from '~/library/databases/databases';
+import { useFirebaseAuth } from "vuefire";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default defineEventHandler(async (event) => {
   console.log("TEST POST");
-
+  // const auth = useFirebaseAuth()!;
+  // await signInWithEmailAndPassword(auth, 'admin.cs@vsuihs.com', '326_TheWorldIsFlat');
   
   // console.log(ConfigurationReaders.nuxtConfigurationReader.EMAIL_PUBLIC_KEY)
   // console.log(ConfigurationReaders.nuxtConfigurationReader.EMAIL_SERVICE_ID)
   // console.log(ConfigurationReaders.nuxtConfigurationReader.EMAIL_TEMPLATE_ID)
 
-  return {}
+  return true
   // console.log(`Student Count: ${().data}`);
   // return {
   //   a: [await Databases.getAllStudentsCount(),

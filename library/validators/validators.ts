@@ -19,6 +19,8 @@ import { UserNameValidator } from './userNameValidator';
 import { ConfirmPasswordValidator } from './confirmPasswordValidator';
 import { UserExistenceValidator } from './userExistenceValidator';
 import { UserPasswordHashValidator } from './userPasswordHashValidator';
+import { VSUIssuedIdValidator } from './vsuIssuedIdValidator';
+import { BirthDateValidator } from './birthdateValidator';
 
 export class Validators {
     private static readonly _emptyValidator: EmptyValidator = new EmptyValidator();
@@ -62,6 +64,18 @@ export class Validators {
     private static readonly _userSignUpSpecificsValidator: UserSignUpSpecificsValidator = new UserSignUpSpecificsValidator();
     
     private static readonly _userPasswordHashValidator: UserPasswordHashValidator = new UserPasswordHashValidator();
+
+    private static readonly _vsuIssuedIdValidator: VSUIssuedIdValidator = new VSUIssuedIdValidator();
+
+    private static readonly _birthDateValidator: BirthDateValidator = new BirthDateValidator();
+
+    public static get birthDateValidator(): BirthDateValidator {
+        return Validators._birthDateValidator;
+    }
+
+    public static get vsuIssuedIdValidator(): VSUIssuedIdValidator {
+        return Validators._vsuIssuedIdValidator;
+    }
 
     public static get userPasswordHashValidator(): UserPasswordHashValidator {
         return Validators._userPasswordHashValidator;

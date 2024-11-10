@@ -2,7 +2,7 @@ import prand from 'pure-rand';
 
 import { Generator } from "./generator";
 
-export class UuidGenerator extends Generator {
+export class RandomNumberGenerator extends Generator {
     public generate(): any {
         return prand.uniformIntDistribution(
             1, 100, prand.xoroshiro128plus(

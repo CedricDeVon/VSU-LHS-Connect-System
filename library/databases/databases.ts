@@ -1,4 +1,4 @@
-import { where, orderBy} from "firebase/firestore";
+import { where, orderBy } from "firebase/firestore";
 
 import type { Result } from "../results/result";
 import { FailedResult } from "../results/failedResult";
@@ -76,7 +76,51 @@ export class Databases {
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllSections(): Promise<Result> {
+        try {
+            const result: Result = await Databases._sectionFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneSectionViaName(name: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._adminFirebaseDatabase.queryOne(
+                where("name", "==", name)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneSectionViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._sectionFirebaseDatabase.queryOne(
+                where("id", "==", id)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async deleteOneSectionViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._sectionFirebaseDatabase.deleteOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
         }
     }
 
@@ -88,7 +132,7 @@ export class Databases {
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 
@@ -98,65 +142,7 @@ export class Databases {
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
-        }
-    }
-
-    public static async deleteUserViaId(id: string): Promise<Result> {
-        try {
-            let result: Result = await Databases._userFirebaseDatabase.deleteOneDocument(id);
-            return result;
-
-        } catch (error: any) {
-            return new FailedResult(error);
-        }
-    }
-
-    public static async getUser(email: string): Promise<Result> {
-        try {
-            const result: Result = await Databases._userFirebaseDatabase.queryOne(
-                where("email", "==", email)
-            );
-            if (result.isNotSuccessful) {
-                throw new Error(result.message);
-            }
-            return result;
-
-        } catch (error: any) {
-            return new FailedResult(error);
-        }
-    }
-
-    public static async getOneUserViaId(id: string): Promise<Result> {
-        try {
-            const result: Result = await Databases._userFirebaseDatabase.queryUniques(
-                where("id", "==", id)
-            );
-            console.log(result)
-            return result;
-
-        } catch (error: any) {
-            return new FailedResult(error);
-        }
-    }
-
-    public static async getAllAdvisers(): Promise<Result> {
-        try {
-            const result: Result = await Databases._adviserFirebaseDatabase.queryDuplicates();
-            return result;
-
-        } catch (error: any) {
-            return new FailedResult(error);
-        }
-    }
-
-    public static async getAllStudents(): Promise<Result> {
-        try {
-            const result: Result = await Databases._studentFirebaseDatabase.queryDuplicates();
-            return result;
-
-        } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 
@@ -166,84 +152,159 @@ export class Databases {
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 
-    public static async getAllSections(): Promise<Result> {
+    public static async getOneUserViaEmail(email: string): Promise<Result> {
         try {
-            const result: Result = await Databases._sectionFirebaseDatabase.queryDuplicates();
-            return result;
-
-        } catch (error: any) {
-            return new FailedResult(error);
-        }
-    }
-
-    public static async getSectionViaName(name: string): Promise<Result> {
-        try {
-            const result: Result = await Databases._adminFirebaseDatabase.queryOne(
-                where("name", "==", name)
+            const result: Result = await Databases._userFirebaseDatabase.queryOne(
+                where("email", "==", email)
             );
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 
-    public static async getSectionViaId(id: string): Promise<Result> {
+    public static async getOneUserViaId(id: string): Promise<Result> {
         try {
-            const result: Result = await Databases._sectionFirebaseDatabase.queryOne(
-                where("id", "==", id)
-            );
+            const result: Result = await Databases._userFirebaseDatabase.readOneDocument(id);
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 
-    public static async getAdminViaUserId(userId: string): Promise<Result> {
+    public static async updateOneUserViaId(id: string, values: any): Promise<Result> {
         try {
-            const result: Result = await Databases._adminFirebaseDatabase.queryOne(
-                where("userId", "==", userId)
-            );
-            if (result.isNotSuccessful) {
-                throw new Error(result.message);
-            }
+            let result: Result = await Databases._userFirebaseDatabase.updateOneDocument(id, values);
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 
-    public static async getAdviserViaUserId(userId: string): Promise<Result> {
+    public static async deleteOneUserViaId(id: string): Promise<Result> {
+        try {
+            let result: Result = await Databases._userFirebaseDatabase.deleteOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllAdvisers(): Promise<Result> {
+        try {
+            const result: Result = await Databases._adviserFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneAdviserViaUserId(userId: string): Promise<Result> {
         try {
             const result: Result = await Databases._adviserFirebaseDatabase.queryOne(
                 where("userId", "==", userId)
             );
-            if (result.isNotSuccessful) {
-                throw new Error(result.message);
+            if (result.data === undefined) {
+                throw new Error(`User does not have an 'Adviser' account`);
             }
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateOneAdviserViaId(id: string, values: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._adviserFirebaseDatabase.updateOneDocument(id, values);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async deleteOneAdviserViaId(id: string): Promise<Result> {
+        try {
+            let result: Result = await Databases._adviserFirebaseDatabase.deleteOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllStudents(): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneStudentViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.readOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateOneStudentViaId(id: string, values: any): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.updateOneDocument(id, values);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async deleteOneStudentViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.deleteOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneAdminViaUserId(userId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._adminFirebaseDatabase.queryOne(
+                where("userId", "==", userId)
+            );
+            if (result.data === undefined) {
+                throw new Error(`User does not have an 'Admin' account`);
+            }
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
         }
     }
 
     public static async getAllStudentsCount(): Promise<Result> {
         try {
             const result: Result = await Databases._adminFirebaseDatabase.countCollectionDocuments('student')
-            if (result.isNotSuccessful) {
-                throw new Error(result.message);
-            }
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 
@@ -264,7 +325,7 @@ export class Databases {
             return new SuccessfulResult(anecdotalReportResult.data + incidentalReportResult.data);
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 
@@ -273,13 +334,10 @@ export class Databases {
             const result: Result = await Databases._adminFirebaseDatabase.countCollectionDocuments('adviser',
                 where("status", "==", "pending")
             );
-            if (result.isNotSuccessful) {
-                throw new Error(result.message);
-            }
             return result;
 
         } catch (error: any) {
-            return new FailedResult(error);
+            return new FailedResult(error.message);
         }
     }
 }

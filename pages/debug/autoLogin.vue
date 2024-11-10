@@ -1,20 +1,19 @@
 <script setup lang="ts">
-import { adminStore } from '@/stores/admin';
+// import { adminStore } from '~/stores/views/adminViewStore';
 import { useFirebaseAuth } from "vuefire";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-const aStore = adminStore();
-const auth = useFirebaseAuth()!;
-
+// const aStore = adminStore();
 async function logInAsAdmin() {
+    
     // await signInWithEmailAndPassword(auth, , );
     // await aStore.updateDashboard();
-    return navigateTo("/AdminDashboard", { replace: true });
+    return navigateTo("/admin/dashboard", { replace: true });
 }
 
 async function logInAsAdviser() {
     // await signInWithEmailAndPassword(auth, , );
-    return navigateTo("/RegistrationSuccessful", { replace: true });
+    return navigateTo("/adviser/advisory", { replace: true });
 }
 
 </script>

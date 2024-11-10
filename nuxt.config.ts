@@ -96,14 +96,14 @@ export default defineNuxtConfig({
     emailTemplateId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_TEMPLATE_ID"),
     emailPublicKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_PUBLIC_KEY"),
     userTokenDurationInSeconds: 60,
-    debugAdminEmail: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADMIN_EMAIL"),
-    debugAdminPassword: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADMIN_PASSWORD"),
-    debugAdviserEmail: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADVISER_EMAIL"),
-    debugAdviserPassword: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADVISER_PASSWORD"),
     public: {
       environmentName: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_ENVIRONMENT_NAME"),
       isConsoleLoggingEnabled: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_IS_CONSOLE_LOGGING_ENABLED"),
       isFileLoggingEnabled: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_IS_FILE_LOGGING_ENABLED"),
+      debugAdminEmail: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADMIN_EMAIL"),
+      debugAdminPassword: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADMIN_PASSWORD"),
+      debugAdviserEmail: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADVISER_EMAIL"),
+      debugAdviserPassword: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADVISER_PASSWORD"),
     }
   },
 

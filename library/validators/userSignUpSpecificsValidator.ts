@@ -1,13 +1,13 @@
+import { Validator } from "./validator";
+import { Validators } from "./validators";
 import { Result } from "../results/result";
 import { FailedResult } from '../results/failedResult';
 import { SuccessfulResult } from "../results/successfulResult";
-import { Validators } from "./validators";
-import { Validator } from "./validator";
 
 export class UserSignUpSpecificsValidator extends Validator {
     public async validate(value: any): Promise<Result> {
         try {
-            const { firstName, middleName, lastName, birthdate, facultyId, gradeLevel, sectionName } = value;
+            const { firstName, middleName, lastName, birthDate, facultyId } = value;
             let result: Result = await Validators.personNameValidator.validate(firstName);
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
@@ -20,20 +20,16 @@ export class UserSignUpSpecificsValidator extends Validator {
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
-            if (birthdate === undefined || birthdate === null || birthdate === '') {
-                throw new Error('Please input your birthdate');
+            result = await Validators.birthDateValidator.validate(birthDate);
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
             }
-            // if (gradeLevel === undefined || gradeLevel === null || gradeLevel === '' || gradeLevel < 7 || gradeLevel > 12) {
-            //     throw new Error('Please input a valid grade level');
-            // }
-            // if (sectionName === undefined || sectionName === null || sectionName === '') {
-            //     throw new Error('Please input a valid section name');
-            // }
-            if (facultyId === undefined || facultyId === null || facultyId === '') {
-                throw new Error('Plase input a valid faculty id');
+            result = await Validators.vsuIssuedIdValidator.validate(facultyId);
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
             }
             
-            return new SuccessfulResult(value);
+            return new SuccessfulResult();
 
         } catch (error: any) {
             return new FailedResult(error.message);

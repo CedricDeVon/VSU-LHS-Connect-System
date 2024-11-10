@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const userSignUpStore = defineStore('userSignUpStore', () => {
+export const useUserSignUpStore = defineStore('useUserSignUpStore', () => {
     const userName = ref('');
     const email = ref('');
     const password = ref('');

@@ -121,28 +121,28 @@ export class NuxtConfigurationReader extends ConfigurationReader {
     }
 
     public get DEBUG_ADMIN_EMAIL(): number {
-        const result: Result = this.getPrivateValue('debugAdminEmail');
+        const result: Result = this.getPublicValue('debugAdminEmail');
         this._throwErrorIfResultIsUnsuccessful(result);
         
         return result.data;
     }
     
     public get DEBUG_ADMIN_PASSWORD(): number {
-        const result: Result = this.getPrivateValue('debugAdminPassword');
+        const result: Result = this.getPublicValue('debugAdminPassword');
         this._throwErrorIfResultIsUnsuccessful(result);
         
         return result.data;
     }
 
     public get DEBUG_ADVISER_EMAIL(): number {
-        const result: Result = this.getPrivateValue('debugAdviserEmail');
+        const result: Result = this.getPublicValue('debugAdviserEmail');
         this._throwErrorIfResultIsUnsuccessful(result);
         
         return result.data;
     }
     
     public get DEBUG_ADVISER_PASSWORD(): number {
-        const result: Result = this.getPrivateValue('debugAdviserPassword');
+        const result: Result = this.getPublicValue('debugAdviserPassword');
         this._throwErrorIfResultIsUnsuccessful(result);
         
         return result.data;

@@ -17,7 +17,6 @@ export class UserSignUpBaseValidator extends Validator {
                 throw new Error(result.message);
             }
             result = await Validators.userExistenceValidator.validate(email);
-            console.log(result);
             if (result.isSuccessful) {
                 throw new Error(result.message);
             }

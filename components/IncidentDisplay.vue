@@ -1,7 +1,13 @@
+<!--This is under experiment and lacks the right header
+:this'll automatically display an iframe of document when created
+:this needs only a 'incidentReportID' as a parameter
+:this will only work properly when there is an initial report sent by the adviser thru the system
+If we'll have feature where a GF can make an incident report directly without digital initial report,
+then we can modify this code to accept the name of the reporter directly-->
+
 <template>
-  <div>
-    <!--<h1>PDF Generator Example</h1>
-    <button @click="displayPDF">Generate PDF</button>-->
+  <div id="incident-display-container">
+    <!-- The iframe will be appended here -->
   </div>
 </template>
 
@@ -10,6 +16,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
+import { footer } from '~/assets/images/footer';
 import { incidentReport } from '~/data/incident';
 import { Admin } from '~/data/admin';
 import { initialReport } from '~/data/initialReport';
@@ -29,8 +36,8 @@ export default {
   },
 
   async created(){
-    await this.initIncidentByID('report01');
-    await this.getReporter('report01');
+    await this.initIncidentByID('report09');
+    await this.getReporter('report09');
     this.displayPDF();
 
   },
@@ -38,22 +45,16 @@ export default {
   computed: {
 
     defineIncidentDoc(){
-      
       return {
-
       pageMargins: [72,120,72,90],
-
       header:
-
       {
         image: headerImage,
         width: 500,
+        height: 80,
         alignment: 'center',
         margin: [0,20,0,0],
-        
       },
-
-
       content: [
         
         [
@@ -173,9 +174,9 @@ export default {
         {
           columns:
            [
-                { width: '25%', text: 'Reported by: ', style: 'label', margin: [0, 70, 0, 0] },
+                { width: '25%', text: 'Reported by: ', style: 'label', margin: [0, 50, 0, 0] },
                 {
-                  width: '30%',
+                  width: '40%',
                   stack: [
                     {
                       text: `${this.reportedBy}`,
@@ -190,9 +191,9 @@ export default {
                       margin: [0, 0, 0, 0]
                     }
                   ],
-                  margin: [0, 70, 0, 0]
+                  margin: [0, 60, 0, 0]
                 },
-                {width:'45%', text: ''}
+                {width:'35%', text: ''}
               ]
         },
         {
@@ -200,7 +201,7 @@ export default {
            [
                 { width: '25%', text: 'Report received by: ', style: 'label', margin: [0, 40, 0, 0] },
                 {
-                  width: '30%',
+                  width: '40%',
                   stack: [
                     {
                       text: `${this.receivedBy}`,
@@ -217,7 +218,7 @@ export default {
                   ],
                   margin: [0, 40, 0, 0]
                 },
-                {width:'45%', text: ''}
+                {width:'35%', text: ''}
               ]
         },
       
@@ -229,11 +230,13 @@ export default {
           fontSize: 18,
           bold: true,
           alignment: 'center',
+   
 
         },
         content: {
           margin: [0,10,0,10],
           fontSize: 12,
+          
         
         },
         label:{
@@ -241,20 +244,30 @@ export default {
           fontsize: 11,
           margin:[0,10,0,10],
           width: 85,
+       
         },
 
       },
-      footer: (currentPage, pageCount) => {
+
+      footer: (currentPage, pageCount,) => {
         return [
           {
-            text: `${new Date().toLocaleDateString()}            Page ${currentPage} of ${pageCount}`,
+            image: footer,
+            width: 480,
             alignment: 'center',
-            margin: [0, 10],
+            margin: [0,10,0,0]
+          },
+          {
+            text:`FM-OOP-05                                    Rev.: 01                                    ${new Date().toLocaleDateString()}                                       Page ${currentPage} of ${pageCount}                                  Control Number:______`,
+            alignment: 'justify',
+            margin: [70, 0],
+            fontSize: 7,
+            
           },
         ];
       },
     };
-
+   
     },
 
   },
@@ -270,16 +283,19 @@ export default {
     },
     async getReporter(incidentReportID){
       let index = initialReport.findIndex((incd) => incd.reportIDRef === incidentReportID);
+      console.log(index);
       const id = initialReport[index].reportedBY;
-      index = adviser.findIndex((adv) => adv.id)
+      console.log(id);
+      if(id){
+      index = adviser.findIndex((adv) => adv.id === id);
       this.reportedBy =  `${(adviser[index].firstName).toUpperCase()} ${(adviser[index].middleName).charAt(0).toUpperCase() + '.'} ${(adviser[index].lastName).toUpperCase()}`;
+      return true;
+      }else return false;
     },
     
 
    /* generatePDF() {
       // Sample data should be from database
-
-
       pdfMake.createPdf(this.defineIncidentDoc()).download('myDocument.pdf');
     },*/
 
@@ -294,10 +310,10 @@ export default {
   iframe.style.display = 'block'; 
   iframe.style.margin = '0 auto'; 
   iframe.src = url;
-  document.body.appendChild(iframe);
+  //document.getElementById('incident-display-container').appendChild(iframe);
 
   // Alternatively, open in a new tab
-  // window.open(url);
+   window.open(url);
 });
     },
 
@@ -314,4 +330,5 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+
 </style>

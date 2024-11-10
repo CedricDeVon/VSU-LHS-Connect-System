@@ -75,9 +75,16 @@ export default {
     },
     computed: {
         studentIncidents() {
-            return this.studentData.incidentDocIDs.map(id => 
-                incidentReport.find(report => report.incidentDocID === id)
-            ).filter(report => report !== undefined);
+            console.log('Student IDs:', this.studentData.incidentDocIDs);
+            const incidents = this.studentData.incidentDocIDs.map(id => {
+                const found = incidentReport.find(report => report.incidentDocID === id);
+                if (!found) {
+                    console.log('Missing incident report for ID:', id);
+                }
+                return found;
+            }).filter(report => report !== undefined);
+            console.log('Found incidents:', incidents);
+            return incidents;
         }
     },
     emits: ['close'],

@@ -52,7 +52,7 @@ return (users).length;
 
 
 
-const users = [
+export const users = [
     {
       userId: 'userid1',
       emailAdd: '22-1-01056@vsu.edu.ph',

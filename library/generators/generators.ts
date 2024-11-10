@@ -1,9 +1,9 @@
-import { UuidGenerator } from "./uuidGenerator";
+import { UidGenerator } from "./uidGenerator";
 
 export class Generators {
-    private static readonly _uuidGenerator: UuidGenerator = new UuidGenerator();
+    private static readonly _uuidGenerator: UidGenerator = new UidGenerator();
 
-    public static get uuidGenerator(): UuidGenerator {
+    public static get uuidGenerator(): UidGenerator {
         return Generators._uuidGenerator;
     }
 }

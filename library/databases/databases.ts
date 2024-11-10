@@ -1,9 +1,10 @@
-import { FirebaseStorage } from "./firebaseStorage";
-import { FirebaseDatabase } from "./firebaseDatabase";
+import { where, orderBy} from "firebase/firestore";
+
 import type { Result } from "../results/result";
 import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
-import { where, and, or, orderBy} from "firebase/firestore";
+import { FirebaseStorage } from "./firebaseStorage";
+import { FirebaseDatabase } from "./firebaseDatabase";
 
 export class Databases {
     private static readonly _userFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('user');

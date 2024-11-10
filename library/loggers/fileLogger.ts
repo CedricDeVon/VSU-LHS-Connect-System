@@ -1,4 +1,3 @@
-
 import * as log4js from "log4js";
 
 import { Logger } from './logger'
@@ -38,7 +37,7 @@ export class FileLogger extends Logger {
     }
   }
 
-  private _isloggingEnabled(isForcedLoggingEnabled: boolean = true) {
+  private _isloggingEnabled(isForcedLoggingEnabled: boolean = true): boolean {
     return ConfigurationReaders.nuxtConfigurationReader.isEnvironmentNameNotProduction &&
     ConfigurationReaders.nuxtConfigurationReader.IS_FILE_LOGGING_ENABLED && isForcedLoggingEnabled;
   }

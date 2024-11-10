@@ -1,6 +1,6 @@
 import { Result } from "../results/result";
-import { SuccessfulResult } from "../results/successfulResult";
 import { FailedResult } from "../results/failedResult";
+import { SuccessfulResult } from "../results/successfulResult";
 import { ConfigurationReader } from "./configurationReader";
 
 export class EnvironmentConfigurationReader extends ConfigurationReader {

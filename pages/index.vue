@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['validate-user']
+  // middleware: ['validate-user']
 });
 
 </script>

@@ -1,5 +1,5 @@
-import { EnvironmentConfigurationReader } from "./environmentConfigurationReader";
 import { NuxtConfigurationReader } from "./nuxtConfigurationReader";
+import { EnvironmentConfigurationReader } from "./environmentConfigurationReader";
 
 export class ConfigurationReaders {
     private static readonly _environmentConfigurationReader: EnvironmentConfigurationReader = new EnvironmentConfigurationReader();

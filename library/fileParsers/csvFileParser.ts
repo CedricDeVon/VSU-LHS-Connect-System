@@ -1,11 +1,9 @@
-import type { IFile } from "../files/iFile";
-
-import { ParsedFile } from "../files/parsedFile";
-import { FailedResult } from "../results/failedResult";
 import { Result } from "../results/result";
+import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
 import { FileParser } from "./fileParser";
-import { FileParsers } from "./fileParsers";
+import type { IFile } from "../files/iFile";
+import { ParsedFile } from "../files/parsedFile";
 
 export class CSVFileParser extends FileParser {
   public constructor() {

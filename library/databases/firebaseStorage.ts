@@ -1,12 +1,12 @@
 import * as firebaseApp from "firebase/app";
 import * as firebaseStorage from "firebase/storage";
 
-import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
-import { ParsedFile } from "../files/parsedFile";
-import { FailedResult } from "../results/failedResult";
-import { Result } from "../results/result";
-import { SuccessfulResult } from "../results/successfulResult";
 import { Database } from "./database";
+import { Result } from "../results/result";
+import { FailedResult } from "../results/failedResult";
+import { SuccessfulResult } from "../results/successfulResult";
+import { ParsedFile } from "../files/parsedFile";
+import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
 
 export class FirebaseStorage extends Database {
   private readonly _folderPath: string;

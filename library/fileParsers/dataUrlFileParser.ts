@@ -1,9 +1,8 @@
-import type { IFile } from "../files/iFile";
-
-import { FailedResult } from "../results/failedResult";
-import { Result } from "../results/result";
-import { SuccessfulResult } from "../results/successfulResult";
 import { FileParser } from "./fileParser";
+import type { IFile } from "../files/iFile";
+import { Result } from "../results/result";
+import { FailedResult } from "../results/failedResult";
+import { SuccessfulResult } from "../results/successfulResult";
 
 export class DataUrlFileParser extends FileParser {
   public constructor() {

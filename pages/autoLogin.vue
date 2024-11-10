@@ -7,13 +7,13 @@ const aStore = adminStore();
 const auth = useFirebaseAuth()!;
 
 async function logInAsAdmin() {
-    await signInWithEmailAndPassword(auth, 'admin.cs@vsuihs.com', '326_TheWorldIsFlat');
-    await aStore.updateDashboard();
+    // await signInWithEmailAndPassword(auth, , );
+    // await aStore.updateDashboard();
     return navigateTo("/AdminDashboard", { replace: true });
 }
 
 async function logInAsAdviser() {
-    await signInWithEmailAndPassword(auth, '22-1-00001@vsu.edu.ph', '326_TheWorldIsFlat');
+    // await signInWithEmailAndPassword(auth, , );
     return navigateTo("/RegistrationSuccessful", { replace: true });
 }
 

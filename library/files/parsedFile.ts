@@ -1,6 +1,5 @@
-import type { Result } from "../results/result";
 import type { IFile } from "./iFile";
-
+import type { Result } from "../results/result";
 import { FileParsers } from "../fileParsers/fileParsers";
 
 export class ParsedFile {
@@ -41,6 +40,10 @@ export class ParsedFile {
     return this._name;
   }
 
+  public set name(value: string) {
+    this._name = `${value}.${this._extension}`;
+  }
+
   public get size(): number {
     return this._size;
   }
@@ -71,9 +74,5 @@ export class ParsedFile {
 
   public get asciiBinaryString() {
     return this.base64BinaryString.toString("ascii");
-  }
-
-  public set name(value: string) {
-    this._name = `${value}.${this._extension}`;
   }
 }

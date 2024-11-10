@@ -1,5 +1,5 @@
-import { DatasetTransformer } from "./datasetTransformer";
 import { Validators } from "../validators/validators";
+import { DatasetTransformer } from "./datasetTransformer";
 
 export class StudentCSVDatasetTransformer extends DatasetTransformer {
     public constructor() {

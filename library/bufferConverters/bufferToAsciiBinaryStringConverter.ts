@@ -1,5 +1,5 @@
-import { FailedResult } from "../results/failedResult";
 import { Result } from "../results/result";
+import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
 import { BufferConverter } from "./bufferConverter";
 import { BufferConverters } from "./bufferConverters";

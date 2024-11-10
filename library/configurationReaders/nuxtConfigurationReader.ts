@@ -1,6 +1,6 @@
 import { Result } from "../results/result";
-import { SuccessfulResult } from "../results/successfulResult";
 import { FailedResult } from "../results/failedResult";
+import { SuccessfulResult } from "../results/successfulResult";
 import { ConfigurationReader } from "./configurationReader";
 
 export class NuxtConfigurationReader extends ConfigurationReader {
@@ -118,6 +118,34 @@ export class NuxtConfigurationReader extends ConfigurationReader {
         this._throwErrorIfResultIsUnsuccessful(result);
         
         return parseInt(result.data);
+    }
+
+    public get DEBUG_ADMIN_EMAIL(): number {
+        const result: Result = this.getPrivateValue('debugAdminEmail');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
+    
+    public get DEBUG_ADMIN_PASSWORD(): number {
+        const result: Result = this.getPrivateValue('debugAdminPassword');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
+
+    public get DEBUG_ADVISER_EMAIL(): number {
+        const result: Result = this.getPrivateValue('debugAdviserEmail');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
+    
+    public get DEBUG_ADVISER_PASSWORD(): number {
+        const result: Result = this.getPrivateValue('debugAdviserPassword');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
     }
 
     private _throwErrorIfResultIsUnsuccessful(result: Result): void {

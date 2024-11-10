@@ -18,7 +18,7 @@ export class ConsoleLogger extends Logger {
         this.print(message, 'Error', isLoggingEnabled);
     }
 
-    public print(message: string, logLevel: string, isLoggingEnabled: boolean = true) {
+    public print(message: string, logLevel: string, isLoggingEnabled: boolean = true): void {
         if (ConfigurationReaders.nuxtConfigurationReader.IS_CONSOLE_LOGGING_ENABLED && isLoggingEnabled) {
             console.log(`[${new Date().toISOString()}] - [${logLevel}] - [${message}]`);
         }

@@ -27,4 +27,12 @@ export abstract class Result {
     public get message(): string {
         return this._message;
     }
+
+    public get toObject(): { data: any, isSuccessful: boolean, message: string } {
+        return {
+            data: this.data,
+            isSuccessful: this.isSuccessful,
+            message: this.message
+        }
+    }
 }

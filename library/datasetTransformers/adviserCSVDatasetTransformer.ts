@@ -1,9 +1,8 @@
-import type { IFile } from "../files/iFile";
-
-import { FileParsers } from "../fileParsers/fileParsers";
-import { FailedResult } from "../results/failedResult";
 import { Result } from "../results/result";
+import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
+import type { IFile } from "../files/iFile";
+import { FileParsers } from "../fileParsers/fileParsers";
 import { Validators } from "../validators/validators";
 import { DatasetTransformer } from "./datasetTransformer";
 
@@ -20,7 +19,7 @@ export class AdviserCSVDatasetTransformer extends DatasetTransformer {
     );
   }
 
-  public transform(file: IFile): Result {
+  public async transform(file: IFile): Promise<Result> {
     try {
       let validationResult: Result = FileParsers.csvFileParser.parseToString(file);
       if (validationResult.isNotSuccessful) {
@@ -40,7 +39,7 @@ export class AdviserCSVDatasetTransformer extends DatasetTransformer {
       for (let rowIndex: number = 1; rowIndex < rawParsedData.length; ++rowIndex) {
         columns = rawParsedData[rowIndex].split(",");
         key = this._columnTypes[0](columns[0]);
-        validationResult = this._columnValidators[0].validate(key);
+        validationResult = await this._columnValidators[0].validate(key);
         if (validationResult.isNotSuccessful) {
           throw new Error(validationResult.message);
         } else if (key in values) {
@@ -54,7 +53,7 @@ export class AdviserCSVDatasetTransformer extends DatasetTransformer {
         columns.shift();
         for (let columnIndex: number = 1; columnIndex < columns.length; ++columnIndex) {
           cellData = this._columnTypes[columnIndex](columns[columnIndex]);
-          validationResult = this._columnValidators[columnIndex].validate(cellData);
+          validationResult = await this._columnValidators[columnIndex].validate(cellData);
           if (validationResult.isNotSuccessful) {
             throw new Error(validationResult.message);
           }

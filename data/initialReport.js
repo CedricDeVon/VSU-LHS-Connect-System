@@ -16,7 +16,7 @@ export const initialReport = [
         placeOfIncident: 'Place1',
         thingsInvolved: 'liqour',
         narrativeReport: 'A student was caught drinking liqour inside the campus.',
-        dateReported: 'July 8, 2024',
+        dateReported: 'July 8, 2024', 
         status: 'Read',
     },
     {

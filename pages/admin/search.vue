@@ -197,8 +197,135 @@ const filteredStudents = () => {
       </div>
     </div>
     <AddSectionForm v-if="store.searchShowAddSectionForm" @close="store.searchShowAddSectionForm = false" @add-section="addNewSection" />
+    <AddSectionForm v-if="showAddSectionForm" @close="showAddSectionForm = false" @add-section="addNewSection" />
+    <StudentDetailsModal 
+        v-if="selectedStudent"
+        :show="!!selectedStudent"
+        :studentData="selectedStudent"
+        @close="selectedStudent = null"
+    />
   </div>
 </template>
+
+<script>
+import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
+import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
+import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
+import { section } from '~/data/section.js';
+import { student } from '~/data/student.js';
+import debounce from 'lodash/debounce';
+
+export default {
+  components: {
+    AdminSidebar, AdminHeader, AddSectionForm, StudentDetailsModal
+  },
+  watch: {
+    searchQuery: debounce(function (newQuery) {
+      this.debouncedQuery = newQuery;
+    }, 300) // Debounce with a 300ms delay
+  },
+  data() {
+    return {
+      searchQuery: '',
+      debouncedQuery: '',
+      selectedSearch: '',
+      showAddSectionForm: false,
+      sections: section,
+      students: student,
+      sortBy: '',
+      selectedStudent: null,
+    };
+  },
+  methods: {
+    addNewSection(newSection) {
+      this.sections.push({
+        id: this.sections.length + 1, // assuming id is sequential hehe
+        sectionName: newSection.sectionName,
+        sectionLevel: newSection.sectionLevel,
+        adviserId: newSection.adviserId
+      });
+    },
+    getSectionByStudentId(studentId) {
+      for (const sec of this.sections) {
+        if (sec.sectionStudents.includes(studentId)) {
+          return sec;
+        }
+      }
+      return null;
+    },
+    navigateToPage(section) {
+      if (section.adviserId) {
+        this.$router.push({
+          path: `/admin/section/${section.id}`
+        });
+      } else {
+        this.$router.push({ name: 'admin-accounts' });
+      }
+    },
+    viewStudentProfile(studentId) {
+      const studentData = this.students.find(s => s.studentId === studentId);
+      if (studentData) {
+        this.selectedStudent = studentData;
+      }
+    }
+  },
+  computed: {
+    filteredSections() {
+      let filtered = this.sections.filter((section) => {
+        if (!this.debouncedQuery) return true; // Show all if query is empty
+        return (
+          section.sectionName.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||
+          String(section.sectionLevel).includes(this.debouncedQuery) ||
+          (section.adviserId && section.adviserId.toLowerCase().includes(this.debouncedQuery.toLowerCase()))
+        );
+      });
+      if (this.selectedSearch === 'section') {
+        if (this.sortBy === 'sNameSort') {
+          filtered.sort((a, b) => a.sectionName.localeCompare(b.sectionName));
+        } else if (this.sortBy === 'sGradeSort') {
+          filtered.sort((a, b) => a.sectionLevel - b.sectionLevel);
+        } else if (this.sortBy === 'recentlyAddedSort') {
+          filtered.sort((a, b) => b.id - a.id); // TODO: Change to date added if naa na nga attribute
+        }
+      }
+
+      return filtered;
+    },
+    filteredStudents() {
+      let filtered = this.students.filter((student) => {
+        if (!this.debouncedQuery) return true;
+        return (
+          student.studentId.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||
+          student.lastName.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||
+          student.firstName.toLowerCase().includes(this.debouncedQuery.toLowerCase())
+        );
+      });
+
+      if (this.selectedSearch === 'student') {
+        if (this.sortBy === 'surnameSort') {
+          filtered.sort((a, b) => a.lastName.localeCompare(b.lastName));
+        } else if (this.sortBy === 'gradeLvlSort') {
+          filtered.sort((a, b) => {
+            const sectionA = this.getSectionByStudentId(a.studentId);
+            const sectionB = this.getSectionByStudentId(b.studentId);
+            return (sectionA ? sectionA.sectionLevel : 0) - (sectionB ? sectionB.sectionLevel : 0);
+          });
+        }
+      }
+
+      return filtered.map(student => {
+        const section = this.getSectionByStudentId(student.studentId);
+        return {
+          ...student,
+          sectionName: section ? section.sectionName : '---',
+          sectionLevel: section ? section.sectionLevel : '---'
+        };
+      });
+    },
+  },
+};
+</script>
 
 <style scoped>
 thead th {

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import LoginPage from '~/pages/LoginPage.vue';
+import LoginPage from '~/pages/auth/login.vue';
 import { getAuth, signOut } from "firebase/auth";
 
 const store = adminStore();
@@ -7,7 +7,7 @@ const store = adminStore();
 const userSignOut = async () => {
   const auth = getAuth();
   await signOut(auth);
-  return navigateTo('/LoginPage');
+  return navigateTo('/login');
 }
 
 const topNav = [

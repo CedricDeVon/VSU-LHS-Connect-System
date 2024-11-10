@@ -104,6 +104,12 @@
       </div>
     </div>
     <AddSectionForm v-if="showAddSectionForm" @close="showAddSectionForm = false" @add-section="addNewSection" />
+    <StudentDetailsModal 
+        v-if="selectedStudent"
+        :show="!!selectedStudent"
+        :studentData="selectedStudent"
+        @close="selectedStudent = null"
+    />
   </div>
 </template>
 
@@ -111,13 +117,14 @@
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
+import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 import { section } from '~/data/section.js';
 import { student } from '~/data/student.js';
 import debounce from 'lodash/debounce';
 
 export default {
   components: {
-    AdminSidebar, AdminHeader, AddSectionForm
+    AdminSidebar, AdminHeader, AddSectionForm, StudentDetailsModal
   },
   watch: {
     searchQuery: debounce(function (newQuery) {
@@ -133,6 +140,7 @@ export default {
       sections: section,
       students: student,
       sortBy: '',
+      selectedStudent: null,
     };
   },
   methods: {
@@ -162,7 +170,10 @@ export default {
       }
     },
     viewStudentProfile(studentId) {
-      this.$router.push(`/admin/student/${studentId}`);
+      const studentData = this.students.find(s => s.studentId === studentId);
+      if (studentData) {
+        this.selectedStudent = studentData;
+      }
     }
   },
   computed: {

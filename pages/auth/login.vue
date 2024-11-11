@@ -23,13 +23,13 @@ const submit = async () => {
 
   store.resetAllData();
   if (apiResult.isAdmin) { // Admin
-    return navigateTo("/AdminDashboard", { replace: true });
+    return navigateTo("/admin/dashboard", { replace: true });
   }
-  else if (!apiResult.status) { // Adviser
-    return navigateTo("/RegistrationSuccessful", { replace: true });
+  else if (!apiResult.status) { // Unverified Adviser
+    return navigateTo("/adviser/pending", { replace: true });
   }
-  else {
-    return navigateTo("/RegistrationSuccessful", { replace: true });
+  else { // Verified Adviser
+    return navigateTo("/adviser/dashboard", { replace: true });
   }
 };
 
@@ -74,7 +74,7 @@ onMounted(() => {
           </button>
           <div class="text-center mt-4">
             <p class="text-gray-500">OR</p>
-            <NuxtLink to="/SignupPage1" class="text-blue-500 hover:underline">Register Here</NuxtLink>
+            <NuxtLink to="/auth/register" class="text-blue-500 hover:underline">Register Here</NuxtLink>
           </div>
       </form>
     </div>

@@ -10,7 +10,7 @@ export const anecdotalReport = [
         purpose: 'home visitation and INC grade',
         placeOfIncident: 'Place1',
         thingsInvolved: 'INC Grade',
-        details: 'Maam mimi visited and to to a student regarding the INC grade',
+        details: '      Maam mimi visited and to to a student regarding the INC grade'.repeat(15),
         remarks: 'The home visitation was successful',
         datePrepared: 'July 8, 2024',
         preparedBy: 'Ma\'am MIMI',  

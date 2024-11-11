@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { userSignUpStore } from '~/stores/userSignUp';
 import { handleBackClick } from '~/composables/navigation';
+import statueImage from '~/assets/images/vsu-main-the-search-for-truth-statue.png'
+
 
 const store = userSignUpStore()
 
-const submit = async () => {  
+const submit = async () => {
   const result: any = await $fetch('/api/user/signUpBase', {
     method: 'POST', body: store.getUserData()
   });
@@ -24,80 +26,133 @@ const goBack = () => {
 </script>
 
 <template>
-  <div class="flex min-h-screen">
-    <div class="w-1/2  flex items-center justify-center bg-left">
-      <div class="w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden signup-outer-container">
-        <div class="w-full p-8 bg-amber-50 signup-container">
-          <h2 class="text-2xl font-semibold text-green-800 mb-6">Login Details</h2>
-          <form @submit.prevent="submit">
-            <div class="mb-4">
-              <input
-                type="text"
-                v-model="store.userName"
-                placeholder="Enter username"
-                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div class="mb-4">
-              <label class="block text-green-800 mb-1">VSUIHS-Issued Email</label>
-              <input
-                type="email"
-                v-model="store.email"
-                placeholder="Enter email"
-                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div class="mb-4">
-              <label class="block text-green-800 mb-1">Password</label>
-              <input
-                type="password"
-                v-model="store.password"
-                placeholder="Password"
-                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div class="mb-6">
-              <label class="block text-green-800 mb-1">Confirm Password</label>
-              <input
-                type="password"
-                v-model="store.confirmPassword"
-                placeholder="Confirm Password"
-                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div v-if ="store.errorMessage" class="text-red-500 mb-4">{{ store.errorMessage }}</div>
-            <button
-              type="submit"
-              class="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 transition duration-300 mb-2"
-            
-            >
-              PROCEED
-            </button>
-            
-            <div class="text-center text-gray-500 my-2">OR</div>
-            <button
-              type="button"
-              @click="goBack"
-              class="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-500 transition duration-300"
-            >
+  <div class="fixed inset-0 flex overflow-hidden">
+    <div class="fixed right-[5%] top-[20%] h-screen w-1/2 bg-cover bg-left opacity-75 z-10 scale-[1.03]
+             animate-statue-entrance mix-blend-multiply" :style="{
+              backgroundImage: `url(${statueImage})`,
+              backgroundColor: 'transparent'
+            }"></div>
+    <div class="w-1/2 flex items-center justify-center bg-left h-screen">
+      <div class="w-[380px] animate-slide-in">
+        <form @submit.prevent="submit" class="bg-white p-8 rounded-xl shadow-md space-y-5 max-h-[90vh] overflow-y-auto">
+          <h2 class="text-[#2B5741] text-2xl font-semibold mb-8 animate-fade-in-delayed">Login Details</h2>
+
+          <!-- Username Input -->
+          <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+            <label class="block text-[#2B5741] text-sm mb-1">Username</label>
+            <input type="text" v-model="store.userName" placeholder="Username" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                     transition-all duration-300
+                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
+            <i class="fas fa-user absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+
+          <!-- Email Input -->
+          <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+            <label class="block text-[#2B5741] text-sm mb-1">VSUIHS-Issued Email</label>
+            <input type="email" v-model="store.email" placeholder="Enter email" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                     transition-all duration-300
+                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
+            <i class="fas fa-envelope absolute right-4 top-[60%] -translate-y-1/2 text-gray-400"></i>
+          </div>
+
+          <!-- Password Input -->
+          <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+            <input type="password" v-model="store.password" placeholder="Password" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                     transition-all duration-300
+                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
+            <i class="fas fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+
+          <!-- Confirm Password Input -->
+          <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+            <input type="password" v-model="store.confirmPassword" placeholder="Confirm Password" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                     transition-all duration-300
+                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
+            <i class="fas fa-lock absolute right-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          </div>
+
+          <!-- Error Message -->
+          <div v-if="store.errorMessage" class="text-red-500 text-sm animate-shake bg-red-50 p-3 rounded-lg">
+            {{ store.errorMessage }}
+          </div>
+
+          <!-- Proceed Button -->
+          <button type="submit" class="w-full py-3 bg-[#2B5741] text-white rounded-lg text-sm uppercase tracking-wider
+                   transition-all duration-300 hover:bg-[#1e3d2d]">
+            PROCEED
+          </button>
+
+          <!-- Divider -->
+          <div class="text-center text-gray-500 my-2">OR</div>
+
+          <!-- Back Button -->
+          <button type="button" @click="goBack" class="w-full py-3 bg-[#6B8E76] text-white rounded-lg text-sm uppercase tracking-wider
+                   transition-all duration-300 hover:bg-[#5a7862]">
             BACK
-            
-            </button>
-          </form>
-        </div>
+          </button>
+        </form>
       </div>
     </div>
     <!-- Right section -->
-    <div class="w-1/2 bg-right">
-
+    <div class="w-1/2 bg-right h-screen animate-fade-in">
+      <div class="relative h-full flex flex-col items-center justify-start animate-slide-in-right">
+        <!-- Logo Container -->
+        <div class="bg-[#F5F5F5]/80 backdrop-blur-sm rounded-lg w-[80%] max-w-[600px] 
+                    transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                    animate-fade-in-delayed">
+          <img 
+            src="@/assets/images/sample-logo.png" 
+            alt="Connect System Logo" 
+            class="w-full max-w-[70%] h-auto mx-auto transform transition-all duration-500 
+                   hover:scale-[1.05] animate-float"
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.8s ease-out;
+}
+
 .bg-left {
   background-color: #fffef1;
 }
+
 .bg-right {
   background-color: #f5f5f5;
 }
@@ -110,64 +165,119 @@ const goBack = () => {
   padding: 50px;
   background-color: white;
 }
+
+/* Add this to prevent body scrolling */
+:root {
+  overflow: hidden;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-10px) scale(1.02);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
+.animate-fade-in-delayed {
+  animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
 </style>
 
 // onMounted(()=>{
-  //   if(typeof window !== 'undefined'){
-  //     signUpUsername.value = sessionStorage.getItem('signUpUsername') || '';
-  //     signUpEmail.value = sessionStorage.getItem('signUpEmail') || '';
-  //     signUpPassword.value = sessionStorage.getItem('signUpPassword') || '';
-  //   }
-  // });
-  
+// if(typeof window !== 'undefined'){
+// signUpUsername.value = sessionStorage.getItem('signUpUsername') || '';
+// signUpEmail.value = sessionStorage.getItem('signUpEmail') || '';
+// signUpPassword.value = sessionStorage.getItem('signUpPassword') || '';
+// }
+// });
+
 
 // sessionStorage.setItem('signUpUsername', signUpUsername.value);
-  // sessionStorage.setItem('signUpEmail', signUpEmail.value);
-  // sessionStorage.setItem('signUpPassword', signUpPassword.value);
-  // sessionStorage.setItem('signUpConfirmPassword', signUpConfirmPassword.value);
-  // console.log(signUpUsername.value)
-  <!-- router.push({ name: 'SignupPage2' }); -->
+// sessionStorage.setItem('signUpEmail', signUpEmail.value);
+// sessionStorage.setItem('signUpPassword', signUpPassword.value);
+// sessionStorage.setItem('signUpConfirmPassword', signUpConfirmPassword.value);
+// console.log(signUpUsername.value)
+<!-- router.push({ name: 'SignupPage2' }); -->
 
 
-  // errorMessage.value = '';
+// errorMessage.value = '';
 
-  // if(!username.value){
-  //   errorMessage.value = 'Username is required.';
-  //   return;
-  // }
-  // if(!email.value){
-  //   errorMessage.value = 'Email Address is required.';
-  //   return;
-  // }
-  // if(!password.value){
-  //   errorMessage.value = 'Password is required.';
-  //   return;
-  // }
-  // if(password.value !== confirmPassword.value){
-  //   errorMessage.value = 'Password do not match.';
-  //   return;
-  // }
+// if(!username.value){
+// errorMessage.value = 'Username is required.';
+// return;
+// }
+// if(!email.value){
+// errorMessage.value = 'Email Address is required.';
+// return;
+// }
+// if(!password.value){
+// errorMessage.value = 'Password is required.';
+// return;
+// }
+// if(password.value !== confirmPassword.value){
+// errorMessage.value = 'Password do not match.';
+// return;
+// }
 
-  // if(!usernameAvailable(username.value)){
-  //   errorMessage.value = 'Username already taken.';
-  //   return;
-  // }
-  // if(existingEmail(email.value)){
-  //   errorMessage.value = 'Email is already registered.';
-  //   return;
-  // }
+// if(!usernameAvailable(username.value)){
+// errorMessage.value = 'Username already taken.';
+// return;
+// }
+// if(existingEmail(email.value)){
+// errorMessage.value = 'Email is already registered.';
+// return;
+// }
 
-  // sessionStorage.setItem('username', username.value);
-  // sessionStorage.setItem('username', username.value);
-  // sessionStorage.setItem('email', email.value);
-  // sessionStorage.setItem('password', password.value);
-  // sessionStorage.setItem('confirmPassword', confirmPassword.value);
-  
-  // const user = {
-  // id: Generators.uuidGenerator.generate(),
-  // email: signUpEmail.value,
-  // username: signUpUsername.value,
-  // password: signUpPassword.value,
-  // status: false,
-  // }
-  // // sessionStorage.setItem('user', JSON.stringify(user));  
+// sessionStorage.setItem('username', username.value);
+// sessionStorage.setItem('username', username.value);
+// sessionStorage.setItem('email', email.value);
+// sessionStorage.setItem('password', password.value);
+// sessionStorage.setItem('confirmPassword', confirmPassword.value);
+
+// const user = {
+// id: Generators.uuidGenerator.generate(),
+// email: signUpEmail.value,
+// username: signUpUsername.value,
+// password: signUpPassword.value,
+// status: false,
+// }
+// // sessionStorage.setItem('user', JSON.stringify(user));

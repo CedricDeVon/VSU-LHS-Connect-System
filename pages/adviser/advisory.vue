@@ -1,7 +1,6 @@
 <template>
     <div class="adviser-page">
         <AdviserHeader/>
-
        <div >
 
        <!--<AddStudentForm/>-->

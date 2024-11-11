@@ -106,7 +106,7 @@ export const section = [
 },
 {
     id: 'sectionid4',
-    adviserId: 'adviserid4',
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'C',
     sectionLevel: '7',
@@ -115,7 +115,7 @@ export const section = [
 },
 {
     id: 'sectionid5',
-    adviserId: 'adviserid5',
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Java',
     sectionLevel: '7',
@@ -353,7 +353,7 @@ export const section = [
 },
 {
     id: 'sectionid27',
-    adviserId: 'adviserid27',
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Mobile Game Development',
     sectionLevel: '12',

@@ -197,6 +197,10 @@
                 </section>
             </div>
         </div>
+            <SendEmail v-if="showSendEmailModal" 
+            :initialEmail="toSendEmail" 
+            @close="showSendEmailModal = false" 
+            />
     </div>
 </template>
 
@@ -204,14 +208,16 @@
 import { section } from '~/data/section.js';
 import { student } from '~/data/student.js';
 import { adviser } from '~/data/adviser.js';
+import { users } from '~/data/user.js';
 import { incidentReport } from '~/data/incident.js';
+import SendEmail  from '~/components/Modals/SendEmailModal.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 
 export default {
     name: 'admin-section-details',
     components: {
-        AdminSidebar, AdminHeader
+        AdminSidebar, AdminHeader, SendEmail
     },
     data() {
         return {
@@ -222,7 +228,9 @@ export default {
             selectedReportSort: '',
             selectedReportStatus: 'all',
             sectionStudents: [],
-            sectionReports: []
+            sectionReports: [],
+            showSendEmailModal: false,
+            toSendEmail: ''
         };
     },
     async created() {
@@ -239,6 +247,19 @@ export default {
         }
     },
     methods: {
+        async sendEmail() {
+            this.showSendEmailModal = true;
+            const user = await this.getUser(this.adviser.userId);
+            console.log('Adviser User:', user);
+            this.toSendEmail = user.emailAdd;
+            console.log('Sending email to:', this.toSendEmail)
+            console.log('Email Modal:', this.showSendEmailModal)
+        },
+
+        async getUser(userId) {
+            return users.find(u => u.userId === userId);
+        },
+
         getAdviserFullName() {
             if (!this.adviser) return 'No Adviser Assigned';
             return `${this.adviser.firstName} ${this.adviser.middleName} ${this.adviser.lastName}${this.adviser.suffix ? ` ${this.adviser.suffix}` : ''}`;

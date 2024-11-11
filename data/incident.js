@@ -15,7 +15,7 @@ export const incidentReport = [
         others: 'Guidance Facilitator will send a letter to the parents for the case conference.',
         dateReported: 'July 8, 2024',
         lastModified: 'July 10, 2024',
-        hasCaseConference: true, 
+        hasCaseConference: ["caseConID1"], 
         AY: '2024-2025',
         status: 'Resolved',
     },
@@ -33,7 +33,7 @@ export const incidentReport = [
         others: 'Parents will be notified.',
         dateReported: 'October 4, 2024',
         lastModified: 'October 5, 2024',
-        hasCaseConference: true,
+        hasCaseConference: ["caseConID2", "caseConID7", "caseConID11"],
         AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
@@ -51,7 +51,7 @@ export const incidentReport = [
         others: '',
         dateReported: 'May 8, 2024',
         lastModified: '',
-        hasCaseConference: false,
+        hasCaseConference: [],
         AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
@@ -69,7 +69,7 @@ export const incidentReport = [
         others: '',
         dateReported: 'September 16, 2024',
         lastModified: '',
-        hasCaseConference: false,
+        hasCaseConference: [],
         AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
@@ -87,7 +87,7 @@ export const incidentReport = [
         others: 'Letters to parents will be sent.',
         dateReported: 'August 21, 2024',
         lastModified: 'August 24, 2024',
-        hasCaseConference: true,
+        hasCaseConference: ["caseConID3", "caseConID6", "caseConID9"],
         AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
@@ -105,7 +105,7 @@ export const incidentReport = [
         others: '',
         dateReported: 'June 11, 2024',
         lastModified: '',
-        hasCaseConference: false,
+        hasCaseConference: [],
         AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
@@ -123,7 +123,7 @@ export const incidentReport = [
         others: 'Parents were informed of the altercation.',
         dateReported: 'April 26, 2024',
         lastModified: 'April 28, 2024',
-        hasCaseConference: true,
+        hasCaseConference: ["caseConID4", "caseConID5", "caseConID8", "caseConID10", "caseConID12"],
         AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
@@ -141,7 +141,7 @@ export const incidentReport = [
         others: '',
         dateReported: 'March 31, 2024',
         lastModified: '',
-        hasCaseConference: false,
+        hasCaseConference: [],
         AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
@@ -159,7 +159,7 @@ export const incidentReport = [
         others: 'Both students warned of suspension for future infractions.',
         dateReported: 'February 15, 2024',
         lastModified: 'February 16, 2024',
-        hasCaseConference: false,
+        hasCaseConference: [],
         AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },
@@ -177,7 +177,7 @@ export const incidentReport = [
         others: '',
         dateReported: 'January 6, 2024',
         lastModified: '',
-        hasCaseConference: false,
+        hasCaseConference: [],
         AY: '2024-2025',
         status: 'NotResolved', // Unread status in initial report
     },
@@ -195,7 +195,7 @@ export const incidentReport = [
         others: 'Students assigned to cleanup graffiti and given detention.',
         dateReported: 'December 13, 2024',
         lastModified: 'December 15, 2024',
-        hasCaseConference: false,
+        hasCaseConference: [],
         AY: '2024-2025',
         status: 'Resolved', // Read status in initial report
     },

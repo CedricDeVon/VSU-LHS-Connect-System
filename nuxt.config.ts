@@ -94,6 +94,7 @@ export default defineNuxtConfig({
     firebaseStorageUrl: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_FIREBASE_STORAGE_URL"),
     emailServiceId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_SERVICE_ID"),
     emailTemplateId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_TEMPLATE_ID"),
+    emailTemplateIdForApproval: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_TEMPLATE2_ID"),
     emailPublicKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_PUBLIC_KEY"),
     userTokenDurationInSeconds: 60,
     public: {

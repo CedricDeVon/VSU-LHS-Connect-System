@@ -498,7 +498,7 @@ export const adviser = [
 {
   id: 'adviserid34',
   userId: 'userid34',
-  sectionId: 'sectionid34',
+  sectionId: 'sectionid8',
   facultyId: '22-1-01104',
   firstName: 'FirstName34',
   lastName: 'LastName34',

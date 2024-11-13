@@ -10,10 +10,10 @@ export const anecdotalReport = [
         purpose: 'home visitation and INC grade',
         placeOfIncident: 'Place1',
         thingsInvolved: 'INC Grade',
-        details: 'Maam mimi visited and to to a student regarding the INC grade',
+        details: '      Maam mimi visited and to to a student regarding the INC grade'.repeat(15),
         remarks: 'The home visitation was successful',
         datePrepared: 'July 8, 2024',
-        preparedBY: 'Ma\'am MIMI',  
+        preparedBy: 'Ma\'am MIMI',  
         AY: '2024-2025',
     },
     {
@@ -28,7 +28,7 @@ export const anecdotalReport = [
         details: 'Counselor discussed behavioral issues with the student and offered strategies.',
         remarks: 'The counseling session was constructive.',
         datePrepared: 'August 11, 2024',
-        preparedBY: 'Mr. Johnson',
+        preparedBy: 'Mr. Johnson',
         AY: '2024-2025',
     },
     {
@@ -43,7 +43,7 @@ export const anecdotalReport = [
         details: 'Teacher assisted the student in improving study habits and time management.',
         remarks: 'The student showed willingness to improve.',
         datePrepared: 'September 06, 2024',
-        preparedBY: 'Mrs. Lee',
+        preparedBy: 'Mrs. Lee',
         AY: '2024-2025',
     },
     {
@@ -58,7 +58,7 @@ export const anecdotalReport = [
         details: 'A peer mediation session was conducted to resolve conflicts between students.',
         remarks: 'The session led to a mutual understanding.',
         datePrepared: 'September 16, 2024',
-        preparedBY: 'Mr. Smith',
+        preparedBy: 'Mr. Smith',
         AY: '2024-2025',
     },
     {
@@ -73,7 +73,7 @@ export const anecdotalReport = [
         details: 'Visited the family to discuss the student’s academic performance and needed support.',
         remarks: 'The family was cooperative and eager to help.',
         datePrepared: 'October 02, 2024',
-        preparedBY: 'Ms. Taylor',
+        preparedBy: 'Ms. Taylor',
         AY: '2024-2025',
     },
     {
@@ -88,7 +88,7 @@ export const anecdotalReport = [
         details: 'Discussed the student’s attendance issues and potential consequences.',
         remarks: 'The intervention was well-received.',
         datePrepared: 'October 16, 2024',
-        preparedBY: 'Mr. Brown',
+        preparedBy: 'Mr. Brown',
         AY: '2024-2025',
     },
     {
@@ -103,7 +103,7 @@ export const anecdotalReport = [
         details: 'Provided additional math tutoring sessions to help the student catch up.',
         remarks: 'The student made significant progress.',
         datePrepared: 'November 02, 2024',
-        preparedBY: 'Mrs. Wilson',
+        preparedBy: 'Mrs. Wilson',
         AY: '2024-2025',
     },
     {
@@ -118,7 +118,7 @@ export const anecdotalReport = [
         details: 'Facilitated collaboration between students for a group project.',
         remarks: 'The students worked well together and achieved a good result.',
         datePrepared: 'November 16, 2024',
-        preparedBY: 'Mr. White',
+        preparedBy: 'Mr. White',
         AY: '2024-2025',
     },
     {
@@ -133,7 +133,7 @@ export const anecdotalReport = [
         details: 'Monitored the student’s progress in their subjects and offered assistance.',
         remarks: 'The student showed improvement in grades.',
         datePrepared: 'December 06, 2024',
-        preparedBY: 'Ms. Green',
+        preparedBy: 'Ms. Green',
         AY: '2024-2025',
     },
     {
@@ -148,7 +148,7 @@ export const anecdotalReport = [
         details: 'Conducted a parent-teacher conference to discuss student’s performance.',
         remarks: 'The parents were engaged and supportive.',
         datePrepared: 'December 21, 2024',
-        preparedBY: 'Mr. Black',
+        preparedBy: 'Mr. Black',
         AY: '2024-2025',
     },
 

@@ -92,6 +92,13 @@ export class NuxtConfigurationReader extends ConfigurationReader {
         return result.data;
     }
 
+    public get EMAIL_TEMPLATE2_ID(): string {
+        const result: Result = this.getPrivateValue('emailTemplateIdForApproval');
+        this._throwErrorIfResultIsUnsuccessful(result);
+        
+        return result.data;
+    }
+
     public get EMAIL_PUBLIC_KEY(): string {
         const result: Result = this.getPrivateValue('emailPublicKey');
         this._throwErrorIfResultIsUnsuccessful(result);

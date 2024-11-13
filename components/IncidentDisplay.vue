@@ -25,6 +25,17 @@ import { adviser } from '~/data/adviser';
 
 export default {
 
+  props: {
+    show: {
+      type: Boolean,
+      default: false,
+    },
+    incidentReportID: {
+      type: String,
+      required: true,
+    },
+  },
+
   data() {
     return {
     incdReport:{},
@@ -36,8 +47,8 @@ export default {
   },
 
   async created(){
-    await this.initIncidentByID('report09');
-    await this.getReporter('report09');
+    await this.initIncidentByID(this.incidentReportID);
+    await this.getReporter(this.incidentReportID);
     this.displayPDF();
 
   },
@@ -118,7 +129,7 @@ export default {
         {
           columns:
           [
-          {width:'30%', text: 'Things Involved:', style: 'label' },
+          {width:'30%', text: 'Thing/s Involved:', style: 'label' },
           {width:'5%', text:''},
           {width: '65%', text: `${this.incdReport.thingsInvolved}`, style: 'content', alignment: 'center'  },
           ],
@@ -126,14 +137,10 @@ export default {
         {
           canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }]
         },
-        {
-          columns:
-          [
-          {width:'30%', text: 'Narrative Report:', style: 'label' },
-          {width:'5%', text:''},
-          {width:'65%', text: `${this.incdReport.narrativeReport}`, style: 'content', alignment: 'center'  },
-          ],
-        },
+
+          {text: 'Narrative Report:', style: 'label' },
+          {text: `${this.incdReport.narrativeReport}`, style: 'content', alignment: 'left', margin: [5, 0, 0, 0] },
+
         {
           canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }]
         },
@@ -227,7 +234,7 @@ export default {
       ],
       styles: {
         header: {
-          fontSize: 18,
+          fontSize: 15,
           bold: true,
           alignment: 'center',
    
@@ -235,7 +242,7 @@ export default {
         },
         content: {
           margin: [0,10,0,10],
-          fontSize: 12,
+          fontSize: 11,
           
         
         },

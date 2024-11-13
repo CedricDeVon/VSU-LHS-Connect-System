@@ -1,11 +1,10 @@
 <template>
     <div class="adviser-page">
         <AdviserHeader/>
-
        <div >
 
        <!--<AddStudentForm/>-->
-         
+       
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
             </div>
@@ -83,9 +82,8 @@
 
 <script>
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import StudentBasicInfo from "~/components/Modals/StudentBasicInfo.vue";
+    import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
     import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
-
     export default {
         name: "Advisory",
         components: {AdviserHeader, StudentBasicInfo, AddStudentForm,},

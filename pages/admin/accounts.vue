@@ -65,10 +65,10 @@ const filteredAdvisers = () => {
 <template>
   <div class="flex h-screen">
     <AdminSidebar />
-
+         
     <div class="flex-grow accounts-page">
       <!--Header-->
-      <AdminHeader />
+     
       <div class="flex justify-center p-8">
         <div class="bg-white custom-shadow rounded-lg w-full max-w-4xl">
           <!-- Dropdown Button -->
@@ -154,7 +154,17 @@ const filteredAdvisers = () => {
         v-if="adminViewStore.accountsShowUploadModal"
         @close="adminViewStore.accountsShowUploadModal = false"
       /> 
+       <!-- Modal for Approved Account -->
+       <ApprovedAccountModal
+        v-if="showApprovalModal"
+        @close="showApprovalModal = false"
+        :approvedEmail="propAdviser.email"
+        :adviserName="propAdviser.name"
+        :adviserID="propAdviser.facultyId"
+        :adviserSection="propAdviser.section"/>
+
     </div>
+  
   </div>
 </template>
 

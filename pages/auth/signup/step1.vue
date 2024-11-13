@@ -81,23 +81,70 @@ const handleGoingBackToPreviousPage = () => {
               class="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-500 transition duration-300"
             >
             BACK
-            
-            </button>
-          </form>
-        </div>
+          </button>
+        </form>
       </div>
     </div>
     <!-- Right section -->
-    <div class="w-1/2 bg-right">
-
+    <div class="w-1/2 bg-right h-screen animate-fade-in">
+      <div class="relative h-full flex flex-col items-center justify-start animate-slide-in-right">
+        <!-- Logo Container -->
+        <div class="bg-[#F5F5F5]/80 backdrop-blur-sm rounded-lg w-[80%] max-w-[600px] 
+                    transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                    animate-fade-in-delayed">
+          <img 
+            src="@/assets/images/sample-logo.png" 
+            alt="Connect System Logo" 
+            class="w-full max-w-[70%] h-auto mx-auto transform transition-all duration-500 
+                   hover:scale-[1.05] animate-float"
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.8s ease-out;
+}
+
 .bg-left {
   background-color: #fffef1;
 }
+
 .bg-right {
   background-color: #f5f5f5;
 }
@@ -109,5 +156,60 @@ const handleGoingBackToPreviousPage = () => {
 .signup-container {
   padding: 50px;
   background-color: white;
+}
+
+/* Add this to prevent body scrolling */
+:root {
+  overflow: hidden;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-10px) scale(1.02);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.8s ease-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
+.animate-fade-in-delayed {
+  animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
 }
 </style>

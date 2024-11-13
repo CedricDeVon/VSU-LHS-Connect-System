@@ -71,3 +71,61 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes statueEntrance {
+  from {
+    opacity: 0;
+    transform: scale(1.2) translateX(50px);
+  }
+  to {
+    opacity: 0.5;
+    transform: scale(1.03) translateX(0);
+  }
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
+.animate-fade-in-delayed {
+  animation: fadeIn 1s ease-out 0.5s both;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.8s ease-out;
+}
+
+.animate-statue-entrance {
+  animation: statueEntrance 1.2s ease-out;
+}
+
+/* Optional: Add smooth transitions for all interactive elements */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+</style>

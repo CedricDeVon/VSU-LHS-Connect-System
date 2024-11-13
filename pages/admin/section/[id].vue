@@ -371,6 +371,10 @@ const findStudentByFirstName = (firstName: any) => {
                 </section>
             </div>
         </div>
+            <SendEmail v-if="showSendEmailModal" 
+            :initialEmail="toSendEmail" 
+            @close="showSendEmailModal = false" 
+            />
     </div>
 </template>
 

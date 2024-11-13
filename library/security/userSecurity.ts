@@ -17,6 +17,19 @@ export class UserSecurity {
             if (result.isNotSuccessful) {
                 throw new Error(result.message)
             }
+            const jsonWebToken: any = await $fetch('/api/auth/jsonWebToken/sign', {
+                method: 'POST', body: {
+                    id: firebaseCurrentUser.uid,
+                    username: result.data.username,
+                    email,
+                    password,
+                    status: result.data.status,
+                    role
+                }
+              });
+            window.localStorage!.setItem('userAuthToken',
+                jsonWebToken.data
+            );
             return new SuccessfulResult(result.data);
 
         } catch (error: any) {
@@ -129,6 +142,7 @@ export class UserSecurity {
             UserSecurity._handleUndefinedOrNullArguments(auth);
 
             await signOut(auth);
+            window.localStorage?.removeItem('userAuthToken');
             return new SuccessfulResult();
 
         } catch (error: any) {

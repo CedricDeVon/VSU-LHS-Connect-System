@@ -3,9 +3,9 @@ import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore'
 
-// definePageMeta({
-//   middleware: ['validate-user']
-// });
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
 
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateDashboard();

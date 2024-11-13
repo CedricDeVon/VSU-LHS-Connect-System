@@ -95,7 +95,7 @@ onMounted(() => {
             <button type="button" @click="handleGoingBackToPreviousPage"
               class="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-500 transition duration-300">
               BACK
-
+            </button>
 
           <!-- Faculty ID -->
           <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
@@ -163,6 +163,7 @@ onMounted(() => {
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

@@ -3,7 +3,9 @@
         <AdviserHeader/>
        <div >
 
-       <!--<AddStudentForm/>-->
+       <AddStudentForm v-if="showAddStudentForm"
+       @close="showAddStudentForm = false"
+       />
        
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
@@ -30,10 +32,10 @@
 
                        
                             <button @click="addStudent" 
-                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none"
+                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray text-white bg-gray-600 hover:bg-slate-400 focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
-                            </button>    
+                            </button>
                         </div>
                         <!--Table of Students-->
                         <div class=" overflow-x-auto overflow-y-auto max-h-96">

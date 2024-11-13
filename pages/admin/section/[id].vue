@@ -1,3 +1,177 @@
+<script setup lang="ts">
+import { section } from '~/data/section.js';
+import { student } from '~/data/student.js';
+import { adviser } from '~/data/adviser.js';
+import { incidentReport } from '~/data/incident.js';
+import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
+import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+const adminViewStore = useAdminViewStore();
+
+const getAdviserFullName = () => {
+    // if (!adminViewStore.sectionAdviser) return 'No Adviser Assigned';
+    // return `${adminViewStore.sectionAdviser.firstName} ${adminViewStore.sectionAdviser.middleName} ${adminViewStore.sectionAdviser.lastName}${adminViewStore.sectionAdviser.suffix ? ` ${adminViewStore.sectionAdviser.suffix}` : ''}`;
+    return '';
+}
+
+const getStudent = (studentId: any) => {
+    // return student.find(s => s.studentId === studentId);
+    return {};
+}
+
+const getStudentFullName = (studentId: any) => {
+    // const studentData = getStudent(studentId); 
+    // if (!studentData) return 'Unknown Student';
+    // return `${studentData.lastName}, ${studentData.firstName} ${studentData.middleName || ''}`.trim();
+    return '';
+}
+
+const viewStudentProfile = (studentId: any) => {
+    // Navigate to student profile page
+    // $router.push(`/admin/student/${studentId}`);
+}
+
+const viewReport = (reportId: any) => {
+    // console.log('Viewing report:', reportId);
+    // $router.push(`/admin/reports/${reportId}`);
+}
+
+const formatDate = (date: any) => {
+    return new Date(date).toLocaleDateString();
+}
+
+const getStatusClass = (status: any) => {
+    const classes: any = {
+        'Resolved': 'text-green-600 font-medium',
+        'NotResolved': 'text-yellow-600 font-medium'
+    };
+    return classes[status] || 'text-gray-600 font-medium';
+}
+
+const getSectionReports = () => {
+    // let reports = incidentReport.filter(report => {
+    //     const reportStudents = report.peopleInvolved || [];
+    //     return adminViewStore.sectionSection?.sectionStudents.some(studentId => {
+    //         const student = getStudent(studentId);
+    //         return student && reportStudents.includes(student.firstName);
+    //     });
+    // });
+
+    // // Filter by status
+    // if (adminViewStore.sectionSelectedReportStatus !== 'all') {
+    //     reports = reports.filter(report => report.status === adminViewStore.sectionSelectedReportStatus);
+    // }
+
+    // // Sort reports based on selection
+    // switch (adminViewStore.sectionSelectedReportSort) {
+    //     case 'ascDateSort':
+    //         reports.sort((a: any, b: any) => new Date(a.dateOfIncident) - new Date(b.dateOfIncident));
+    //         break;
+    //     case 'descDateSort':
+    //         reports.sort((a: any, b: any) => new Date(b.dateOfIncident) - new Date(a.dateOfIncident));
+    //         break;
+    //     case 'repIDSort':
+    //         reports.sort((a: any, b: any) => a.reportID.localeCompare(b.reportID));
+    //         break;
+    //     case 'surnameSort':
+    //         reports.sort((a: any, b: any) => {
+    //             const studentA = findStudentByFirstName(a.peopleInvolved[0]);
+    //             const studentB = findStudentByFirstName(b.peopleInvolved[0]);
+    //             return studentA?.lastName.localeCompare(studentB?.lastName) || 0;
+    //         });
+    //         break;
+    // }
+
+    // return reports;
+    return [];
+}
+
+const getSectionStudents = () => {
+    // let students = adminViewStore.sectionSection?.sectionStudents.map((id: any) => getStudent(id)) || [];
+
+    // // Sort students based on selection
+    // switch (adminViewStore.sectionSelectedStudentSort) {
+    //     case 'surnameSort':
+    //         students.sort((a: any, b: any) => a.lastName.localeCompare(b.lastName));
+    //         break;
+    //     case 'studentIDSort':
+    //         students.sort((a: any, b: any) => a.studentId.localeCompare(b.studentId));
+    //         break;
+    // }
+
+    // return students;
+    return [];
+}
+
+const getStudentNamesFromReport = (involvedStudents: any) => {
+    // if (!involvedStudents) return '';
+
+    // // Convert first names to full names with surname first
+    // const studentFullNames = involvedStudents.map((firstName: any) => {
+    //     const student = findStudentByFirstName(firstName);
+    //     if (student) {
+    //         return `${student.lastName}, ${student.firstName}`;
+    //     }
+    //     return firstName;
+    // });
+    // return studentFullNames.join('; ');
+    return '';
+}
+
+const findStudentByFirstName = (firstName: any) => {
+    // return student.find(s => s.firstName === firstName);
+    return {};
+}
+
+
+// export default {
+//     name: 'admin-section-details',
+//     components: {
+//         AdminSidebar, AdminHeader
+//     },
+//     data() {
+//         return {
+//             section: null,
+//             adviser: null,
+//             selectedView: '',
+//             selectedStudentSort: '',
+//             selectedReportSort: '',
+//             selectedReportStatus: 'all',
+//             sectionStudents: [],
+//             sectionReports: []
+//         };
+//     },
+//     async created() {
+//         const sectionId = this.$route.params.id;
+//         adminViewStore.sectionSection = section.find(sec => String(sec.id) === String(sectionId));
+
+//         if (!adminViewStore.sectionSection) {
+//             console.error('Section not found:', sectionId);
+//             return;
+//         }
+
+//         if (adminViewStore.sectionSection.adviserId) {
+//             adminViewStore.sectionAdviser = adviser.find(adv => adv.id === adminViewStore.sectionSection.adviserId);
+//         }
+//     },
+//     methods: {
+        
+//     },
+//     watch: {
+//         // Watch for changes in selectedView and fetch appropriate data
+//         selectedView: {
+//             handler: 'fetchSectionData',
+//             immediate: true
+//         }
+//     },
+//     mounted() {
+//         console.log('Incident Report Data:', incidentReport);
+//     }
+// };
+</script>
+
+
 <template>
     <div class="flex h-screen overflow-hidden">
         <AdminSidebar />
@@ -65,14 +239,14 @@
                                 <div class="w-full">
                                     <select
                                         class="mb-0 inline-flex justify-center w-[30%] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
-                                        v-model="selectedView">
+                                        v-model="adminViewStore.sectionSelectedView">
                                         <option value="" disabled>Select View</option>
                                         <option value="studentView">Students</option>
                                         <option value="reportsView">Incident Reports</option>
                                     </select>
 
                                     <!-- Student Sort -->
-                                    <select v-if="selectedView === 'studentView'"
+                                    <select v-if="adminViewStore.sectionSelectedView === 'studentView'"
                                         class="mb-0 ml-4 inline-flex justify-center w-[30%] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
                                         v-model="selectedStudentSort">
                                         <option value="" disabled>Sort By</option>
@@ -81,7 +255,7 @@
                                     </select>
 
                                     <!-- Report Sort -->
-                                    <select v-if="selectedView === 'reportsView'"
+                                    <select v-if="adminViewStore.sectionSelectedView === 'reportsView'"
                                         class="mb-0 ml-4 inline-flex justify-center w-[30%] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
                                         v-model="selectedReportSort">
                                         <option value="" disabled>Sort By</option>
@@ -92,9 +266,9 @@
                                     </select>
 
                                     <!-- Report Status Filter -->
-                                    <select v-if="selectedView === 'reportsView'"
+                                    <select v-if="adminViewStore.sectionSelectedView === 'reportsView'"
                                         class="mb-0 ml-4 inline-flex justify-center w-[30%] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
-                                        v-model="selectedReportStatus">
+                                        v-model="adminViewStore.sectionSelectedStudentSort">
                                         <option value="all">All Status</option>
                                         <option value="Resolved">Resolved</option>
                                         <option value="NotResolved">Not Resolved</option>
@@ -102,7 +276,7 @@
                                 </div>
 
                                 <!-- Placeholder Message when no view is selected -->
-                                <template v-if="!selectedView">
+                                <template v-if="!adminViewStore.sectionSelectedView">
                                     <section class="flex-1 rounded-lg p-6">
                                         <div class="flex flex-col h-[60%]">
                                             <div class="flex justify-center items-center h-full">
@@ -113,7 +287,7 @@
                                 </template>
 
                                 <!-- Students View -->
-                                <template v-else-if="selectedView === 'studentView'">
+                                <template v-else-if="adminViewStore.sectionSelectedView === 'studentView'">
                                     <section class="flex-1 rounded-lg p-6 ">
                                         <div class="flex flex-col h-[65%] ">
                                             <div
@@ -153,7 +327,7 @@
                                 </template>
 
                                 <!-- Reports View -->
-                                <template v-else-if="selectedView === 'reportsView'">
+                                <template v-else-if="adminViewStore.sectionSelectedView === 'reportsView'">
                                     <section class="flex-1 rounded-lg p-6">
                                         <div class="flex flex-col h-[60%]">
                                             <div class="flex justify-center items-center mb-6 bg-[#265630] rounded-xl py-3 px-4">
@@ -199,155 +373,6 @@
         </div>
     </div>
 </template>
-
-<script>
-import { section } from '~/data/section.js';
-import { student } from '~/data/student.js';
-import { adviser } from '~/data/adviser.js';
-import { incidentReport } from '~/data/incident.js';
-import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
-import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-
-export default {
-    name: 'admin-section-details',
-    components: {
-        AdminSidebar, AdminHeader
-    },
-    data() {
-        return {
-            section: null,
-            adviser: null,
-            selectedView: '',
-            selectedStudentSort: '',
-            selectedReportSort: '',
-            selectedReportStatus: 'all',
-            sectionStudents: [],
-            sectionReports: []
-        };
-    },
-    async created() {
-        const sectionId = this.$route.params.id;
-        this.section = section.find(sec => String(sec.id) === String(sectionId));
-
-        if (!this.section) {
-            console.error('Section not found:', sectionId);
-            return;
-        }
-
-        if (this.section.adviserId) {
-            this.adviser = adviser.find(adv => adv.id === this.section.adviserId);
-        }
-    },
-    methods: {
-        getAdviserFullName() {
-            if (!this.adviser) return 'No Adviser Assigned';
-            return `${this.adviser.firstName} ${this.adviser.middleName} ${this.adviser.lastName}${this.adviser.suffix ? ` ${this.adviser.suffix}` : ''}`;
-        },
-        getStudent(studentId) {
-            return student.find(s => s.studentId === studentId);
-        },
-        getStudentFullName(studentId) {
-            const studentData = this.getStudent(studentId); 
-            if (!studentData) return 'Unknown Student';
-            return `${studentData.lastName}, ${studentData.firstName} ${studentData.middleName || ''}`.trim();
-        },
-        viewStudentProfile(studentId) {
-            // Navigate to student profile page
-            this.$router.push(`/admin/student/${studentId}`);
-        },
-        viewReport(reportId) {
-            console.log('Viewing report:', reportId);
-            this.$router.push(`/admin/reports/${reportId}`);
-        },
-        formatDate(date) {
-            return new Date(date).toLocaleDateString()
-        },
-        getStatusClass(status) {
-            return {
-                'Resolved': 'text-green-600 font-medium',
-                'NotResolved': 'text-yellow-600 font-medium'
-            }[status] || 'text-gray-600 font-medium';
-        },
-        getSectionReports() {
-            let reports = incidentReport.filter(report => {
-                const reportStudents = report.peopleInvolved || [];
-                return this.section?.sectionStudents.some(studentId => {
-                    const student = this.getStudent(studentId);
-                    return student && reportStudents.includes(student.firstName);
-                });
-            });
-
-            // Filter by status
-            if (this.selectedReportStatus !== 'all') {
-                reports = reports.filter(report => report.status === this.selectedReportStatus);
-            }
-
-            // Sort reports based on selection
-            switch (this.selectedReportSort) {
-                case 'ascDateSort':
-                    reports.sort((a, b) => new Date(a.dateOfIncident) - new Date(b.dateOfIncident));
-                    break;
-                case 'descDateSort':
-                    reports.sort((a, b) => new Date(b.dateOfIncident) - new Date(a.dateOfIncident));
-                    break;
-                case 'repIDSort':
-                    reports.sort((a, b) => a.reportID.localeCompare(b.reportID));
-                    break;
-                case 'surnameSort':
-                    reports.sort((a, b) => {
-                        const studentA = this.findStudentByFirstName(a.peopleInvolved[0]);
-                        const studentB = this.findStudentByFirstName(b.peopleInvolved[0]);
-                        return studentA?.lastName.localeCompare(studentB?.lastName) || 0;
-                    });
-                    break;
-            }
-
-            return reports;
-        },
-        getSectionStudents() {
-            let students = this.section?.sectionStudents.map(id => this.getStudent(id)) || [];
-
-            // Sort students based on selection
-            switch (this.selectedStudentSort) {
-                case 'surnameSort':
-                    students.sort((a, b) => a.lastName.localeCompare(b.lastName));
-                    break;
-                case 'studentIDSort':
-                    students.sort((a, b) => a.studentId.localeCompare(b.studentId));
-                    break;
-            }
-
-            return students;
-        },
-        getStudentNamesFromReport(involvedStudents) {
-            if (!involvedStudents) return '';
-
-            // Convert first names to full names with surname first
-            const studentFullNames = involvedStudents.map(firstName => {
-                const student = this.findStudentByFirstName(firstName);
-                if (student) {
-                    return `${student.lastName}, ${student.firstName}`;
-                }
-                return firstName;
-            });
-            return studentFullNames.join('; ');
-        },
-        findStudentByFirstName(firstName) {
-            return student.find(s => s.firstName === firstName);
-        }
-    },
-    watch: {
-        // Watch for changes in selectedView and fetch appropriate data
-        selectedView: {
-            handler: 'fetchSectionData',
-            immediate: true
-        }
-    },
-    mounted() {
-        console.log('Incident Report Data:', incidentReport);
-    }
-};
-</script>
 
 <style scoped>
 .table-container {

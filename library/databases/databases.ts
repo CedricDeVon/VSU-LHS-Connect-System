@@ -7,26 +7,68 @@ import { FirebaseStorage } from "./firebaseStorage";
 import { FirebaseDatabase } from "./firebaseDatabase";
 
 export class Databases {
-    private static readonly _userFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('user');
-
     private static readonly _adminFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('admin');
-
+    
     private static readonly _adviserFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('adviser');
-
-    private static readonly _studentFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('student');
-
+    
+    private static readonly _anecdotalDividerFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('anecdotalDivider');
+    
+    private static readonly _anecdotalReportFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('anecdotalReport');
+    
+    private static readonly _announcementDividerFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('announcementDivider');
+    
+    private static readonly _announcementFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('announcement');
+    
+    private static readonly _caseConferenceFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('caseConference');
+    
+    private static readonly _incidentDividerFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('incidentDivider');
+    
+    private static readonly _incidentReportFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('incidentReport');
+    
     private static readonly _sectionFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('section');
-
+    
+    private static readonly _studentFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('student');
+    
     private static readonly _timelineFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('timeline');
-
+    
+    private static readonly _userFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('user');
+    
     private static readonly _userIconsFirebaseStorage: FirebaseStorage = new FirebaseStorage('users/icons');
+    
+    private static readonly _anecdotalReportsFirebaseStorage: FirebaseStorage = new FirebaseStorage('reports/anecdotals');
 
     private static readonly _incidentalReportsFirebaseStorage: FirebaseStorage = new FirebaseStorage('reports/incidents');
 
-    private static readonly _anecdotalReportsFirebaseStorage: FirebaseStorage = new FirebaseStorage('reports/anecdotals');
-
     private static readonly _caseConferenceFirebaseStorage: FirebaseStorage = new FirebaseStorage('reports/caseConferences');
 
+    public static get anecdotalDividerFirebaseDatabase(): FirebaseDatabase {
+        return Databases._anecdotalDividerFirebaseDatabase;
+    }
+    
+    public static get anecdotalReportFirebaseDatabase(): FirebaseDatabase {
+        return Databases._anecdotalReportFirebaseDatabase;
+    }
+    
+    public static get announcementDividerFirebaseDatabase(): FirebaseDatabase {
+        return Databases._announcementDividerFirebaseDatabase;
+    }
+    
+    public static get announcementFirebaseDatabase(): FirebaseDatabase {
+        return Databases._announcementFirebaseDatabase;
+    }
+    
+    public static get caseConferenceFirebaseDatabase(): FirebaseDatabase {
+        return Databases._caseConferenceFirebaseDatabase;
+    }
+    
+    public static get incidentDividerFirebaseDatabase(): FirebaseDatabase {
+        return Databases._incidentDividerFirebaseDatabase;
+    }
+    
+    public static get incidentReportFirebaseDatabase(): FirebaseDatabase {
+        return Databases._incidentReportFirebaseDatabase;
+    }
+    
     public static get userFirebaseDatabase(): FirebaseDatabase {
         return Databases._userFirebaseDatabase;
     }
@@ -129,6 +171,33 @@ export class Databases {
             let result: Result = await Databases._timelineFirebaseDatabase.queryOne(
                 [orderBy('schoolYear', 'desc'), orderBy('semester', 'desc')]
             );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async areAllAdviserEmailsNotFound(adviserEmails: string[]): Promise<Result> {
+        try {
+            let result: Result;
+            for (const adviserEmail of adviserEmails) {
+                result = await Databases.getOneUserViaEmail(adviserEmail);
+                console.log(result)
+                if (result.data !== undefined) {
+                    throw new Error(`Adviser '${adviserEmail}' already exists`);
+                }
+            }
+            return new SuccessfulResult();
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateAdviserStatusToActiveViaId(id: string): Promise<Result> {
+        try {
+            let result: Result = await Databases._adviserFirebaseDatabase.updateOneDocument(id, { status: 'active' });
             return result;
 
         } catch (error: any) {

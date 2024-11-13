@@ -13,6 +13,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const accountsShowUploadModal = ref(false);
   const accountsFile = ref(null);
   const accountsAdvisers = useState('accountsAdvisers');
+  const accountsMessage = ref('');
 
   const searchQuery = ref('');
   const searchDebouncedQuery = ref('');
@@ -23,53 +24,94 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const searchAdvisers = useState('searchAdvisers');
   const searchSortBy = ref('');
 
-  const updateSearch = async () => {
-    const { sections, students, advisers } = await $fetch('/api/adminSearch', {
-      method: 'POST'
-    })
-    searchSections.value = sections;
-    searchStudents.value = students;
-    searchAdvisers.value = advisers;
+  const sectionSection = ref(null);
+  const sectionAdviser = ref(null);
+  const sectionSelectedView = ref('');
+  const sectionSelectedStudentSort = ref('');
+  const sectionSelectedReportSort = ref('');
+  const sectionSelectedReportStatus = ref('all');
+  const sectionSections = useState('studentSections');
+  const sectionSectionStudents = useState('studentSectionStudents');
+  const sectionSectionAdviser = useState('studentSectionAdviser');
+  const sectionSectionReports = useState('studentSectionReports');
+
+  const studentStudentData = ref(null);
+  const studentStudentSection = ref(null);
+  const studentSelectedSort = ref('');
+  const studentAllSectionStudents = useState('studentAllSectionStudents');
+  const studentShowIncidentModal = ref(false);
+
+  const updateSectionPageData = async () => {
+
   }
 
-  const getDashboardData = () => {
-    return {
-        dashBoardReportsCount: dashBoardReportsCount.value,
-        dashBoardStudentsCount: dashBoardStudentsCount.value,
-        dashBoardAccountApprovalsCount: dashBoardAccountApprovalsCount.value
-    };
+  const updateStudentPageData = async () => {
+
   }
+
+  const resetAdviserAccountsCSVFileInputData = async (message: string) => {
+    accountsMessage.value = message;
+    accountsFile.value = null;
+    accountsMessage.value = '';
+  }
+
+  const updateAll = async () => {
+    const currentUser = await getCurrentUser();
+    const { data } = await $fetch('/api/admin/view', {
+      method: 'POST', body: { id: currentUser?.uid, email: currentUser?.email }
+    });
+    adminName.value = data.user.username;
+    adminEmail.value = data.user.email;
+    dashBoardReportsCount.value = data.reportsCount;
+    dashBoardStudentsCount.value = data.studentsCount;
+    dashBoardAccountApprovalsCount.value = data.approvalsCount;
+    accountsAdvisers.value = data.advisers;
+    searchSections.value = data.sections;
+    searchStudents.value = data.students;
+    searchAdvisers.value = data.advisers;
+  };
+
+  const updateSearch = async () => {
+    const { data } = await $fetch('/api/admin/view/search', {
+      method: 'POST'
+    });
+    searchSections.value = data.sections;
+    searchStudents.value = data.students;
+    searchAdvisers.value = data.advisers;
+  };
 
   const updateDashboard = async () => {
     const currentUser = await getCurrentUser();
-    const { user, reportsCount, studentsCount, approvalsCount } = await $fetch('/api/adminDashboard', {
-        method: 'POST',
-        body: { email: currentUser?.email, id: currentUser?.uid }
-    })
+    const { data } = await $fetch('/api/admin/view/dashboard', {
+        method: 'POST', body: { email: currentUser?.email, id: currentUser?.uid }
+    });
     
-    adminName.value = user.username;
-    adminEmail.value = user.email;
-    dashBoardReportsCount.value = reportsCount;
-    dashBoardStudentsCount.value = studentsCount;
-    dashBoardAccountApprovalsCount.value = approvalsCount;   
-  }
+    adminName.value = data.user.username;
+    adminEmail.value = data.user.email;
+    dashBoardReportsCount.value = data.reportsCount;
+    dashBoardStudentsCount.value = data.studentsCount;
+    dashBoardAccountApprovalsCount.value = data.approvalsCount;
+  };
 
   const updateAccountsAdvisers = async () => {
-    const { advisers } = await $fetch('/api/accountsAdvisers', {
+    const { data } = await $fetch('/api/admin/view/accounts', {
       method: 'POST'
-    })
-    accountsAdvisers.value = advisers;
-  }
+    });
+    accountsAdvisers.value = data.advisers;
+  };
 
-  function resetAllData() {
+  const resetAllData = () => {
     adminName.value = '';
     adminEmail.value = '';
+
     dashBoardReportsCount.value = '0';
     dashBoardStudentsCount.value = '0';
     dashBoardAccountApprovalsCount.value = '0';
+
     accountsSelectedAccount.value = 'all';
     accountsShowUploadModal.value = false;
     accountsFile.value = null;
+    accountsMessage.value = '';
     accountsAdvisers.value = [];
   
     searchQuery.value = '';
@@ -78,7 +120,23 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     searchShowAddSectionForm.value = false;
     searchSections.value = [];
     searchStudents.value = [];
+    searchAdvisers.value = [];
     searchSortBy.value = '';
+
+    sectionSection.value = null;
+    sectionAdviser.value = null;
+    sectionSelectedView.value = '';
+    sectionSelectedStudentSort.value = '';
+    sectionSelectedReportSort.value = '';
+    sectionSelectedReportStatus.value = 'all';
+    sectionSectionStudents.value = [];
+    sectionSectionReports.value = [];
+  
+    studentStudentData.value = null;
+    studentStudentSection.value = null;
+    studentSelectedSort.value = '';
+    studentAllSectionStudents.value = [];
+    studentShowIncidentModal.value = false;
   }
 
   return {
@@ -88,6 +146,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     accountsSelectedAccount,
     accountsShowUploadModal,
     accountsFile,
+    accountsMessage,
     searchQuery,
     searchDebouncedQuery,
     searchSelectedSearch,
@@ -99,10 +158,24 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     dashBoardReportsCount,
     dashBoardStudentsCount,
     dashBoardAccountApprovalsCount,
+    updateAll,
     updateDashboard,
     updateAccountsAdvisers,
     updateSearch,
-    getDashboardData,
     resetAllData,
-     };
+    resetAdviserAccountsCSVFileInputData,
+    sectionSection,
+    sectionAdviser,
+    sectionSelectedView,
+    sectionSelectedStudentSort,
+    sectionSelectedReportSort,
+    sectionSelectedReportStatus,
+    sectionSectionStudents,
+    sectionSectionReports,
+    studentStudentData,
+    studentStudentSection,
+    studentSelectedSort,
+    studentAllSectionStudents,
+    studentShowIncidentModal,
+  };
 });

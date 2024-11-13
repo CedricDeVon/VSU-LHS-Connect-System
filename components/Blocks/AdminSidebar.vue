@@ -13,24 +13,24 @@ const signOutUser = async () => {
 }
 
 const topNav = [
-  { title: "Dashboard", icon: "lucide:home", link: "AdminDashboard" },
-  { title: "Search", icon: "lucide:search", link: "SearchPage" },
+  { title: "Dashboard", icon: "lucide:home", link: "dashboard" },
+  { title: "Search", icon: "lucide:search", link: "search" },
   {
     title: "Reports",
     icon: "lucide:bar-chart-3",
     items: [
-      { title: "Incident Reports", link: "IncidentsPage" },
-      { title: "Anecdotal Reports", link: "#" },
+      { title: "Incident Reports", link: "incidental" },
+      { title: "Anecdotal Reports", link: "anecdotal" },
     ],
   },
-  { title: "Accounts", icon: "lucide:user-cog", link: "AccountsPage" },
-  { title: "Archives", icon: "lucide:folder-dot", link: "#" },
+  { title: "Accounts", icon: "lucide:user-cog", link: "accounts" },
+  { title: "Archives", icon: "lucide:folder-dot", link: "archives" },
 ];
 const bottomNav = [
   {
     title: "Settings",
     icon: "lucide:settings-2",
-    link: "#",
+    link: "settings",
   },
 ];
 </script>

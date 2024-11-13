@@ -9,12 +9,11 @@ import { DatasetTransformer } from "./datasetTransformer";
 export class AdviserCSVDatasetTransformer extends DatasetTransformer {
   public constructor() {
     super(
-      [String, String, String, Number],
+      [String, String, String],
       [
         Validators.emailValidator,
         Validators.personNameValidator,
-        Validators.passwordValidator,
-        Validators.personAgeValidator,
+        Validators.vsuIssuedIdValidator,
       ]
     );
   }
@@ -30,7 +29,7 @@ export class AdviserCSVDatasetTransformer extends DatasetTransformer {
       if (rawParsedData.length < 2) {
         throw new Error("File must contain at least 1 adviser");
       }
-
+      
       let key: any;
       let cellData: any;
       let columns: any[] = rawParsedData[0].split(",");
@@ -61,6 +60,7 @@ export class AdviserCSVDatasetTransformer extends DatasetTransformer {
         values[key] = columns;
       }
       return new SuccessfulResult({ keys, values });
+
     } catch (error: any) {
       return new FailedResult(error.message);
     }

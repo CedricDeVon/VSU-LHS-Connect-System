@@ -1,18 +1,29 @@
 <script setup lang="ts">
-// import { adminStore } from '~/stores/views/adminViewStore';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 import { useFirebaseAuth } from "vuefire";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { UserSecurity } from "~/library/security/userSecurity";
+import { ConfigurationReaders } from '~/library/configurationReaders/configurationReaders';
 
-// const aStore = adminStore();
-async function logInAsAdmin() {
-    
-    // await signInWithEmailAndPassword(auth, , );
-    // await aStore.updateDashboard();
+const auth = useFirebaseAuth();
+const adminViewStore = useAdminViewStore();
+
+async function logInAsAdmin() {    
+    await UserSecurity.logInUser({
+        auth,
+        email: ConfigurationReaders.nuxtConfigurationReader.DEBUG_ADMIN_EMAIL,
+        password: ConfigurationReaders.nuxtConfigurationReader.DEBUG_ADMIN_PASSWORD,
+        role: 'admin'
+    });
     return navigateTo("/admin/dashboard", { replace: true });
 }
 
 async function logInAsAdviser() {
-    // await signInWithEmailAndPassword(auth, , );
+    await UserSecurity.logInUser({
+        auth,
+        email: ConfigurationReaders.nuxtConfigurationReader.DEBUG_ADVISER_EMAIL,
+        password: ConfigurationReaders.nuxtConfigurationReader.DEBUG_ADVISER_PASSWORD,
+        role: 'adviser'
+    });
     return navigateTo("/adviser/advisory", { replace: true });
 }
 

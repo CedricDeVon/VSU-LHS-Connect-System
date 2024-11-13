@@ -1,3 +1,4 @@
+import type { IFile } from "../files/iFile";
 import { FailedResult } from "../results/failedResult";
 import type { Result } from "../results/result";
 import { SuccessfulResult } from "../results/successfulResult";
@@ -73,6 +74,49 @@ export class UserSecurity {
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
+            return new SuccessfulResult();
+
+        } catch (error: any) {
+            return UserSecurity._handleFailedResult(error);
+        }
+    }
+
+    public static async signUpManyUsersViaCSVFile(file: any): Promise<Result> {
+        try {
+            UserSecurity._handleUndefinedOrNullArguments(file);
+
+            const result: any = await $fetch('/api/auth/signUp/advisers', {
+                method: 'POST', body: { file }
+            });
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
+            return new SuccessfulResult();
+            /*
+            parse csv /
+            check if adviser email is found '
+            auth signup
+            firebase signup
+            */
+
+        } catch (error: any) {
+            return UserSecurity._handleFailedResult(error);
+        }
+    }
+
+    public static async deleteAdviser(auth: any, data: { userId: string, adviserId: string} ): Promise<Result> {
+        try {
+            UserSecurity._handleUndefinedOrNullArguments(auth);
+            UserSecurity._handleUndefinedOrNullArguments(data);
+
+            const { userId, adviserId } = data;
+            const result: any = await $fetch('/api/adviser/request/reject', {
+                method: 'POST', body: { userId, adviserId }
+              });
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
+            await auth.deleteUser(userId);
             return new SuccessfulResult();
 
         } catch (error: any) {

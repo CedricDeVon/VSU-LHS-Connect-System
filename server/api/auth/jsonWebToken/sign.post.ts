@@ -6,18 +6,15 @@ import { ConfigurationReaders } from '~/library/configurationReaders/configurati
 
 export default defineEventHandler(async (event) => {
     try {
-        const { id, username, email, password, status, type } = await readBody(event);
+        const { id, username, email, password, status, role } = await readBody(event);
         const jsonWebToken = jwt.sign({
-            data: { id, username, email, password, status, type },
+            data: { id, username, email, password, status, role },
             exp: Math.floor(Date.now() / 1000) + ConfigurationReaders.nuxtConfigurationReader.USER_TOKEN_DURATION_IN_SECONDS },
             ConfigurationReaders.nuxtConfigurationReader.CRYPTOGRAPHY_KEY);
-        return {
-            data: jsonWebToken,
-            isSuccessful: true
-        };
+        return new SuccessfulResult(jsonWebToken).cloneToObject();
 
     } catch (error: any) {
-        return { isSuccessful: false, error };
+        return new FailedResult(error.message).cloneToObject();
     }
 })
   

@@ -104,6 +104,7 @@ export default defineNuxtConfig({
       debugAdminPassword: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADMIN_PASSWORD"),
       debugAdviserEmail: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADVISER_EMAIL"),
       debugAdviserPassword: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_DEBUG_ADVISER_PASSWORD"),
+      signUpTemporaryPassword: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_SIGN_UP_TEMPORARY_PASSWORD"),
     }
   },
 

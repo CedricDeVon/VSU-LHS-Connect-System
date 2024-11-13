@@ -3,23 +3,24 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
 import debounce from 'lodash/debounce';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-const store = adminStore();
-await store.updateSearch();
+const adminViewStore = useAdminViewStore();
+await adminViewStore.updateSearch();
 
 const addNewSection = async (newSection: any) => {
-  await $fetch('/api/section', {
+  const result = await $fetch('/api/section/create', {
     method: 'POST',
     body: {
       name: newSection.sectionName,
       level: newSection.sectionLevel
     }
   });
-  await store.updateSearch();
+  await adminViewStore.updateSearch();
 }
 
 const getSectionByStudentId = (id: any) => {
-  for (const sec of store.searchSections) {
+  for (const sec of adminViewStore.searchSections) {
     if (sec.sectionStudents.includes(id)) {
       return sec;
     }
@@ -28,7 +29,7 @@ const getSectionByStudentId = (id: any) => {
 }
 
 const getAdviserBySectionId = (id: any) => {
-  for (const adviser of store.accountsAdvisers) {
+  for (const adviser of adminViewStore.accountsAdvisers) {
     if (adviser.id === id) {
       return adviser;
     }
@@ -37,20 +38,20 @@ const getAdviserBySectionId = (id: any) => {
 }
 
 const filteredSections = () => {
-  let filtered = store.searchSections.filter((section: any) => {
-    if (!store.searchDebouncedQuery) return true; // Show all if query is empty
+  let filtered = adminViewStore.searchSections.filter((section: any) => {
+    if (!adminViewStore.searchDebouncedQuery) return true; // Show all if query is empty
     return (
-      section.data.name.toLowerCase().includes(store.searchDebouncedQuery.toLowerCase()) ||
-      String(section.data.level).includes(store.searchDebouncedQuery) ||
-      (section.data.adviser && section.data.adviser.data.facultyId.toLowerCase().includes(store.searchDebouncedQuery.toLowerCase()))
+      section.data.name.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase()) ||
+      String(section.data.level).includes(adminViewStore.searchDebouncedQuery) ||
+      (section.data.adviser && section.data.adviser.data.facultyId.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase()))
     );
   });
-  if (store.searchSelectedSearch === 'section') {
-    if (store.searchSortBy === 'sNameSort') {
+  if (adminViewStore.searchSelectedSearch === 'section') {
+    if (adminViewStore.searchSortBy === 'sNameSort') {
       filtered.sort((a: any, b: any) => a.data.name.localeCompare(b.data.name));
-    } else if (store.searchSortBy === 'sGradeSort') {
+    } else if (adminViewStore.searchSortBy === 'sGradeSort') {
       filtered.sort((a: any, b: any) => a.data.level - b.data.level);
-    } else if (store.searchSortBy === 'recentlyAddedSort') {
+    } else if (adminViewStore.searchSortBy === 'recentlyAddedSort') {
       filtered.sort((a: any, b: any) => b.data.id - a.data.id); // TODO: Change to date added if naa na nga attribute
     }
   }
@@ -59,19 +60,19 @@ const filteredSections = () => {
 }
 
 const filteredStudents = () => {
-  let filtered = store.searchStudents.filter((student: any) => {
-    if (!store.searchDebouncedQuery) return true;
+  let filtered = adminViewStore.searchStudents.filter((student: any) => {
+    if (!adminViewStore.searchDebouncedQuery) return true;
     return (
-      student.id.toLowerCase().includes(store.searchDebouncedQuery.toLowerCase()) ||
-      student.data.lastName.toLowerCase().includes(store.searchDebouncedQuery.toLowerCase()) ||
-      student.data.firstName.toLowerCase().includes(store.searchDebouncedQuery.toLowerCase())
+      student.id.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase()) ||
+      student.data.lastName.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase()) ||
+      student.data.firstName.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase())
     );
   });
 
-  if (store.searchSelectedSearch === 'student') {
-    if (store.searchSortBy === 'surnameSort') {
+  if (adminViewStore.searchSelectedSearch === 'student') {
+    if (adminViewStore.searchSortBy === 'surnameSort') {
       filtered.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
-    } else if (store.searchSortBy === 'gradeLvlSort') {
+    } else if (adminViewStore.searchSortBy === 'gradeLvlSort') {
       filtered.sort((a: any, b: any) => {
         const sectionA: any = getSectionByStudentId(a.data.studentId);
         const sectionB: any = getSectionByStudentId(b.data.studentId);
@@ -101,30 +102,30 @@ const filteredStudents = () => {
           <div class="flex ml-7 items-center w-[90%]">
             <input type="text" placeholder="Search student or section by name, ID, or adviser"
               class="w-full px-4 py-2 h-[40px] border border-gray-300 rounded-l-md focus:outline-none mr-3"
-              v-model="store.searchQuery" />
+              v-model="adminViewStore.searchQuery" />
             <select
               class="px-4 py-2 border border-gray-300 rounded-md bg-gray-10 text-gray-700 inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
-              v-model="store.searchSelectedSearch">
+              v-model="adminViewStore.searchSelectedSearch">
               <option value="" disabled>Select search category</option>
               <option value="student">Student</option>
               <option value="section">Section</option>
             </select>
-            <select v-if="store.searchSelectedSearch === 'section'"
+            <select v-if="adminViewStore.searchSelectedSearch === 'section'"
               class="px-4 py-2 border border-gray-300 rounded-md bg-gray-10 text-gray-700 inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none ml-3"
-              v-model="store.searchSortBy">
+              v-model="adminViewStore.searchSortBy">
               <option value="" disabled>Sort by</option>
               <option value="sNameSort">Section Name</option>
               <option value="sGradeSort">Grade Level</option>
               <option value="recentlyAddedSort">Recently Added</option>
             </select>
-            <select v-if="store.searchSelectedSearch === 'student'"
+            <select v-if="adminViewStore.searchSelectedSearch === 'student'"
               class="px-4 py-2 border border-gray-300 rounded-md bg-gray-10 text-gray-700 inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none ml-3"
-              v-model="store.searchSortBy">
+              v-model="adminViewStore.searchSortBy">
               <option value="" disabled>Sort by</option>
               <option value="surnameSort">Surname</option>
               <option value="gradeLvlSort">Grade Level</option>
             </select>
-            <button v-if="store.searchSelectedSearch === 'section'" @click="store.searchShowAddSectionForm = true"
+            <button v-if="adminViewStore.searchSelectedSearch === 'section'" @click="adminViewStore.searchShowAddSectionForm = true"
               class="inline-flex items-center ml-3 h-[40px] px-4 bg-[#728B78] text-white text-sm font-medium rounded-md hover:bg-[#536757] border-none hover:text-white transition-colors duration-200 whitespace-nowrap"
               style="font-size: 0.875rem;">
               Add New Section
@@ -132,7 +133,7 @@ const filteredStudents = () => {
           </div>
         </div>
 
-        <div v-if="!store.searchSelectedSearch" class="text-gray-500 text-center text-xl font-regular">
+        <div v-if="!adminViewStore.searchSelectedSearch" class="text-gray-500 text-center text-xl font-regular">
           Please select a search category to view results.
         </div>
 
@@ -141,14 +142,14 @@ const filteredStudents = () => {
             <div class="overflow-y-auto max-h-[80vh]">
               <table class="min-w-full text-left">
                 <thead class="bg-head text-white sticky top-0">
-                  <tr v-if="store.searchSelectedSearch === 'section'">
+                  <tr v-if="adminViewStore.searchSelectedSearch === 'section'">
                     <th class="px-6 py-3 text-left text-sm font-medium uppercase">Section-ID</th>
                     <th class="px-6 py-3 text-left text-sm font-medium uppercase">Section Name</th>
                     <th class="px-6 py-3 text-left text-sm font-medium uppercase">Grade Level</th>
                     <th class="px-6 py-3 text-left text-sm font-medium uppercase">Adviser</th>
                     <th class="px-6 py-3 text-left text-sm font-medium uppercase">Action</th>
                   </tr>
-                  <tr v-else-if="store.searchSelectedSearch === 'student'">
+                  <tr v-else-if="adminViewStore.searchSelectedSearch === 'student'">
                     <th class="px-6 py-3 text-left text-sm font-medium uppercase">Student-ID</th>
                     <th class="px-6 py-3 text-left text-sm font-medium uppercase">Student Name</th>
                     <th class="px-6 py-3 text-left text-sm font-medium uppercase">Section and Grade Level</th>
@@ -157,7 +158,7 @@ const filteredStudents = () => {
                 </thead>
 
                 <tbody class="text-gray-700">
-                  <template v-if="store.searchSelectedSearch === 'section'">
+                  <template v-if="adminViewStore.searchSelectedSearch === 'section'">
                     <tr v-for="section in filteredSections()" :key="section.id" class="border-b bg-transparent">
                       <td class="px-6 py-4">{{ section.id }}</td>
                       <td class="px-6 py-4">{{ section.data.name }}</td>
@@ -175,7 +176,7 @@ const filteredStudents = () => {
                       </td>
                     </tr>
                   </template>
-                  <template v-else-if="store.searchSelectedSearch === 'student'">
+                  <template v-else-if="adminViewStore.searchSelectedSearch === 'student'">
                     <tr v-for="student in filteredStudents()" :key="student.id" class="border-b bg-transparent">
                       <td class="px-6 py-4">{{ student.id }}</td>
                       <td class="px-6 py-4">{{ student.data.lastName + ', ' + student.data.firstName }}</td>
@@ -196,7 +197,7 @@ const filteredStudents = () => {
         </div>
       </div>
     </div>
-    <AddSectionForm v-if="store.searchShowAddSectionForm" @close="store.searchShowAddSectionForm = false" @add-section="addNewSection" />
+    <AddSectionForm v-if="adminViewStore.searchShowAddSectionForm" @close="adminViewStore.searchShowAddSectionForm = false" @add-section="addNewSection" />
     <AddSectionForm v-if="showAddSectionForm" @close="showAddSectionForm = false" @add-section="addNewSection" />
     <StudentDetailsModal 
         v-if="selectedStudent"

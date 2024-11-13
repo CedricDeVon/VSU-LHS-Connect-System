@@ -9,6 +9,8 @@ export default defineEventHandler(async (event) => {
       return section.id === adviser.data.sectionId
     })[0];
   }
+  const adminData = (await Databases.getOneAdminViaUserId(id)).data;
+  const userData = (await Databases.getUser(email)).data;
   
   return {
     sections,
@@ -17,3 +19,10 @@ export default defineEventHandler(async (event) => {
   }
 });
   
+// const adminUser = ;
+// return {
+//   user: ,
+//   reportsCount: (await Databases.getAllAdminReportsCount(adminUser.id)).data,
+//   studentsCount: (await Databases.getAllStudentsCount()).data,
+//   approvalsCount: (await Databases.getAllPendingAdvisersCount()).data,
+//   advisers: (await Databases.getAllAdvisers()).data

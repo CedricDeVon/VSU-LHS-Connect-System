@@ -1,82 +1,94 @@
-<script>
+<script setup lang="ts">
 import { defineComponent } from 'vue';
 import { student } from '~/data/student.js';
 import { section } from '~/data/section.js';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-export default defineComponent({
-    name: 'StudentInformation',
-    components: {
-        AdminSidebar,
-        AdminHeader,
-        IncidentReportsModal
-    },
-    data() {
-        return {
-            studentData: null,
-            studentSection: null,
-            selectedSort: '',
-            allSectionStudents: [], // To store all students from the section
-            showIncidentModal: false
-        }
-    },
-    created() {
-        // Get student ID from route params
-        const studentId = this.$route.params.id;
+const adminViewStore = useAdminViewStore();
 
-        // Find student data
-        this.studentData = student.find(s => s.studentId === studentId);
-
-        // Find student's section
-        if (this.studentData) {
-            this.studentSection = section.find(sec =>
-                sec.sectionStudents.includes(this.studentData.studentId)
-            );
-            
-            // Get all students from the same section
-            if (this.studentSection) {
-                this.allSectionStudents = this.studentSection.sectionStudents.map(id => 
-                    student.find(s => s.studentId === id)
-                ).filter(s => s !== null);
-            }
-        }
-    },
-    computed: {
-        sortedStudents() {
-            let sorted = [...this.allSectionStudents];
-            
-            switch (this.selectedSort) {
-                case 'surname':
-                    sorted.sort((a, b) => a.lastName.localeCompare(b.lastName));
-                    break;
-                case 'studentID':
-                    sorted.sort((a, b) => a.studentId.localeCompare(b.studentId));
-                    break;
-            }
-            
-            return sorted;
-        },
-        hasIncidents() {
-            return this.studentData?.incidentDocIDs?.length > 0;
-        },
-        incidentButtonText() {
-            const count = this.studentData?.incidentDocIDs?.length || 0;
-            return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
-        }
-    },
-    methods: {
-        getFullName(student) {
-            return `${student.lastName}, ${student.firstName} ${student.middleName || ''}`.trim();
-        },
-        viewStudent(studentId) {
-            if (studentId !== this.studentData.studentId) {
-                this.$router.push(`/admin/student/${studentId}`);
-            }
-        }
+const sortedStudents = () => {
+    let sorted = [...adminViewStore.studentAllSectionStudents];
+    
+    switch (adminViewStore.studentSelectedSort) {
+        case 'surname':
+            sorted.sort((a, b) => a.lastName.localeCompare(b.lastName));
+            break;
+        case 'studentID':
+            sorted.sort((a, b) => a.studentId.localeCompare(b.studentId));
+            break;
     }
-});
+    
+    return sorted;
+}
+
+const hasIncidents = () => {
+    return adminViewStore.studentStudentData?.incidentDocIDs?.length > 0;
+}
+
+const incidentButtonText = () => {
+    const count = adminViewStore.studentStudentData?.incidentDocIDs?.length || 0;
+    return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
+}
+
+const getFullName = (student: any) => {
+    return `${student.lastName}, ${student.firstName} ${student.middleName || ''}`.trim();
+}
+
+const viewStudent = (studentId: any) => {
+    // if (studentId !== adminViewStore.studentStudentData.studentId) {
+    //     router.push(`/admin/student/${studentId}`);
+    // }
+}
+
+
+// export default defineComponent({
+//     name: 'StudentInformation',
+//     components: {
+//         AdminSidebar,
+//         AdminHeader,
+//         IncidentReportsModal
+//     },
+//     data() {
+//         return {
+//             studentData: null,
+//             studentSection: null,
+//             selectedSort: '',
+//             allSectionStudents: [], // To store all students from the section
+//             showIncidentModal: false
+//         }
+//     },
+//     created() {
+//         // Get student ID from route params
+//         const studentId = this.$route.params.id;
+
+//         // Find student data
+//         adminViewStore.studentStudentData = student.find(s => s.studentId === studentId);
+
+//         // Find student's section
+//         if (adminViewStore.studentStudentData) {
+//             this.studentSection = section.find(sec =>
+//                 sec.sectionStudents.includes(adminViewStore.studentStudentData.studentId)
+//             );
+            
+//             // Get all students from the same section
+//             if (this.studentSection) {
+//                 adminViewStore.studentAllSectionStudents = this.studentSection.sectionStudents.map(id => 
+//                     student.find(s => s.studentId === id)
+//                 ).filter(s => s !== null);
+//             }
+//         }
+//     },
+//     computed: {
+        
+//     },
+//     methods: {
+        
+//     }
+// });
+
 </script>
 
 <template>
@@ -160,11 +172,11 @@ export default defineComponent({
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Address:</span>
-                                        <span>{{ studentData.Address || 'N/A' }}</span>
+                                        <span>{{ studentData.address || 'N/A' }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Contact:</span>
-                                        <span>{{ studentData.contactNum || 'N/A' }}</span>
+                                        <span>{{ studentData.contactNumber || 'N/A' }}</span>
                                     </div>
 
                                     <!-- Buttons with adjusted margins -->
@@ -194,11 +206,11 @@ export default defineComponent({
     </div>
 
     <!-- Add Modal -->
-    <IncidentReportsModal 
-        :show="showIncidentModal"
-        :student-data="studentData"
+    <!-- <IncidentReportsModal 
+        :show="adminViewStore.studentShowIncidentModal"
+        :student-data="adminViewStore.studentStudentData"
         @close="showIncidentModal = false"
-    />
+    /> -->
 </template>
 
 <style scoped>

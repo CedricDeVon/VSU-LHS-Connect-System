@@ -1,50 +1,31 @@
 <script setup lang="ts">
-import { adminStore } from '../../stores/views/adminViewStore'
+import { DatasetTransformers } from '~/library/datasetTransformers/datasetTransformers';
+import { Result } from '~/library/results/result';
+import { UserSecurity } from '~/library/security/userSecurity';
+import { useAdminViewStore } from '../../stores/views/adminViewStore'
 
-const store = adminStore();
-const successMessage = useState('successMessage')
+const adminViewStore = useAdminViewStore();
+const { handleFileInput, files } = useFileStorage();
 
-const handleFileChange = (event: any) => {
-  store.accountsfile = event.target.files[0];
-  successMessage.value = '';
+// const handleFileChange = async (event: any) => {
+//   // adminViewStore.accountsfile = event.target.files[0];
+//   // adminViewStore.accountsMessage = '';
+// }
+
+const uploadFile = async () => {
+  const result: Result = await UserSecurity.signUpManyUsersViaCSVFile(files.value);
+  console.log(result)
+  // if (result.isNotSuccessful) {
+  //     await adminViewStore.resetAdviserAccountsCSVFileInputData(result.message);
+  //     return;
+  // }
+
+  // if (adminViewStore.accountsfile) {
+  //   await adminViewStore.resetAdviserAccountsCSVFileInputData('File uploaded successfully!');
+  // }
+  // $emit('close');
 }
 
-const uploadFile = () => {
-  if (store.accountsfile) {
-    store.accounts$emit('file-uploaded', store.accountsfile);
-    successMessage.value = 'File uploaded successfully!';
-    store.accountsfile = null;
-    setTimeout(() => {
-      // $emit('close');
-    }, 1000);
-  }
-}
-
-// export default {
-//   name: 'AdviserCSVUploadModal',
-//   data() {
-//     return {
-//       file: null,
-//       successMessage: '',
-//     };
-//   },
-//   methods: {
-//     handleFileChange(event) {
-//       this.file = event.target.files[0];
-//       this.successMessage = '';
-//     },
-//     uploadFile() {
-//       if (this.file) {
-//         this.$emit('file-uploaded', this.file);
-//         this.successMessage = 'File uploaded successfully!';
-//         this.file = null;
-//         setTimeout(() => {
-//           this.$emit('close');
-//         }, 1000);
-//       }
-//     },
-//   },
-// };
 </script>
 
 <template>
@@ -58,9 +39,9 @@ const uploadFile = () => {
             Please ensure your CSV file follows this format:
           </p>
           <ul class="list-disc list-inside text-sm ml-4 mt-2">
-            <li><strong>Column 1:</strong> Adviser Name</li>
-            <li><strong>Column 2:</strong> Email</li>
-            <li><strong>Column 3:</strong> Department</li>
+            <li><strong>Column 1:</strong> Email</li>
+            <li><strong>Column 2:</strong> Adviser Full Name</li>
+            <li><strong>Column 3:</strong> Faculty ID</li>
           </ul>
           <p class="text-sm mt-2">Only .csv files are accepted.</p>
         </div>
@@ -68,7 +49,7 @@ const uploadFile = () => {
         <input
           type="file"
           accept=".csv"
-          @change="handleFileChange"
+          @input="handleFileInput"
           class="mb-4 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
         />
   
@@ -79,14 +60,13 @@ const uploadFile = () => {
             Cancel
           </button>
           <button
-            :disabled="!file"
             @click="uploadFile"
             class="px-4 py-2 rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none disabled:opacity-50">
             Upload
           </button>
         </div>
   
-        <p v-if="successMessage" class="text-gray-500 mt-4">{{ successMessage }}</p>
+        <p v-if="adminViewStore.accountsMessage" class="text-gray-500 mt-4">{{ adminViewStore.accountsMessage }}</p>
       </div>
     </div>
   </template>
@@ -109,3 +89,5 @@ const uploadFile = () => {
     cursor: pointer;
   }
   </style>
+
+  // @change="handleFileChange"

@@ -8,6 +8,7 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore'
 // });
 
 const adminViewStore = useAdminViewStore();
+await adminViewStore.updateDashboard();
 
 </script>
 

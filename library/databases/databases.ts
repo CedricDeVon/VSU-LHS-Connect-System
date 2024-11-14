@@ -132,6 +132,18 @@ export class Databases {
         }
     }
 
+    public static async getManyStudentsViaSectionId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.queryDuplicates(
+                where('sectionId', '==', id)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async getOneSectionViaName(name: string): Promise<Result> {
         try {
             const result: Result = await Databases._adminFirebaseDatabase.queryOne(
@@ -168,9 +180,12 @@ export class Databases {
 
     public static async getMostRecentTimeline(): Promise<Result> {
         try {
-            let result: Result = await Databases._timelineFirebaseDatabase.queryOne(
-                [orderBy('schoolYear', 'desc'), orderBy('semester', 'desc')]
+            let result: Result = await Databases._timelineFirebaseDatabase.queryDuplicatesWithMultipleConditions(
+               orderBy('schoolYear', 'desc')
             );
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
             return result;
 
         } catch (error: any) {

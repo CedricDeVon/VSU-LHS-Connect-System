@@ -8,6 +8,7 @@ import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
+adminViewStore.updateStudentPageData(useRoute().params.id);
 
 const sortedStudents = () => {
     let sorted = [...adminViewStore.studentAllSectionStudents];

@@ -45,8 +45,13 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
 
   }
 
-  const updateStudentPageData = async () => {
-
+  const updateStudentPageData = async (studentId: string) => {
+    const { data } = await $fetch('/api/admin/view/student', {
+      method: 'POST', body: {
+        studentId
+      }
+    });
+    console.log(data)
   }
 
   const resetAdviserAccountsCSVFileInputData = async (message: string) => {
@@ -177,5 +182,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     studentSelectedSort,
     studentAllSectionStudents,
     studentShowIncidentModal,
+    updateStudentPageData,
+    updateSectionPageData
   };
 });

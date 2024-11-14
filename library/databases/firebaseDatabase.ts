@@ -43,7 +43,6 @@ export class FirebaseDatabase extends Database {
             this._handleObjectArgumentValidation(values);
             this._handleStringArgumentValidation(collectionName);
 
-            console.log(id, values)
             const database = firestore.getFirestore(getApp());
             await firestore.runTransaction(database, async (transaction: any) => {
                 await firestore.setDoc(firestore.doc(database, this._generateCompleteCollectionPath(collectionName), id), values);
@@ -186,6 +185,7 @@ export class FirebaseDatabase extends Database {
             querySnapshot.forEach((document) => {
                 data = { id: document.id, ...document.data() };
               });
+            
             return new SuccessfulResult(data);
 
         } catch (error: any) {
@@ -202,6 +202,24 @@ export class FirebaseDatabase extends Database {
             querySnapshot.forEach((document) => {
                 data.push({ id: document.id, data: document.data()});
               });
+        
+            return new SuccessfulResult(data);
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public async queryDuplicatesWithMultipleConditions(firstCondition: any): Promise<Result> {
+        try {
+            const database = firestore.getFirestore(getApp());
+            const collection = firestore.collection(database, this._generateCompleteCollectionPath());
+            const querySnapshot = await firestore.getDocs(firestore.query(collection, firstCondition));
+            const data: any = [];
+            querySnapshot.forEach((document) => {
+                data.push({ id: document.id, data: document.data()});
+              });
+        
             return new SuccessfulResult(data);
 
         } catch (error: any) {

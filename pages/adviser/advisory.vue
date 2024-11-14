@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
+import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+
+const adviserViewStore = useAdviserViewStore();
+adviserViewStore.updateAdvisoryView();
+
+
+</script>
+
 <template>
     <div class="adviser-page">
         <AdviserHeader/>
@@ -6,7 +18,7 @@
        <!--<AddStudentForm/>-->
        
             <div>
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
             </div>
 
                 <!--Title of the Content?-->
@@ -22,14 +34,14 @@
                         <div class="grid-cols-2 pb-5 ml-6" >
                            <select
                                class="mr-8 xl:pr-24 lg:mr-5 lg:pr-2 py-2  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
-                               v-model="selectedSort">
+                               v-model="adviserViewStore.adviserSelectedSort">
                                <option value="" disabled selected hidden>Sort by</option>
                                <option value="surname">Surname</option>
                                <option value="student_ID">Student ID</option>
                            </select>
 
                        
-                            <button @click="addStudent" 
+                            <button @click="adviserViewStore.addNewStudent" 
                                     class="xl:px-7 py-2 lg:px-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
@@ -51,9 +63,9 @@
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    <tr class ="hover:bg-gray-200 " v-for="(item, index) in items" :key="index" @click="handleRowClick(item)" >
-                                        <td class="py-2 px-4 text-center align-middle ">{{ item.column1 }}</td>
-                                        <td class="py-2 px-4 text-center align-middle ">{{ item.column2 }}</td>
+                                    <tr class ="hover:bg-gray-200 " v-for="student in adviserViewStore.advisoryStudents" :key="student.id" @click="adviserViewStore.studentClick(student)" >
+                                        <td class="py-2 px-4 text-center align-middle ">{{ student.id }}</td>
+                                        <td class="py-2 px-4 text-center align-middle ">{{ `${student.data.lastName}, ${student.data.firstName} ${student.data.suffix}` }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -62,14 +74,11 @@
 
                      <!--Student Information-->
                    <div class="col-span-6 pt-10 ">
-                    <div v-if="!showStudentInfo" class="flex justify-center items-center mt-32">
-                        <!--<h1 class="text-2xl">Select a student to display their details</h1>-->
+                    <div v-if="!adviserViewStore.advisoryShowStudentInfo" class="flex justify-center items-center mt-32">
+                        <h1 class="text-2xl">Select a student to display their details</h1>
                     </div>
-                    
-                        <StudentBasicInfo v-if="showStudentInfo"/>
-                       
+                        <StudentBasicInfo v-if="adviserViewStore.advisoryShowStudentInfo"/>
                     </div>
-                  
                 </div>
             </div>
         </div>
@@ -80,52 +89,6 @@
     </div>
 </template>
 
-<script>
-    import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-    import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
-    export default {
-        name: "Advisory",
-        components: {AdviserHeader, StudentBasicInfo, AddStudentForm,},
-        props: {},
-        data() {return {
-            selectedSort: "",
-            items: [],
-            showStudentInfo: false,
-            showAddStudentForm: false,
-        };},
-
-        methods: {
-            addStudent() {
-                //this.items.push({ column1: "2022-00000", column2: "New Student" });
-                this.showAddStudentForm = true;
-            },
-            handleRowClick(item) {
-                this.showStudentInfo = true;
-            },
-
-            fetchData(){
-                this.items = [
-                    { column1: 'Data 1', column2: 'Data 2' },
-                    { column1: 'Data 3', column2: 'Data 4' },
-                    // Add more data as needed
-                ];
-
-            },
-
-            /*handleRowClick(item) {
-      // Handle row click event
-      console.log('Row clicked:', item);
-    }*/
-
-        },
-
-        mounted() {
-            this.fetchData();
-        }
-        
-  };
-</script>
 <style scoped>
     .adviser-page{
         background: #fffef1;

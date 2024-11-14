@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { getCurrentUser } from 'vuefire';
+import { Databases } from '~/library/databases/databases';
 
 export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const adminName = ref('');
@@ -52,8 +53,24 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
       }
     });
     console.log(data)
+    studentStudentData.value = data.studentData;
+    studentStudentSection.value = data.studentSection;
+    studentAllSectionStudents.value = data.allSectionStudents;
   }
 
+  const getFullName = (student: any) => {
+    return `${student.data.lastName}, ${student.data.firstName} ${student.data.middleName} ${student.data.suffix}`.trim();
+  }
+
+  const getGradeAndSection = () => {
+      if (!studentStudentSection.value) {
+        return 'N/A';
+      }
+
+      const { data } = studentStudentSection.value;
+      return `Grade ${data.level}, Section ${data.name}`;
+  }
+  
   const resetAdviserAccountsCSVFileInputData = async (message: string) => {
     accountsMessage.value = message;
     accountsFile.value = null;
@@ -175,6 +192,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     sectionSelectedStudentSort,
     sectionSelectedReportSort,
     sectionSelectedReportStatus,
+    sectionSections,
     sectionSectionStudents,
     sectionSectionReports,
     studentStudentData,
@@ -182,7 +200,10 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     studentSelectedSort,
     studentAllSectionStudents,
     studentShowIncidentModal,
+    sectionSectionAdviser,
     updateStudentPageData,
-    updateSectionPageData
+    updateSectionPageData,
+    getFullName,
+    getGradeAndSection
   };
 });

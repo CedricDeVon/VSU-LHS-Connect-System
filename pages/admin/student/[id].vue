@@ -11,14 +11,14 @@ const adminViewStore = useAdminViewStore();
 adminViewStore.updateStudentPageData(useRoute().params.id);
 
 const sortedStudents = () => {
-    let sorted = [...adminViewStore.studentAllSectionStudents];
+    let sorted = adminViewStore.studentAllSectionStudents;
     
     switch (adminViewStore.studentSelectedSort) {
         case 'surname':
-            sorted.sort((a, b) => a.lastName.localeCompare(b.lastName));
+            sorted.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
             break;
         case 'studentID':
-            sorted.sort((a, b) => a.studentId.localeCompare(b.studentId));
+            sorted.sort((a: any, b: any) => a.id.localeCompare(b.id));
             break;
     }
     
@@ -26,69 +26,21 @@ const sortedStudents = () => {
 }
 
 const hasIncidents = () => {
-    return adminViewStore.studentStudentData?.incidentDocIDs?.length > 0;
+    // return adminViewStore.studentStudentData?.incidentDocIDs?.length > 0;
+    return true;
 }
 
 const incidentButtonText = () => {
-    const count = adminViewStore.studentStudentData?.incidentDocIDs?.length || 0;
-    return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
-}
-
-const getFullName = (student: any) => {
-    return `${student.lastName}, ${student.firstName} ${student.middleName || ''}`.trim();
+    // const count = adminViewStore.studentStudentData?.incidentDocIDs?.length || 0;
+    // return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
+    return '';
 }
 
 const viewStudent = (studentId: any) => {
-    // if (studentId !== adminViewStore.studentStudentData.studentId) {
-    //     router.push(`/admin/student/${studentId}`);
-    // }
+    if (studentId !== adminViewStore.studentStudentData.id) {
+        useRoute().push(`/admin/student/${studentId}`);
+    }
 }
-
-
-// export default defineComponent({
-//     name: 'StudentInformation',
-//     components: {
-//         AdminSidebar,
-//         AdminHeader,
-//         IncidentReportsModal
-//     },
-//     data() {
-//         return {
-//             studentData: null,
-//             studentSection: null,
-//             selectedSort: '',
-//             allSectionStudents: [], // To store all students from the section
-//             showIncidentModal: false
-//         }
-//     },
-//     created() {
-//         // Get student ID from route params
-//         const studentId = this.$route.params.id;
-
-//         // Find student data
-//         adminViewStore.studentStudentData = student.find(s => s.studentId === studentId);
-
-//         // Find student's section
-//         if (adminViewStore.studentStudentData) {
-//             this.studentSection = section.find(sec =>
-//                 sec.sectionStudents.includes(adminViewStore.studentStudentData.studentId)
-//             );
-            
-//             // Get all students from the same section
-//             if (this.studentSection) {
-//                 adminViewStore.studentAllSectionStudents = this.studentSection.sectionStudents.map(id => 
-//                     student.find(s => s.studentId === id)
-//                 ).filter(s => s !== null);
-//             }
-//         }
-//     },
-//     computed: {
-        
-//     },
-//     methods: {
-        
-//     }
-// });
 
 </script>
 
@@ -112,7 +64,7 @@ const viewStudent = (studentId: any) => {
                         <div class="col-span-4">
                             <div class="mb-4 flex items-start">
                                 <select 
-                                    v-model="selectedSort"
+                                    v-model="adminViewStore.studentSelectedSort"
                                     class="mr-4 px-10 py-2 border-b-2 border-gray-400 bg-transparent text-black font-medium focus:outline-none">
                                     <option value="" disabled selected>Sort by</option>
                                     <option value="surname">Surname</option>
@@ -130,15 +82,15 @@ const viewStudent = (studentId: any) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr v-for="student in sortedStudents" 
-                                            :key="student.studentId"
-                                            @click="viewStudent(student.studentId)"
+                                        <tr v-for="student in sortedStudents()" 
+                                            :key="student.id"
+                                            @click="viewStudent(student.id)"
                                             :class="[
                                                 'hover:bg-gray-100 cursor-pointer',
-                                                student.studentId === studentData?.studentId ? 'bg-green-50' : ''
+                                                student.id === adminViewStore.studentStudentData?.id ? 'bg-green-50' : ''
                                             ]">
-                                            <td class="px-6 py-3">{{ student.studentId }}</td>
-                                            <td class="px-6 py-3">{{ getFullName(student) }}</td>
+                                            <td class="px-6 py-3">{{ student.id }}</td>
+                                            <td class="px-6 py-3">{{ adminViewStore.getFullName(student) }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -147,37 +99,37 @@ const viewStudent = (studentId: any) => {
 
                         <!-- Right Column - Student Details -->
                         <div class="border border-green-900 col-span-6 overflow-y-auto max-h-[calc(93vh-180px)] rounded-2xl border-opacity-50 p-6">
-                            <div v-if="studentData" class="flex flex-col items-center">
+                            <div v-if="adminViewStore.studentStudentData" class="flex flex-col items-center">
                                 <h2 class="text-3xl font-bold text-green-900 mb-6">Basic Information</h2>
                                 
-                                <img :src="studentData?.profilePic || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS11c2VyLXJvdW5kIj48cGF0aCBkPSJNMTggMjBhNiA2IDAgMCAwLTEyIDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='"
+                                <img :src="adminViewStore.studentStudentData?.data.profilePicture || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS11c2VyLXJvdW5kIj48cGF0aCBkPSJNMTggMjBhNiA2IDAgMCAwLTEyIDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='"
                                      alt="Student profile"
                                      class="w-48 h-48 rounded-full object-cover shadow-md mb-4"/>
                                 
-                                <h3 class="text-2xl font-bold mb-2">{{ studentData.firstName }} {{ studentData.lastName }}</h3>
-                                <p class="text-lg mb-6">ID NO: {{ studentData.studentId }}</p>
+                                <h3 class="text-2xl font-bold mb-2">{{ adminViewStore.getFullName(adminViewStore.studentStudentData) }}</h3>
+                                <p class="text-lg mb-6">ID NO: {{ adminViewStore.studentStudentData.id }}</p>
 
                                 <!-- Student Details -->
                                 <div class="w-full max-w-md space-y-3">
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Grade & Section:</span>
-                                        <span>{{ studentSection?.sectionName || 'N/A' }}</span>
+                                        <span>{{ adminViewStore.getGradeAndSection() || 'N/A' }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Age:</span>
-                                        <span>{{ studentData.age || 'N/A' }}</span>
+                                        <span>{{ adminViewStore.studentStudentData.data.age || 'N/A' }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Gender:</span>
-                                        <span>{{ studentData.gender || 'N/A' }}</span>
+                                        <span>{{ adminViewStore.studentStudentData.data.gender || 'N/A' }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Address:</span>
-                                        <span>{{ studentData.address || 'N/A' }}</span>
+                                        <span>{{ adminViewStore.studentStudentData.data.address || 'N/A' }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Contact:</span>
-                                        <span>{{ studentData.contactNumber || 'N/A' }}</span>
+                                        <span>{{ adminViewStore.studentStudentData.data.contactNumber || 'N/A' }}</span>
                                     </div>
 
                                     <!-- Buttons with adjusted margins -->
@@ -189,9 +141,9 @@ const viewStudent = (studentId: any) => {
 
                                         <!-- Warning/Alert Action - Only show if student has incidents -->
                                         <button v-if="hasIncidents" 
-                                                @click="showIncidentModal = true"
+                                                @click="adminViewStore.studentShowIncidentModal = true"
                                                 class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
-                                            View {{ incidentButtonText }}
+                                            View Incidents
                                         </button>
                                     </div>
                                 </div>
@@ -243,3 +195,49 @@ const viewStudent = (studentId: any) => {
     scrollbar-color: #728B78 #f1f1f1;
 }
 </style>
+
+
+// export default defineComponent({
+//     name: 'StudentInformation',
+//     components: {
+//         AdminSidebar,
+//         AdminHeader,
+//         IncidentReportsModal
+//     },
+//     data() {
+//         return {
+//             studentData: null,
+//             studentSection: null,
+//             selectedSort: '',
+//             allSectionStudents: [], // To store all students from the section
+//             showIncidentModal: false
+//         }
+//     },
+//     created() {
+//         // Get student ID from route params
+//         const studentId = this.$route.params.id;
+
+//         // Find student data
+//         adminViewStore.studentStudentData = student.find(s => s.studentId === studentId);
+
+//         // Find student's section
+//         if (adminViewStore.studentStudentData) {
+//             this.studentSection = section.find(sec =>
+//                 sec.sectionStudents.includes(adminViewStore.studentStudentData.studentId)
+//             );
+            
+//             // Get all students from the same section
+//             if (this.studentSection) {
+//                 adminViewStore.studentAllSectionStudents = this.studentSection.sectionStudents.map(id => 
+//                     student.find(s => s.studentId === id)
+//                 ).filter(s => s !== null);
+//             }
+//         }
+//     },
+//     computed: {
+        
+//     },
+//     methods: {
+        
+//     }
+// });

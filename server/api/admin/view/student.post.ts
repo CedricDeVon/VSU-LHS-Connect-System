@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     if (studentSection) {
       allSectionStudents = students.filter((student: any) => student.data.sectionId === studentSection.id);
     }
-
+    studentData.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(studentData.data.profilePicture)).data;
     return new SuccessfulResult({
       students, sections, studentData, studentSection, allSectionStudents
     }).cloneToObject();

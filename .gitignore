@@ -28,3 +28,4 @@ sa.json
 notes.txt
 sandbox
 pages/adviser/advisoryGuide.vue
+components/used-components/ShortDatepicker.vue

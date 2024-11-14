@@ -138,10 +138,10 @@
 
     .backPic{
         position: absolute;
-        width: 900px;
-        height: 1200px;
+        width: 50%;
+        height: auto;
         border-radius: 15px;
-        left: 600px;
+        left: 50%;
         top: 20px;
         z-index: 0;
     }

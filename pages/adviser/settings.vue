@@ -1,17 +1,14 @@
 <template>
     <div class="adviser-page">
         <AdviserHeader/>
-            <div >
-            <AddStudentForm v-if="showAddStudentForm"
-            @close="showAddStudentForm = false"
-            />
+        <div >
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
             </div>
 
                 <!--Title of the Content?-->
             <div class="title flex justify-center items-center">
-                <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
+                <div><h1 class="text-white text-2xl font-bold">Account Settings</h1></div>
             </div>   
 
             <!--Content of the Page-->
@@ -34,41 +31,8 @@
                                     aria-label="Add Student">
                                     Add Student
                             </button>
-                        </div>
-                        <!--Table of Students-->
-                        <div class=" overflow-x-auto overflow-y-auto max-h-96">
-                            <table class="min-w-full ">
-                                <thead class="sticky top-0" >
-                                    <tr class=" gray  text-white">
-                                        <th 
-                                            class="px-6 py-3 rounded-l-md ">
-                                            Student ID
-                                        </th>
-                                        <th 
-                                            class="px-6 py-3 rounded-r-md ">
-                                            Student Name
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody >
-                                    <tr class ="hover:bg-gray-200 table-text " v-for="(student, index) in students" :key="index" @click="handleRowClick(student)" >
-                                        <td class="py-5 px-4 text-center align-middle ">{{ student.studentId }}</td>
-                                        <td class="py-5 px-4 text-center align-middle ">{{ `${student.firstName} ${student.lastName}`}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
                         </div>  
                    </div>
-
-                     <!--Student Information-->
-                   <div class="col-span-6 pt-10 ">
-                    <div v-if="!showStudentInfo" class="flex justify-center items-center mt-32">
-                        <h1 class="text-2xl">Select a student to display their details</h1>
-                    </div>
-                    
-                        <StudentBasicInfo v-if="showStudentInfo" :student="studentInfo" :section="mySection" />
-                       
-                    </div>
                   
                 </div>
             </div>
@@ -82,66 +46,31 @@
 
 <script>
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-    import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
     import { student } from "~/data/student";
     import { section } from "~/data/section";
 
     export default {
-        name: "Advisory",
-        components: {AdviserHeader, StudentBasicInfo, AddStudentForm,},
+        name: "Settings",
+        components: {AdviserHeader,},
         props: {
             AdviserID: {
                 type: String,
                 required: true,
-                default: "adviserid1" // this should be the adviserID of the logged in user
+                default: "adviserid16" // this should be the adviserID of the logged in user
             },
             AcademicYear: {
                 type: String,
                 required: true,
                 default: "2024-2025" // this should be the current academic year
-            },
-            section: {
-                type: Object,
-                required: true, // I think it would be better if these are global variables
-            },
+            }
         },
         data() {return {
-            mySection: {
-                id: 'sectionid1',
-                adviserId: 'adviserid1',
-                sectionPopulation: '20',
-                sectionName: 'Javascript',
-                sectionLevel: '7',
-                sectionSchoolYear: '2024-2025',
-                sectionStudents: [
-                    '22-1-10076',
-                    '22-1-10077',
-                    '22-1-10078',
-                    '22-1-10079',
-                    '22-1-10080',
-                    '22-1-10081',
-                    '22-1-10082',
-                    '22-1-10083',
-                    '22-1-10084',
-                    '22-1-10085',
-                    '22-1-10086'
-                ]
-            },
-            selectedSort: "",
-            students: [],
-            showStudentInfo: false,
-            showAddStudentForm: false,
-            studentInfo: {},
+
         };},
 
         methods: {
-            addStudent() {
-                //this.items.push({ column1: "2022-00000", column2: "New Student" });
-                this.showAddStudentForm = true;
-            },
-            handleRowClick(student) {
-                this.studentInfo = student;
+
+            handleRowClick(item) {
                 this.showStudentInfo = true;
             },
 

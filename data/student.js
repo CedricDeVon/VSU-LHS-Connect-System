@@ -30,7 +30,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10110',
@@ -48,7 +47,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10801',
@@ -66,7 +64,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10121',
@@ -84,7 +81,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10000',
@@ -102,7 +98,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10000',
@@ -120,7 +115,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10000',
@@ -138,7 +132,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10000',
@@ -156,7 +149,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10000',
@@ -174,7 +166,6 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
     },
     {
         studentId: '22-1-10000',
@@ -192,7 +183,7 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
+       
     },
     {
         studentId: '22-1-10000',
@@ -210,7 +201,7 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
+       
     },
     {
         studentId: '22-1-10000',
@@ -228,7 +219,7 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
+       
     },
     {
         studentId: '22-1-10000',
@@ -246,7 +237,7 @@ export const student = [
         age: calculateAge('2004-01-01'),
         hasAnecdotal: false,
         sectionID: '',
-        hasAnecdotal: false,
+       
     },
 
 
@@ -266,7 +257,7 @@ export const student = [
             age: calculateAge('2004-01-01'),
             hasAnecdotal: false,
             sectionID: '',
-            hasAnecdotal: false,
+           
         },
         {
             studentId: '22-1-10075',

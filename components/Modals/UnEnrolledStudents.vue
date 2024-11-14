@@ -78,9 +78,11 @@ import type { academicYear } from '~/data/academicYear';
     props: {
       academicYear: {
         type: String,
-        default: '2023-2024'
+        default: '2023-2024'    // Change the default value to the current academic year
       }
     },
+
+
     setup(props) {
 
         const searchQuery = ref<string>('');
@@ -111,6 +113,7 @@ import type { academicYear } from '~/data/academicYear';
     const filteredStudents = computed(() => {
         if (selectedLevel.value === '') { return unenrolledStudents.value;
         }else{
+          console.log(debouncedQuery.value);
         const studentIDs = getStudentIDPerLevel(selectedLevel.value, props.academicYear);
         const levelGroup = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
         return levelGroup.filter((stdnt) => stdnt.isEnrolled === false);

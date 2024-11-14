@@ -1,12 +1,10 @@
 <template>
     <div class="adviser-page">
         <AdviserHeader/>
-       <div >
-
-       <AddStudentForm v-if="showAddStudentForm"
-       @close="showAddStudentForm = false"
-       />
-       
+            <div >
+            <AddStudentForm v-if="showAddStudentForm"
+            @close="showAddStudentForm = false"
+            />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
             </div>
@@ -53,9 +51,9 @@
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    <tr class ="hover:bg-gray-200 " v-for="(item, index) in items" :key="index" @click="handleRowClick(item)" >
-                                        <td class="py-2 px-4 text-center align-middle ">{{ item.column1 }}</td>
-                                        <td class="py-2 px-4 text-center align-middle ">{{ item.column2 }}</td>
+                                    <tr class ="hover:bg-gray-200 table-text " v-for="(student, index) in students" :key="index" @click="handleRowClick(item)" >
+                                        <td class="py-5 px-4 text-center align-middle ">{{ student.studentId }}</td>
+                                        <td class="py-5 px-4 text-center align-middle ">{{ `${student.firstName} ${student.lastName}`}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -65,7 +63,7 @@
                      <!--Student Information-->
                    <div class="col-span-6 pt-10 ">
                     <div v-if="!showStudentInfo" class="flex justify-center items-center mt-32">
-                        <!--<h1 class="text-2xl">Select a student to display their details</h1>-->
+                        <h1 class="text-2xl">Select a student to display their details</h1>
                     </div>
                     
                         <StudentBasicInfo v-if="showStudentInfo"/>
@@ -86,15 +84,30 @@
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
     import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
     import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+    import { student } from "~/data/student";
+    import { section } from "~/data/section";
+
     export default {
         name: "Advisory",
         components: {AdviserHeader, StudentBasicInfo, AddStudentForm,},
-        props: {},
+        props: {
+            AdviserID: {
+                type: String,
+                required: true,
+                default: "adviserid16" // this should be the adviserID of the logged in user
+            },
+            AcademicYear: {
+                type: String,
+                required: true,
+                default: "2024-2025" // this should be the current academic year
+            }
+        },
         data() {return {
             selectedSort: "",
-            items: [],
+            students: [],
             showStudentInfo: false,
             showAddStudentForm: false,
+            incd: 'incidentID7'
         };},
 
         methods: {
@@ -106,13 +119,9 @@
                 this.showStudentInfo = true;
             },
 
-            fetchData(){
-                this.items = [
-                    { column1: 'Data 1', column2: 'Data 2' },
-                    { column1: 'Data 3', column2: 'Data 4' },
-                    // Add more data as needed
-                ];
-
+            fetchStudents(id,ay) {
+                const studentIDs = (section.find((sec)=> sec.adviserId === id && sec.sectionSchoolYear === ay)).sectionStudents;
+                this.students = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
             },
 
             /*handleRowClick(item) {
@@ -123,7 +132,7 @@
         },
 
         mounted() {
-            this.fetchData();
+            this.fetchStudents(this.AdviserID, this.AcademicYear);
         }
         
   };
@@ -184,5 +193,11 @@
         left: 95px;
         top: 135px;
         z-index: 2;
+    }
+
+    .table-text{
+        font-size: 16px;
+        font-weight: 500;
+        color: #265630;
     }
 </style>

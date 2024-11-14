@@ -424,7 +424,7 @@ export const section = [
     sectionLevel: '12',
     sectionSchoolYear: '2023-2024',
     sectionStudents: [
-        '22-1-10100'
+        '22-1-10801'
     ],
 },
 

@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia'
 
 export const studentAddedStore = defineStore('studentAddedStore', () => {
-   const studentId = ref('');
+    const AdviserId = ref('');
+    const studentId = ref('');
     const firstName = ref('');
     const lastName = ref('');
     const middleName = ref('');
@@ -15,6 +16,7 @@ export const studentAddedStore = defineStore('studentAddedStore', () => {
     const profilePic = ref('');
 
     return { 
+        AdviserId,
         studentId,
         firstName,
         lastName,

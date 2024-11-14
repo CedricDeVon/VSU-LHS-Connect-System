@@ -51,7 +51,7 @@ export const student = [
         hasAnecdotal: false,
     },
     {
-        studentId: '22-1-10100',
+        studentId: '22-1-10801',
         firstName: 'Try unenrolled',
         lastName: 'Gomex',
         middleName: 'Perex',
@@ -69,7 +69,7 @@ export const student = [
         hasAnecdotal: false,
     },
     {
-        studentId: '22-1-10100',
+        studentId: '22-1-10121',
         firstName: 'Try unenrolled',
         lastName: 'Gomex',
         middleName: 'Perex',

@@ -2,7 +2,7 @@
     <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-70">
         <div class=" z-50 w-2/5 mt-14 h-fit" >
             <!-- Header -->
-            <div class=" header p-1 rounded-lg">
+            <div class=" header p-4 rounded-lg">
                 Add Student to Advisory
             </div>
             <!--initial Body -->
@@ -131,8 +131,10 @@
                
               </div>
               <div v-if="showBulkNewStudentForm">
-              </div>
-              <div v-if="showBulkContStudentForm">
+                <div class="smallText flex justify-center m-4">
+                  <StudentCSVUploadModal @close = "$emit('close')"/>
+                </div>
+
               </div>
 
             </div>
@@ -150,13 +152,19 @@ import ShortDatepicker from '../used-components/ShortDatepicker.vue';
 import { ref, watch, defineEmits } from 'vue';
 import { studentAddedStore } from '~/stores/studentAdded';
 import UnEnrolledStudents from './UnEnrolledStudents.vue';
+import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
   
 
 
   export default{
       name: 'AddStudentForm',
-      components: { ShortDatepicker, UnEnrolledStudents},
-
+      components: { ShortDatepicker, UnEnrolledStudents, StudentCSVUploadModal},
+      props: {
+        AdviserID: {
+          type: String,
+          required: true,
+        },
+      },
 
       setup() {
         const emit = defineEmits(['update:modelValue', 'close']);

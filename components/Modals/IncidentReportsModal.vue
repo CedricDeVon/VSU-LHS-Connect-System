@@ -1,5 +1,16 @@
+<script setup lang='ts'>
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+const adminViewStore = useAdminViewStore();
+
+const viewIncidentDetails = (incidentId: any) => {
+    useRouter().push(`/admin/incident/${incidentId}`);
+}
+
+</script>
+
 <template>
-    <div v-if="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic" @click="handleOverlayClick">
+    <div v-if="adminViewStore.studentShowIncidentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic">
         <div class="bg-[#FFFEF1] rounded-2xl w-[800px] max-h-[90vh] flex flex-col relative" @click.stop>
             <!-- Sticky Header Section -->
             <div class="sticky top-0 z-10">
@@ -21,27 +32,28 @@
             <div class="overflow-y-auto flex-1">
                 <!-- Incident Reports List -->
                 <div class="p-6 space-y-4">
-                    <div v-for="incident in studentIncidents" 
-                         :key="incident.incidentDocID"
+                    <div v-for="incident in adminViewStore.studentStudentData.data.incidentalReports" 
+                         :key="incident.id"
                          class="border border-gray-200 rounded-lg p-4 transition-all duration-200 hover:border-[#265630] hover:shadow-lg hover:bg-white cursor-pointer"
-                         @click="viewIncidentDetails(incident.incidentDocID)">
+                         @click="viewIncidentDetails(incident.id)">
                         <div class="flex justify-between items-start">
                             <div>
                                 <h3 class="text-lg font-bold text-[#265630]">
-                                    {{ incident.reportID }} 
-                                    <span :class="incident.status === 'Resolved' ? 'text-green-600' : 'text-red-600'">
-                                        ({{ incident.status }})
+                                    {{ incident.id }} 
+                                    <span :class="incident.data.status === 'Resolved' ? 'text-green-600' : 'text-red-600'">
+                                        ({{ incident.data.status }})
                                     </span>
                                 </h3>
-                                <p class="text-gray-600 italic">{{ incident.dateOfIncident }}</p>
+                                <p class="text-gray-600 italic">{{ new Date().toDateString() }}</p>
+                                <!-- <p class="text-gray-600 italic">{{ new Date().toLocaleDateString() }}</p> -->
                             </div>
                         </div>
                         <p class="mt-2 text-gray-700">
                             <span class="font-semibold">Name of People Involved:</span> 
-                            {{ incident.peopleInvolved.join(', ') }}
+                            {{ incident.data.peopleInvolved }}
                         </p>
                         <p class="mt-1 text-gray-600 italic text-sm">
-                            ({{ incident.narrativeReport.substring(0, 100) }}...)
+                            ({{ incident.data.narrativeReport.substring(0, 100) }}...)
                         </p>
                     </div>
                 </div>
@@ -57,50 +69,6 @@
         </div>
     </div>
 </template>
-
-<script>
-import { incidentReport } from '~/data/incident.js';
-
-export default {
-    name: 'IncidentReportsModal',
-    props: {
-        show: {
-            type: Boolean,
-            default: false
-        },
-        studentData: {
-            type: Object,
-            required: true
-        }
-    },
-    computed: {
-        studentIncidents() {
-            console.log('Student IDs:', this.studentData.incidentDocIDs);
-            const incidents = this.studentData.incidentDocIDs.map(id => {
-                const found = incidentReport.find(report => report.incidentDocID === id);
-                if (!found) {
-                    console.log('Missing incident report for ID:', id);
-                }
-                return found;
-            }).filter(report => report !== undefined);
-            console.log('Found incidents:', incidents);
-            return incidents;
-        }
-    },
-    emits: ['close'],
-    methods: {
-        handleOverlayClick(event) {
-            if (event.target === event.currentTarget) {
-                this.$emit('close');
-            }
-        },
-        viewIncidentDetails(incidentId) {
-            this.$emit('close');
-            this.$router.push(`/admin/incident/${incidentId}`);
-        }
-    }
-}
-</script>
 
 <style scoped>
 @font-face {

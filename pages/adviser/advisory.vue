@@ -5,7 +5,7 @@ import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
 import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 
 const adviserViewStore = useAdviserViewStore();
-adviserViewStore.updateAdvisoryView();
+await adviserViewStore.updateAdvisoryView();
 
 </script>
 

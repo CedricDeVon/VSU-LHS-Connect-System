@@ -62,11 +62,12 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
         studentId
       }
     });
+    // console.log(data.studentData)
     studentStudentData.value = data.studentData;
     studentStudentSection.value = data.studentSection;
     studentAllSectionStudents.value = data.allSectionStudents;
   }
-
+  
   const getFullName = (student: any) => {
     return `${student.data.lastName}, ${student.data.firstName} ${student.data.middleName} ${student.data.suffix}`.trim();
   }
@@ -77,7 +78,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
       }
 
       const { data }: any = studentStudentSection.value;
-      return `Grade ${data.level}, Section ${data.name}`;
+      return `Grade ${data.level}, ${data.name}`;
   }
 
   const studentGetGradeAndSection = (student: any) => {

@@ -8,10 +8,6 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateSearch();
 
-const viewStudentProfile = async (id: string) => {
-
-}
-
 const addNewSection = async (newSection: any) => {
   const result = await $fetch('/api/section/create', {
     method: 'POST',

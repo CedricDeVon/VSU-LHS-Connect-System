@@ -157,6 +157,25 @@ export class Databases {
             return new FailedResult(error.message);
         }
     }
+    public static async getAllIncidentalReports(): Promise<Result> {
+        try {
+            const result: Result = await Databases._incidentReportFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+    
+    public static async getAllIncidentalReportDividers(): Promise<Result> {
+        try {
+            const result: Result = await Databases._incidentDividerFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
 
     public static async getAllSections(): Promise<Result> {
         try {

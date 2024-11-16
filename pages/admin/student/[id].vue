@@ -6,11 +6,11 @@ import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
-adminViewStore.updateStudentPageData(useRoute().params.id);
+await adminViewStore.updateStudentPageData(useRoute().params.id);
 
 const sortedStudents = () => {
     let sorted = adminViewStore.studentAllSectionStudents;
-    
+
     switch (adminViewStore.studentSelectedSort) {
         case 'surname':
             sorted.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
@@ -32,6 +32,10 @@ const incidentButtonText = () => {
     // const count = adminViewStore.studentStudentData?.incidentDocIDs?.length || 0;
     // return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
     return '';
+}
+
+const showIncident = () => {
+    
 }
 
 const viewStudent = (studentId: any) => {
@@ -104,7 +108,7 @@ const viewStudent = (studentId: any) => {
                                      alt="Student profile"
                                      class="w-48 h-48 rounded-full object-cover shadow-md mb-4"/>
                                 
-                                <h3 class="text-2xl font-bold mb-2">{{ adminViewStore.getFullName(adminViewStore.studentStudentData.value) }}</h3>
+                                <h3 class="text-2xl font-bold mb-2">{{ adminViewStore.getFullName(adminViewStore.studentStudentData) }}</h3>
                                 <p class="text-lg mb-6">ID NO: {{ adminViewStore.studentStudentData.id }}</p>
 
                                 <!-- Student Details -->
@@ -138,7 +142,7 @@ const viewStudent = (studentId: any) => {
                                         </button>
 
                                         <!-- Warning/Alert Action - Only show if student has incidents -->
-                                        <button v-if="hasIncidents" 
+                                        <button v-if="hasIncidents()" 
                                                 @click="adminViewStore.studentShowIncidentModal = true"
                                                 class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             View Incidents
@@ -154,14 +158,13 @@ const viewStudent = (studentId: any) => {
                 </div>
             </main>
         </div>
+        <div>
+            <IncidentReportsModal 
+            :show="adminViewStore.studentShowIncidentModal"
+            :student-data="adminViewStore.studentStudentData"
+            @close="adminViewStore.studentShowIncidentModal = false" />
+        </div>
     </div>
-
-    <!-- Add Modal -->
-    <!-- <IncidentReportsModal 
-        :show="adminViewStore.studentShowIncidentModal"
-        :student-data="adminViewStore.studentStudentData"
-        @close="showIncidentModal = false"
-    /> -->
 </template>
 
 <style scoped>

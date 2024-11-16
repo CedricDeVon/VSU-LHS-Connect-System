@@ -23,19 +23,9 @@ const sortedStudents = () => {
     return sorted;
 }
 
-const hasIncidents = () => {
-    // return adminViewStore.studentStudentData?.incidentDocIDs?.length > 0;
-    return true;
-}
-
 const incidentButtonText = () => {
-    // const count = adminViewStore.studentStudentData?.incidentDocIDs?.length || 0;
-    // return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
-    return '';
-}
-
-const showIncident = () => {
-    
+    const count = adminViewStore.studentStudentData.data.incidentalReports.length || 0;
+    return (count > 1) ? `Incident Reports (${count})` : 'Incident Report';
 }
 
 const viewStudent = (studentId: any) => {
@@ -142,10 +132,10 @@ const viewStudent = (studentId: any) => {
                                         </button>
 
                                         <!-- Warning/Alert Action - Only show if student has incidents -->
-                                        <button v-if="hasIncidents()" 
+                                        <button v-if="adminViewStore.studentStudentData.data.incidentalReports.length" 
                                                 @click="adminViewStore.studentShowIncidentModal = true"
                                                 class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
-                                            View Incidents
+                                            {{ incidentButtonText() }}
                                         </button>
                                     </div>
                                 </div>

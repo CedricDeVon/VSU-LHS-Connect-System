@@ -7,11 +7,17 @@ export default defineEventHandler(async (event) => {
     const advisers = (await Databases.getAllAdvisers()).data;
     const sections = (await Databases.getAllSections()).data;
     const students = (await Databases.getAllStudents()).data;
-    for (let section of sections) {
+    for (const section of sections) {
       section.data.adviser = advisers.filter((adviser: any) => {
         return section.id === adviser.data.sectionId
       })[0];
     }
+    for (const student of students) {
+      student.data.section = sections.filter((section: any) => {
+        return section.id === student.data.sectionId;
+      })[0];
+    }
+
     return new SuccessfulResult({
       advisers,
       sections,

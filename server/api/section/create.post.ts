@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
     try {
         const { name, level } = await readBody(event);
 
-        const timeline = await Databases.getMostRecentTimeline();
+        const timeline = (await Databases.getMostRecentTimeline()).data[0];
         const count = (await Databases.sectionFirebaseDatabase.countCollectionDocuments()).data;
         const result: Result = await Databases.createOneSection(`S-${count + 1}`, name, level, timeline.data.schoolYear)
         return result.cloneToObject();

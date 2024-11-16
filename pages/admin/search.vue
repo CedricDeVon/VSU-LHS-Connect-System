@@ -8,6 +8,10 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateSearch();
 
+const viewStudentProfile = async (id: string) => {
+
+}
+
 const addNewSection = async (newSection: any) => {
   const result = await $fetch('/api/section/create', {
     method: 'POST',
@@ -20,9 +24,9 @@ const addNewSection = async (newSection: any) => {
 }
 
 const getSectionByStudentId = (id: any) => {
-  for (const sec of adminViewStore.searchSections) {
-    if (sec.sectionStudents.includes(id)) {
-      return sec;
+  for (const section of adminViewStore.searchSections) {
+    if (section.id === id) {
+      return section;
     }
   }
   return null;
@@ -74,8 +78,8 @@ const filteredStudents = () => {
       filtered.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
     } else if (adminViewStore.searchSortBy === 'gradeLvlSort') {
       filtered.sort((a: any, b: any) => {
-        const sectionA: any = getSectionByStudentId(a.data.studentId);
-        const sectionB: any = getSectionByStudentId(b.data.studentId);
+        const sectionA: any = getSectionByStudentId(a.id);
+        const sectionB: any = getSectionByStudentId(b.id);
         return (sectionA ? sectionA.data.level : 0) - (sectionB ? sectionB.data.level : 0);
       });
     }
@@ -165,7 +169,7 @@ const filteredStudents = () => {
                       <td class="px-6 py-4">Grade {{ section.data.level }}</td>
                       <td class="px-6 py-4">
                         <span v-if="section.data.adviser">{{ section.data.adviser.data.facultyId }}</span>
-                        <span v-else class="text-gray-500">----</span>
+                        <span v-else class="text-gray-500">N/A</span>
                       </td>
                       <td class="px-6 py-4">
                         <button
@@ -179,11 +183,11 @@ const filteredStudents = () => {
                   <template v-else-if="adminViewStore.searchSelectedSearch === 'student'">
                     <tr v-for="student in filteredStudents()" :key="student.id" class="border-b bg-transparent">
                       <td class="px-6 py-4">{{ student.id }}</td>
-                      <td class="px-6 py-4">{{ student.data.lastName + ', ' + student.data.firstName }}</td>
-                      <td class="px-6 py-4">{{ 'Grade ' + student.data.level + ' - ' + student.data.name }}</td>
+                      <td class="px-6 py-4">{{ adminViewStore.getFullName(student) }}</td>
+                      <td class="px-6 py-4">{{ adminViewStore.studentGetGradeAndSection(student) }}</td>
                       <td class="px-6 py-4">
                         <button
-                          @click="viewStudentProfile(student.studentId)"
+                          @click="viewStudentProfile(student.id)"
                           class="bg-green-200 text-green-800 px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
                           View Profile
                         </button>

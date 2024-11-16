@@ -3,7 +3,7 @@
     <div class="bg-gray-100 rounded-lg shadow-lg justify-center w-full max-w-md p-6 relative">
       <h2 class="text-xl font-semibold mb-4 text-gray-800">Section Details</h2>
       <label>Grade Level</label>
-      <input v-model="sectionLevel" type="text"
+      <input v-model="sectionLevel" type="number" min="7" max="12"
         class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-5">
       <label>Section Name</label>
       <input v-model="sectionName" type="text"
@@ -34,9 +34,9 @@ export default {
   methods: {
     handleAddSection() {
       this.$emit('add-section', {
-        sectionName: this.sectionName || null,
-        sectionLevel: this.sectionLevel || null,
-        adviserId: null 
+        sectionName: this.sectionName || '',
+        sectionLevel: this.sectionLevel || '',
+        adviserId: '' 
       });
       this.sectionName = ''; 
       this.sectionLevel = '';

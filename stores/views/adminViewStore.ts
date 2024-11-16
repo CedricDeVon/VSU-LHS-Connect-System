@@ -79,6 +79,10 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
       const { data }: any = studentStudentSection.value;
       return `Grade ${data.level}, Section ${data.name}`;
   }
+
+  const studentGetGradeAndSection = (student: any) => {
+    return (student.data.section) ? `Grade ${student.data.section.data.level}, ${student.data.section.data.name}` : 'N/A';
+  }
   
   const resetAdviserAccountsCSVFileInputData = async (message: string) => {
     accountsMessage.value = message;
@@ -209,6 +213,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     studentStudentData,
     studentStudentSection,
     studentSelectedSort,
+    studentGetGradeAndSection,
     studentAllSectionStudents,
     studentShowIncidentModal,
     sectionSectionAdvisers,

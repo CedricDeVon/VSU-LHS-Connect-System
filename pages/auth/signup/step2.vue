@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+// import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
 import { userSignUpStore } from '~/stores/userSignUp'
 import statueImage from '~/assets/images/vsu-main-the-search-for-truth-statue.png'

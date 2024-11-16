@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-import { signOut } from "firebase/auth";
+// import { signOut } from "firebase/auth";
 
 definePageMeta({
   middleware: ['validate-user']

@@ -1,13 +1,13 @@
 <template>
     <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-70">
-        <div class=" z-50 w-2/5 mt-14" >
+        <div class=" z-50 w-2/5 mt-14 h-fit" >
             <!-- Header -->
-            <div class=" header p-1 rounded-lg">
+            <div class=" header p-4 rounded-lg">
                 Add Student to Advisory
             </div>
             <!--initial Body -->
-            <div class="body flex justify-self-center rounded-b-lg">
-              <div v-if="!doneInitPreparation" class="p-5 pt-10 w-full">
+            <div class="body flex justify-self-center rounded-b-lg ">
+              <div v-if="initPreparation" class="p-5 pt-10 w-full ">
                
                 <div>
                   <label>Type of Student/s:</label>
@@ -27,7 +27,7 @@
                   </div> 
                 </div>
 
-                 <div class="pt-5">
+                 <div v-if="selectedStudentType === 'newStudent'" class="pt-5">
                   <label>Type of Adding Student/s:</label>
                   <div class="flex justify-center pt-3">
                     <div class="selection-box rounded-lg m-1 p-2" :class="{selected: selectedAddingType === 'singleAdding'}"
@@ -46,7 +46,7 @@
                  </div>
 
                   <div class="flex justify-end mt-14 ">
-                    <button class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Cancel">
+                    <button @click="$emit('close')" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Cancel">
                       Cancel
                     </button>
                     <button @click ="nextClick" class=" button2 px-11 py-2 m-2 rounded-lg focus:outline-none" aria-label="Next">
@@ -56,39 +56,86 @@
               </div>
               
               <!--Body if singleAdding of new student-->
-              <div v-if ="doneInitPreparation && selectedAddingType === 'singleAdding'" class=" body2 flex justify-center h-full w-full">
-                <div class=" w-11/12">
+              <div v-if ="showSingleNewStudentForm" class=" body2 flex justify-center h-fit w-full">
+                <div class=" w-11/12 h-fit">
 
-                  <div class="flex justify-center">
-                    <h1>Picture ni nga div</h1>
+                  <div class="flex justify-center pt-5">
+                    <img src="~/assets/icons/default-user.png" alt="user profile" class=" h-52">
                   </div>
 
                   <div>
-                    <div class="p-4 pb-0 ">
+                    <div class="p-2 pb-0 ">
                       <div class="pb-1">Student ID:</div>
                       <label>
-                        <input type="text" class="input px-2 py-1 rounded-sm w-1/2" placeholder="Enter Student ID">
+                        <input type="text" class="input px-2 py-2 rounded-sm w-1/2" placeholder="Enter Student ID">
                       </label>
                     </div>
-                    <div class="p-4 ">
+                    <div class="p-2 ">
                       <div class="pb-1">Student's Full Name: </div>
                       <label>
-                        <input type="text" class=" inputName px-2 py-1 rounded-sm " placeholder="Enter First Name">
-                        <input type="text" class=" inputName px-2 py-1 rounded-sm  ml-2" placeholder="Enter Middle Name">
-                        <input type="text" class=" inputName px-2 py-1 rounded-sm w-2/6 ml-2" placeholder="Enter Last Name">
+                        <input type="text" class=" inputName px-2 py-2 rounded-sm " placeholder="Enter First Name">
+                        <input type="text" class=" inputName px-2 py-2 rounded-sm  ml-2" placeholder="Enter Last Name">
+                        <input type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2" placeholder="Suffix">
                       </label>
                     </div>
                   </div>
 
-                  <div class="p-4">
-                    <label>Birtdate:<DatePickerInput v-model="student.birthDate" class="input "></DatePickerInput></label><label>Sex at Birth:<input class=" input w-1/4 mx-1 px-2 py-1" placeholder="Choose Gender"/></label>
+                  <div class="p-2">
+                    <!--For now I just removed the template for the datepicker since it has some issues when choosing different year
+                    I've wasted much time trying to solve it but I failed hehe, but when I tried my component called ShortDatepicker, 
+                    it worked naman just fine in a page I dont know why it malfunction in this component-->
+                    <label>Birtdate:
+                        <UiDatepicker v-model="store.birthDate" :fixed-position="true">
+                     
+                            <UiInput placeholder="MM/DD/YYYY" :value="inputValue" v-on="inputEvents" class="input w-1/5 p-1 ml-2 mr-3" />
+                        
+                        </UiDatepicker>     
+                    </label>
+                    <label class="mx-2">Sex at Birth:
+                      <select
+                               class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-none"
+                               v-model="selectedGender">
+                               <option value="" disabled selected hidden>Gender</option>
+                               <option value="male">Male</option>
+                               <option value="female">Female</option>
+                      </select>
+                    </label> 
+                  </div>
+                  <div class="p-1 px-2 pb-0 ">
+                     Address:
+                    <label>
+                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3" placeholder="Enter Student Address">
+                    </label>
+                  </div>
+                  <div class=" mt-2 p-1 px-2 pb-0 ">
+                     Contact Number/s:
+                    <label>
+                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-1/3" placeholder="Enter Contact Number">
+                      <button class="pl-5 wordbutton ">Add +</button>
+                    </label>
+                  </div>
+                  <div class="flex justify-end mt-7 mb-7 ">
+                    <button @click ="handleBack" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Back">
+                      Back
+                    </button>
+                    <button @click ="addStudentClick" class=" button2 px-11 py-2 m-2 rounded-lg focus:outline-none" aria-label="Add Student">
+                      Add Student
+                    </button>
                   </div>
                 </div>
               </div>
+              <div v-if="showSingleContStudentForm" class="w-full">
+                <div class="smallText flex justify-center m-4">
+                  <UnEnrolledStudents @close = "$emit('close')"/>
+                </div>
+               
+              </div>
+              <div v-if="showBulkNewStudentForm">
+                <div class="smallText flex justify-center m-4">
+                  <StudentCSVUploadModal @close = "$emit('close')"/>
+                </div>
 
-                  <div>
-
-                  </div>
+              </div>
 
             </div>
         </div>
@@ -98,67 +145,135 @@
 
 
 <script >
-import DatePickerInput from '~/components/used-components/DatePickerInput.vue';
+
+// import { emit } from 'process';
+import ShortDatepicker from '../used-components/ShortDatepicker.vue';
+// import DatePickerInput from '../used-components/DatePickerInput.vue';
+import { ref, watch, defineEmits } from 'vue';
+import { studentAddedStore } from '~/stores/studentAdded';
+import UnEnrolledStudents from './UnEnrolledStudents.vue';
+import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
+  
+
 
   export default{
       name: 'AddStudentForm',
-      components: {DatePickerInput},
-      data() {
-        return {
+      components: { ShortDatepicker, UnEnrolledStudents, StudentCSVUploadModal},
+      props: {
+        AdviserID: {
+          type: String,
+          required: true,
+        },
+      },
 
-          doneInitPreparation: false,
-          selectedStudentType:'',
-          hoveredStudentType:'',
-          selectedAddingType:'',
-          hoveredAddingType:'',
-          student: {
-            studentId: '',
-            firstName: '',
-            lastName: '',
-            middleName: '',
-            suffix: '',
-            gender: '',
-            Address: '',
-            contactNum: '',
-            isEnrolled: true,
-            incidentDocIDs: [],
-            birthDate: '',
-            profilePic: '',
-          },
-        };
-  },
+      setup() {
+        const emit = defineEmits(['update:modelValue', 'close']);
+        const store = studentAddedStore();
+        const initPreparation = ref(true);
+        const showSingleNewStudentForm = ref(false);
+        const showSingleContStudentForm = ref(false);
+        const showBulkNewStudentForm = ref(false);
+        const showBulkContStudentForm = ref(false);
+        const selectedStudentType = ref('');
+        const hoveredStudentType = ref('');
+        const selectedAddingType = ref('');
+        const hoveredAddingType = ref('');
 
-  methods: {
-    nextClick(){
-      if(this.selectedStudentType === '' || this.selectedAddingType === ''){
-        alert('Please select a student type and adding type');
-      }else{
-        if(this.selectedAddingType === 'singleAdding'){
-          this.doneInitPreparation = true;
+        watch(() => store.birthDate, (newValue) => {
+          emit('update:modelValue', newValue);
+          console.log('Birthdate changed:', newValue);
+        });
+
+
+        const nextClick = () => {
+        if (selectedStudentType.value === '' ) {
+          alert('Please select a student type and adding type');
+          return;
+        } 
+        if (selectedAddingType.value === 'singleAdding' && selectedStudentType.value === 'newStudent') {
+          showSingleNewStudentForm.value = true;
+          initPreparation.value = false;
+          return;
         }
-        if(this.selectedAddingType === 'bulkAdding'){
-          this.doneInitPreparation = true;
+        if (selectedStudentType.value === 'continuingStudent') {
+          showSingleContStudentForm.value = true;
+          initPreparation.value = false;
+          return;
         }
+        if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'newStudent') {
+          showBulkNewStudentForm.value = true;
+          initPreparation.value = false;
+          return;
+        }
+        // if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'continuingStudent') {
+        //   showBulkContStudentForm.value = true;
+        //   initPreparation.value = false;
+        // }
+        else {
+          alert('Please select a student adding type');
       }
-    },
+    };
 
-    selectStudentType(box){
-      this.selectedStudentType = box;
-    },
-    hoverStudentType(box){
-      this.hoveredStudentType = box;
-    },
-    selectAddingType(box){
-      this.selectedAddingType = box;
-    },
-    hoverAddingType(box){
-      this.hoveredAddingType = box;
-    },
+    const handleBack = () => {
+      showSingleNewStudentForm.value = false;
+      showSingleContStudentForm.value = false;
+      showBulkNewStudentForm.value = false;
+      showBulkContStudentForm.value = false;
+      initPreparation.value = true;
+    };
+
+    const selectStudentType = (box) => {
+      selectedStudentType.value = box;
+    };
+
+    const hoverStudentType = (box) => {
+      hoveredStudentType.value = box;
+    };
+
+    const selectAddingType = (box) => {
+      selectedAddingType.value = box;
+    };
+
+    const hoverAddingType = (box) => {
+      hoveredAddingType.value = box;
+    };
+
+    return {
+     // date,
+      emit,
+      store,
+      initPreparation,
+      showSingleNewStudentForm,
+      showSingleContStudentForm,
+      showBulkNewStudentForm,
+      showBulkContStudentForm,
+      selectedStudentType,
+      hoveredStudentType,
+      selectedAddingType,
+      hoveredAddingType,
+      nextClick,
+      handleBack,
+      selectStudentType,
+      hoverStudentType,
+      selectAddingType,
+      hoverAddingType,
+    };
   },
 };
 </script>
 
+
+
 <style scoped>
+
+    .wordbutton{
+        font-family: "Century Gothic", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        color: #414E44;
+        border: none;
+        cursor: pointer;
+    }
 
     .header{
         font-family: "Century Gothic", sans-serif;
@@ -173,7 +288,7 @@ import DatePickerInput from '~/components/used-components/DatePickerInput.vue';
 
     .body{
         font-family: "Century Gothic", sans-serif;
-        font-size: 15px;
+        font-size: 25px;
         font-weight: 700;
         color:#414E44;
         background-color: white;
@@ -182,7 +297,7 @@ import DatePickerInput from '~/components/used-components/DatePickerInput.vue';
     }
     .body2{
         font-family: "Century Gothic", sans-serif;
-        font-size: 15px;
+        font-size: 20px;
         font-weight: 700;
         color:#414E44;
  
@@ -231,13 +346,13 @@ import DatePickerInput from '~/components/used-components/DatePickerInput.vue';
         font-family: "Century Gothic", sans-serif;
         font-size: 20px;
         font-weight: 700;
-        color: #414E44;
-        background-color: #FEFFB1;
+        color: white;
+        background-color: #728B78;
         border: none;
         cursor: pointer;
     }
     .button2:hover{
-        background-color: #f7f898;
+        background-color: #265630;
     }
 
     .button3{
@@ -245,33 +360,39 @@ import DatePickerInput from '~/components/used-components/DatePickerInput.vue';
         font-size: 20px;
         font-weight: 700;
         color: white;
-        background-color: #FF6161;
+        background-color: #969696;
         border: none;
         cursor: pointer;
     }
     .button3:hover{
-        background-color: #e75b5b;
+        background-color:#7a7979;
     }
 
     .input{
         font-family: "Century Gothic", sans-serif;
-        font-size: 12px;
+        font-size: 15px;
         font-weight: 300;
-        color:#414E44;
+        color:black;
         background-color: white;
-        border: 1px solid #414E44;
+        border: 1px solid gray;
         border-radius: 5px;
     
         
     }
     .inputName{
         font-family: "Century Gothic", sans-serif;
-        font-size: 12px;
+        font-size: 15px;
+        font-weight: 300;
+        color:black;
+        background-color: white;
+        width: 35%;
+        border: 1px solid gray;
+    }
+    .smallText{
+        font-family: "Century Gothic", sans-serif;
+        font-size: 17px;
         font-weight: 300;
         color:#414E44;
-        background-color: white;
-        width: 32%;
-        border: 1px solid #414E44;
     }
 
 </style>

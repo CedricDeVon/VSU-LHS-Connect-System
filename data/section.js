@@ -72,7 +72,6 @@ export const section = [
     sectionLevel: '7',
     sectionSchoolYear: '2024-2025',
     sectionStudents: [
-        '22-1-10075',
         '22-1-10076',
         '22-1-10077',
         '22-1-10078',
@@ -86,6 +85,19 @@ export const section = [
         '22-1-10086'
     ]
 },
+
+{
+    id: 'sectionid01',
+    adviserId: 'adviserid1',
+    sectionPopulation: '1',
+    sectionName: 'Javascript',
+    sectionLevel: '7',
+    sectionSchoolYear: '2023-2024',
+    sectionStudents: [
+        '22-1-10075',
+    ]
+},
+
 {
     id: 'sectionid2',
     adviserId: null,
@@ -133,6 +145,19 @@ export const section = [
     sectionSchoolYear: '2024-2025',
     sectionStudents: [],
 },
+
+{
+    id: 'sectionid6',
+    adviserId: null,
+    sectionPopulation: 0,
+    sectionName: 'Python Basics',
+    sectionLevel: '8',
+    sectionSchoolYear: '2023-2024',
+    sectionStudents: [
+         '22-1-10110'
+    ],
+},
+
 {
     id: 'sectionid7',
     adviserId: 'adviserid7',
@@ -248,7 +273,19 @@ export const section = [
         '22-1-10104',
         '22-1-10105',
         '22-1-10106',
-        '22-1-10107'
+        '22-1-10107',
+        
+    ],
+},
+{
+    id: 'sectionid61',
+    adviserId: 'adviserid16',
+    sectionPopulation: 11,
+    sectionName: 'DevOps',
+    sectionLevel: '10',
+    sectionSchoolYear: '2023-2024',
+    sectionStudents: [
+        '22-1-10000',
     ],
 },
 {
@@ -378,6 +415,19 @@ export const section = [
     sectionSchoolYear: '2024-2025',
     sectionStudents: [],
 },
+
+{
+    id: 'sectionid92',
+    adviserId: 'adviserid29',
+    sectionPopulation: 1,
+    sectionName: 'Big Data',
+    sectionLevel: '12',
+    sectionSchoolYear: '2023-2024',
+    sectionStudents: [
+        '22-1-10801'
+    ],
+},
+
 {
     id: 'sectionid30',
     adviserId: 'adviserid30',

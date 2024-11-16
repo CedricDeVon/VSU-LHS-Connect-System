@@ -1,21 +1,21 @@
 <template>
     <div class="adviser-page">
-        <AdviserHeader/>
-       <div >
-
-       <!--<AddStudentForm/>-->
-       
+        <AdviserHeader @notif-click="notifClick"  />
+            <div >
+            <AddStudentForm v-if="showAddStudentForm"
+            @close="showAddStudentForm = false"
+            />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center">
+            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
                 <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
             </div>   
 
             <!--Content of the Page-->
-            <div class="contain ">
+            <div class="contain " :style="{width: containWidth}">
                 <div class="grid grid-cols-10">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <!--Sort/Add student-->
@@ -30,10 +30,10 @@
 
                        
                             <button @click="addStudent" 
-                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none"
+                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
-                            </button>    
+                            </button>
                         </div>
                         <!--Table of Students-->
                         <div class=" overflow-x-auto overflow-y-auto max-h-96">
@@ -51,9 +51,9 @@
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    <tr class ="hover:bg-gray-200 " v-for="(item, index) in items" :key="index" @click="handleRowClick(item)" >
-                                        <td class="py-2 px-4 text-center align-middle ">{{ item.column1 }}</td>
-                                        <td class="py-2 px-4 text-center align-middle ">{{ item.column2 }}</td>
+                                    <tr class ="hover:bg-gray-200 table-text " v-for="(student, index) in students" :key="index" @click="handleRowClick(student)" >
+                                        <td class="py-5 px-4 text-center align-middle ">{{ student.studentId }}</td>
+                                        <td class="py-5 px-4 text-center align-middle ">{{ `${student.firstName} ${student.lastName}`}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -63,10 +63,10 @@
                      <!--Student Information-->
                    <div class="col-span-6 pt-10 ">
                     <div v-if="!showStudentInfo" class="flex justify-center items-center mt-32">
-                        <!--<h1 class="text-2xl">Select a student to display their details</h1>-->
+                        <h1 class="text-2xl">Select a student to display their details</h1>
                     </div>
                     
-                        <StudentBasicInfo v-if="showStudentInfo"/>
+                        <StudentBasicInfo v-if="showStudentInfo" :student="studentInfo" :section="mySection" />
                        
                     </div>
                   
@@ -84,15 +84,58 @@
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
     import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
     import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+    import { student } from "~/data/student";
+    import { section } from "~/data/section";
+
     export default {
         name: "Advisory",
         components: {AdviserHeader, StudentBasicInfo, AddStudentForm,},
-        props: {},
+        props: {
+            AdviserID: {
+                type: String,
+                required: true,
+                default: "adviserid1" // this should be the adviserID of the logged in user
+            },
+            AcademicYear: {
+                type: String,
+                required: true,
+                default: "2024-2025" // this should be the current academic year
+            },
+            section: {
+                type: Object,
+                required: true, // I think it would be better if these are global variables
+            },
+        },
         data() {return {
+            mySection: {
+                id: 'sectionid1',
+                adviserId: 'adviserid1',
+                sectionPopulation: '20',
+                sectionName: 'Javascript',
+                sectionLevel: '7',
+                sectionSchoolYear: '2024-2025',
+                sectionStudents: [
+                    '22-1-10076',
+                    '22-1-10077',
+                    '22-1-10078',
+                    '22-1-10079',
+                    '22-1-10080',
+                    '22-1-10081',
+                    '22-1-10082',
+                    '22-1-10083',
+                    '22-1-10084',
+                    '22-1-10085',
+                    '22-1-10086'
+                ]
+            },
             selectedSort: "",
-            items: [],
+            students: [],
             showStudentInfo: false,
             showAddStudentForm: false,
+            studentInfo: {},
+            showNotification:false,
+            containWidth:'89%',
+            titleWidth:'87%'
         };},
 
         methods: {
@@ -100,17 +143,20 @@
                 //this.items.push({ column1: "2022-00000", column2: "New Student" });
                 this.showAddStudentForm = true;
             },
-            handleRowClick(item) {
+            handleRowClick(student) {
+                this.studentInfo = student;
                 this.showStudentInfo = true;
             },
 
-            fetchData(){
-                this.items = [
-                    { column1: 'Data 1', column2: 'Data 2' },
-                    { column1: 'Data 3', column2: 'Data 4' },
-                    // Add more data as needed
-                ];
+            notifClick(){
+                this.containWidth = this.containWidth === '89%' ? '70%': '89%';
+                this.titleWidth = this.titleWidth === '87%' ? '68%': '87%';
+                this.showNotification = !this.showNotification;
+            },
 
+            fetchStudents(id,ay) {
+                const studentIDs = (section.find((sec)=> sec.adviserId === id && sec.sectionSchoolYear === ay)).sectionStudents;
+                this.students = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
             },
 
             /*handleRowClick(item) {
@@ -121,7 +167,7 @@
         },
 
         mounted() {
-            this.fetchData();
+            this.fetchStudents(this.AdviserID, this.AcademicYear);
         }
         
   };
@@ -136,10 +182,10 @@
 
     .backPic{
         position: absolute;
-        width: 900px;
-        height: 1200px;
+        width: 50%;
+        height: auto;
         border-radius: 15px;
-        left: 600px;
+        left: 50%;
         top: 20px;
         z-index: 0;
     }
@@ -156,13 +202,19 @@
   
     } 
 
-  .gray {
+.gray {
+    background-color: #6b7e6f;
+}
+.gray-button {
     background-color: #728B78;
-    }
+}
+.gray-button:hover {
+    background-color: #4a5e4e;
+}
+
 
     .contain{
         position:absolute;
-        width: 89%;
         height: 70%;
         background: rgba(255, 255, 255, 0.89);
         border-radius: 15px;
@@ -175,12 +227,17 @@
 
     .title{
         position: absolute;
-        width: 87%;
         height: 6.1%;
         background: #265630;
         border-radius: 15px;
         left: 95px;
         top: 135px;
         z-index: 2;
+    }
+
+    .table-text{
+        font-size: 16px;
+        font-weight: 500;
+        color: #265630;
     }
 </style>

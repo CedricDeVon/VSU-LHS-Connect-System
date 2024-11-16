@@ -59,7 +59,7 @@
                             </button>
 
                             <!-- Secondary Action -->
-                            <button class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
+                            <button @click="viewAnecdotalReport" class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
                                 View Anecdotal Report
                             </button>
 
@@ -127,6 +127,14 @@ export default {
                 });
             } else {
                 alert('Student is not assigned to any section');
+            }
+        },
+        viewAnecdotalReport() {
+            if (this.studentData.anecdotalDocID) {
+                this.$emit('close');
+                this.$router.push(`/admin/anecdote/${this.studentData.studentId}`);
+            } else {
+                alert('No anecdotal report available for this student');
             }
         }
     },

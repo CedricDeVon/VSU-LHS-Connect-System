@@ -278,7 +278,7 @@ export default {
         },
         viewReport(reportId) {
             console.log('Viewing report:', reportId);
-            this.$router.push(`/admin/reports/${reportId}`);
+            this.$router.push(`/admin/incident/${reportId}`);
         },
         formatDate(date) {
             return new Date(date).toLocaleDateString()

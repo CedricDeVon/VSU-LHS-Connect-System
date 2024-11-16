@@ -21,10 +21,15 @@ import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
 import { anecdotalReport } from '~/data/anecdotal';
 import { student } from '~/data/student';
+import { report } from '~/data/report';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+const associatedReports = computed(() => {
+    return report.filter(report => anecdotalReport.reportIDs.includes(report.reportID));
+});
 
 export default {
     components: {
@@ -49,6 +54,91 @@ export default {
         defineAnecdotalDoc() {
             if (!this.anecReport || !this.studentData) return null;
 
+            // Get associated reports
+            const associatedReports = report.filter(r => 
+                this.anecReport.reportIDs.includes(r.reportID)
+            );
+
+            // Create content array for the document
+            const content = [
+                { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 30] },
+                {
+                    table: {
+                        widths: ['30%', '70%'],
+                        headerRows: 0,
+                        body: [
+                            [
+                                { text: 'Student Name:', style: 'label', border: [false, false, false, false] },
+                                { text: `${this.studentData.firstName} ${this.studentData.middleName} ${this.studentData.lastName}`, style: 'content', border: [false, false, false, false] }
+                            ],
+                            [
+                                { text: 'Student ID:', style: 'label', border: [false, false, false, false] },
+                                { text: this.studentData.studentId, style: 'content', border: [false, false, false, false] }
+                            ],
+                            [
+                                { text: 'Academic Year:', style: 'label', border: [false, false, false, false] },
+                                { text: this.anecReport.AY, style: 'content', border: [false, false, false, false] }
+                            ],
+                            [
+                                { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
+                                { text: this.anecReport.preparedBy, style: 'content', border: [false, false, false, false] }
+                            ]
+                        ]
+                    }
+                }
+            ];
+
+            // Add each report as a section
+            associatedReports.forEach((rep, index) => {
+                content.push(
+                    { text: `Report ${index + 1}`, style: 'subheader', margin: [0, 20, 0, 10] },
+                    {
+                        table: {
+                            widths: ['30%', '70%'],
+                            headerRows: 0,
+                            body: [
+                                [
+                                    { text: 'Report ID:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.reportID, style: 'content', border: [false, false, false, false] }
+                                ],
+                                [
+                                    { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.date, style: 'content', border: [false, false, false, false] }
+                                ],
+                                [
+                                    { text: 'Date Prepared:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.datePrepared, style: 'content', border: [false, false, false, false] }
+                                ],
+                                [
+                                    { text: 'Purpose:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.purpose, style: 'content', border: [false, false, false, false] }
+                                ],
+                                [
+                                    { text: 'Witnesses:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
+                                ],
+                                [
+                                    { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.placeOfIncident, style: 'content', border: [false, false, false, false] }
+                                ],
+                                [
+                                    { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.thingsInvolved, style: 'content', border: [false, false, false, false] }
+                                ],
+                                [
+                                    { text: 'Details:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.details, style: 'content', border: [false, false, false, false] }
+                                ],
+                                [
+                                    { text: 'Adviser Remarks:', style: 'label', border: [false, false, false, false] },
+                                    { text: rep.adviserRemarks, style: 'content', border: [false, false, false, false] }
+                                ]
+                            ]
+                        }
+                    }
+                );
+            });
+
             return {
                 pageMargins: [72, 120, 72, 90],
                 header: {
@@ -58,66 +148,17 @@ export default {
                     alignment: 'center',
                     margin: [0, 10, 0, 0],
                 },
-                content: [
-                    { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 30] },
-                    {
-                        table: {
-                            widths: ['30%', '70%'],
-                            headerRows: 0,
-                            body: [
-                                [
-                                    { text: 'Student Name:', style: 'label', border: [false, false, false, false] },
-                                    { text: `${this.studentData.firstName} ${this.studentData.middleName} ${this.studentData.lastName}`, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'People Involved:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.peopleInvolved, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Witness:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.witness, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.dateOfIncident, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Purpose:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.purpose, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.placeOfIncident, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.thingsInvolved, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Details:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.details, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Remarks:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.remarks, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Date Prepared:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.datePrepared, style: 'content', border: [false, false, false, false] }
-                                ],
-                                [
-                                    { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
-                                    { text: this.anecReport.preparedBy, style: 'content', border: [false, false, false, false] }
-                                ]
-                            ]
-                        }
-                    }
-                ],
+                content: content,
                 styles: {
                     header: {
                         fontSize: 18,
                         bold: true,
                         alignment: 'center',
+                    },
+                    subheader: {
+                        fontSize: 14,
+                        bold: true,
+                        decoration: 'underline'
                     },
                     label: {
                         bold: true,

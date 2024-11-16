@@ -1,6 +1,6 @@
 <template>
     <div class="adviser-page">
-        <AdviserHeader/>
+        <AdviserHeader @notif-click="notifClick"  />
             <div >
             <AddStudentForm v-if="showAddStudentForm"
             @close="showAddStudentForm = false"
@@ -10,12 +10,12 @@
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center">
+            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
                 <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
             </div>   
 
             <!--Content of the Page-->
-            <div class="contain ">
+            <div class="contain " :style="{width: containWidth}">
                 <div class="grid grid-cols-10">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <!--Sort/Add student-->
@@ -30,7 +30,7 @@
 
                        
                             <button @click="addStudent" 
-                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray text-white bg-gray-600 hover:bg-slate-400 focus:outline-none"
+                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
                             </button>
@@ -133,6 +133,9 @@
             showStudentInfo: false,
             showAddStudentForm: false,
             studentInfo: {},
+            showNotification:false,
+            containWidth:'89%',
+            titleWidth:'87%'
         };},
 
         methods: {
@@ -143,6 +146,12 @@
             handleRowClick(student) {
                 this.studentInfo = student;
                 this.showStudentInfo = true;
+            },
+
+            notifClick(){
+                this.containWidth = this.containWidth === '89%' ? '70%': '89%';
+                this.titleWidth = this.titleWidth === '87%' ? '68%': '87%';
+                this.showNotification = !this.showNotification;
             },
 
             fetchStudents(id,ay) {
@@ -193,13 +202,19 @@
   
     } 
 
-  .gray {
+.gray {
+    background-color: #6b7e6f;
+}
+.gray-button {
     background-color: #728B78;
-    }
+}
+.gray-button:hover {
+    background-color: #4a5e4e;
+}
+
 
     .contain{
         position:absolute;
-        width: 89%;
         height: 70%;
         background: rgba(255, 255, 255, 0.89);
         border-radius: 15px;
@@ -212,7 +227,6 @@
 
     .title{
         position: absolute;
-        width: 87%;
         height: 6.1%;
         background: #265630;
         border-radius: 15px;

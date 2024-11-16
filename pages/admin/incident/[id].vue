@@ -55,10 +55,10 @@ export default {
         pageMargins: [72, 120, 72, 90],
         header: {
           image: headerImage,
-          width: 500,
-          height: 80,
+          width: 600,
+          height: 100,
           alignment: 'center',
-          margin: [0, 20, 0, 0],
+          margin: [0, 10, 0, 0],
         },
         content: [
           [

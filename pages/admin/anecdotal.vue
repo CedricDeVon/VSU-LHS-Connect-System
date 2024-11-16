@@ -15,7 +15,7 @@ import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 
 export default {
-    name: 'anecdotal',
+    name: 'admin-anecdotal',
     components: { AdminSidebar, AdminHeader },
 }
 </script>

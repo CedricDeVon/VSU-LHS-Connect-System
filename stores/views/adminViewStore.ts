@@ -31,10 +31,10 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const sectionSelectedStudentSort = ref('');
   const sectionSelectedReportSort = ref('');
   const sectionSelectedReportStatus = ref('all');
-  const sectionSections = useState('studentSections');
-  const sectionSectionStudents = useState('studentSectionStudents');
-  const sectionSectionAdviser = useState('studentSectionAdviser');
-  const sectionSectionReports = useState('studentSectionReports');
+  const sectionSections = useState('sectionSections');
+  const sectionSectionStudents = useState('sectionSectionStudents');
+  const sectionSectionAdvisers = useState('sectionSectionAdvisers');
+  const sectionSectionIncidentReports = useState('sectionSectionIncidentReports');
 
   const studentStudentData = ref(null);
   const studentStudentSection = ref(null);
@@ -42,17 +42,26 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const studentAllSectionStudents = useState('studentAllSectionStudents');
   const studentShowIncidentModal = ref(false);
 
-  const updateSectionPageData = async () => {
-
+  const updateSectionPageData = async (sectionId: string) => {
+    const { data }: any = await $fetch('/api/admin/view/section', {
+      method: 'POST', body: {
+        sectionId
+      }
+    });
+    sectionSection.value = data.section;
+    sectionAdviser.value = data.adviser;
+    sectionSections.value = data.sections;
+    sectionSectionStudents.value = data.sectionStudents;
+    sectionSectionAdvisers.value = data.sectionAdvisers;
+    sectionSectionIncidentReports.value = data.sectionReports;
   }
 
   const updateStudentPageData = async (studentId: string) => {
-    const { data } = await $fetch('/api/admin/view/student', {
+    const { data }: any = await $fetch('/api/admin/view/student', {
       method: 'POST', body: {
         studentId
       }
     });
-    console.log(data)
     studentStudentData.value = data.studentData;
     studentStudentSection.value = data.studentSection;
     studentAllSectionStudents.value = data.allSectionStudents;
@@ -67,7 +76,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
         return 'N/A';
       }
 
-      const { data } = studentStudentSection.value;
+      const { data }: any = studentStudentSection.value;
       return `Grade ${data.level}, Section ${data.name}`;
   }
   
@@ -79,7 +88,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
 
   const updateAll = async () => {
     const currentUser = await getCurrentUser();
-    const { data } = await $fetch('/api/admin/view', {
+    const { data }: any = await $fetch('/api/admin/view', {
       method: 'POST', body: { id: currentUser?.uid, email: currentUser?.email }
     });
     adminName.value = data.user.username;
@@ -94,7 +103,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   };
 
   const updateSearch = async () => {
-    const { data } = await $fetch('/api/admin/view/search', {
+    const { data }: any = await $fetch('/api/admin/view/search', {
       method: 'POST'
     });
     searchSections.value = data.sections;
@@ -104,19 +113,19 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
 
   const updateDashboard = async () => {
     const currentUser = await getCurrentUser();
-    const { data } = await $fetch('/api/admin/view/dashboard', {
+    const { data }: any = await $fetch('/api/admin/view/dashboard', {
         method: 'POST', body: { email: currentUser?.email, id: currentUser?.uid }
     });
     
-    adminName.value = data.user.username;
-    adminEmail.value = data.user.email;
+    adminName.value = data.user.data.username;
+    adminEmail.value = data.user.data.email;
     dashBoardReportsCount.value = data.reportsCount;
     dashBoardStudentsCount.value = data.studentsCount;
     dashBoardAccountApprovalsCount.value = data.approvalsCount;
   };
 
   const updateAccountsAdvisers = async () => {
-    const { data } = await $fetch('/api/admin/view/accounts', {
+    const { data }: any = await $fetch('/api/admin/view/accounts', {
       method: 'POST'
     });
     accountsAdvisers.value = data.advisers;
@@ -151,8 +160,10 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     sectionSelectedStudentSort.value = '';
     sectionSelectedReportSort.value = '';
     sectionSelectedReportStatus.value = 'all';
+    sectionSections.value = [];
     sectionSectionStudents.value = [];
-    sectionSectionReports.value = [];
+    sectionSectionAdvisers.value = [];
+    sectionSectionIncidentReports.value = [];
   
     studentStudentData.value = null;
     studentStudentSection.value = null;
@@ -194,13 +205,13 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     sectionSelectedReportStatus,
     sectionSections,
     sectionSectionStudents,
-    sectionSectionReports,
+    sectionSectionIncidentReports,
     studentStudentData,
     studentStudentSection,
     studentSelectedSort,
     studentAllSectionStudents,
     studentShowIncidentModal,
-    sectionSectionAdviser,
+    sectionSectionAdvisers,
     updateStudentPageData,
     updateSectionPageData,
     getFullName,

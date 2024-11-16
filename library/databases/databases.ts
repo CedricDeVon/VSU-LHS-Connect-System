@@ -109,6 +109,42 @@ export class Databases {
         return Databases._caseConferenceFirebaseStorage;
     }
 
+    public static async getAllIncidentReportsViaFacultyId(facultyId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._incidentReportFirebaseDatabase.queryDuplicates(
+                where("facultyId", "==", facultyId)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllStudentsViaSectionId(sectionId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.queryDuplicates(
+                where("sectionId", "==", sectionId)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneAdviserViaSectionId(sectionId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._adviserFirebaseDatabase.queryOne(
+                where("sectionId", "==", sectionId)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async createOneSection(id: string, name: string, level: number, schoolYear: string): Promise<Result> {
         try {
             let result: Result = await Databases._sectionFirebaseDatabase.createOneDocumentWithId(id, {
@@ -146,7 +182,7 @@ export class Databases {
 
     public static async getOneSectionViaName(name: string): Promise<Result> {
         try {
-            const result: Result = await Databases._adminFirebaseDatabase.queryOne(
+            const result: Result = await Databases._sectionFirebaseDatabase.queryOne(
                 where("name", "==", name)
             );
             return result;
@@ -158,9 +194,7 @@ export class Databases {
 
     public static async getOneSectionViaId(id: string): Promise<Result> {
         try {
-            const result: Result = await Databases._sectionFirebaseDatabase.queryOne(
-                where("id", "==", id)
-            );
+            const result: Result = await Databases._sectionFirebaseDatabase.readOneDocument(id);
             return result;
 
         } catch (error: any) {

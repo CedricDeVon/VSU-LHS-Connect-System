@@ -9,9 +9,10 @@ import { DatasetTransformer } from "./datasetTransformer";
 export class AdviserCSVDatasetTransformer extends DatasetTransformer {
   public constructor() {
     super(
-      [String, String, String],
+      [String, String, String, String],
       [
         Validators.emailValidator,
+        Validators.personNameValidator,
         Validators.personNameValidator,
         Validators.vsuIssuedIdValidator,
       ]

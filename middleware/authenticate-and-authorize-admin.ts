@@ -11,12 +11,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       let result: any = await $fetch('/api/auth/jsonWebToken/verify', {
         method: 'POST', body: { jsonWebToken }
       })
-      
-      const { role, email, password } = result.data.data;
       if (result.isNotSuccessful) {
-        console.log('JWT Not Verified');
-        return navigateTo('/auth/login');
+        throw new Error(result.message);
       }
+    
+      const { role, email, password } = result.data.data;
 
       if (role !== 'admin') {
         console.log('User is not an admin');

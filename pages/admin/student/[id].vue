@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { defineComponent } from 'vue';
-import { student } from '~/data/student.js';
-import { section } from '~/data/section.js';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
@@ -106,7 +104,7 @@ const viewStudent = (studentId: any) => {
                                      alt="Student profile"
                                      class="w-48 h-48 rounded-full object-cover shadow-md mb-4"/>
                                 
-                                <h3 class="text-2xl font-bold mb-2">{{ adminViewStore.getFullName(adminViewStore.studentStudentData) }}</h3>
+                                <h3 class="text-2xl font-bold mb-2">{{ adminViewStore.getFullName(adminViewStore.studentStudentData.value) }}</h3>
                                 <p class="text-lg mb-6">ID NO: {{ adminViewStore.studentStudentData.id }}</p>
 
                                 <!-- Student Details -->
@@ -195,49 +193,3 @@ const viewStudent = (studentId: any) => {
     scrollbar-color: #728B78 #f1f1f1;
 }
 </style>
-
-
-// export default defineComponent({
-//     name: 'StudentInformation',
-//     components: {
-//         AdminSidebar,
-//         AdminHeader,
-//         IncidentReportsModal
-//     },
-//     data() {
-//         return {
-//             studentData: null,
-//             studentSection: null,
-//             selectedSort: '',
-//             allSectionStudents: [], // To store all students from the section
-//             showIncidentModal: false
-//         }
-//     },
-//     created() {
-//         // Get student ID from route params
-//         const studentId = this.$route.params.id;
-
-//         // Find student data
-//         adminViewStore.studentStudentData = student.find(s => s.studentId === studentId);
-
-//         // Find student's section
-//         if (adminViewStore.studentStudentData) {
-//             this.studentSection = section.find(sec =>
-//                 sec.sectionStudents.includes(adminViewStore.studentStudentData.studentId)
-//             );
-            
-//             // Get all students from the same section
-//             if (this.studentSection) {
-//                 adminViewStore.studentAllSectionStudents = this.studentSection.sectionStudents.map(id => 
-//                     student.find(s => s.studentId === id)
-//                 ).filter(s => s !== null);
-//             }
-//         }
-//     },
-//     computed: {
-        
-//     },
-//     methods: {
-        
-//     }
-// });

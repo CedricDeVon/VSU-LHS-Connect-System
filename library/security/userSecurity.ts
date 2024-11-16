@@ -1,9 +1,12 @@
+
+import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
 import type { IFile } from "../files/iFile";
 import { FailedResult } from "../results/failedResult";
 import type { Result } from "../results/result";
 import { SuccessfulResult } from "../results/successfulResult";
-import { signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 import { useFirebaseAuth } from "vuefire";
+
 
 export class UserSecurity {
     public static async logInUser(data: any): Promise<Result> {
@@ -17,6 +20,7 @@ export class UserSecurity {
             if (result.isNotSuccessful) {
                 throw new Error(result.message)
             }
+            
             const jsonWebToken: any = await $fetch('/api/auth/jsonWebToken/sign', {
                 method: 'POST', body: {
                     id: firebaseCurrentUser.uid,
@@ -98,19 +102,43 @@ export class UserSecurity {
         try {
             UserSecurity._handleUndefinedOrNullArguments(file);
 
-            const result: any = await $fetch('/api/auth/signUp/advisers', {
+            let result: any = await $fetch('/api/auth/signUp/advisers/step1', {
                 method: 'POST', body: { file }
             });
             if (result.isNotSuccessful) {
                 throw new Error(result.message);
             }
+
+            const jsonWebTokenData: any = await $fetch('/api/auth/jsonWebToken/verify', {
+                method: 'POST', body: { jsonWebToken: window.localStorage!.getItem('userAuthToken') }
+            })
+            let currentUser = await getCurrentUser();
+            const advisers: any = [];
+            for (const adviserEmail in result.data) {
+                await createUserWithEmailAndPassword(getAuth(), adviserEmail, ConfigurationReaders.nuxtConfigurationReader.SIGN_UP_TEMPORARY_PASSWORD);
+                currentUser = await getCurrentUser();
+                result.data[adviserEmail].push(currentUser.uid);
+                advisers.push({
+                    id: currentUser.uid,
+                    email: adviserEmail,
+                    firstName: result.data[adviserEmail][0],
+                    lastName: result.data[adviserEmail][1],
+                    facultyId: result.data[adviserEmail][2]
+                })
+            }
+            
+            await signInWithEmailAndPassword(getAuth(), jsonWebTokenData.data.data.email, jsonWebTokenData.data.data.password);
+
+            result = await $fetch('/api/auth/signUp/advisers/step2', {
+                method: 'POST', body: {
+                    advisers
+                }
+            });
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
+            
             return new SuccessfulResult();
-            /*
-            parse csv /
-            check if adviser email is found '
-            auth signup
-            firebase signup
-            */
 
         } catch (error: any) {
             return UserSecurity._handleFailedResult(error);

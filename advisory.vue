@@ -7,7 +7,6 @@ import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 const adviserViewStore = useAdviserViewStore();
 adviserViewStore.updateAdvisoryView();
 
-
 </script>
 
 <template>
@@ -79,6 +78,7 @@ adviserViewStore.updateAdvisoryView();
                     </div>
                         <StudentBasicInfo v-if="adviserViewStore.advisoryShowStudentInfo"/>
                     </div>
+
                 </div>
             </div>
         </div>

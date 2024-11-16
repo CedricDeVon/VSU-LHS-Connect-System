@@ -8,6 +8,7 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
+adminViewStore.updateSectionPageData(useRoute().params.id);
 
 const getAdviserFullName = () => {
     // if (!adminViewStore.sectionAdviser) return 'No Adviser Assigned';

@@ -40,8 +40,9 @@ const uploadFile = async () => {
           </p>
           <ul class="list-disc list-inside text-sm ml-4 mt-2">
             <li><strong>Column 1:</strong> Email</li>
-            <li><strong>Column 2:</strong> Adviser Full Name</li>
-            <li><strong>Column 3:</strong> Faculty ID</li>
+            <li><strong>Column 2:</strong> Adviser First Name</li>
+            <li><strong>Column 3:</strong> Adviser Last Name</li>
+            <li><strong>Column 4:</strong> Faculty ID</li>
           </ul>
           <p class="text-sm mt-2">Only .csv files are accepted.</p>
         </div>

@@ -155,7 +155,7 @@ export class NuxtConfigurationReader extends ConfigurationReader {
         return result.data;
     }
 
-    public get SIGN_UP_TEMPORARY_PASSWORD(): number {
+    public get SIGN_UP_TEMPORARY_PASSWORD(): string {
         const result: Result = this.getPublicValue('signUpTemporaryPassword');
         this._throwErrorIfResultIsUnsuccessful(result);
         

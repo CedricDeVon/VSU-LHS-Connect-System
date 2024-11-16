@@ -63,7 +63,7 @@ export class FirebaseDatabase extends Database {
             const result = await firestore.runTransaction(database, async (transaction: any) => {
                 return await firestore.getDoc(firestore.doc(database, this._generateCompleteCollectionPath(collectionName), documentName));
             });
-            return new SuccessfulResult(result);
+            return new SuccessfulResult({ id: result.id, data: result.data() });
 
         } catch (error: any) {
             return new FailedResult(error.message);
@@ -183,7 +183,7 @@ export class FirebaseDatabase extends Database {
             const querySnapshot = await firestore.getDocs(firestore.query(collection, conditions));
             let data: any;
             querySnapshot.forEach((document) => {
-                data = { id: document.id, ...document.data() };
+                data = { id: document.id, data: document.data() };
               });
             
             return new SuccessfulResult(data);

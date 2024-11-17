@@ -28,9 +28,14 @@ const adviserViewStore = useAdviserViewStore();
                 </div>
 
                 <!--Buttons-->
-                <div class="flex justify-center items-center m-3">
+                <div v-if="student.hasAnecdotal" class="flex justify-center items-center m-3">
                     <button class=" updateAnecdotal shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Update Anecdotal">
                         Update Anecdotal Report
+                    </button>
+                </div>
+                <div v-else class="flex justify-center items-center m-3">
+                    <button class=" updateAnecdotal shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Create Anecdotal">
+                        Create Anecdotal Report
                     </button>
                 </div>
                 <div class="flex justify-center m-3">

@@ -11,22 +11,22 @@ await adviserViewStore.updateAdvisoryView();
 
 <template>
     <div class="adviser-page">
-        <AdviserHeader/>
-       <div >
-
-       <!--<AddStudentForm/>-->
-       
+        <AdviserHeader @notif-click="notifClick"  />
+            <div >
+            <AddStudentForm v-if="showAddStudentForm"
+            @close="showAddStudentForm = false"
+            />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center">
+            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
                 <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
             </div>   
 
             <!--Content of the Page-->
-            <div class="contain ">
+            <div class="contain " :style="{width: containWidth}">
                 <div class="grid grid-cols-10">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <!--Sort/Add student-->
@@ -40,11 +40,11 @@ await adviserViewStore.updateAdvisoryView();
                            </select>
 
                        
-                            <button @click="adviserViewStore.addNewStudent" 
-                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none"
+                            <button @click="adviserViewStore.addNewStudent"
+                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
-                            </button>    
+                            </button>
                         </div>
                         <!--Table of Students-->
                         <div class=" overflow-x-auto overflow-y-auto max-h-96">
@@ -99,10 +99,10 @@ await adviserViewStore.updateAdvisoryView();
 
     .backPic{
         position: absolute;
-        width: 900px;
-        height: 1200px;
+        width: 50%;
+        height: auto;
         border-radius: 15px;
-        left: 600px;
+        left: 50%;
         top: 20px;
         z-index: 0;
     }
@@ -119,13 +119,19 @@ await adviserViewStore.updateAdvisoryView();
   
     } 
 
-  .gray {
+.gray {
+    background-color: #6b7e6f;
+}
+.gray-button {
     background-color: #728B78;
-    }
+}
+.gray-button:hover {
+    background-color: #4a5e4e;
+}
+
 
     .contain{
         position:absolute;
-        width: 89%;
         height: 70%;
         background: rgba(255, 255, 255, 0.89);
         border-radius: 15px;
@@ -138,12 +144,17 @@ await adviserViewStore.updateAdvisoryView();
 
     .title{
         position: absolute;
-        width: 87%;
         height: 6.1%;
         background: #265630;
         border-radius: 15px;
         left: 95px;
         top: 135px;
         z-index: 2;
+    }
+
+    .table-text{
+        font-size: 16px;
+        font-weight: 500;
+        color: #265630;
     }
 </style>

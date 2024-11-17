@@ -1,21 +1,198 @@
 <template>
-    <div class="general flex h-screen">
-      <!-- Sidebar -->
-      <AdminSidebar />
-  
-      <div class="flex-grow dashboard-page">
-        <AdminHeader />
-        <h1 class="text-3xl"> The anecdotal reports page is under construction!!</h1>
-      </div>
-      
+    <div class="flex h-screen">
+        <AdminSidebar />
+        <div class="general flex-grow flex flex-col">
+            <AdminHeader />
+            <main class="flex-1 bg-[#FFFEF1]">
+                <!-- Search Section -->
+                <div class="p-8 pt-0 general min-h-screen flex flex-col w-full">
+                    <div class="rounded-lg p-6 mb-6">
+                        <h2 class="text-2xl font-bold text-[#265630] mb-4">Search Anecdotal Reports</h2>
+                        <div class="flex gap-4 mb-6">
+                            <input 
+                                type="text" 
+                                v-model="searchQuery"
+                                @input="handleSearch"
+                                placeholder="Search by Student Name, Purpose, or Date..."
+                                class="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
+                            />
+                            <!-- Sort Dropdown -->
+                            <select 
+                                v-model="selectedSort"
+                                class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
+                            >
+                                <option value="">Sort By</option>
+                                <option value="ascDate">Date (Ascending)</option>
+                                <option value="descDate">Date (Descending)</option>
+                                <option value="studentName">Student Name</option>
+                                <option value="purpose">Purpose</option>
+                            </select>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div v-if="searchResults.length > 0" class="border rounded-lg" style="height: calc(100vh - 280px);">
+                            <div class="relative h-full">
+                                <!-- Fixed Header -->
+                                <table class="w-full">
+                                    <thead class="bg-[#728B78] text-white sticky top-0 z-10">
+                                        <tr>
+                                            <th class="p-3 text-left w-[20%]">Student Name</th>
+                                            <th class="p-3 text-left w-[20%]">Purpose</th>
+                                            <th class="p-3 text-left w-[15%]">Date</th>
+                                            <th class="p-3 text-left w-[25%]">Prepared By</th>
+                                            <th class="p-3 text-left w-[20%]">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <!-- Scrollable Body -->
+                                <div class="overflow-y-auto h-full" style="max-height: calc(100vh - 330px);">
+                                    <table class="w-full">
+                                        <tbody>
+                                            <tr v-for="report in searchResults" 
+                                                :key="report.anecdotalDocID"
+                                                class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
+                                                <td class="p-4 w-[20%]">{{ report.peopleInvolved }}</td>
+                                                <td class="p-4 w-[20%]">{{ report.purpose }}</td>
+                                                <td class="p-4 w-[15%]">{{ report.dateOfIncident }}</td>
+                                                <td class="p-4 w-[25%]">{{ report.preparedBy }}</td>
+                                                <td class="p-4 w-[20%]">
+                                                    <button 
+                                                        @click="viewReport(report.anecdotalDocID)"
+                                                        class="bg-[#728B78] hover:bg-[#265630] text-white px-4 py-2 rounded-md transition-colors"
+                                                    >
+                                                        View Details
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- No Results Message -->
+                        <div v-else-if="searchQuery" class="text-gray-500 text-center text-xl font-regular">
+                            <p class="text-gray-500">No anecdotal reports found matching your search.</p>
+                        </div>
+
+                        <!-- Initial State Message -->
+                        <div v-else class="text-gray-500 text-center text-xl font-regular">
+                            <p class="text-gray-500">Enter search terms to find anecdotal reports.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
 </template>
+
 <script>
+import { defineComponent } from 'vue';
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
+import { anecdotalReport } from '~/data/anecdotal';
+import {student} from '~/data/student';
 
-export default {
-    name: 'anecdotal',
+export default defineComponent({
+    name: 'admin-anecdotal',
     components: { AdminSidebar, AdminHeader },
-}
+    data() {
+        return {
+            searchQuery: '',
+            selectedSort: '',
+            searchResults: [],
+            anecdotalReports: anecdotalReport
+        };
+    },
+    methods: {
+        handleSearch() {
+            let results = [...this.anecdotalReports];
+
+            // Apply search filter
+            if (this.searchQuery) {
+                const query = this.searchQuery.toLowerCase();
+                results = results.filter(report => {
+                    return report.peopleInvolved.toLowerCase().includes(query) ||
+                           report.purpose.toLowerCase().includes(query) ||
+                           report.dateOfIncident.toLowerCase().includes(query);
+                });
+            }
+
+            // Apply sorting
+            switch (this.selectedSort) {
+                case 'ascDate':
+                    results.sort((a, b) => new Date(a.dateOfIncident) - new Date(b.dateOfIncident));
+                    break;
+                case 'descDate':
+                    results.sort((a, b) => new Date(b.dateOfIncident) - new Date(a.dateOfIncident));
+                    break;
+                case 'studentName':
+                    results.sort((a, b) => a.peopleInvolved.localeCompare(b.peopleInvolved));
+                    break;
+                case 'purpose':
+                    results.sort((a, b) => a.purpose.localeCompare(b.purpose));
+                    break;
+            }
+
+            this.searchResults = results;
+        },
+
+        viewReport(anecdotalDocID) {
+            // Find the student with this anecdotal report
+            const studentWithReport = student.find(s => s.anecdotalDocID === anecdotalDocID);
+            if (studentWithReport) {
+                this.$router.push(`/admin/anecdote/${studentWithReport.studentId}`);
+            } else {
+                console.warn('No student found with this anecdotal report');
+            }
+        }
+    },
+    watch: {
+        selectedSort() {
+            this.handleSearch();
+        }
+    },
+    mounted() {
+        this.handleSearch();
+    }
+});
 </script>
+
+<style scoped>
+/* Scrollbar styles */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #728B78;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #265630;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #728B78 #f1f1f1;
+}
+
+table {
+    table-layout: fixed;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+</style>

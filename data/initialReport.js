@@ -15,6 +15,8 @@ export const initialReport = [
         narrativeReport: 'A student was caught drinking liqour inside the campus.',
         dateReported: 'July 8, 2024', 
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport2',
@@ -29,10 +31,13 @@ export const initialReport = [
         narrativeReport: 'A student was caught using illegal drugs inside the campus.',
         dateReported: 'October 4, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport3',
-        reportIDRef: '',
+        reportIDRef: 'report03',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Vinz',
         ],
@@ -43,10 +48,13 @@ export const initialReport = [
         narrativeReport: 'A student was caught cutting classes away from the campus.',
         dateReported: 'May 8, 2024',
         status: 'Unread',
+        isDraft:true,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport4',
-        reportIDRef: '',
+        reportIDRef: 'report04',
+        reportedBY: 'adviserid1',
         peopleInvolved: [
             'Alex', 'Sam',
         ],
@@ -57,20 +65,38 @@ export const initialReport = [
         narrativeReport: 'Two students were caught cheating during the exam.',
         dateReported: 'September 16, 2024',
         status: 'Unread',
+        isDraft:true,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport5',
         reportIDRef: 'report05',
-        peopleInvolved: [
-            'Lisa', 'Chris',
-        ],
-        witness: 'Nina',
+        reportedBY: 'adviserid1',
+        peopleInvolved: ['Vinz Dela Cruz', 'Alex Torres', 'Lisa Hernandez', 'Chris Garcia'],
+        witness: 'Ms. Rodriguez',
+        dateOfIncident: 'August 15, 2024',
+        placeOfIncident: 'Classroom',
+        thingsInvolved: 'classroom disruption',
+        narrativeReport: 'Multiple students were involved in a classroom disruption during Math class.',
+        dateReported: 'August 16, 2024',
+        status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
+    },
+    {
+        initialDocID: 'initialReport6',
+        reportIDRef: 'report06',
+        reportedBY: 'adviserid1',
+        peopleInvolved: ['Alex Torres', 'Lisa Hernandez', 'Mark Espinosa'],
+        witness: 'Mr. Santos',
         dateOfIncident: 'August 20, 2024',
         placeOfIncident: 'Canteen',
         thingsInvolved: 'bullying',
         narrativeReport: 'A student reported being bullied during lunch.',
         dateReported: 'August 21, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport6',
@@ -99,10 +125,13 @@ export const initialReport = [
         narrativeReport: 'Two students were involved in a physical altercation during gym class.',
         dateReported: 'April 26, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport8',
-        reportIDRef: '',
+        reportIDRef: 'report08',
+        reportedBY: 'adviserid12',
         peopleInvolved: [
             'Sarah', 'Michael',
         ],
@@ -113,6 +142,8 @@ export const initialReport = [
         narrativeReport: 'A student was reported using substances in the restroom.',
         dateReported: 'March 31, 2024',
         status: 'Unread',
+        isDraft:true,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport9',
@@ -127,10 +158,13 @@ export const initialReport = [
         narrativeReport: 'Students were caught driving recklessly in the school parking lot.',
         dateReported: 'February 15, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport10',
-        reportIDRef: '',
+        reportIDRef: 'report10',
+        reportedBY: 'adviserid12',
         peopleInvolved: [
             'Grace',
         ],
@@ -141,6 +175,8 @@ export const initialReport = [
         narrativeReport: 'A student was disruptive during class, causing disturbances.',
         dateReported: 'January 6, 2024',
         status: 'Unread',
+        isDraft:true,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport11',
@@ -155,6 +191,8 @@ export const initialReport = [
         narrativeReport: 'Students were caught tagging walls with graffiti.',
         dateReported: 'December 13, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport12',
@@ -168,6 +206,8 @@ export const initialReport = [
         narrativeReport: 'Students were caught mishandling expensive laboratory equipment.',
         dateReported: 'September 6, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport13',
@@ -181,6 +221,8 @@ export const initialReport = [
         narrativeReport: 'Students engaged in a physical fight during PE class.',
         dateReported: 'September 16, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport14',
@@ -194,6 +236,8 @@ export const initialReport = [
         narrativeReport: 'Students were caught leaving school premises during class hours.',
         dateReported: 'September 21, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport15',
@@ -207,6 +251,8 @@ export const initialReport = [
         narrativeReport: 'Student attempted to access restricted areas of the school network.',
         dateReported: 'October 2, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport16',
@@ -220,6 +266,8 @@ export const initialReport = [
         narrativeReport: 'Student was caught using unauthorized materials during an exam.',
         dateReported: 'October 6, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport17',
@@ -233,6 +281,8 @@ export const initialReport = [
         narrativeReport: 'Student was caught mishandling laboratory equipment.',
         dateReported: 'October 9, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport18',
@@ -246,6 +296,8 @@ export const initialReport = [
         narrativeReport: 'Student was caught damaging library materials.',
         dateReported: 'October 13, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport19',
@@ -259,6 +311,8 @@ export const initialReport = [
         narrativeReport: 'Student was caught using mobile phone during examination.',
         dateReported: 'October 16, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport20',
@@ -272,6 +326,8 @@ export const initialReport = [
         narrativeReport: 'Student was reported for bullying a classmate.',
         dateReported: 'October 19, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport21',
@@ -285,6 +341,8 @@ export const initialReport = [
         narrativeReport: 'Students were involved in a physical altercation during lunch break.',
         dateReported: 'October 23, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     },
     {
         initialDocID: 'initialReport22',
@@ -298,5 +356,7 @@ export const initialReport = [
         narrativeReport: 'Student was caught skipping PE class.',
         dateReported: 'October 26, 2024',
         status: 'Read',
+        isDraft:false,
+        academicYear: '2024-2025'
     }
 ];

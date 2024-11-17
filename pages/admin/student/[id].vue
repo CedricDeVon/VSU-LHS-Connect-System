@@ -127,7 +127,7 @@ const viewStudent = (studentId: any) => {
                                     <!-- Buttons with adjusted margins -->
                                     <div class="space-y-2 mt-4">
                                         <!-- Secondary Action -->
-                                        <button class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
+                                        <button @click="viewAnecdotalReport" class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             View Anecdotal Report
                                         </button>
 

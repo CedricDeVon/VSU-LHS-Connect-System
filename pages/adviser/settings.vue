@@ -117,7 +117,7 @@
         methods: {
 
             handleRowClick(item) {
-                this.showStudentInfo = true;
+
             },
 
             notifClick(){
@@ -130,21 +130,8 @@
                 this.$router.push('/auth/login');
             },
 
-            fetchStudents(id,ay) {
-                const studentIDs = (section.find((sec)=> sec.adviserId === id && sec.sectionSchoolYear === ay)).sectionStudents;
-                this.students = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
-            },
-
-            /*handleRowClick(item) {
-      // Handle row click event
-      console.log('Row clicked:', item);
-    }*/
-
         },
 
-        mounted() {
-            this.fetchStudents(this.AdviserID, this.AcademicYear);
-        }
         
   };
 </script>

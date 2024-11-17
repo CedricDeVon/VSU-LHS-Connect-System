@@ -8,38 +8,14 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
-adminViewStore.updateSectionPageData(useRoute().params.id);
-
-const getAdviserFullName = () => {
-    // if (!adminViewStore.sectionAdviser) return 'No Adviser Assigned';
-    // return `${adminViewStore.sectionAdviser.firstName} ${adminViewStore.sectionAdviser.middleName} ${adminViewStore.sectionAdviser.lastName}${adminViewStore.sectionAdviser.suffix ? ` ${adminViewStore.sectionAdviser.suffix}` : ''}`;
-    return '';
-}
-
-const getStudent = (studentId: any) => {
-    // return student.find(s => s.studentId === studentId);
-    return {};
-}
-
-const getStudentFullName = (studentId: any) => {
-    // const studentData = getStudent(studentId); 
-    // if (!studentData) return 'Unknown Student';
-    // return `${studentData.lastName}, ${studentData.firstName} ${studentData.middleName || ''}`.trim();
-    return '';
-}
+await adminViewStore.updateSectionPageData(useRoute().params.id);
 
 const viewStudentProfile = (studentId: any) => {
-    // Navigate to student profile page
-    // $router.push(`/admin/student/${studentId}`);
+    return navigateTo(`/admin/student/${studentId}`, { replace: true });
 }
 
 const viewReport = (reportId: any) => {
-    // console.log('Viewing report:', reportId);
-    // $router.push(`/admin/reports/${reportId}`);
-}
-
-const formatDate = (date: any) => {
-    return new Date(date).toLocaleDateString();
+    return navigateTo(`/admin/reports/${reportId}`, { replace: true });
 }
 
 const getStatusClass = (status: any) => {
@@ -51,127 +27,48 @@ const getStatusClass = (status: any) => {
 }
 
 const getSectionReports = () => {
-    // let reports = incidentReport.filter(report => {
-    //     const reportStudents = report.peopleInvolved || [];
-    //     return adminViewStore.sectionSection?.sectionStudents.some(studentId => {
-    //         const student = getStudent(studentId);
-    //         return student && reportStudents.includes(student.firstName);
-    //     });
-    // });
-
+    let reports = adminViewStore.sectionSectionIncidentReports;
     // // Filter by status
-    // if (adminViewStore.sectionSelectedReportStatus !== 'all') {
-    //     reports = reports.filter(report => report.status === adminViewStore.sectionSelectedReportStatus);
-    // }
+    if (adminViewStore.sectionSelectedReportStatus !== 'all') {
+        reports = reports.filter((report: any) => report.data.status === adminViewStore.sectionSelectedReportStatus);
+    }
+    
+    // Sort reports based on selection
+    switch (adminViewStore.sectionSelectedReportSort) {
+        case 'ascDateSort':
+            reports.sort((a: any, b: any) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
+            break;
+        case 'descDateSort':
+            reports.sort((a: any, b: any) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
+            break;
+        case 'repIDSort':
+            reports.sort((a: any, b: any) => a.id.localeCompare(b.id));
+            break;
+        case 'surnameSort':
+            reports.sort((a: any, b: any) => a.data.peopleInvolved - b.data.peopleInvolved);
+            break;
+    }
 
-    // // Sort reports based on selection
-    // switch (adminViewStore.sectionSelectedReportSort) {
-    //     case 'ascDateSort':
-    //         reports.sort((a: any, b: any) => new Date(a.dateOfIncident) - new Date(b.dateOfIncident));
-    //         break;
-    //     case 'descDateSort':
-    //         reports.sort((a: any, b: any) => new Date(b.dateOfIncident) - new Date(a.dateOfIncident));
-    //         break;
-    //     case 'repIDSort':
-    //         reports.sort((a: any, b: any) => a.reportID.localeCompare(b.reportID));
-    //         break;
-    //     case 'surnameSort':
-    //         reports.sort((a: any, b: any) => {
-    //             const studentA = findStudentByFirstName(a.peopleInvolved[0]);
-    //             const studentB = findStudentByFirstName(b.peopleInvolved[0]);
-    //             return studentA?.lastName.localeCompare(studentB?.lastName) || 0;
-    //         });
-    //         break;
-    // }
-
-    // return reports;
-    return [];
+    return reports;
 }
 
 const getSectionStudents = () => {
-    // let students = adminViewStore.sectionSection?.sectionStudents.map((id: any) => getStudent(id)) || [];
+    let students = adminViewStore.sectionSectionStudents;
 
-    // // Sort students based on selection
-    // switch (adminViewStore.sectionSelectedStudentSort) {
-    //     case 'surnameSort':
-    //         students.sort((a: any, b: any) => a.lastName.localeCompare(b.lastName));
-    //         break;
-    //     case 'studentIDSort':
-    //         students.sort((a: any, b: any) => a.studentId.localeCompare(b.studentId));
-    //         break;
-    // }
+    // Sort students based on selection
+    switch (adminViewStore.sectionSelectedStudentSort) {
+        case 'surnameSort':
+            students.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
+            break;
+        case 'studentIDSort':
+            students.sort((a: any, b: any) => a.id.localeCompare(b.id));
+            break;
+    }
 
-    // return students;
-    return [];
+    return students;
 }
 
-const getStudentNamesFromReport = (involvedStudents: any) => {
-    // if (!involvedStudents) return '';
-
-    // // Convert first names to full names with surname first
-    // const studentFullNames = involvedStudents.map((firstName: any) => {
-    //     const student = findStudentByFirstName(firstName);
-    //     if (student) {
-    //         return `${student.lastName}, ${student.firstName}`;
-    //     }
-    //     return firstName;
-    // });
-    // return studentFullNames.join('; ');
-    return '';
-}
-
-const findStudentByFirstName = (firstName: any) => {
-    // return student.find(s => s.firstName === firstName);
-    return {};
-}
-
-
-// export default {
-//     name: 'admin-section-details',
-//     components: {
-//         AdminSidebar, AdminHeader
-//     },
-//     data() {
-//         return {
-//             section: null,
-//             adviser: null,
-//             selectedView: '',
-//             selectedStudentSort: '',
-//             selectedReportSort: '',
-//             selectedReportStatus: 'all',
-//             sectionStudents: [],
-//             sectionReports: []
-//         };
-//     },
-//     async created() {
-//         const sectionId = this.$route.params.id;
-//         adminViewStore.sectionSection = section.find(sec => String(sec.id) === String(sectionId));
-
-//         if (!adminViewStore.sectionSection) {
-//             console.error('Section not found:', sectionId);
-//             return;
-//         }
-
-//         if (adminViewStore.sectionSection.adviserId) {
-//             adminViewStore.sectionAdviser = adviser.find(adv => adv.id === adminViewStore.sectionSection.adviserId);
-//         }
-//     },
-//     methods: {
-        
-//     },
-//     watch: {
-//         // Watch for changes in selectedView and fetch appropriate data
-//         selectedView: {
-//             handler: 'fetchSectionData',
-//             immediate: true
-//         }
-//     },
-//     mounted() {
-//         console.log('Incident Report Data:', incidentReport);
-//     }
-// };
 </script>
-
 
 <template>
     <div class="flex h-screen overflow-hidden">
@@ -183,7 +80,7 @@ const findStudentByFirstName = (firstName: any) => {
                     <!-- Header -->
                     <h1
                         class="sticky top-0 z-10 mx-auto w-[90%] px-6 py-4 mt-4 text-2xl font-bold text-center text-white rounded-3xl bg-[#728B78]">
-                        Section {{ section?.sectionName || 'Details' }}
+                        Section {{ adminViewStore.sectionSection.data.name || 'Details' }}
                     </h1>
 
 
@@ -192,35 +89,35 @@ const findStudentByFirstName = (firstName: any) => {
                             <!-- Left Sidebar -->
                             <aside class="w-1/4 min-w-[300px] max-lg:w-full rounded-lg p-6">
                                 <div class="flex flex-col items-center">
-                                    <img :src="adviser?.profilePic || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS11c2VyLXJvdW5kIj48cGF0aCBkPSJNMTggMjBhNiA2IDAgMCAwLTEyIDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='"
+                                    <img :src="adminViewStore.sectionAdviser.data.profilePicture || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS11c2VyLXJvdW5kIj48cGF0aCBkPSJNMTggMjBhNiA2IDAgMCAwLTEyIDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='"
                                         @error="handleImageError" alt="Profile"
                                         class="w-48 h-48 rounded-full object-cover bg-gray-100" />
                                     <div class="w-full relative group mt-2">
                                         <h2 class="m-0 text-2xl font-bold text-center text-green-900 px-2 truncate max-w-full">
-                                            {{ getAdviserFullName() }}
+                                            {{ adminViewStore.getFullName(adminViewStore.sectionAdviser) }}
                                         </h2>
                                         <!-- Tooltip -->
                                         <div class="absolute hidden group-hover:block bg-gray-900/75 text-white text-sm rounded-md py-1 px-2 left-1/2 transform transition-all duration-300 -translate-x-1/2 z-10 whitespace-nowrap">
-                                            {{ getAdviserFullName() }}
+                                            {{ adminViewStore.getFullName(adminViewStore.sectionAdviser) }}
                                         </div>
                                     </div>
                                     <p class="m-0 text-md text-center text-neutral-700 mt-2 mb-4">
-                                        Grade {{ section?.sectionLevel }} - {{ section?.sectionName }} Adviser
+                                        Grade {{ adminViewStore.sectionSection.data.level }} - {{ adminViewStore.sectionSection.data.name }} Adviser
                                     </p>
 
                                     <!-- Adviser Details -->
                                     <dl class="w-full space-y-3 text-lg">
                                         <div class="flex justify-between">
                                             <dt class="font-bold">Faculty ID:</dt>
-                                            <dd>{{ adviser?.facultyId || '-' }}</dd>
+                                            <dd>{{ adminViewStore.sectionAdviser.data.facultyId || 'N/A' }}</dd>
                                         </div>
                                         <div class="flex justify-between">
                                             <dt class="font-bold">Status:</dt>
-                                            <dd class="capitalize">{{ adviser?.status || '-' }}</dd>
+                                            <dd class="capitalize">{{ adminViewStore.sectionAdviser.data.status || 'N/A' }}</dd>
                                         </div>
                                         <div class="flex justify-between">
                                             <dt class="font-bold">Birthdate:</dt>
-                                            <dd>{{ adviser?.bdate || '-' }}</dd>
+                                            <dd>{{ adminViewStore.sectionAdviser.data.birthdate || 'N/A' }}</dd>
                                         </div>
                                     </dl>
                                     <button @click="sendEmail"
@@ -269,10 +166,10 @@ const findStudentByFirstName = (firstName: any) => {
                                     <!-- Report Status Filter -->
                                     <select v-if="adminViewStore.sectionSelectedView === 'reportsView'"
                                         class="mb-0 ml-4 inline-flex justify-center w-[30%] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
-                                        v-model="adminViewStore.sectionSelectedStudentSort">
+                                        v-model="adminViewStore.sectionSelectedReportStatus">
                                         <option value="all">All Status</option>
                                         <option value="Resolved">Resolved</option>
-                                        <option value="NotResolved">Not Resolved</option>
+                                        <option value="Unresolved">Unresolved</option>
                                     </select>
                                 </div>
 
@@ -306,15 +203,15 @@ const findStudentByFirstName = (firstName: any) => {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="student in getSectionStudents()"
-                                                            :key="student.studentId" 
+                                                        <tr v-for="student of getSectionStudents()"
+                                                            :key="student.id" 
                                                             class="p-10">
-                                                            <td class="p-3 text-center w-[30%]">{{ student.studentId }}</td>
+                                                            <td class="p-3 text-center w-[30%]">{{ student.id }}</td>
                                                             <td class="p-3 text-center w-[40%] break-words whitespace-normal">
-                                                                {{ `${student.lastName}, ${student.firstName} ${student.middleName || ''}`.trim() }}
+                                                                {{ adminViewStore.getFullName(student) }}
                                                             </td>
                                                             <td class="p-3 text-center w-[30%]">
-                                                                <button @click="viewStudentProfile(student.studentId)"
+                                                                <button @click="viewStudentProfile(student.id)"
                                                                     class="font-md px-4 py-1 bg-[#F8F1BA] rounded-lg hover:bg-[#728B78] hover:text-white transition-colors">
                                                                     View Profile
                                                                 </button>
@@ -339,24 +236,24 @@ const findStudentByFirstName = (firstName: any) => {
                                                     <thead class="bg-[#728B78] text-white sticky top-0">
                                                         <tr>
                                                             <th class="p-3 text-center w-[20%]">Report ID</th>
-                                                            <th class="p-3 text-center w-[35%]">Student Name</th>
-                                                            <th class="p-3 text-center w-[25%]">Date</th>
+                                                            <th class="p-3 text-center w-[35%]">People Involved</th>
+                                                            <th class="p-3 text-center w-[25%]">Date of Incident</th>
                                                             <th class="p-3 text-center w-[20%]">Status</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr v-for="report in getSectionReports()" 
-                                                            :key="report.incidentDocID"
-                                                            @click="viewReport(report.incidentDocID)"
+                                                        <tr v-for="report of getSectionReports()" 
+                                                            :key="report.id"
+                                                            @click="viewReport(report.id)"
                                                             class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
-                                                            <td class="p-4 text-center break-words whitespace-normal">{{ report.reportID }}</td>
+                                                            <td class="p-4 text-center break-words whitespace-normal">{{ report.id }}</td>
                                                             <td class="p-4 text-center break-words whitespace-normal">
-                                                                {{ getStudentNamesFromReport(report.peopleInvolved) }}
+                                                                {{ report.data.peopleInvolved }}
                                                             </td>
-                                                            <td class="p-4 text-center break-words whitespace-normal">{{ report.dateOfIncident }}</td>
+                                                            <td class="p-4 text-center break-words whitespace-normal">{{ report.data.dateOfIncident }}</td>
                                                             <td class="p-4 text-center">
-                                                                <span :class="getStatusClass(report.status)">
-                                                                    {{ report.status }}
+                                                                <span :class="getStatusClass(report.data.status)">
+                                                                    {{ report.data.status }}
                                                                 </span>
                                                             </td>
                                                         </tr>

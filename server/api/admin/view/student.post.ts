@@ -21,7 +21,6 @@ export default defineEventHandler(async (event) => {
         }));
       }
     }
-    // console.log(students[0].data.incidentalReports);
     
     const sections = (await Databases.getAllSections()).data;
     const studentData = students.find((student: any) => student.id === studentId)

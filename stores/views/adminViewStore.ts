@@ -53,7 +53,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     sectionSections.value = data.sections;
     sectionSectionStudents.value = data.sectionStudents;
     sectionSectionAdvisers.value = data.sectionAdvisers;
-    sectionSectionIncidentReports.value = data.sectionReports;
+    sectionSectionIncidentReports.value = data.sectionIncidentReports;
   }
 
   const updateStudentPageData = async (studentId: string) => {
@@ -68,8 +68,8 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     studentAllSectionStudents.value = data.allSectionStudents;
   }
   
-  const getFullName = (student: any) => {
-    return `${student.data.lastName}, ${student.data.firstName} ${student.data.middleName} ${student.data.suffix}`.trim();
+  const getFullName = (person: any) => {
+    return `${person.data.lastName}, ${person.data.firstName} ${person.data.middleName} ${person.data.suffix}`.trim();
   }
 
   const getGradeAndSection = () => {

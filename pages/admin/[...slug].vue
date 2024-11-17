@@ -1,3 +1,7 @@
+<script script lang='ts'>
+
+</script>
+
 <template>
     <div class="relative flex items-center justify-center min-h-screen bg-gray-100 overflow-hidden">
         <!-- Background Image -->
@@ -12,15 +16,9 @@
             <p class="text-green-800 text-xl font-medium mb-2">
                 Please check the URL or return to the homepage.
             </p>
-            <NuxtLink to="AdminDashboard" class="mt-4 inline-block px-6 py-3 bg-green-700 text-white rounded-md hover:bg-green-800">
+            <NuxtLink to="/admin/dashboard" class="mt-4 inline-block px-6 py-3 bg-green-700 text-white rounded-md hover:bg-green-800">
                 Go to Homepage
             </NuxtLink>
         </div>
     </div>
 </template>
-
-<script>
-export default {
-    name: "RegistrationSuccessful",
-};
-</script>

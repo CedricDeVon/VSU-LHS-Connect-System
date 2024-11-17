@@ -46,7 +46,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-05-15'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal1'
+        anecdotalDocID: 'ANEC-2024-10075'
     },
     {
         studentId: '22-1-10076',
@@ -63,7 +63,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-08-20'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal2'
+        anecdotalDocID: 'ANEC-2024-10076'
     },
     {
         studentId: '22-1-10077',
@@ -80,7 +80,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2001-12-05'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal9'
+        anecdotalDocID: 'ANEC-2024-10077'
     },
     {
         studentId: '22-1-10078',
@@ -97,7 +97,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-03-10'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal27'
+        anecdotalDocID: 'ANEC-2024-10078'
     },
     {
         studentId: '22-1-10079',
@@ -114,7 +114,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-07-25'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal28'
+        anecdotalDocID: 'ANEC-2024-10079'
     },
     {
         studentId: '22-1-10389',
@@ -131,6 +131,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2004-07-25'),
         sectionID: '',
+        anecdotalDocID: null
     },
     {
         studentId: '22-1-10080',
@@ -147,7 +148,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2001-11-30'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal2'
+        anecdotalDocID: 'ANEC-2024-10080'
     },
     {
         studentId: '22-1-10081',
@@ -164,7 +165,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-06-18'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal29'
+        anecdotalDocID: 'ANEC-2024-10081'
     },
     {
         studentId: '22-1-10082',
@@ -181,7 +182,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-09-14'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal30'
+        anecdotalDocID: 'ANEC-2024-10082'
     },
     {
         studentId: '22-1-10083',
@@ -198,6 +199,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2001-04-22'),
         sectionID: 'sectionid1',
+        anecdotalDocID: 'ANEC-2024-10083'
     },
     {
         studentId: '22-1-10084',
@@ -214,7 +216,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-01-30'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal8'
+        anecdotalDocID: 'ANEC-2024-10084'
     },
     {
         studentId: '22-1-10085',
@@ -231,7 +233,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-05-05'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal3'
+        anecdotalDocID: 'ANEC-2024-10085'
     },
     {
         studentId: '22-1-10086',
@@ -248,7 +250,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2001-08-12'),
         sectionID: 'sectionid1',
-        anecdotalDocID: 'anecdotal5'
+        anecdotalDocID: 'ANEC-2024-10086'
     },
     {
         studentId: '22-1-10087',
@@ -265,41 +267,24 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-11-09'),
         sectionID: 'sectionid12',
-        anecdotalDocID: 'anecdotal11'
+        anecdotalDocID: 'ANEC-2024-10087'
     },
     {
         studentId: '22-1-10088',
-        firstName: 'Michael',
-        lastName: 'Buenaflor',
-        middleName: 'De Leon',
+        firstName: 'Marco',
+        lastName: 'Santos',
+        middleName: 'Rivera',
         suffix: '',
         gender: 'Male',
-        address: 'Baybay, Leyte',
-        contactNum: '09481235678',
+        address: 'Tacloban City',
+        contactNum: '09123456789',
         isEnrolled: true,
-        incidentDocIDs: ['incidentID8'],
-        birthDate: '2002-02-14',
+        incidentDocIDs: [],
+        birthDate: '2002-08-15',
         profilePic: null,
-        age: calculateAge('2002-02-14'),
-        sectionID: 'sectionid12',
-        anecdotalDocID: 'anecdotal12'
-    },
-    {
-        studentId: '22-1-10089',
-        firstName: 'Kevin',
-        lastName: 'Reyes',
-        middleName: 'Lorenzo',
-        suffix: '',
-        gender: 'Male',
-        address: 'Inopacan, Leyte',
-        contactNum: '09134256789',
-        isEnrolled: true,
-        incidentDocIDs: ['incidentID9'],
-        birthDate: '2001-06-25',
-        profilePic: null,
-        age: calculateAge('2001-06-25'),
-        sectionID: 'sectionid12',
-        anecdotalDocID: 'anecdotal6'
+        age: calculateAge('2002-08-15'),
+        sectionID: 'sectionid26',
+        anecdotalDocID: 'ANEC-2024-10088'
     },
     {
         studentId: '22-1-10090',
@@ -316,12 +301,13 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-04-10'),
         sectionID: 'sectionid12',
+        anecdotalDocID: 'ANEC-2024-10090'
     },
     {
         studentId: '22-1-10091',
-        firstName: 'Grace',
-        lastName: 'Castillo',
-        middleName: 'Santos',
+        firstName: 'Sofia',
+        lastName: 'Reyes',
+        middleName: 'Castillo',
         suffix: '',
         gender: 'Female',
         address: 'Baybay, Leyte',
@@ -332,7 +318,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-12-01'),
         sectionID: 'sectionid12',
-        anecdotalDocID: 'anecdotal7'
+        anecdotalDocID: 'ANEC-2024-10091'
     },
     {
         studentId: '22-1-10092',
@@ -349,6 +335,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2001-03-15'),
         sectionID: 'sectionid12',
+        anecdotalDocID: 'ANEC-2024-10092'
     },
     {
         studentId: '22-1-10093',
@@ -365,6 +352,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-07-07'),
         sectionID: 'sectionid14',
+        anecdotalDocID: 'ANEC-2024-10093'
     },
     {
         studentId: '22-1-10094',
@@ -381,7 +369,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-10-20'),
         sectionID: 'sectionid14',
-        anecdotalDocID: 'anecdotal4'
+        anecdotalDocID: 'ANEC-2024-10094'
     },
     {
         studentId: '22-1-10095',
@@ -398,6 +386,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2001-01-18'),
         sectionID: 'sectionid14',
+        anecdotalDocID: 'ANEC-2024-10095'
     },
     {
         studentId: '22-1-10096',
@@ -414,6 +403,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-11-05'),
         sectionID: 'sectionid14',
+        anecdotalDocID: 'ANEC-2024-10096'
     },
     {
         studentId: '22-1-10097',
@@ -430,6 +420,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-02-25'),
         sectionID: 'sectionid16',
+        anecdotalDocID: 'ANEC-2024-10097'
     },
     {
         studentId: '22-1-10098',
@@ -446,6 +437,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2001-09-30'),
         sectionID: 'sectionid16',
+        anecdotalDocID: 'ANEC-2024-10098'
     },
     {
         studentId: '22-1-10099',
@@ -462,6 +454,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-04-12'),
         sectionID: 'sectionid16',
+        anecdotalDocID: 'ANEC-2024-10099'
     },
     {
         studentId: '22-1-10100',
@@ -478,6 +471,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-07-22'),
         sectionID: 'sectionid16',
+        anecdotalDocID: 'ANEC-2024-10100'
     },
     {
         studentId: '22-1-10101',
@@ -494,7 +488,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2001-11-09'),
         sectionID: 'sectionid16',
-        anecdotalDocID: 'anecdotal13'
+        anecdotalDocID: 'ANEC-2024-10101'
     },
     {
         studentId: '22-1-10102',
@@ -511,6 +505,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-04-15'),
         sectionID: 'sectionid16',
+        anecdotalDocID: 'ANEC-2024-10102'
     },
     {
         studentId: '22-1-10103',
@@ -527,6 +522,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-11-22'),
         sectionID: 'sectionid16',
+        anecdotalDocID: 'ANEC-2024-10103'
     },
     {
         studentId: '22-1-10104',
@@ -543,7 +539,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-01-10'),
         sectionID: 'sectionid16',
-        anecdotalDocID: 'anecdotal31'
+        anecdotalDocID: 'ANEC-2024-10104'
     },
     {
         studentId: '22-1-10105',
@@ -560,7 +556,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-08-05'),
         sectionID: 'sectionid16',
-        anecdotalDocID: 'anecdotal32'
+        anecdotalDocID: 'ANEC-2024-10105'
     },
     {
         studentId: '22-1-10106',
@@ -577,7 +573,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-06-25'),
         sectionID: 'sectionid16',
-        anecdotalDocID: 'anecdotal33'
+        anecdotalDocID: 'ANEC-2024-10106'
     },
     {
         studentId: '22-1-10107',
@@ -594,7 +590,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-12-10'),
         sectionID: 'sectionid16',
-        anecdotalDocID: 'anecdotal34'
+        anecdotalDocID: 'ANEC-2024-10107'
     },
     {
         studentId: '22-1-10108',
@@ -611,7 +607,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-03-30'),
         sectionID: 'sectionid26',
-        anecdotalDocID: 'anecdotal35'
+        anecdotalDocID: 'ANEC-2024-10108'
     },
     {
         studentId: '22-1-10109',
@@ -628,7 +624,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-09-18'),
         sectionID: 'sectionid26',
-        anecdotalDocID: 'anecdotal14'
+        anecdotalDocID: 'ANEC-2024-10109'
     },
     {
         studentId: '22-1-10110',
@@ -645,7 +641,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-07-12'),
         sectionID: 'sectionid26',
-        anecdotalDocID: 'anecdotal36'
+        anecdotalDocID: 'ANEC-2024-10110'
     },
     {
         studentId: '22-1-10111',
@@ -662,7 +658,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-11-05'),
         sectionID: 'sectionid26',
-        anecdotalDocID: 'anecdotal37'
+        anecdotalDocID: 'ANEC-2024-10111'
     },
     {
         studentId: '22-1-10112',
@@ -679,7 +675,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-02-20'),
         sectionID: 'sectionid26',
-        anecdotalDocID: 'anecdotal38'
+        anecdotalDocID: 'ANEC-2024-10112'
     },
     {
         studentId: '22-1-10113',
@@ -696,6 +692,6 @@ export const student = [
         profilePic: null,
         age: calculateAge('2002-10-15'),
         sectionID: 'sectionid26',
-        anecdotalDocID: 'anecdotal39'
+        anecdotalDocID: 'ANEC-2024-10113'
     }
 ];

@@ -67,50 +67,45 @@
                     <div class="p-2 pb-0 ">
                       <div class="pb-1">Student ID:</div>
                       <label>
-                        <input type="text" class="input px-2 py-2 rounded-sm w-1/2" placeholder="Enter Student ID">
+                        <input type="text" class="input px-2 py-2 rounded-sm w-1/2 focus outline-green-400 " placeholder="Enter Student ID">
                       </label>
                     </div>
                     <div class="p-2 ">
                       <div class="pb-1">Student's Full Name: </div>
                       <label>
-                        <input type="text" class=" inputName px-2 py-2 rounded-sm " placeholder="Enter First Name">
-                        <input type="text" class=" inputName px-2 py-2 rounded-sm  ml-2" placeholder="Enter Last Name">
-                        <input type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2" placeholder="Suffix">
+                        <input type="text" class=" inputName px-2 py-2 rounded-sm focus outline-green-400 " placeholder="Enter First Name">
+                        <input type="text" class=" inputName px-2 py-2 rounded-sm  ml-2 focus outline-green-400" placeholder="Enter Last Name">
+                        <input type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2 focus outline-green-400" placeholder="Suffix">
                       </label>
                     </div>
                   </div>
 
-                  <div class="p-2">
-                    <!--For now I just removed the template for the datepicker since it has some issues when choosing different year
-                    I've wasted much time trying to solve it but I failed hehe, but when I tried my component called ShortDatepicker, 
-                    it worked naman just fine in a page I dont know why it malfunction in this component-->
-                    <label>Birtdate:
-                        <UiDatepicker v-model="store.birthDate" :fixed-position="true">
-                     
-                            <UiInput placeholder="MM/DD/YYYY" :value="inputValue" v-on="inputEvents" class="input w-1/5 p-1 ml-2 mr-3" />
-                        
-                        </UiDatepicker>     
-                    </label>
-                    <label class="mx-2">Sex at Birth:
+                  <div class="grid grid-flow-col p-2">
+                      <label>Birtdate: </label>
+                      <UiVeeDatepicker placeholder="MM/DD/YYYY"/>     
+
+                      <label class="mx-5">Sex at Birth:
                       <select
-                               class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-none"
+                               class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-green-400"
                                v-model="selectedGender">
                                <option value="" disabled selected hidden>Gender</option>
                                <option value="male">Male</option>
                                <option value="female">Female</option>
                       </select>
                     </label> 
+                    
+                   
                   </div>
                   <div class="p-1 px-2 pb-0 ">
                      Address:
                     <label>
-                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3" placeholder="Enter Student Address">
+                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3 focus outline-green-400 " placeholder="Enter Student Address">
                     </label>
                   </div>
                   <div class=" mt-2 p-1 px-2 pb-0 ">
                      Contact Number/s:
                     <label>
-                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-1/3" placeholder="Enter Contact Number">
+                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-1/3 focus outline-green-400" placeholder="Enter Contact Number">
                       <button class="pl-5 wordbutton ">Add +</button>
                     </label>
                   </div>
@@ -273,6 +268,10 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
         color: #414E44;
         border: none;
         cursor: pointer;
+    }
+    .wordbutton:hover{
+      color:#265630;
+      font-weight: 700;
     }
 
     .header{

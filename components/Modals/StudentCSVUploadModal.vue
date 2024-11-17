@@ -9,9 +9,15 @@
             Please ensure your CSV file follows this format:
           </p>
           <ul class="list-disc list-inside text-sm ml-4 mt-2">
-            <li><strong>Column 1:</strong> Adviser Name</li>
-            <li><strong>Column 2:</strong> Email</li>
-            <li><strong>Column 3:</strong> Department</li>
+            <li><strong>Column 1:</strong> Last Name</li>
+            <li><strong>Column 2:</strong> First Name</li>
+            <li><strong>Column 3:</strong> Middle Name</li>
+            <li><strong>Column 3:</strong> Suffix</li>
+            <li><strong>Column 3:</strong> Gender</li>
+            <li><strong>Column 3:</strong> Birth Date</li>
+            <li><strong>Column 3:</strong> Home Address</li>
+            <li><strong>Column 3:</strong> Contact Number</li>
+
           </ul>
           <p class="text-sm mt-2">Only .csv files are accepted.</p>
         </div>

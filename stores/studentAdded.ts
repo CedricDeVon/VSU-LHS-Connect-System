@@ -15,6 +15,41 @@ export const studentAddedStore = defineStore('studentAddedStore', () => {
     const birthDate = ref('');
     const profilePic = ref('');
 
+
+    const getStudentData = () => {
+        return{
+            AdviserId : AdviserId.value,
+            studentId : studentId.value,
+            firstName : firstName.value,
+            lastName : lastName.value,
+            middleName : middleName.value,
+            suffix : suffix.value,
+            gender : gender.value,
+            address : address.value,
+            contactNum : contactNum.value,
+            isEnrolled : isEnrolled.value,
+            incidentDocIDs : incidentDocIDs.value,
+            birthDate : birthDate.value,
+            profilePic : profilePic.value
+        };
+    }
+
+    function resetAllData() {
+        AdviserId.value = '',
+        studentId.value = '',
+        firstName.value = '',
+        lastName.value = '',
+        middleName.value = '',
+        suffix.value = '',
+        gender.value ='',
+        address.value = '',
+        contactNum.value ='',
+        isEnrolled.value = true,
+        incidentDocIDs.value = [],
+        birthDate.value = '',
+        profilePic.value =''
+    }
+
     return { 
         AdviserId,
         studentId,
@@ -28,7 +63,9 @@ export const studentAddedStore = defineStore('studentAddedStore', () => {
         isEnrolled,
         incidentDocIDs,
         birthDate,
-        profilePic
+        profilePic,
+        getStudentData,
+        resetAllData
     };
   });
   

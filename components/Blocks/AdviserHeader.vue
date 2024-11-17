@@ -54,7 +54,7 @@ methods: {
         this.$router.push('/adviser/advisory')
     },
     goToReports(){
-        this.$router.push('/admin/reports')
+        this.$router.push('/adviser/reports')
     },
     goToSettings(){
         this.$router.push('/adviser/settings')

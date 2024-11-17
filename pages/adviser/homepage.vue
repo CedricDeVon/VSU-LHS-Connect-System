@@ -1,6 +1,7 @@
 <template>
     <div class="adviser-page">
         <AdviserHeader/>
+        <!-- Unsay Problem diri lodz? -->
         <div>
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>

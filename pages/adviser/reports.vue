@@ -5,6 +5,7 @@
         :report="reportChosen"
         @close ="creationClose"
         /> 
+        <notification-modal v-if="showNotification"/>
         <AdviserHeader @notif-click="notifClick"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
@@ -95,12 +96,13 @@
     import { initialReport } from "~/data/initialReport";
     import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
     import { adviserReportStore } from "../../stores/adviserReport";
+    import NotificationModal from '~/components/Modals/NotificationModal.vue';
    
 
 
     export default {
         name: "reports",
-        components: {AdviserHeader, InitialReportModal, },
+        components: {AdviserHeader, InitialReportModal, NotificationModal, },
         props: {
             AdviserID: {
                 type: String,

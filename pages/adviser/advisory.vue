@@ -5,6 +5,8 @@
             <AddStudentForm v-if="showAddStudentForm"
             @close="showAddStudentForm = false"
             />
+
+            <notification-modal v-if="showNotification" />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
             </div>
@@ -86,10 +88,11 @@
     import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
     import { student } from "~/data/student";
     import { section } from "~/data/section";
+    import NotificationModal from '~/components/Modals/NotificationModal.vue';
 
     export default {
         name: "Advisory",
-        components: {AdviserHeader, StudentBasicInfo, AddStudentForm,},
+        components: {AdviserHeader, StudentBasicInfo, AddStudentForm, NotificationModal,},
         props: {
             AdviserID: {
                 type: String,

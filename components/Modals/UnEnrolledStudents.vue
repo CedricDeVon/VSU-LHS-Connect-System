@@ -67,7 +67,7 @@
   <script lang="ts">
     import { computed } from 'vue';
     import {watch, ref} from 'vue';
-    import { student } from '../data/student'; 
+    import { student } from '../../data/student.js'; 
     import debounce from 'lodash/debounce';
     import { section } from '~/data/section.js';
 import type { academicYear } from '~/data/academicYear';

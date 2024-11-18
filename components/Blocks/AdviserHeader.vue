@@ -48,7 +48,7 @@ name: 'AdviserHeader',
 
 methods: {
     goToHomepage(){
-        // this.$router.push('/adviser/homepage')
+         this.$router.push('/adviser/homepage')
     },
     goToAdvisory(){
         this.$router.push('/adviser/advisory')

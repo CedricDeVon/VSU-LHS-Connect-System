@@ -1,3 +1,59 @@
+<script setup lang='ts'>
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import { initialReport } from "~/data/initialReport";
+import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
+import { adviserReportStore } from "../../stores/adviserReport";
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+
+const adviserViewStore = useAdviserViewStore();
+await adviserViewStore.updateReports();
+
+const handleRowClick = (item: any) => {
+
+}
+
+const notifClick = () => {
+    adviserViewStore.reportsContainWidth = adviserViewStore.reportsContainWidth === '89%' ? '70%': '89%';
+    adviserViewStore.reportsTitleWidth = adviserViewStore.reportsTitleWidth === '87%' ? '68%': '87%';
+    adviserViewStore.reportsShowNotification = !adviserViewStore.reportsShowNotification;
+}
+
+const report = () => {
+    adviserViewStore.resetReports();
+    adviserViewStore.reportsShowCreateReport = true;
+}
+
+const editReport = (report: any) => {
+    adviserViewStore.reportsReportChosen = report;
+    adviserViewStore.resetReports();
+    if (report) {
+        adviserViewStore.reportsPeopleInvolved = report.peopleInvolved;
+        adviserViewStore.reportsWitness = report.witness;
+        adviserViewStore.reportsDateOfIncident = report.dateOfIncident;
+        adviserViewStore.reportsPlaceOfIncident = report.placeOfIncident;
+        adviserViewStore.reportsThingsInvolved = report.thingsInvolved;
+        adviserViewStore.reportsNarrativeReport = report.narrativeReport;
+    }
+    adviserViewStore.reportsShowCreateReport = true;
+}
+
+const viewDetails = (report: any) => {
+    adviserViewStore.reportsReportChosen = report;
+    adviserViewStore.reportsShowCreateReport = true;
+}
+
+const fetchReports = (id: any, ay: any) => {
+    adviserViewStore.reportsReports  = initialReport.filter((report)=> report.reportedBY === id && report.academicYear === ay);
+    console.log(adviserViewStore.reportsReports);
+}
+
+const creationClose = () => {
+    adviserViewStore.reportsShowCreateReport = false;
+    adviserViewStore.reportsReportChosen = {isDraft:true};
+}
+
+</script>
+
 <template>
     <div class="reports-page">
         <InitialReportModal
@@ -60,10 +116,10 @@
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    <tr class =" hover:bg-gray-200 text " v-for="report in reports" :key="report.reportIDRef"  >
-                                        <td class=" py-5 text-center align-middle ">{{ report.reportIDRef }}</td>
-                                        <td class=" py-5 text-center align-middle ">{{ `${report.peopleInvolved.join(', ')}` }}</td>
-                                        <td class=" py-5 text-center align-middle ">{{ report.dateOfIncident }}</td>
+                                    <tr class =" hover:bg-gray-200 text " v-for="report in reports" :key="report.id"  >
+                                        <td class=" py-5 text-center align-middle ">{{ report.id }}</td>
+                                        <td class=" py-5 text-center align-middle ">{{ report.data.peopleInvolved }}</td>
+                                        <td class=" py-5 text-center align-middle ">{{ report.data.dateOfIncident }}</td>
                                         <td class=" py-5 text-center align-middle ">
                                             <button v-if="report.isDraft"  @click="editReport(report)" 
                                                     class=" py-2 px-16 rounded-lg yellow-button text-white focus:outline-none"
@@ -90,102 +146,6 @@
     </div>
 </template>
 
-<script>
-    import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import { initialReport } from "~/data/initialReport";
-    import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
-    import { adviserReportStore } from "../../stores/adviserReport";
-   
-
-
-    export default {
-        name: "reports",
-        components: {AdviserHeader, InitialReportModal, },
-        props: {
-            AdviserID: {
-                type: String,
-                required: true,
-                default: "adviserid1" // this should be the adviserID of the logged in user
-            },
-            AcademicYear: {
-                type: String,
-                required: true,
-                default: "2024-2025" // this should be the current academic year
-            },
-
-        },
-        data() {
-            return {
-            reports: [],
-            reportChosen: {isDraft : true},
-            showCreateReport:false,
-            isDraft:true,
-            showNotification:false,
-            containWidth:'89%',
-            titleWidth:'87%',
-            selectedSort:'',
-            store: adviserReportStore()
-
-        };},
-
-        methods: {
-
-            handleRowClick(item) {
-  
-            },
-
-            notifClick(){
-                this.containWidth = this.containWidth === '89%' ? '70%': '89%';
-                this.titleWidth = this.titleWidth === '87%' ? '68%': '87%';
-                this.showNotification = !this.showNotification;
-            },
-
-            report(){
-                this.store.resetAllData();
-                this.showCreateReport =true;
-            },
-
-            editReport(rep){
-                this.reportChosen = rep;
-                this.store.resetAllData();
-                    if (rep) {
-                    this.store.peopleInvolved = rep.peopleInvolved;
-                    this.store.witness = rep.witness;
-                    this.store.dateOfIncident = rep.dateOfIncident;
-                    this.store.placeOfIncident = rep.placeOfIncident;
-                    this.store.thingsInvolved = rep.thingsInvolved;
-                    this.store.narrativeReport = rep.narrativeReport;
-                }
-                this.showCreateReport=true;
-            },
-            viewDetails(rep){
-                this.reportChosen = rep;
-                this.showCreateReport=true;
-            },
-
-            fetchReports(id, ay) {
-                this.reports  = initialReport.filter((rep)=> rep.reportedBY === id && rep.academicYear === ay);
-                console.log(this.reports);
-            },
-
-            creationClose(){
-                this.showCreateReport = false;
-                this.reportChosen = {isDraft:true};
-            },
-
-            /*handleRowClick(item) {
-            // Handle row click event
-            console.log('Row clicked:', item);
-            }*/
-
-        },
-
-        mounted() {
-            this.fetchReports(this.AdviserID, this.AcademicYear);
-        }
-        
-  };
-</script>
 <style scoped>
     .reports-page{
         background: #fffef1;
@@ -279,7 +239,92 @@
         font-weight: 500;
         color: #265630;
     }
-
-
-
 </style>
+
+
+//     export default {
+//         name: "reports",
+//         components: {AdviserHeader, InitialReportModal, },
+//         props: {
+//             AdviserID: {
+//                 type: String,
+//                 required: true,
+//                 default: "adviserid1" // this should be the adviserID of the logged in user
+//             },
+//             AcademicYear: {
+//                 type: String,
+//                 required: true,
+//                 default: "2024-2025" // this should be the current academic year
+//             },
+
+//         },
+//         data() {
+//             return {
+//             reports: [],
+//             reportChosen: {isDraft : true},
+//             showCreateReport:false,
+//             isDraft:true,
+//             showNotification:false,
+//             containWidth:'89%',
+//             titleWidth:'87%',
+//             selectedSort:'',
+//             store: adviserReportStore()
+
+//         };},
+
+//         methods: {
+
+//             handleRowClick(item) {
+  
+//             },
+
+//             notifClick(){
+//                 adviserViewStore.reportsContainWidth = adviserViewStore.reportsContainWidth === '89%' ? '70%': '89%';
+//                 adviserViewStore.reportsTitleWidth = adviserViewStore.reportsTitleWidth === '87%' ? '68%': '87%';
+//                 adviserViewStore.reportsShowNotification = !adviserViewStore.reportsShowNotification;
+//             },
+
+//             report(){
+// //                 adviserViewStore.reportsresetAllData();
+//                 adviserViewStore.reportsShowCreateReport =true;
+//             },
+
+//             editReport(report){
+//                 adviserViewStore.reportsReportChosen = report;
+// //                 adviserViewStore.reportsresetAllData();
+//                     if (report) {
+//                     adviserViewStore.reportsPeopleInvolved = report.peopleInvolved;
+//                     adviserViewStore.reportsWitness = report.witness;
+//                     adviserViewStore.reportsDateOfIncident = report.dateOfIncident;
+//                     adviserViewStore.reportsPlaceOfIncident = report.placeOfIncident;
+//                     adviserViewStore.reportsThingsInvolved = report.thingsInvolved;
+//                     adviserViewStore.reportsNarrativeReport = report.narrativeReport;
+//                 }
+//                 adviserViewStore.reportsShowCreateReport=true;
+//             },
+//             viewDetails(report){
+//                 adviserViewStore.reportsReportChosen = report;
+//                 adviserViewStore.reportsShowCreateReport=true;
+//             },
+
+//             fetchReports(id, ay) {
+//                 adviserViewStore.reportsReports  = initialReport.filter((report)=> report.reportedBY === id && report.academicYear === ay);
+//                 console.log(adviserViewStore.reportsReports);
+//             },
+
+//             creationClose(){
+//                 adviserViewStore.reportsShowCreateReport = false;
+//                 adviserViewStore.reportsReportChosen = {isDraft:true};
+//             },
+
+//             /*handleRowClick(item) {
+//             // Handle row click event
+//             console.log('Row clicked:', item);
+//             }*/
+
+//         },
+
+//         mounted() {
+//             adviserViewStore.fetchReports(adviserViewStore.reportsAdviserID, adviserViewStore.reportsAcademicYear);
+//         }
+//   };

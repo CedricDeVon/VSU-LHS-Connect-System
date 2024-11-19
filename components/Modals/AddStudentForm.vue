@@ -1,3 +1,119 @@
+<script >
+
+// import { emit } from 'process';
+// import ShortDatepicker from '../used-components/ShortDatepicker.vue';
+// import DatePickerInput from '../used-components/DatePickerInput.vue';
+import { ref, watch, defineEmits } from 'vue';
+import { studentAddedStore } from '~/stores/studentAdded';
+import UnEnrolledStudents from './UnEnrolledStudents.vue';
+import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
+
+  export default{
+      name: 'AddStudentForm',
+      components: { UnEnrolledStudents, StudentCSVUploadModal},
+      props: {
+        AdviserID: {
+          type: String,
+          required: true,
+        },
+      },
+
+      setup() {
+        const emit = defineEmits(['update:modelValue', 'close']);
+        const store = studentAddedStore();
+        const initPreparation = ref(true);
+        const showSingleNewStudentForm = ref(false);
+        const showSingleContStudentForm = ref(false);
+        const showBulkNewStudentForm = ref(false);
+        const showBulkContStudentForm = ref(false);
+        const selectedStudentType = ref('');
+        const hoveredStudentType = ref('');
+        const selectedAddingType = ref('');
+        const hoveredAddingType = ref('');
+
+        watch(() => store.birthDate, (newValue) => {
+          emit('update:modelValue', newValue);
+          console.log('Birthdate changed:', newValue);
+        });
+
+
+        const nextClick = () => {
+        if (selectedStudentType.value === '' ) {
+          alert('Please select a student type and adding type');
+          return;
+        } 
+        if (selectedAddingType.value === 'singleAdding' && selectedStudentType.value === 'newStudent') {
+          showSingleNewStudentForm.value = true;
+          initPreparation.value = false;
+          return;
+        }
+        if (selectedStudentType.value === 'continuingStudent') {
+          showSingleContStudentForm.value = true;
+          initPreparation.value = false;
+          return;
+        }
+        if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'newStudent') {
+          showBulkNewStudentForm.value = true;
+          initPreparation.value = false;
+          return;
+        }
+        // if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'continuingStudent') {
+        //   showBulkContStudentForm.value = true;
+        //   initPreparation.value = false;
+        // }
+        else {
+          alert('Please select a student adding type');
+      }
+    };
+
+    const handleBack = () => {
+      showSingleNewStudentForm.value = false;
+      showSingleContStudentForm.value = false;
+      showBulkNewStudentForm.value = false;
+      showBulkContStudentForm.value = false;
+      initPreparation.value = true;
+    };
+
+    const selectStudentType = (box) => {
+      selectedStudentType.value = box;
+    };
+
+    const hoverStudentType = (box) => {
+      hoveredStudentType.value = box;
+    };
+
+    const selectAddingType = (box) => {
+      selectedAddingType.value = box;
+    };
+
+    const hoverAddingType = (box) => {
+      hoveredAddingType.value = box;
+    };
+
+    return {
+     // date,
+      emit,
+      store,
+      initPreparation,
+      showSingleNewStudentForm,
+      showSingleContStudentForm,
+      showBulkNewStudentForm,
+      showBulkContStudentForm,
+      selectedStudentType,
+      hoveredStudentType,
+      selectedAddingType,
+      hoveredAddingType,
+      nextClick,
+      handleBack,
+      selectStudentType,
+      hoverStudentType,
+      selectAddingType,
+      hoverAddingType,
+    };
+  },
+};
+</script>
+
 <template>
     <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-70">
         <div class=" z-50 w-2/5 mt-14 h-fit" >
@@ -136,128 +252,6 @@
         </div>
     </div>
 </template>
-
-
-
-<script >
-
-// import { emit } from 'process';
-import ShortDatepicker from '../used-components/ShortDatepicker.vue';
-// import DatePickerInput from '../used-components/DatePickerInput.vue';
-import { ref, watch, defineEmits } from 'vue';
-import { studentAddedStore } from '~/stores/studentAdded';
-import UnEnrolledStudents from './UnEnrolledStudents.vue';
-import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
-  
-
-
-  export default{
-      name: 'AddStudentForm',
-      components: { ShortDatepicker, UnEnrolledStudents, StudentCSVUploadModal},
-      props: {
-        AdviserID: {
-          type: String,
-          required: true,
-        },
-      },
-
-      setup() {
-        const emit = defineEmits(['update:modelValue', 'close']);
-        const store = studentAddedStore();
-        const initPreparation = ref(true);
-        const showSingleNewStudentForm = ref(false);
-        const showSingleContStudentForm = ref(false);
-        const showBulkNewStudentForm = ref(false);
-        const showBulkContStudentForm = ref(false);
-        const selectedStudentType = ref('');
-        const hoveredStudentType = ref('');
-        const selectedAddingType = ref('');
-        const hoveredAddingType = ref('');
-
-        watch(() => store.birthDate, (newValue) => {
-          emit('update:modelValue', newValue);
-          console.log('Birthdate changed:', newValue);
-        });
-
-
-        const nextClick = () => {
-        if (selectedStudentType.value === '' ) {
-          alert('Please select a student type and adding type');
-          return;
-        } 
-        if (selectedAddingType.value === 'singleAdding' && selectedStudentType.value === 'newStudent') {
-          showSingleNewStudentForm.value = true;
-          initPreparation.value = false;
-          return;
-        }
-        if (selectedStudentType.value === 'continuingStudent') {
-          showSingleContStudentForm.value = true;
-          initPreparation.value = false;
-          return;
-        }
-        if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'newStudent') {
-          showBulkNewStudentForm.value = true;
-          initPreparation.value = false;
-          return;
-        }
-        // if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'continuingStudent') {
-        //   showBulkContStudentForm.value = true;
-        //   initPreparation.value = false;
-        // }
-        else {
-          alert('Please select a student adding type');
-      }
-    };
-
-    const handleBack = () => {
-      showSingleNewStudentForm.value = false;
-      showSingleContStudentForm.value = false;
-      showBulkNewStudentForm.value = false;
-      showBulkContStudentForm.value = false;
-      initPreparation.value = true;
-    };
-
-    const selectStudentType = (box) => {
-      selectedStudentType.value = box;
-    };
-
-    const hoverStudentType = (box) => {
-      hoveredStudentType.value = box;
-    };
-
-    const selectAddingType = (box) => {
-      selectedAddingType.value = box;
-    };
-
-    const hoverAddingType = (box) => {
-      hoveredAddingType.value = box;
-    };
-
-    return {
-     // date,
-      emit,
-      store,
-      initPreparation,
-      showSingleNewStudentForm,
-      showSingleContStudentForm,
-      showBulkNewStudentForm,
-      showBulkContStudentForm,
-      selectedStudentType,
-      hoveredStudentType,
-      selectedAddingType,
-      hoveredAddingType,
-      nextClick,
-      handleBack,
-      selectStudentType,
-      hoverStudentType,
-      selectAddingType,
-      hoverAddingType,
-    };
-  },
-};
-</script>
-
-
 
 <style scoped>
 

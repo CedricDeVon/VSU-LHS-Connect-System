@@ -1,23 +1,48 @@
+<script setup lang='ts'>
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import { student } from "~/data/student";
+import { section } from "~/data/section";
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+
+const adviserViewStore = useAdviserViewStore();
+await adviserViewStore.updateSettings();
+
+const handleRowClick = (item: any) => {
+
+}
+
+const notifyClick = () => {
+    adviserViewStore.settingsContainWidth = (adviserViewStore.settingsContainWidth === '89%') ? '70%': '89%';
+    adviserViewStore.settingsTitleWidth = (adviserViewStore.settingsTitleWidth === '87%') ? '68%': '87%';
+    adviserViewStore.settingsShowNotification = !adviserViewStore.settingsShowNotification;
+}
+
+const logoutClick = () => {
+    return navigateTo('/auth/login');
+}
+
+</script>
+
 <template>
     <div class="adviser-page">
-        <AdviserHeader @notif-click="notifClick"/>
+        <AdviserHeader @notif-click="notifyClick"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.settingsTimeline) }}</h1>
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
+            <div class="title flex justify-center items-center" :style="{width: adviserViewStore.settingsTitleWidth}">
                 <div><h1 class="text-white text-2xl font-bold">Account Settings</h1></div>
             </div>   
 
             <!--Content of the Page-->
-            <div class="contain " :style="{ width: containWidth}">
+            <div class="contain " :style="{ width: adviserViewStore.settingsContainWidth}">
                 <div class="grid grid-cols-10 h-full">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <div class="grid-cols-2 pb-5 ml-6 flex justify-center" >
-                            <img src="assets/icons/default-user.png"
-                         :alt="profilePic"
+                            <img :src="adviserViewStore.settingsUser.data.profilePicture"
+                         :alt="adviserViewStore.settingsUser.data.username"
                          class="w-auto h-80 rounded-full object-cover mb-4 "/>
                         </div>  
                         <div class="pb-5 ml-6 flex justify-center " >
@@ -37,7 +62,7 @@
                                 <div class="col-span-3 flex justify-start items-center ">
                                     <label class="m-0 text">Username:  </label>
                                 </div>
-                                <div class=" col-span-7 text2 flex items-center">{{ User.username }}</div>
+                                <div class=" col-span-7 text2 flex items-center">{{ adviserViewStore.settingsUser.data.username }}</div>
                                 <div class="col-span-2 flex justify-end py-2">
                                     <button class="gray-button text-white  py-2 px-4 rounded-md shadow-lg">
                                     Change 
@@ -47,9 +72,8 @@
 
                             <div class=" grid grid-cols-12 w-full h-fit border-b-2 border-lime-950 pt-5 ">
                                 <div class="col-span-3 flex justify-start items-center ">
-                                    <label class="text m-0">Password:  </label>
+                                    <label class="text m-0">Password  </label>
                                 </div>
-                                <div class=" col-span-7 text2 flex items-center">{{ User.password }}</div>
                                 <div class="col-span-2 flex justify-end py-2">
                                     <button class="gray-button text-white  py-2 px-4 rounded-md shadow-lg">
                                         Change 
@@ -76,65 +100,6 @@
     </div>
 </template>
 
-<script>
-    import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import { student } from "~/data/student";
-    import { section } from "~/data/section";
-
-    export default {
-        name: "Settings",
-        components: {AdviserHeader,},
-        props: {
-            AdviserID: {
-                type: String,
-                required: true,
-                default: "adviserid16" // this should be the adviserID of the logged in user
-            },
-            AcademicYear: {
-                type: String,
-                required: true,
-                default: "2024-2025" // this should be the current academic year
-            },
-            User: {
-                type: Object,
-                required: true,
-                default:   {
-                    userId: 'userid16',
-                    emailAdd: '22-1-01020@vsu.edu.ph',
-                    username: 'FirstName16',
-                    password: 'LastName16',
-                    canAccess: true,
-                },
-            }
-        },
-        data() {
-            return {
-            showNotification:false,
-            containWidth:'89%',
-            titleWidth:'87%'
-        };},
-
-        methods: {
-
-            handleRowClick(item) {
-
-            },
-
-            notifClick(){
-                this.containWidth = this.containWidth === '89%' ? '70%': '89%';
-                this.titleWidth = this.titleWidth === '87%' ? '68%': '87%';
-                this.showNotification = !this.showNotification;
-            },
-
-            logoutClick(){
-                this.$router.push('/auth/login');
-            },
-
-        },
-
-        
-  };
-</script>
 <style scoped>
     .adviser-page{
         background: #fffef1;

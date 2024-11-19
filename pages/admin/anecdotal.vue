@@ -1,92 +1,3 @@
-<template>
-    <div class="flex h-screen">
-        <AdminSidebar />
-        <div class="general flex-grow flex flex-col">
-            <AdminHeader />
-            <main class="flex-1 bg-[#FFFEF1]">
-                <!-- Search Section -->
-                <div class="p-8 pt-0 general min-h-screen flex flex-col w-full">
-                    <div class="rounded-lg p-6 mb-6">
-                        <h2 class="text-2xl font-bold text-[#265630] mb-4">Search Anecdotal Reports</h2>
-                        <div class="flex gap-4 mb-6">
-                            <input 
-                                type="text" 
-                                v-model="searchQuery"
-                                @input="handleSearch"
-                                placeholder="Search by Student Name, Purpose, or Date..."
-                                class="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
-                            />
-                            <!-- Sort Dropdown -->
-                            <select 
-                                v-model="selectedSort"
-                                class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
-                            >
-                                <option value="">Sort By</option>
-                                <option value="ascDate">Date (Ascending)</option>
-                                <option value="descDate">Date (Descending)</option>
-                                <option value="studentName">Student Name</option>
-                                <option value="purpose">Purpose</option>
-                            </select>
-                        </div>
-
-                        <!-- Results Section -->
-                        <div v-if="searchResults.length > 0" class="border rounded-lg" style="height: calc(100vh - 280px);">
-                            <div class="relative h-full">
-                                <!-- Fixed Header -->
-                                <table class="w-full">
-                                    <thead class="bg-[#728B78] text-white sticky top-0 z-10">
-                                        <tr>
-                                            <th class="p-3 text-left w-[20%]">Student Name</th>
-                                            <th class="p-3 text-left w-[20%]">Purpose</th>
-                                            <th class="p-3 text-left w-[15%]">Date</th>
-                                            <th class="p-3 text-left w-[25%]">Prepared By</th>
-                                            <th class="p-3 text-left w-[20%]">Action</th>
-                                        </tr>
-                                    </thead>
-                                </table>
-
-                                <!-- Scrollable Body -->
-                                <div class="overflow-y-auto h-full" style="max-height: calc(100vh - 330px);">
-                                    <table class="w-full">
-                                        <tbody>
-                                            <tr v-for="report in searchResults" 
-                                                :key="report.anecdotalDocID"
-                                                class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
-                                                <td class="p-4 w-[20%]">{{ report.peopleInvolved }}</td>
-                                                <td class="p-4 w-[20%]">{{ report.purpose }}</td>
-                                                <td class="p-4 w-[15%]">{{ report.dateOfIncident }}</td>
-                                                <td class="p-4 w-[25%]">{{ report.preparedBy }}</td>
-                                                <td class="p-4 w-[20%]">
-                                                    <button 
-                                                        @click="viewReport(report.anecdotalDocID)"
-                                                        class="bg-[#728B78] hover:bg-[#265630] text-white px-4 py-2 rounded-md transition-colors"
-                                                    >
-                                                        View Details
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- No Results Message -->
-                        <div v-else-if="searchQuery" class="text-gray-500 text-center text-xl font-regular">
-                            <p class="text-gray-500">No anecdotal reports found matching your search.</p>
-                        </div>
-
-                        <!-- Initial State Message -->
-                        <div v-else class="text-gray-500 text-center text-xl font-regular">
-                            <p class="text-gray-500">Enter search terms to find anecdotal reports.</p>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-</template>
-
 <script>
 import { defineComponent } from 'vue';
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
@@ -139,6 +50,7 @@ export default defineComponent({
         },
 
         viewReport(anecdotalDocID) {
+            console.log(anecdotalDocID)
             // Find the student with this anecdotal report
             const studentWithReport = student.find(s => s.anecdotalDocID === anecdotalDocID);
             if (studentWithReport) {
@@ -158,6 +70,95 @@ export default defineComponent({
     }
 });
 </script>
+
+<template>
+    <div class="flex h-screen">
+        <AdminSidebar />
+        <div class="general flex-grow flex flex-col">
+            <AdminHeader />
+            <main class="flex-1 bg-[#FFFEF1]">
+                <!-- Search Section -->
+                <div class="p-8 pt-0 general min-h-screen flex flex-col w-full">
+                    <div class="rounded-lg p-6 mb-6">
+                        <h2 class="text-2xl font-bold text-[#265630] mb-4">Search Anecdotal Reports</h2>
+                        <div class="flex gap-4 mb-6">
+                            <input 
+                                type="text" 
+                                v-model="searchQuery"
+                                @input="handleSearch"
+                                placeholder="Search by Student Name, Purpose, or Date..."
+                                class="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
+                            />
+                            <!-- Sort Dropdown -->
+                            <select 
+                                v-model="selectedSort"
+                                class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
+                            >
+                                <option value="">Sort By</option>
+                                <option value="ascDate">Date (Ascending)</option>
+                                <option value="descDate">Date (Descending)</option>
+                                <option value="studentName">Student Name</option>
+                                <option value="purpose">Purpose</option>
+                            </select>
+                        </div>
+
+                        <!-- Results Section -->
+                        <div v-if="searchResults.length > 0" class="border rounded-lg" style="height: calc(100vh - 280px);">
+                            <div class="relative h-full">
+                                <!-- Fixed Header -->
+                                <table class="w-full">
+                                    <thead class="bg-[#728B78] text-white sticky top-0 z-10">
+                                        <tr>
+                                            <th class="p-3 text-left w-[20%]">Student Name</th>
+                                            <th class="p-3 text-left w-[20%]">Purpose</th>
+                                            <th class="p-3 text-left w-[15%]">Date of Incident</th>
+                                            <th class="p-3 text-left w-[25%]">Prepared By</th>
+                                            <th class="p-3 text-left w-[20%]">Action</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+
+                                <!-- Scrollable Body -->
+                                <div class="overflow-y-auto h-full" style="max-height: calc(100vh - 330px);">
+                                    <table class="w-full">
+                                        <tbody>
+                                            <tr v-for="report in searchResults" 
+                                                :key="report.anecdotalDocID"
+                                                class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
+                                                <td class="p-4 w-[20%]">{{ report.peopleInvolved }}</td>
+                                                <td class="p-4 w-[20%]">{{ report.purpose }}</td>
+                                                <td class="p-4 w-[15%]">{{ report.dateOfIncident }}</td>
+                                                <td class="p-4 w-[25%]">{{ report.preparedBy }}</td>
+                                                <td class="p-4 w-[20%]">
+                                                    <button 
+                                                        @click="viewReport(report.anecdotalDocID)"
+                                                        class="bg-[#728B78] hover:bg-[#265630] text-white px-4 py-2 rounded-md transition-colors"
+                                                    >
+                                                        View Details
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- No Results Message -->
+                        <div v-else-if="searchQuery" class="text-gray-500 text-center text-xl font-regular">
+                            <p class="text-gray-500">No anecdotal reports found matching your search.</p>
+                        </div>
+
+                        <!-- Initial State Message -->
+                        <div v-else class="text-gray-500 text-center text-xl font-regular">
+                            <p class="text-gray-500">Enter search terms to find anecdotal reports.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</template>
 
 <style scoped>
 /* Scrollbar styles */

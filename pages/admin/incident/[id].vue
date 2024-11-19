@@ -1,18 +1,3 @@
-<template>
-  <div class="flex h-screen">
-    <AdminSidebar />
-    <div class="general flex-grow">
-      <AdminHeader />
-      <div class="p-8 pt-0 general min-h-screen max-h-screen flex flex-col w-full">
-        <div class="flex justify-center items-start w-full h-full pt-4">
-          <div id="incident-display-container" class="w-[90%]">
-            <!-- The iframe will be appended here -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <script>
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -244,6 +229,22 @@ export default {
   },
 };
 </script>
+
+<template>
+  <div class="flex h-screen">
+    <AdminSidebar />
+    <div class="general flex-grow">
+      <AdminHeader />
+      <div class="p-8 pt-0 general min-h-screen max-h-screen flex flex-col w-full">
+        <div class="flex justify-center items-start w-full h-full pt-4">
+          <div id="incident-display-container" class="w-[90%]">
+            <!-- The iframe will be appended here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 #incident-display-container {

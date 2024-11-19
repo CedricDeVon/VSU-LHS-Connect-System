@@ -1,10 +1,21 @@
+<script setup lang='ts'>
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
+import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+
+const adviserViewStore = useAdviserViewStore();
+await adviserViewStore.updateHomePage();
+
+</script>
+
 <template>
     <div class="adviser-page">
         <AdviserHeader/>
         <!-- Unsay Problem diri lodz? -->
         <div>
             <div>
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.homepageTimeline) }}</h1>
             </div>
 
                 <!--Title of the Content?-->
@@ -28,23 +39,6 @@
         </div>
     </div>
 </template>
-
-<script>
-    import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-    import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
-    export default {
-        name: "Advisory",
-        components: {AdviserHeader, StudentBasicInfo, AddStudentForm,},
-        props: {},
-        data() {return {
-            selectedSort: "",
-            items: [],
-            showStudentInfo: false,
-            showAddStudentForm: false,
-        };},
-    }
-</script>
 
 <style scoped>
     .adviser-page{

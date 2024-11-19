@@ -42,6 +42,77 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const studentAllSectionStudents = useState('studentAllSectionStudents');
   const studentShowIncidentModal = ref(false);
 
+  const incidentalIncidentalReports = useState('incidentalIncidentalalReports');
+  const incidentalStudentData = useState('incidentalStudentData');
+  const incidentalReportType = ref('INCIDENTAL REPORT');
+  const incidentalReceivedBy = ref('');
+  const incidentalReportedBy = ref('');
+
+  const incidentIncidentalReport = useState('incidentIncidentalalReport');
+  const incidentStudentData = useState('incidentStudentData');
+  
+  const anecdotalAnecdotalReports = useState('anecdotalAnecdotalReports');
+  const anecdotalStudentData = useState('anecdotalStudentData');
+
+  const anecdoteAnecdotalReport = useState('anecdoteAnecdotalReport');
+  const anecdoteStudentData = useState('anecdoteStudentData');
+
+  const settingsUserData = useState('settingsUserData');
+  const settingsAdminData = useState('settingsAdminData');
+
+  const updateSettings = async () => {
+    const currentUser = await getCurrentUser();
+    const result: any = await $fetch('/api/admin/view/settings', {
+      method: 'POST', body: {
+        userId: currentUser?.uid
+      }
+    });
+
+    settingsUserData.value = result.data.userData;
+    settingsAdminData.value = result.data.adminData;
+  }
+
+  const updateAnecdote = async (studentId: string) => {
+    const result: any = await $fetch('/api/admin/view/anecdote', {
+      method: 'POST', body: {
+        studentId
+      }
+    });
+
+    anecdoteAnecdotalReport.value = result.data.anecdotalReport;
+    anecdoteStudentData.value = result.data.studentData;
+  }
+  
+  const updateIncident = async (incidentId: string) => {
+    const result: any = await $fetch('/api/admin/view/incident', {
+      method: 'POST', body: {
+        incidentId
+      }
+    });
+
+    incidentIncidentalReport.value = result.data.incidentalReport;
+    incidentStudentData.value = result.data.studentData;
+  }
+  
+  const updateAnecdotal = async () => {
+    const result: any = await $fetch('/api/admin/view/anecdotal', {
+      method: 'POST', body: {}
+    });
+
+    anecdotalAnecdotalReports.value = result.data.anecdotalReports;
+    anecdotalStudentData.value = result.data.students;
+  }
+
+  const updateIncidental = async () => {
+    const result: any = await $fetch('/api/admin/view/incidental', {
+      method: 'POST', body: {}
+    });
+    
+    
+    incidentalIncidentalReports.value = result.data.incidentalReports;
+    incidentalStudentData.value = result.data.studentData;
+  }
+
   const updateSectionPageData = async (sectionId: string) => {
     const { data }: any = await $fetch('/api/admin/view/section', {
       method: 'POST', body: {
@@ -221,6 +292,21 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     updateStudentPageData,
     updateSectionPageData,
     getFullName,
-    getGradeAndSection
+    getGradeAndSection,
+    incidentalIncidentalReports,
+    incidentalReportType,
+    incidentalReceivedBy,
+    incidentalReportedBy,    
+    anecdotalAnecdotalReports,
+    anecdotalStudentData,
+    incidentIncidentalReport,
+    incidentStudentData,
+    anecdoteAnecdotalReport,
+    anecdoteStudentData,
+    updateSettings,
+    updateAnecdote,
+    updateIncident,
+    updateAnecdotal,
+    updateIncidental,
   };
 });

@@ -102,7 +102,7 @@
                 required: true,
                 default:   {
                     userId: 'userid16',
-                    emailAdd: '22-1-01020@vsu.edu.ph',
+                    emailAdd: 'sample22-1-01020@vsu.edu.ph',
                     username: 'FirstName16',
                     password: 'LastName16',
                     canAccess: true,

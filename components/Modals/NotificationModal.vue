@@ -14,11 +14,10 @@
             class="bg-white rounded-lg p-4 m-5  shadow-2xl "
             :class="{' new-announcement ': notification.isNew }"
             >
-            <p class="flex justify-self-end" ><img src="" alt=""></p>
             <h1 class="subHeader">{{ notification.announcementTitle }}</h1>
-            <p class="p-2">{{ notification.announcementContent }}</p>
-            <p class="text-xs font-bold pt-2">{{ notification.announcementDate }}</p>
-            <p class="text-xs">{{ notification.announcementBy }}</p>
+            <p class="text-xs font-bold ">{{ notification.announcementDate }}<span class="text-xs">  : {{ notification.announcementBy }}</span></p> 
+            <p class="p-2 px-0">{{ notification.announcementContent }}</p>
+            <p class="text-xs"></p>
             </div> 
           </div>
         </div>

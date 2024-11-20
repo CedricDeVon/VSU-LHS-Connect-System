@@ -1,16 +1,113 @@
 <template>
-  <div class="flex h-screen">
+  <div class="flex h-screen bg-gray-100">
     <AdminSidebar />
-    <div class="general flex-grow">
+    <div class="flex-1 overflow-hidden">
       <AdminHeader />
-      <div class="p-8 pt-0 general min-h-screen max-h-screen flex flex-col w-full">
-        <div class="flex justify-center items-start w-full h-full pt-4">
-          <div id="incident-display-container" class="w-[90%]">
-            <!-- The iframe will be appended here -->
+      <div class="p-8 pt-0 overflow-y-auto h-[calc(100vh-64px)]">
+        <!-- Page Title -->
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-gray-900">Incident Report Details</h1>
+          <p class="text-sm text-gray-600">Managing incident report and related actions</p>
+        </div>
+
+        <div class="flex gap-6">
+          <!-- Left side: PDF Viewer -->
+          <div class="flex-1 bg-white rounded-lg shadow-md min-h-[80vh] overflow-hidden">
+            <!-- PDF Viewer Header -->
+            <div class="bg-gray-50 px-6 py-3 border-b border-gray-200 flex items-center justify-between">
+              <h2 class="text-lg font-semibold text-gray-800">Document Preview</h2>
+              <div class="flex items-center space-x-2">
+                <span class="text-sm text-gray-600">Status:</span>
+                <span :class="{
+                  'px-2 py-1 text-xs font-medium rounded-full': true,
+                  'bg-green-100 text-green-800': incidentData?.status === 'Resolved',
+                  'bg-yellow-100 text-yellow-800': incidentData?.status === 'NotResolved'
+                }">
+                  {{ incidentData?.status === 'NotResolved' ? 'Unresolved' : 'Resolved' }}
+                </span>
+              </div>
+            </div>
+            <!-- PDF Viewer Content -->
+            <iframe id="pdf-viewer" class="w-full h-[calc(100%-48px)] border-none"></iframe>
+          </div>
+
+          <!-- Right side: Actions Panel -->
+          <div class="w-96 space-y-6">
+            <!-- Main Actions -->
+            <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
+              <h2 class="text-xl font-bold text-gray-800 pb-4 border-b border-gray-200">Actions</h2>
+
+              <!-- Update Report Section -->
+              <div v-if="incidentData?.status === 'NotResolved'" class="space-y-3">
+                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Update Report</h3>
+                <button @click="openUpdateForm"
+                  class="w-full bg-blue-500 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <span>Edit Report Details</span>
+                </button>
+              </div>
+
+              <!-- Case Conference Section -->
+              <div class="space-y-3">
+                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Schedule Conference</h3>
+                <button @click="openScheduleDialog"
+                  class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span>Schedule Case Conference</span>
+                </button>
+              </div>
+
+              <!-- Status Management -->
+              <div v-if="incidentData?.status === 'NotResolved'" class="space-y-3">
+                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Case Management</h3>
+                <button @click="confirmResolve"
+                  class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Mark as Resolved</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Document Actions -->
+            <div class="bg-white rounded-lg shadow-md p-6 space-y-4">
+              <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Document Actions</h3>
+              <div class="space-y-3">
+                <button @click="printDocument"
+                  class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 border border-gray-300">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                  </svg>
+                  <span>Print Document</span>
+                </button>
+                <button @click="downloadPDF"
+                  class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span>Download PDF</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Modals -->
+    <UpdateIncidentReportModal v-if="showUpdateModal" :incident="incdReport" @close="showUpdateModal = false"
+      @update="handleUpdate" />
+
+    <ScheduleConferenceModal v-if="showScheduleModal" @close="showScheduleModal = false" @schedule="handleSchedule" />
   </div>
 </template>
 
@@ -20,29 +117,38 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
-import { incidentReport } from '~/data/incident';
+import { incidentReport, updateIncidentReport, initializeIncidentReports } from '~/data/incident';
 import { Admin } from '~/data/admin';
 import { initialReport } from '~/data/initialReport';
 import { adviser } from '~/data/adviser';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import UpdateIncidentReportModal from '~/components/Modals/UpdateIncidentReportModal.vue';
+import ScheduleConferenceModal from '~/components/Modals/ScheduleConferenceModal.vue';
 
 export default {
   components: {
     AdminSidebar,
-    AdminHeader
+    AdminHeader,
+    UpdateIncidentReportModal,
+    ScheduleConferenceModal,
+
   },
 
   data() {
     return {
       incdReport: {},
       reportType: 'INCIDENT REPORT',
-      receivedBy: `${(Admin.firstName).toUpperCase()} ${(Admin.middleName).charAt(0).toUpperCase()+'.'} ${(Admin.lastName).toUpperCase()}`,
+      receivedBy: `${(Admin.firstName).toUpperCase()} ${(Admin.middleName).charAt(0).toUpperCase() + '.'} ${(Admin.lastName).toUpperCase()}`,
       reportedBy: '',
+      incidentData: null,
+      showUpdateModal: false,
+      showScheduleModal: false,
     };
   },
 
   async created() {
+    initializeIncidentReports(); // Initialize from localStorage
     const incidentId = this.$route.params.id;
     await this.initIncidentByID(incidentId);
     await this.getReporter(this.incdReport.reportID);
@@ -50,6 +156,13 @@ export default {
   },
 
   computed: {
+    processedIncidentData() {
+      if (!this.incidentData) return {};
+      return {
+        ...this.incidentData,
+        status: this.incidentData.status === 'Resolved' ? 'NotResolved' : this.incidentData.status
+      }
+    },
     defineIncidentDoc() {
       return {
         pageMargins: [72, 120, 72, 90],
@@ -92,13 +205,13 @@ export default {
               ]
             },
             layout: {
-              hLineWidth: function(i, node) {
+              hLineWidth: function (i, node) {
                 return 0.5;
               },
-              vLineWidth: function(i, node) {
+              vLineWidth: function (i, node) {
                 return 0;
               },
-              hLineColor: function(i, node) {
+              hLineColor: function (i, node) {
                 return '#cccccc';
               },
             }
@@ -155,13 +268,13 @@ export default {
               ]
             },
             layout: {
-              hLineWidth: function(i, node) {
+              hLineWidth: function (i, node) {
                 return 0.5;
               },
-              vLineWidth: function(i, node) {
+              vLineWidth: function (i, node) {
                 return 0;
               },
-              hLineColor: function(i, node) {
+              hLineColor: function (i, node) {
                 return '#cccccc';
               },
             }
@@ -208,13 +321,14 @@ export default {
       const fetchedObject = incidentReport.find(item => item.incidentDocID === id);
       if (fetchedObject) {
         this.incdReport = { ...fetchedObject };
+        this.incidentData = { ...fetchedObject };
       }
     },
 
     async getReporter(incidentReportID) {
       let index = initialReport.findIndex((incd) => incd.reportIDRef === incidentReportID);
       if (index === -1) return false;
-      
+
       const id = initialReport[index].reportedBY;
       if (id) {
         index = adviser.findIndex((adv) => adv.id === id);
@@ -227,34 +341,49 @@ export default {
     displayPDF() {
       pdfMake.createPdf(this.defineIncidentDoc).getBlob((blob) => {
         const url = URL.createObjectURL(blob);
-        
-        // Display in an iframe
-        const iframe = document.createElement('iframe');
-        iframe.style.width = '100%';
-        iframe.style.height = '80vh';
-        iframe.style.border = 'none';
-        iframe.src = url;
-        
-        // Clear previous content and append new iframe
-        const container = document.getElementById('incident-display-container');
-        container.innerHTML = '';
-        container.appendChild(iframe);
+        const viewer = document.getElementById('pdf-viewer');
+        if (viewer) {
+          viewer.src = url;
+        }
       });
+    },
+
+    openUpdateForm() {
+      this.showUpdateModal = true;
+    },
+
+    openScheduleDialog() {
+      this.showScheduleModal = true;
+    },
+    handleUpdate(updatedData) {
+      try {
+        // Update in data store and localStorage
+        if (updateIncidentReport(this.incdReport.incidentDocID, updatedData)) {
+          // Update local state
+          this.incdReport = {
+            ...this.incdReport,
+            ...updatedData
+          };
+          this.incidentData = {
+            ...this.incidentData,
+            ...updatedData
+          };
+
+          // Refresh PDF
+          this.displayPDF();
+          
+          // Close modal
+          this.showUpdateModal = false;
+          
+          alert('Incident report updated successfully');
+        } else {
+          throw new Error('Failed to update incident report');
+        }
+      } catch (error) {
+        console.error('Error updating incident:', error);
+        alert('Failed to update incident report');
+      }
     },
   },
 };
 </script>
-
-<style scoped>
-#incident-display-container {
-  min-height: 80vh;
-  background: white;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-iframe {
-  border-radius: 0.5rem;
-}
-</style>

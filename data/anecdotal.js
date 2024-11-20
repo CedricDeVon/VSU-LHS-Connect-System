@@ -156,13 +156,6 @@ export const anecdotalReport = [
         AY: '2024-2025'
     },
     {
-        anecdotalDocID: 'ANEC-2024-10113',
-        studentId: 'sample22-1-10113',
-        reportIDs: ['REP-20240430-056', 'REP-20240515-057'],
-        preparedBy: 'Mr. Thompson',
-        AY: '2024-2025'
-    },
-    {
         anecdotalDocID: 'ANEC-2024-10101',
         studentId: 'sample22-1-10101',
         reportIDs: ['REP-20240502-058', 'REP-20240518-059'],
@@ -226,6 +219,13 @@ export const anecdotalReport = [
         AY: '2024-2025'
     },
     {
+        anecdotalDocID: 'ANEC-2024-10110',
+        studentId: '22-1-10110',
+        reportIDs: ['REP-20240525-080', 'REP-20240610-081'],
+        preparedBy: 'Mr. Martinez',
+        AY: '2024-2025'
+    },
+    {
         anecdotalDocID: 'ANEC-2024-10111',
         studentId: 'sample22-1-10111',
         reportIDs: ['REP-20240525-083', 'REP-20240610-084'],
@@ -244,97 +244,6 @@ export const anecdotalReport = [
         studentId: 'sample22-1-10113',
         reportIDs: ['REP-20240602-088', 'REP-20240618-089'],
         preparedBy: 'Mrs. White',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10110',
-        studentId: 'sample22-1-10110',
-        reportIDs: ['REP-20240525-080', 'REP-20240610-081'],
-        preparedBy: 'Mr. Martinez',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10083',
-        studentId: 'sample22-1-10083',
-        reportIDs: ['REP-20240325-013', 'REP-20240410-014'],
-        preparedBy: 'Ms. Anderson',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10084',
-        studentId: 'sample22-1-10084',
-        reportIDs: ['REP-20240328-015', 'REP-20240412-016'],
-        preparedBy: 'Dr. Wilson',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10086',
-        studentId: 'sample22-1-10086',
-        reportIDs: ['REP-20240408-018', 'REP-20240422-019'],
-        preparedBy: 'Ms. Johnson',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10087',
-        studentId: 'sample22-1-10087',
-        reportIDs: ['REP-20240410-020', 'REP-20240425-021', 'REP-20240505-022'],
-        preparedBy: 'Mr. Smith',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10088',
-        studentId: 'sample22-1-10088',
-        reportIDs: ['REP-20240412-023', 'REP-20240428-024'],
-        preparedBy: 'Dr. Wilson',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10089',
-        studentId: 'sample22-1-10089',
-        reportIDs: ['REP-20240415-025', 'REP-20240430-026'],
-        preparedBy: 'Mrs. Davis',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10090',
-        studentId: 'sample22-1-10090',
-        reportIDs: ['REP-20240418-027', 'REP-20240502-028', 'REP-20240508-029'],
-        preparedBy: 'Mr. Thompson',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10091',
-        studentId: 'sample22-1-10091',
-        reportIDs: ['REP-20240420-030', 'REP-20240505-031'],
-        preparedBy: 'Ms. Anderson',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10092',
-        studentId: 'sample22-1-10092',
-        reportIDs: ['REP-20240422-032', 'REP-20240508-033', 'REP-20240512-034'],
-        preparedBy: 'Mr. Martinez',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10093',
-        studentId: 'sample22-1-10093',
-        reportIDs: ['REP-20240425-035', 'REP-20240510-036'],
-        preparedBy: 'Dr. Garcia',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10094',
-        studentId: 'sample22-1-10094',
-        reportIDs: ['REP-20240428-037', 'REP-20240512-038'],
-        preparedBy: 'Mrs. White',
-        AY: '2024-2025'
-    },
-    {
-        anecdotalDocID: 'ANEC-2024-10095',
-        studentId: 'sample22-1-10095',
-        reportIDs: ['REP-20240430-039', 'REP-20240515-040', 'REP-20240520-041'],
-        preparedBy: 'Ms. Johnson',
         AY: '2024-2025'
     }
 ];

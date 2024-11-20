@@ -200,13 +200,13 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
                       <label>Birtdate: </label>
                       <UiVeeDatepicker placeholder="MM/DD/YYYY"/>     
 
-                      <label class="mx-5">Sex at Birth:
+                      <label class="mx-5">Sex Assigned at Birth:
                       <select
                                class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-green-400"
                                v-model="selectedGender">
                                <option value="" disabled selected hidden>Gender</option>
-                               <option value="male">Male</option>
-                               <option value="female">Female</option>
+                               <option value="Male">Male</option>
+                               <option value="Female">Female</option>
                       </select>
                     </label> 
                     

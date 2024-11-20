@@ -22,8 +22,6 @@
                                 class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
                             >
                                 <option value="">Sort By</option>
-                                <option value="ascDate">Date (Ascending)</option>
-                                <option value="descDate">Date (Descending)</option>
                                 <option value="studentName">Student Name</option>
                                 <option value="purpose">Purpose</option>
                             </select>
@@ -36,10 +34,10 @@
                                 <table class="w-full">
                                     <thead class="bg-[#728B78] text-white sticky top-0 z-10">
                                         <tr>
+                                            <th class="p-3 text-left w-[20%]">Document ID</th>
                                             <th class="p-3 text-left w-[20%]">Student Name</th>
-                                            <th class="p-3 text-left w-[20%]">Purpose</th>
-                                            <th class="p-3 text-left w-[15%]">Date</th>
-                                            <th class="p-3 text-left w-[25%]">Prepared By</th>
+                                            <th class="p-3 text-left w-[20%]">Adviser</th>
+                                            <th class="p-3 text-left w-[20%]">Academic Year</th>
                                             <th class="p-3 text-left w-[20%]">Action</th>
                                         </tr>
                                     </thead>
@@ -52,10 +50,10 @@
                                             <tr v-for="report in searchResults" 
                                                 :key="report.anecdotalDocID"
                                                 class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
-                                                <td class="p-4 w-[20%]">{{ report.peopleInvolved }}</td>
-                                                <td class="p-4 w-[20%]">{{ report.purpose }}</td>
-                                                <td class="p-4 w-[15%]">{{ report.dateOfIncident }}</td>
-                                                <td class="p-4 w-[25%]">{{ report.preparedBy }}</td>
+                                                <td class="p-4 w-[20%]">{{ report.anecdotalDocID }}</td>
+                                                <td class="p-4 w-[20%]">{{ getStudentName(report.studentId) }}</td>
+                                                <td class="p-4 w-[20%]">{{ getAdviserName(report.studentId) }}</td>
+                                                <td class="p-4 w-[20%]">{{ report.AY }}</td>
                                                 <td class="p-4 w-[20%]">
                                                     <button 
                                                         @click="viewReport(report.anecdotalDocID)"
@@ -92,7 +90,9 @@ import { defineComponent } from 'vue';
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import { anecdotalReport } from '~/data/anecdotal';
-import {student} from '~/data/student';
+import { student } from '~/data/student';
+import { section } from '~/data/section';
+import { adviser } from '~/data/adviser';
 
 export default defineComponent({
     name: 'admin-anecdotal',
@@ -107,15 +107,18 @@ export default defineComponent({
     },
     methods: {
         handleSearch() {
-            let results = [...this.anecdotalReports];
+            let results = anecdotalReport;
 
             // Apply search filter
             if (this.searchQuery) {
                 const query = this.searchQuery.toLowerCase();
                 results = results.filter(report => {
-                    return report.peopleInvolved.toLowerCase().includes(query) ||
-                           report.purpose.toLowerCase().includes(query) ||
-                           report.dateOfIncident.toLowerCase().includes(query);
+                    const studentName = this.getStudentName(report.studentId).toLowerCase();
+                    const adviserName = this.getAdviserName(report.studentId).toLowerCase();
+                    return report.anecdotalDocID.toLowerCase().includes(query) ||
+                           studentName.includes(query) ||
+                           adviserName.includes(query) ||
+                           report.AY.toLowerCase().includes(query);
                 });
             }
 
@@ -128,7 +131,7 @@ export default defineComponent({
                     results.sort((a, b) => new Date(b.dateOfIncident) - new Date(a.dateOfIncident));
                     break;
                 case 'studentName':
-                    results.sort((a, b) => a.peopleInvolved.localeCompare(b.peopleInvolved));
+                    results.sort((a, b) => this.getStudentName(a.studentId).localeCompare(this.getStudentName(b.studentId)));
                     break;
                 case 'purpose':
                     results.sort((a, b) => a.purpose.localeCompare(b.purpose));
@@ -146,9 +149,27 @@ export default defineComponent({
             } else {
                 console.warn('No student found with this anecdotal report');
             }
+        },
+        getStudentName(studentId) {
+            const studentWithReport = student.find(s => s.studentId === studentId);
+            return studentWithReport ? `${studentWithReport.lastName}, ${studentWithReport.firstName}` : 'Unknown';
+        },
+        getAdviserName(studentId) {
+            const studentWithReport = student.find(s => s.studentId === studentId);
+            if (studentWithReport) {
+                const studentSection = section.find(sec => sec.id === studentWithReport.sectionID);
+                if (studentSection) {
+                    const adviserInfo = adviser.find(a => a.id === studentSection.adviserId);
+                    return adviserInfo ? `${adviserInfo.lastName}, ${adviserInfo.firstName}` : 'Unknown';
+                }
+            }
+            return 'Unknown';
         }
     },
     watch: {
+        searchQuery() {
+            this.handleSearch();
+        },
         selectedSort() {
             this.handleSearch();
         }

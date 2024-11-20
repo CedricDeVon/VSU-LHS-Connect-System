@@ -33,41 +33,65 @@
 
           <!-- Right side: Actions Panel -->
           <div class="w-96 space-y-6">
-            <!-- Main Actions -->
-            <div class="bg-white rounded-lg shadow-md p-6 space-y-6">
-              <h2 class="text-xl font-bold text-gray-800 pb-4 border-b border-gray-200">Actions</h2>
+            <!-- Status Card -->
+            <div class="bg-white rounded-lg shadow-md p-4">
+              <div class="flex items-center justify-between">
+                <span class="text-sm font-medium text-gray-500">Current Status</span>
+                <span :class="{
+                  'px-3 py-1 text-sm font-medium rounded-full': true,
+                  'bg-green-100 text-green-800': incidentData?.status === 'Resolved',
+                  'bg-yellow-100 text-yellow-800': incidentData?.status === 'NotResolved'
+                }">
+                  {{ incidentData?.status === 'NotResolved' ? 'Under Investigation' : 'Case Resolved' }}
+                </span>
+              </div>
+              <div class="mt-3 text-xs text-gray-500">
+                Last updated: {{ incidentData?.lastModified || 'Not modified' }}
+              </div>
+            </div>
 
-              <!-- Update Report Section -->
-              <div v-if="incidentData?.status === 'NotResolved'" class="space-y-3">
-                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Update Report</h3>
-                <button @click="openUpdateForm"
-                  class="w-full bg-blue-500 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
+            <!-- Primary Actions -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <h2 class="text-sm font-semibold text-gray-900">Case Actions</h2>
+              </div>
+              
+              <div class="p-4 space-y-3">
+                <!-- Case Conference Button - Primary Action -->
+                <button @click="openScheduleDialog"
+                  :class="{
+                    'w-full px-4 py-3 rounded-lg transition-colors duration-200 flex items-center': true,
+                    'bg-indigo-600 hover:bg-indigo-700 text-white': !isResolved || !hasCaseConference,
+                    'bg-emerald-600 hover:bg-emerald-700 text-white': isResolved && hasCaseConference
+                  }">
+                  <div class="flex items-center justify-center w-full space-x-3">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span>{{ isResolved && hasCaseConference ? 'View Case Conference' : 'Schedule Case Conference' }}</span>
+                    <span v-if="hasCaseConference" 
+                      class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full ml-2">
+                      {{ Array.isArray(incidentData?.hasCaseConference) ? incidentData.hasCaseConference.length : '1' }}
+                    </span>
+                  </div>
+                </button>
+
+                <!-- Update Report - Only for Unresolved -->
+                <button v-if="!isResolved"
+                  @click="openUpdateForm"
+                  class="w-full px-4 py-3 rounded-lg bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 transition-colors duration-200 flex items-center justify-center space-x-2">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  <span>Edit Report Details</span>
+                  <span>Update Case Details</span>
                 </button>
-              </div>
 
-              <!-- Case Conference Section -->
-              <div class="space-y-3">
-                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Schedule Conference</h3>
-                <button @click="openScheduleDialog"
-                  class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <span>Schedule Case Conference</span>
-                </button>
-              </div>
-
-              <!-- Status Management -->
-              <div v-if="incidentData?.status === 'NotResolved'" class="space-y-3">
-                <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Case Management</h3>
-                <button @click="confirmResolve"
-                  class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
+                <!-- Resolution Button - Only for Unresolved -->
+                <button v-if="!isResolved"
+                  @click="confirmResolve"
+                  class="w-full px-4 py-3 rounded-lg bg-white border-2 border-green-600 text-green-600 hover:bg-green-50 transition-colors duration-200 flex items-center justify-center space-x-2">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
@@ -77,24 +101,28 @@
             </div>
 
             <!-- Document Actions -->
-            <div class="bg-white rounded-lg shadow-md p-6 space-y-4">
-              <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Document Actions</h3>
-              <div class="space-y-3">
-                <button @click="printDocument"
-                  class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 border border-gray-300">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                  </svg>
-                  <span>Print Document</span>
-                </button>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <h2 class="text-sm font-semibold text-gray-900">Document Actions</h2>
+              </div>
+              
+              <div class="grid grid-cols-2 gap-3 p-4">
                 <button @click="downloadPDF"
-                  class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  class="flex flex-col items-center justify-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+                  <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
-                  <span>Download PDF</span>
+                  <span class="mt-2 text-sm font-medium text-gray-600">Download</span>
+                </button>
+
+                <button @click="printDocument"
+                  class="flex flex-col items-center justify-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+                  <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                  </svg>
+                  <span class="mt-2 text-sm font-medium text-gray-600">Print</span>
                 </button>
               </div>
             </div>
@@ -314,6 +342,15 @@ export default {
         },
       };
     },
+    isResolved() {
+      return this.incidentData?.status === 'Resolved';
+    },
+    
+    hasCaseConference() {
+      return Array.isArray(this.incidentData?.hasCaseConference) 
+        ? this.incidentData.hasCaseConference.length > 0 
+        : this.incidentData?.hasCaseConference;
+    }
   },
 
   methods: {

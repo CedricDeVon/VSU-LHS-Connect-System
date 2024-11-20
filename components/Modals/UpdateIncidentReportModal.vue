@@ -25,16 +25,109 @@
               <input type="text" :value="incident.reportID" disabled
                 class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm text-gray-600">
             </div>
-
-            <div class="form-group">
-              <label class="block text-sm font-medium text-gray-700">Date of Incident</label>
-              <input type="text" :value="incident.dateOfIncident" disabled
-                class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm text-gray-600">
-            </div>
           </div>
 
           <!-- Editable Fields -->
           <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700">People Involved</label>
+                <div class="relative">
+                  <input 
+                    type="text"
+                    v-model="peopleInput"
+                    @keydown.enter.prevent="addPerson"
+                    @keydown.tab.prevent="addPerson"
+                    @keydown.comma.prevent="addPerson"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    :class="{ 'border-red-500': errors.peopleInvolved }"
+                    placeholder="Type and press Enter to add">
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    <span 
+                      v-for="(person, index) in formData.peopleInvolved" 
+                      :key="index"
+                      class="inline-flex items-center px-2 py-1 rounded-full text-sm bg-blue-100 text-blue-700">
+                      {{ person }}
+                      <button 
+                        type="button"
+                        @click="removePerson(index)"
+                        class="ml-1 text-blue-600 hover:text-blue-800">
+                        ×
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <p v-if="errors.peopleInvolved" class="mt-1 text-sm text-red-600">{{ errors.peopleInvolved }}</p>
+              </div>
+
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700">Witness</label>
+                <div class="relative">
+                  <input 
+                    type="text"
+                    v-model="witnessInput"
+                    @keydown.enter.prevent="addWitness"
+                    @keydown.tab.prevent="addWitness"
+                    @keydown.comma.prevent="addWitness"
+                    class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    :class="{ 'border-red-500': errors.witness }"
+                    placeholder="Type and press Enter to add">
+                  <div class="mt-2 flex flex-wrap gap-2">
+                    <span 
+                      v-for="(w, index) in formData.witness" 
+                      :key="index"
+                      class="inline-flex items-center px-2 py-1 rounded-full text-sm bg-green-100 text-green-700">
+                      {{ w }}
+                      <button 
+                        type="button"
+                        @click="removeWitness(index)"
+                        class="ml-1 text-green-600 hover:text-green-800">
+                        ×
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <p v-if="errors.witness" class="mt-1 text-sm text-red-600">{{ errors.witness }}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700">Date of Incident</label>
+                <input v-model="formData.dateOfIncident" type="date"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                  :class="{ 'border-red-500': errors.dateOfIncident }">
+                <p v-if="errors.dateOfIncident" class="mt-1 text-sm text-red-600">{{ errors.dateOfIncident }}</p>
+              </div>
+
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700">Place of Incident</label>
+                <input v-model="formData.placeOfIncident" type="text"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                  :class="{ 'border-red-500': errors.placeOfIncident }"
+                  placeholder="Enter incident location">
+                <p v-if="errors.placeOfIncident" class="mt-1 text-sm text-red-600">{{ errors.placeOfIncident }}</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700">Things Involved</label>
+              <input v-model="formData.thingsInvolved" type="text"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                :class="{ 'border-red-500': errors.thingsInvolved }"
+                placeholder="Enter items involved">
+              <p v-if="errors.thingsInvolved" class="mt-1 text-sm text-red-600">{{ errors.thingsInvolved }}</p>
+            </div>
+
+            <div class="form-group">
+              <label class="block text-sm font-medium text-gray-700">Narrative Report</label>
+              <textarea v-model="formData.narrativeReport" rows="4"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                :class="{ 'border-red-500': errors.narrativeReport }"
+                placeholder="Describe what happened..."></textarea>
+              <p v-if="errors.narrativeReport" class="mt-1 text-sm text-red-600">{{ errors.narrativeReport }}</p>
+            </div>
+
             <div class="form-group">
               <label class="block text-sm font-medium text-gray-700">Action Taken</label>
               <textarea v-model="formData.actionTaken" rows="3"
@@ -90,7 +183,19 @@ export default {
 
   data() {
     return {
+      peopleInput: '',
+      witnessInput: '',
       formData: {
+        peopleInvolved: Array.isArray(this.incident.peopleInvolved) 
+          ? [...this.incident.peopleInvolved] 
+          : [this.incident.peopleInvolved].filter(Boolean),
+        witness: Array.isArray(this.incident.witness)
+          ? [...this.incident.witness]
+          : [this.incident.witness].filter(Boolean),
+        dateOfIncident: this.incident.dateOfIncident || '',
+        placeOfIncident: this.incident.placeOfIncident || '',
+        thingsInvolved: this.incident.thingsInvolved || '',
+        narrativeReport: this.incident.narrativeReport || '',
         actionTaken: this.incident.actionTaken || '',
         reasonOfAction: this.incident.reasonOfAction || '',
         others: this.incident.others || ''
@@ -100,8 +205,56 @@ export default {
   },
 
   methods: {
+    addPerson() {
+      const value = this.peopleInput.trim();
+      if (value && !this.formData.peopleInvolved.includes(value)) {
+        this.formData.peopleInvolved.push(value);
+        this.peopleInput = '';
+      }
+    },
+
+    removePerson(index) {
+      this.formData.peopleInvolved.splice(index, 1);
+    },
+
+    addWitness() {
+      const value = this.witnessInput.trim();
+      if (value && !this.formData.witness.includes(value)) {
+        this.formData.witness.push(value);
+        this.witnessInput = '';
+      }
+    },
+
+    removeWitness(index) {
+      this.formData.witness.splice(index, 1);
+    },
+
     validate() {
       this.errors = {}
+      
+      if (!this.formData.peopleInvolved?.length) {
+        this.errors.peopleInvolved = 'At least one person must be involved'
+      }
+      
+      if (!this.formData.witness?.length) {
+        this.errors.witness = 'At least one witness is required'
+      }
+      
+      if (!this.formData.dateOfIncident) {
+        this.errors.dateOfIncident = 'Date is required'
+      }
+      
+      if (!this.formData.placeOfIncident?.trim()) {
+        this.errors.placeOfIncident = 'Place of incident is required'
+      }
+      
+      if (!this.formData.thingsInvolved?.trim()) {
+        this.errors.thingsInvolved = 'Things involved is required'
+      }
+      
+      if (!this.formData.narrativeReport?.trim()) {
+        this.errors.narrativeReport = 'Narrative report is required'
+      }
       
       if (!this.formData.actionTaken?.trim()) {
         this.errors.actionTaken = 'Action taken is required'

@@ -15,7 +15,7 @@ export function calculateAge(birthDate) {
 
 export const student = [
     {
-        studentId: '22-1-10110',
+        studentId: 'sample22-1-10110',
         firstName: 'Try unenrolled',
         lastName: 'Gomex',
         middleName: 'Perex',
@@ -32,7 +32,7 @@ export const student = [
         anecdotalDocID: null
     },
     {
-        studentId: '22-1-10075',
+        studentId: 'sample22-1-10075',
         firstName: 'Jade',
         lastName: 'Lopez',
         middleName: 'Santos',
@@ -49,7 +49,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10075'
     },
     {
-        studentId: '22-1-10076',
+        studentId: 'sample22-1-10076',
         firstName: 'Jedo',
         lastName: 'Reyes',
         middleName: 'Marcos',
@@ -66,7 +66,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10076'
     },
     {
-        studentId: '22-1-10077',
+        studentId: 'sample22-1-10077',
         firstName: 'Pawix',
         lastName: 'Mendez',
         middleName: 'Teves',
@@ -83,7 +83,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10077'
     },
     {
-        studentId: '22-1-10078',
+        studentId: 'sample22-1-10078',
         firstName: 'Pawiz',
         lastName: 'Buenaventura',
         middleName: 'Rivera',
@@ -100,7 +100,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10078'
     },
     {
-        studentId: '22-1-10079',
+        studentId: 'sample22-1-10079',
         firstName: 'Vinz',
         lastName: 'Dela Cruz',
         middleName: 'Morales',
@@ -117,7 +117,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10079'
     },
     {
-        studentId: '22-1-10389',
+        studentId: 'sample22-1-10389',
         firstName: 'Venje',
         lastName: 'Ba nana',
         middleName: 'Moral',
@@ -134,7 +134,7 @@ export const student = [
         anecdotalDocID: null
     },
     {
-        studentId: '22-1-10080',
+        studentId: 'sample22-1-10080',
         firstName: 'Alex',
         lastName: 'Torres',
         middleName: 'Diaz',
@@ -151,7 +151,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10080'
     },
     {
-        studentId: '22-1-10081',
+        studentId: 'sample22-1-10081',
         firstName: 'Sam',
         lastName: 'Gonzalez',
         middleName: 'Ramos',
@@ -168,7 +168,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10081'
     },
     {
-        studentId: '22-1-10082',
+        studentId: 'sample22-1-10082',
         firstName: 'Lisa',
         lastName: 'Hernandez',
         middleName: 'Palma',
@@ -185,7 +185,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10082'
     },
     {
-        studentId: '22-1-10083',
+        studentId: 'sample22-1-10083',
         firstName: 'Chris',
         lastName: 'Garcia',
         middleName: 'Iglesias',
@@ -202,7 +202,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10083'
     },
     {
-        studentId: '22-1-10084',
+        studentId: 'sample22-1-10084',
         firstName: 'Mark',
         lastName: 'Espinosa',
         middleName: 'Valdez',
@@ -219,7 +219,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10084'
     },
     {
-        studentId: '22-1-10085',
+        studentId: 'sample22-1-10085',
         firstName: 'Emily',
         lastName: 'Robles',
         middleName: 'Villanueva',
@@ -236,7 +236,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10085'
     },
     {
-        studentId: '22-1-10086',
+        studentId: 'sample22-1-10086',
         firstName: 'Jake',
         lastName: 'Aguilar',
         middleName: 'Mendoza',
@@ -253,7 +253,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10086'
     },
     {
-        studentId: '22-1-10087',
+        studentId: 'sample22-1-10087',
         firstName: 'Sarah',
         lastName: 'Panganiban',
         middleName: 'Reyes',
@@ -270,7 +270,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10087'
     },
     {
-        studentId: '22-1-10088',
+        studentId: 'sample22-1-10088',
         firstName: 'Marco',
         lastName: 'Santos',
         middleName: 'Rivera',
@@ -287,7 +287,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10088'
     },
     {
-        studentId: '22-1-10090',
+        studentId: 'sample22-1-10090',
         firstName: 'Owen',
         lastName: 'Delos Santos',
         middleName: 'Rivera',
@@ -304,7 +304,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10090'
     },
     {
-        studentId: '22-1-10091',
+        studentId: 'sample22-1-10091',
         firstName: 'Sofia',
         lastName: 'Reyes',
         middleName: 'Castillo',
@@ -321,7 +321,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10091'
     },
     {
-        studentId: '22-1-10092',
+        studentId: 'sample22-1-10092',
         firstName: 'Nora',
         lastName: 'Aquino',
         middleName: 'Padilla',
@@ -338,7 +338,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10092'
     },
     {
-        studentId: '22-1-10093',
+        studentId: 'sample22-1-10093',
         firstName: 'Paul',
         lastName: 'Santos',
         middleName: 'Arce',
@@ -355,7 +355,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10093'
     },
     {
-        studentId: '22-1-10094',
+        studentId: 'sample22-1-10094',
         firstName: 'Samantha',
         lastName: 'Villamor',
         middleName: 'De Vera',
@@ -372,7 +372,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10094'
     },
     {
-        studentId: '22-1-10095',
+        studentId: 'sample22-1-10095',
         firstName: 'Brian',
         lastName: 'Sandoval',
         middleName: 'Flores',
@@ -389,7 +389,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10095'
     },
     {
-        studentId: '22-1-10096',
+        studentId: 'sample22-1-10096',
         firstName: 'Alexa',
         lastName: 'Perez',
         middleName: 'Garcia',
@@ -406,7 +406,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10096'
     },
     {
-        studentId: '22-1-10097',
+        studentId: 'sample22-1-10097',
         firstName: 'Ivan',
         lastName: 'Morales',
         middleName: 'Navarro',
@@ -423,7 +423,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10097'
     },
     {
-        studentId: '22-1-10098',
+        studentId: 'sample22-1-10098',
         firstName: 'Lucia',
         lastName: 'Santiago',
         middleName: 'Reyes',
@@ -440,7 +440,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10098'
     },
     {
-        studentId: '22-1-10099',
+        studentId: 'sample22-1-10099',
         firstName: 'Miguel',
         lastName: 'Carreon',
         middleName: 'Domingo',
@@ -457,7 +457,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10099'
     },
     {
-        studentId: '22-1-10100',
+        studentId: 'sample22-1-10100',
         firstName: 'Patricia',
         lastName: 'Alvarado',
         middleName: 'Esquivel',
@@ -474,7 +474,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10100'
     },
     {
-        studentId: '22-1-10101',
+        studentId: 'sample22-1-10101',
         firstName: 'Gerald',
         lastName: 'Franco',
         middleName: 'Dela Rosa',
@@ -491,7 +491,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10101'
     },
     {
-        studentId: '22-1-10102',
+        studentId: 'sample22-1-10102',
         firstName: 'Theresa',
         lastName: 'Ponce',
         middleName: 'Salazar',
@@ -508,7 +508,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10102'
     },
     {
-        studentId: '22-1-10103',
+        studentId: 'sample22-1-10103',
         firstName: 'Enrico',
         lastName: 'Manlapig',
         middleName: 'Suarez',
@@ -525,7 +525,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10103'
     },
     {
-        studentId: '22-1-10104',
+        studentId: 'sample22-1-10104',
         firstName: 'James',
         lastName: 'Estrada',
         middleName: 'Villanueva',
@@ -542,7 +542,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10104'
     },
     {
-        studentId: '22-1-10105',
+        studentId: 'sample22-1-10105',
         firstName: 'Leah',
         lastName: 'Cruz',
         middleName: 'Ferrer',
@@ -559,7 +559,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10105'
     },
     {
-        studentId: '22-1-10106',
+        studentId: 'sample22-1-10106',
         firstName: 'John',
         lastName: 'Abad',
         middleName: 'Mendoza',
@@ -576,7 +576,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10106'
     },
     {
-        studentId: '22-1-10107',
+        studentId: 'sample22-1-10107',
         firstName: 'Grace',
         lastName: 'Bautista',
         middleName: 'Pascua',
@@ -593,7 +593,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10107'
     },
     {
-        studentId: '22-1-10108',
+        studentId: 'sample22-1-10108',
         firstName: 'Ryan',
         lastName: 'Fernandez',
         middleName: 'Marquez',
@@ -610,7 +610,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10108'
     },
     {
-        studentId: '22-1-10109',
+        studentId: 'sample22-1-10109',
         firstName: 'Cindy',
         lastName: 'Gonzales',
         middleName: 'Cruz',
@@ -627,7 +627,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10109'
     },
     {
-        studentId: '22-1-10110',
+        studentId: 'sample22-1-10110',
         firstName: 'Miguel',
         lastName: 'Rivera',
         middleName: 'Santos',
@@ -644,7 +644,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10110'
     },
     {
-        studentId: '22-1-10111',
+        studentId: 'sample22-1-10111',
         firstName: 'Eunice',
         lastName: 'Torralba',
         middleName: 'Villamor',
@@ -661,7 +661,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10111'
     },
     {
-        studentId: '22-1-10112',
+        studentId: 'sample22-1-10112',
         firstName: 'Roland',
         lastName: 'Zabala',
         middleName: 'Silva',
@@ -678,7 +678,7 @@ export const student = [
         anecdotalDocID: 'ANEC-2024-10112'
     },
     {
-        studentId: '22-1-10113',
+        studentId: 'sample22-1-10113',
         firstName: 'Bea',
         lastName: 'Lim',
         middleName: 'Salazar',

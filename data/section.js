@@ -72,17 +72,17 @@ export const section = [
     sectionLevel: '7',
     sectionSchoolYear: '2024-2025',
     sectionStudents: [
-        '22-1-10076',
-        '22-1-10077',
-        '22-1-10078',
-        '22-1-10079',
-        '22-1-10080',
-        '22-1-10081',
-        '22-1-10082',
-        '22-1-10083',
-        '22-1-10084',
-        '22-1-10085',
-        '22-1-10086'
+        'sample22-1-10076',
+        'sample22-1-10077',
+        'sample22-1-10078',
+        'sample22-1-10079',
+        'sample22-1-10080',
+        'sample22-1-10081',
+        'sample22-1-10082',
+        'sample22-1-10083',
+        'sample22-1-10084',
+        'sample22-1-10085',
+        'sample22-1-10086'
     ]
 },
 
@@ -94,7 +94,7 @@ export const section = [
     sectionLevel: '7',
     sectionSchoolYear: '2023-2024',
     sectionStudents: [
-        '22-1-10075',
+        'sample22-1-10075',
     ]
 },
 
@@ -154,7 +154,7 @@ export const section = [
     sectionLevel: '8',
     sectionSchoolYear: '2023-2024',
     sectionStudents: [
-         '22-1-10110'
+         'sample22-1-10110'
     ],
 },
 
@@ -213,12 +213,12 @@ export const section = [
     sectionLevel: '9',
     sectionSchoolYear: '2024-2025',
     sectionStudents: [
-        '22-1-10087',
-        '22-1-10088',
-        '22-1-10089',
-        '22-1-10090',
-        '22-1-10091',
-        '22-1-10092' 
+        'sample22-1-10087',
+        'sample22-1-10088',
+        'sample22-1-10089',
+        'sample22-1-10090',
+        'sample22-1-10091',
+        'sample22-1-10092' 
     ],
 },
 {
@@ -238,10 +238,10 @@ export const section = [
     sectionLevel: '9',
     sectionSchoolYear: '2024-2025',
     sectionStudents: [
-        '22-1-10093',
-        '22-1-10094',
-        '22-1-10095',
-        '22-1-10096'
+        'sample22-1-10093',
+        'sample22-1-10094',
+        'sample22-1-10095',
+        'sample22-1-10096'
     ],
 },
 {
@@ -263,17 +263,17 @@ export const section = [
     sectionLevel: '10',
     sectionSchoolYear: '2024-2025',
     sectionStudents: [
-        '22-1-10097',
-        '22-1-10098',
-        '22-1-10099',
-        '22-1-10100',
-        '22-1-10101',
-        '22-1-10102',
-        '22-1-10103',
-        '22-1-10104',
-        '22-1-10105',
-        '22-1-10106',
-        '22-1-10107',
+        'sample22-1-10097',
+        'sample22-1-10098',
+        'sample22-1-10099',
+        'sample22-1-10100',
+        'sample22-1-10101',
+        'sample22-1-10102',
+        'sample22-1-10103',
+        'sample22-1-10104',
+        'sample22-1-10105',
+        'sample22-1-10106',
+        'sample22-1-10107',
         
     ],
 },
@@ -285,7 +285,7 @@ export const section = [
     sectionLevel: '10',
     sectionSchoolYear: '2023-2024',
     sectionStudents: [
-        '22-1-10000',
+        'sample22-1-10000',
     ],
 },
 {
@@ -380,12 +380,12 @@ export const section = [
     sectionLevel: '12',
     sectionSchoolYear: '2024-2025',
     sectionStudents: [
-        '22-1-10108',
-        '22-1-10109',
-        '22-1-10110',
-        '22-1-10111',
-        '22-1-10112',
-        '22-1-10113'
+        'sample22-1-10108',
+        'sample22-1-10109',
+        'sample22-1-10110',
+        'sample22-1-10111',
+        'sample22-1-10112',
+        'sample22-1-10113'
     ],
 },
 {
@@ -424,7 +424,7 @@ export const section = [
     sectionLevel: '12',
     sectionSchoolYear: '2023-2024',
     sectionStudents: [
-        '22-1-10801'
+        'sample22-1-10801'
     ],
 },
 

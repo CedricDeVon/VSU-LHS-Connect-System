@@ -40,10 +40,11 @@
               <!-- Update Report Section -->
               <div v-if="incidentData?.status === 'NotResolved'" class="space-y-3">
                 <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Update Report</h3>
-                <button @click="openUpdateForm" 
+                <button @click="openUpdateForm"
                   class="w-full bg-blue-500 hover:bg-blue-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
                   <span>Edit Report Details</span>
                 </button>
@@ -52,10 +53,11 @@
               <!-- Case Conference Section -->
               <div class="space-y-3">
                 <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Schedule Conference</h3>
-                <button @click="openScheduleDialog" 
+                <button @click="openScheduleDialog"
                   class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   <span>Schedule Case Conference</span>
                 </button>
@@ -64,7 +66,7 @@
               <!-- Status Management -->
               <div v-if="incidentData?.status === 'NotResolved'" class="space-y-3">
                 <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Case Management</h3>
-                <button @click="confirmResolve" 
+                <button @click="confirmResolve"
                   class="w-full bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -78,17 +80,19 @@
             <div class="bg-white rounded-lg shadow-md p-6 space-y-4">
               <h3 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">Document Actions</h3>
               <div class="space-y-3">
-                <button @click="printDocument" 
+                <button @click="printDocument"
                   class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 border border-gray-300">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                   </svg>
                   <span>Print Document</span>
                 </button>
-                <button @click="downloadPDF" 
+                <button @click="downloadPDF"
                   class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-lg transition-colors duration-200 flex items-center justify-center space-x-2 shadow-sm">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
                   <span>Download PDF</span>
                 </button>
@@ -99,7 +103,11 @@
       </div>
     </div>
 
-   
+    <!-- Modals -->
+    <UpdateIncidentReportModal v-if="showUpdateModal" :incident="incdReport" @close="showUpdateModal = false"
+      @update="handleUpdate" />
+
+    <ScheduleConferenceModal v-if="showScheduleModal" @close="showScheduleModal = false" @schedule="handleSchedule" />
   </div>
 </template>
 
@@ -109,17 +117,22 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
-import { incidentReport } from '~/data/incident';
+import { incidentReport, updateIncidentReport, initializeIncidentReports } from '~/data/incident';
 import { Admin } from '~/data/admin';
 import { initialReport } from '~/data/initialReport';
 import { adviser } from '~/data/adviser';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import UpdateIncidentReportModal from '~/components/Modals/UpdateIncidentReportModal.vue';
+import ScheduleConferenceModal from '~/components/Modals/ScheduleConferenceModal.vue';
 
 export default {
   components: {
     AdminSidebar,
     AdminHeader,
+    UpdateIncidentReportModal,
+    ScheduleConferenceModal,
+
   },
 
   data() {
@@ -135,6 +148,7 @@ export default {
   },
 
   async created() {
+    initializeIncidentReports(); // Initialize from localStorage
     const incidentId = this.$route.params.id;
     await this.initIncidentByID(incidentId);
     await this.getReporter(this.incdReport.reportID);
@@ -142,8 +156,8 @@ export default {
   },
 
   computed: {
-    processedIncidentData(){
-      if(!this.incidentData) return {};
+    processedIncidentData() {
+      if (!this.incidentData) return {};
       return {
         ...this.incidentData,
         status: this.incidentData.status === 'Resolved' ? 'NotResolved' : this.incidentData.status
@@ -332,7 +346,44 @@ export default {
           viewer.src = url;
         }
       });
-    },    
+    },
+
+    openUpdateForm() {
+      this.showUpdateModal = true;
+    },
+
+    openScheduleDialog() {
+      this.showScheduleModal = true;
+    },
+    handleUpdate(updatedData) {
+      try {
+        // Update in data store and localStorage
+        if (updateIncidentReport(this.incdReport.incidentDocID, updatedData)) {
+          // Update local state
+          this.incdReport = {
+            ...this.incdReport,
+            ...updatedData
+          };
+          this.incidentData = {
+            ...this.incidentData,
+            ...updatedData
+          };
+
+          // Refresh PDF
+          this.displayPDF();
+          
+          // Close modal
+          this.showUpdateModal = false;
+          
+          alert('Incident report updated successfully');
+        } else {
+          throw new Error('Failed to update incident report');
+        }
+      } catch (error) {
+        console.error('Error updating incident:', error);
+        alert('Failed to update incident report');
+      }
+    },
   },
 };
 </script>

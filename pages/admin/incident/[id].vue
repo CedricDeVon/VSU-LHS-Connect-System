@@ -58,21 +58,35 @@
               
               <div class="p-4 space-y-3">
                 <!-- Case Conference Button - Primary Action -->
-                <button @click="openScheduleDialog"
-                  :class="{
-                    'w-full px-4 py-3 rounded-lg transition-colors duration-200 flex items-center': true,
-                    'bg-indigo-600 hover:bg-indigo-700 text-white': !isResolved || !hasCaseConference,
-                    'bg-emerald-600 hover:bg-emerald-700 text-white': isResolved && hasCaseConference
-                  }">
+                 <div v-if="!isResolved">
+                <button
+                  @click="openScheduleDialog"
+                  class="w-full px-4 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-200 flex items-center">
                   <div class="flex items-center justify-center w-full space-x-3">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    <span>{{ isResolved && hasCaseConference ? 'View Case Conference' : 'Schedule Case Conference' }}</span>
-                    <span v-if="hasCaseConference" 
-                      class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full ml-2">
-                      {{ Array.isArray(incidentData?.hasCaseConference) ? incidentData.hasCaseConference.length : '1' }}
+                    <span>Schedule Case Conference</span>
+                  </div>
+                </button>
+              </div>
+              <div v-else-if="!hasCaseConference">
+                <h3>The incident does not have a case conference</h3>
+              </div>
+
+                <!-- View Conferences Button - Only show if has conferences -->
+                <button v-if="hasCaseConference"
+                  @click="viewConferenceHistory"
+                  class="w-full px-4 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors duration-200 flex items-center">
+                  <div class="flex items-center justify-center w-full space-x-3">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    <span>Case Conference Documents</span>
+                    <span class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full ml-2">
+                      {{ conferenceCount }}
                     </span>
                   </div>
                 </button>
@@ -135,7 +149,15 @@
     <UpdateIncidentReportModal v-if="showUpdateModal" :incident="incdReport" @close="showUpdateModal = false"
       @update="handleUpdate" />
 
-    <ScheduleConferenceModal v-if="showScheduleModal" @close="showScheduleModal = false" @schedule="handleSchedule" />
+    <ScheduleConferenceModal 
+      v-if="showScheduleModal && !isViewingHistory" 
+      @close="showScheduleModal = false"
+      @schedule="handleScheduleConference" />
+
+    <ViewCaseConferencesModal 
+      v-if="showScheduleModal && isViewingHistory"
+      :conferences="caseConferences"
+      @close="closeConferenceHistory" />
   </div>
 </template>
 
@@ -151,8 +173,10 @@ import { initialReport } from '~/data/initialReport';
 import { adviser } from '~/data/adviser';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-import UpdateIncidentReportModal from '~/components/Modals/UpdateIncidentReportModal.vue';
-import ScheduleConferenceModal from '~/components/Modals/ScheduleConferenceModal.vue';
+import UpdateIncidentReportModal from '~/components/Modals/Incident Management/UpdateIncidentReportModal.vue';
+import ScheduleConferenceModal from '~/components/Modals/Incident Management/ScheduleConferenceModal.vue';
+import ViewCaseConferencesModal from '~/components/Modals/Incident Management/ViewCaseConferencesModal.vue';
+import { caseConference } from '~/data/caseconference';
 
 export default {
   components: {
@@ -160,7 +184,7 @@ export default {
     AdminHeader,
     UpdateIncidentReportModal,
     ScheduleConferenceModal,
-
+    ViewCaseConferencesModal,
   },
 
   data() {
@@ -172,6 +196,8 @@ export default {
       incidentData: null,
       showUpdateModal: false,
       showScheduleModal: false,
+      caseConferences: [], // Will store conference history
+      isViewingHistory: false,
     };
   },
 
@@ -350,6 +376,19 @@ export default {
       return Array.isArray(this.incidentData?.hasCaseConference) 
         ? this.incidentData.hasCaseConference.length > 0 
         : this.incidentData?.hasCaseConference;
+    },
+
+    hasValidConferences() {
+      if (!this.incidentData?.hasCaseConference) return false;
+      return Array.isArray(this.incidentData.hasCaseConference) && 
+             this.incidentData.hasCaseConference.length > 0;
+    },
+
+    conferenceCount() {
+      if (!this.incidentData?.hasCaseConference) return 0;
+      return Array.isArray(this.incidentData.hasCaseConference) 
+        ? this.incidentData.hasCaseConference.length 
+        : (this.incidentData.hasCaseConference ? 1 : 0);
     }
   },
 
@@ -389,9 +428,22 @@ export default {
       this.showUpdateModal = true;
     },
 
-    openScheduleDialog() {
+    viewConferenceHistory() {
+      this.isViewingHistory = true;
+      this.loadCaseConferences();
       this.showScheduleModal = true;
     },
+
+    closeConferenceHistory() {
+      this.showScheduleModal = false;
+      this.isViewingHistory = false;
+    },
+
+    openScheduleDialog() {
+      this.isViewingHistory = false;
+      this.showScheduleModal = true;
+    },
+
     handleUpdate(updatedData) {
       try {
         // Update in data store and localStorage
@@ -421,6 +473,72 @@ export default {
         alert('Failed to update incident report');
       }
     },
+
+    async handleScheduleConference(conferenceData) {
+      try {
+        // Create new conference ID
+        const newConferenceId = `caseConID${Date.now()}`;
+        
+        // Prepare conference data
+        const newConference = {
+          caseConDocID: newConferenceId,
+          incidentID: this.incidentData.incidentDocID,
+          studentName: this.incidentData.peopleInvolved.join(', '),
+          conferenceDate: conferenceData.date,
+          time: conferenceData.time,
+          discussions: conferenceData.notes || '',
+          status: 'Pending',
+          scheduledBy: this.receivedBy
+        };
+
+        // In a real application, you would save this to your backend
+        // For now, we'll just update the local state
+        
+        // Update incident with new conference reference
+        const updatedData = {
+          hasCaseConference: [...(Array.isArray(this.incidentData.hasCaseConference) 
+            ? this.incidentData.hasCaseConference 
+            : []), newConferenceId]
+        };
+
+        await this.handleUpdate(updatedData);
+        this.showScheduleModal = false;
+        alert('Case conference scheduled successfully');
+      } catch (error) {
+        console.error('Error scheduling conference:', error);
+        alert('Failed to schedule case conference');
+      }
+    },
+
+    async loadCaseConferences() {
+      if (!this.incidentData?.hasCaseConference) {
+        this.caseConferences = [];
+        return;
+      }
+
+      // Handle both array and boolean cases
+      const conferenceIds = Array.isArray(this.incidentData.hasCaseConference) 
+        ? this.incidentData.hasCaseConference 
+        : [];
+
+      this.caseConferences = conferenceIds
+        .map(id => caseConference.find(conf => conf.caseConDocID === id))
+        .filter(conf => conf !== undefined)
+        .sort((a, b) => new Date(b.conferenceDate) - new Date(a.conferenceDate));
+    },
+
+    downloadPDF() {
+      const fileName = `Incident_Report_${this.incdReport.reportID}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdfMake.createPdf(this.defineIncidentDoc).download(fileName);
+    },
+
+    printDocument() {
+      pdfMake.createPdf(this.defineIncidentDoc).print({
+        silent: false,
+        printBackground: true
+      });
+    },
+
   },
 };
 </script>

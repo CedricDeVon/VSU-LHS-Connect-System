@@ -16,6 +16,8 @@ await adviserViewStore.updateAdvisoryView();
             <AddStudentForm v-if="showAddStudentForm"
             @close="showAddStudentForm = false"
             />
+
+            <notification-modal v-if="showNotification" />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
             </div>

@@ -61,6 +61,7 @@ const creationClose = () => {
         :report="reportChosen"
         @close ="creationClose"
         /> 
+        <notification-modal v-if="showNotification"/>
         <AdviserHeader @notif-click="notifClick"/>
         <div >
             <div class="m-5 flex justify-start ml-20">

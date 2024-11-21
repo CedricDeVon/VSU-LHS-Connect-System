@@ -1,16 +1,16 @@
-
 <script>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
-import { incidentReport } from '~/data/incident';
-import { Admin } from '~/data/admin';
-import { initialReport } from '~/data/initialReport';
-import { adviser } from '~/data/adviser';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 export default {
   components: {
@@ -20,17 +20,13 @@ export default {
 
   data() {
     return {
-      incdReport: {},
       reportType: 'INCIDENT REPORT',
-      receivedBy: `${(Admin.firstName).toUpperCase()} ${(Admin.middleName).charAt(0).toUpperCase()+'.'} ${(Admin.lastName).toUpperCase()}`,
-      reportedBy: '',
+      adminViewStore: useAdminViewStore()
     };
   },
 
-  async created() {
-    const incidentId = this.$route.params.id;
-    await this.initIncidentByID(incidentId);
-    await this.getReporter(this.incdReport.reportID);
+  async mounted() {
+    await this.adminViewStore.updateIncident(this.$route.params.id);
     this.displayPDF();
   },
 
@@ -56,23 +52,23 @@ export default {
               body: [
                 [
                   { text: 'Name of People Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.peopleInvolved?.join(', ')}`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.peopleInvolved?.join(', ') || 'None' }`, style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Witness:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.witness}`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.witness}` || 'None', style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.dateOfIncident}`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.dateOfIncident}` || 'None', style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.placeOfIncident}`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.placeOfIncident}` || 'None', style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.thingsInvolved}`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.thingsInvolved}` || 'None', style: 'content', border: [false, false, false, false] }
                 ],
               ]
             },
@@ -90,7 +86,7 @@ export default {
           },
           { text: 'Narrative Report:', style: 'label', margin: [0, 15, 0, 5] },
           {
-            text: `${this.incdReport.narrativeReport}`,
+            text: `${this.adminViewStore.incidentIncidentReport.data.narrativeReport}`,
             style: 'content',
             margin: [30, 0, 30, 10],
             alignment: 'justify'
@@ -98,7 +94,7 @@ export default {
           { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
           { text: 'Action Taken:', style: 'label', margin: [0, 15, 0, 5] },
           {
-            text: `${this.incdReport.actionTaken || 'Pending'}`,
+            text: `${this.adminViewStore.incidentIncidentReport.data.actionTaken || 'Pending'}`,
             style: 'content',
             margin: [30, 0, 30, 10],
             alignment: 'justify'
@@ -106,7 +102,7 @@ export default {
           { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
           { text: 'Reason for Action:', style: 'label', margin: [0, 15, 0, 5] },
           {
-            text: `${this.incdReport.reasonOfAction || 'Pending'}`,
+            text: `${this.adminViewStore.incidentIncidentReport.data.reasonOfAction || 'Pending'}`,
             style: 'content',
             margin: [30, 0, 30, 10],
             alignment: 'justify'
@@ -114,7 +110,7 @@ export default {
           { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
           { text: 'Additional Notes:', style: 'label', margin: [0, 15, 0, 5] },
           {
-            text: `${this.incdReport.others || 'None'}`,
+            text: `${this.adminViewStore.incidentIncidentReport.data.others || 'None'}`,
             style: 'content',
             margin: [30, 0, 30, 10],
             alignment: 'justify'
@@ -127,15 +123,15 @@ export default {
               body: [
                 [
                   { text: 'Date Reported:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.dateReported}`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.dateReported}`, style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Last Modified:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.lastModified || 'Not modified'}`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.lastModified || 'Not modified'}`, style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Status:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.status}`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.status}`, style: 'content', border: [false, false, false, false] }
                 ],
               ]
             },
@@ -189,26 +185,6 @@ export default {
   },
 
   methods: {
-    async initIncidentByID(id) {
-      const fetchedObject = incidentReport.find(item => item.incidentDocID === id);
-      if (fetchedObject) {
-        this.incdReport = { ...fetchedObject };
-      }
-    },
-
-    async getReporter(incidentReportID) {
-      let index = initialReport.findIndex((incd) => incd.reportIDRef === incidentReportID);
-      if (index === -1) return false;
-      
-      const id = initialReport[index].reportedBY;
-      if (id) {
-        index = adviser.findIndex((adv) => adv.id === id);
-        this.reportedBy = `${(adviser[index].firstName).toUpperCase()} ${(adviser[index].middleName).charAt(0).toUpperCase() + '.'} ${(adviser[index].lastName).toUpperCase()}`;
-        return true;
-      }
-      return false;
-    },
-
     displayPDF() {
       pdfMake.createPdf(this.defineIncidentDoc).getBlob((blob) => {
         const url = URL.createObjectURL(blob);

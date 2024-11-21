@@ -1,13 +1,14 @@
 <script>
-import { defineComponent } from 'vue';
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
-import { anecdotalReport } from '~/data/anecdotal';
-import { student } from '~/data/student';
-import { section } from '~/data/section';
-import { adviser } from '~/data/adviser';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-export default defineComponent({
+
+export default {
     name: 'admin-anecdotal',
     components: { AdminSidebar, AdminHeader },
     data() {
@@ -15,39 +16,45 @@ export default defineComponent({
             searchQuery: '',
             selectedSort: '',
             searchResults: [],
-            anecdotalReports: anecdotalReport
+            adminViewStore: useAdminViewStore()
         };
     },
+
+    async mounted() {
+        await this.adminViewStore.updateAnecdotal();
+        this.searchResults = this.adminViewStore.anecdotalAnecdotalReports
+    },
+    
     methods: {
         handleSearch() {
-            let results = anecdotalReport;
+            let results = this.adminViewStore.anecdotalAnecdotalReports;
 
             // Apply search filter
             if (this.searchQuery) {
                 const query = this.searchQuery.toLowerCase();
                 results = results.filter(report => {
-                    const studentName = this.getStudentName(report.studentId).toLowerCase();
-                    const adviserName = this.getAdviserName(report.studentId).toLowerCase();
-                    return report.anecdotalDocID.toLowerCase().includes(query) ||
+                    const studentName = this.getStudentName(report.data.studentId).toLowerCase();
+                    const adviserName = this.getAdviserName(report.data.adviserId).toLowerCase();
+                    return report.id.toLowerCase().includes(query) ||
                            studentName.includes(query) ||
                            adviserName.includes(query) ||
-                           report.AY.toLowerCase().includes(query);
+                           report.data.schoolYear.toLowerCase().includes(query);
                 });
             }
 
             // Apply sorting
             switch (this.selectedSort) {
                 case 'ascDate':
-                    results.sort((a, b) => new Date(a.dateOfIncident) - new Date(b.dateOfIncident));
+                    results.sort((a, b) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
                     break;
                 case 'descDate':
-                    results.sort((a, b) => new Date(b.dateOfIncident) - new Date(a.dateOfIncident));
+                    results.sort((a, b) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
                     break;
                 case 'studentName':
-                    results.sort((a, b) => this.getStudentName(a.studentId).localeCompare(this.getStudentName(b.studentId)));
+                    results.sort((a, b) => this.getStudentName(a.data.studentId).localeCompare(this.getStudentName(b.data.studentId)));
                     break;
                 case 'purpose':
-                    results.sort((a, b) => a.purpose.localeCompare(b.purpose));
+                    results.sort((a, b) => a.purpose.localeCompare(b.data.purpose));
                     break;
             }
 
@@ -55,29 +62,23 @@ export default defineComponent({
         },
 
         viewReport(anecdotalDocID) {
-            console.log(anecdotalDocID)
             // Find the student with this anecdotal report
-            const studentWithReport = student.find(s => s.anecdotalDocID === anecdotalDocID);
+            const studentWithReport = this.adminViewStore.anecdotalAnecdotalReports.find(s => s.id === anecdotalDocID);
             if (studentWithReport) {
-                this.$router.push(`/admin/anecdote/${studentWithReport.studentId}`);
+                this.$router.push(`/admin/anecdote/${studentWithReport.data.studentId}`);
             } else {
                 console.warn('No student found with this anecdotal report');
             }
         },
+        
         getStudentName(studentId) {
-            const studentWithReport = student.find(s => s.studentId === studentId);
-            return studentWithReport ? `${studentWithReport.lastName}, ${studentWithReport.firstName}` : 'Unknown';
+            const studentWithReport = this.adminViewStore.anecdotalAnecdotalStudents.find(s => s.id === studentId);
+            return studentWithReport ? `${studentWithReport.data.lastName}, ${studentWithReport.data.firstName}` : 'Unknown';
         },
-        getAdviserName(studentId) {
-            const studentWithReport = student.find(s => s.studentId === studentId);
-            if (studentWithReport) {
-                const studentSection = section.find(sec => sec.id === studentWithReport.sectionID);
-                if (studentSection) {
-                    const adviserInfo = adviser.find(a => a.id === studentSection.adviserId);
-                    return adviserInfo ? `${adviserInfo.lastName}, ${adviserInfo.firstName}` : 'Unknown';
-                }
-            }
-            return 'Unknown';
+
+        getAdviserName(adviserId) {
+            const studentWithAdviser = this.adminViewStore.anecdotalAnecdotalAdvisers.find(s => s.id === adviserId);
+            return studentWithAdviser ? `${studentWithAdviser.data.lastName}, ${studentWithAdviser.data.firstName}` : 'Unknown';
         }
     },
     watch: {
@@ -88,10 +89,7 @@ export default defineComponent({
             this.handleSearch();
         }
     },
-    mounted() {
-        this.handleSearch();
-    }
-});
+};
 </script>
 
 <template>
@@ -146,13 +144,13 @@ export default defineComponent({
                                             <tr v-for="report in searchResults" 
                                                 :key="report.anecdotalDocID"
                                                 class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
-                                                <td class="p-4 w-[20%]">{{ report.anecdotalDocID }}</td>
-                                                <td class="p-4 w-[20%]">{{ getStudentName(report.studentId) }}</td>
-                                                <td class="p-4 w-[20%]">{{ getAdviserName(report.studentId) }}</td>
-                                                <td class="p-4 w-[20%]">{{ report.AY }}</td>
+                                                <td class="p-4 w-[20%]">{{ report.id }}</td>
+                                                <td class="p-4 w-[20%]">{{ getStudentName(report.data.studentId) }}</td>
+                                                <td class="p-4 w-[20%]">{{ getAdviserName(report.data.adviserId) }}</td>
+                                                <td class="p-4 w-[20%]">{{ report.data.schoolYear }}</td>
                                                 <td class="p-4 w-[20%]">
                                                     <button 
-                                                        @click="viewReport(report.anecdotalDocID)"
+                                                        @click="viewReport(report.id)"
                                                         class="bg-[#728B78] hover:bg-[#265630] text-white px-4 py-2 rounded-md transition-colors"
                                                     >
                                                         View Details

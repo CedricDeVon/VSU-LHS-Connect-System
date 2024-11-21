@@ -21,13 +21,14 @@ export class UserSecurity {
                 throw new Error(result.message)
             }
             
+            const { username, status } = result.data.data;
             const jsonWebToken: any = await $fetch('/api/auth/jsonWebToken/sign', {
                 method: 'POST', body: {
                     id: firebaseCurrentUser.uid,
-                    username: result.data.username,
+                    username,
                     email,
                     password,
-                    status: result.data.status,
+                    status,
                     role
                 }
               });

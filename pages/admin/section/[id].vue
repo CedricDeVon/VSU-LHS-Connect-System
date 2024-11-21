@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { section } from '~/data/section.js';
-import { student } from '~/data/student.js';
-import { adviser } from '~/data/adviser.js';
-import { incidentReport } from '~/data/incident.js';
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';

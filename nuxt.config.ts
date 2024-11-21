@@ -96,7 +96,7 @@ export default defineNuxtConfig({
     emailTemplateId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_TEMPLATE_ID"),
     emailTemplateIdForApproval: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_TEMPLATE2_ID"),
     emailPublicKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_PUBLIC_KEY"),
-    userTokenDurationInSeconds: 60,
+    userTokenDurationInSeconds: 3600,
     public: {
       environmentName: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_ENVIRONMENT_NAME"),
       isConsoleLoggingEnabled: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_IS_CONSOLE_LOGGING_ENABLED"),

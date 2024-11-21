@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
 import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
 import AddStudentForm from "~/components/Modals/AddStudentForm.vue";

@@ -3,6 +3,8 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
       const jsonWebToken: any = window.localStorage!.getItem('userAuthToken');
+      console.log(jsonWebToken);
+      
       if (jsonWebToken === undefined || jsonWebToken === null) {
         console.log('JWT Not Found');
         return navigateTo('/auth/login');
@@ -22,10 +24,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         return navigateTo('/auth/login');
       }
 
+      console.log('ok', email, password)
       await signInWithEmailAndPassword(getAuth(), email, password);
+      console.log('done')
       
     } catch (error: any) {
-      console.log(error);
+      console.log(error.message);
       return navigateTo('/auth/login');
     }
   });

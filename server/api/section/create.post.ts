@@ -4,11 +4,16 @@ import { Result } from '~/library/results/result';
 
 export default defineEventHandler(async (event) => {
     try {
-        const { name, level } = await readBody(event);
+        const { id, name, level } = await readBody(event);
+
+        const temp = (await Databases.getOneSectionViaId(id));
+        if (!temp) {
+            throw new Error('Section ID must be unique');
+        }
 
         const timeline = (await Databases.getMostRecentTimeline()).data[0];
         const count = (await Databases.sectionFirebaseDatabase.countCollectionDocuments()).data;
-        const result: Result = await Databases.createOneSection(`S-${count + 1}`, name, level, timeline.data.schoolYear)
+        const result: Result = await Databases.createOneSection(id || `S-${count + 1}`, name, level, timeline.data.schoolYear)
         return result.cloneToObject();
 
     } catch (error: any) {

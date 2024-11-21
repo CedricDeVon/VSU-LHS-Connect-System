@@ -1,20 +1,17 @@
-
 <script>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
-import { anecdotalReport } from '~/data/anecdotal';
-import { student } from '~/data/student';
-import { report } from '~/data/report';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
-const associatedReports = computed(() => {
-    return report.filter(report => anecdotalReport.reportIDs.includes(report.reportID));
-});
 
 export default {
     components: {
@@ -24,25 +21,19 @@ export default {
 
     data() {
         return {
-            anecReport: null,
-            studentData: null,
+            adminViewStore: useAdminViewStore()
         };
     },
 
-    async created() {
-        const studentId = this.$route.params.id;
-        await this.initData(studentId);
+    async mounted() {
+        await this.adminViewStore.updateAnecdote(this.$route.params.id);
         this.displayPDF();
     },
 
     computed: {
         defineAnecdotalDoc() {
-            if (!this.anecReport || !this.studentData) return null;
-
             // Get associated reports
-            const associatedReports = report.filter(r => 
-                this.anecReport.reportIDs.includes(r.reportID)
-            );
+            const associatedReports = this.adminViewStore.anecdoteAnecdotalReport.data.reportIds;
 
             // Create content array for the document
             const content = [
@@ -54,19 +45,19 @@ export default {
                         body: [
                             [
                                 { text: 'Student Name:', style: 'label', border: [false, false, false, false] },
-                                { text: `${this.studentData.firstName} ${this.studentData.middleName} ${this.studentData.lastName}`, style: 'content', border: [false, false, false, false] }
+                                { text: `${this.adminViewStore.anecdoteStudent.data.firstName || ''} ${this.adminViewStore.anecdoteStudent.data.middleName || ''} ${this.adminViewStore.anecdoteStudent.data.lastName || ''}`, style: 'content', border: [false, false, false, false] }
                             ],
                             [
                                 { text: 'Student ID:', style: 'label', border: [false, false, false, false] },
-                                { text: this.studentData.studentId, style: 'content', border: [false, false, false, false] }
+                                { text: this.adminViewStore.anecdoteStudent.id, style: 'content', border: [false, false, false, false] }
                             ],
                             [
                                 { text: 'Academic Year:', style: 'label', border: [false, false, false, false] },
-                                { text: this.anecReport.AY, style: 'content', border: [false, false, false, false] }
+                                { text: this.adminViewStore.anecdoteAnecdotalReport.data.schoolYear, style: 'content', border: [false, false, false, false] }
                             ],
                             [
                                 { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
-                                { text: this.anecReport.preparedBy, style: 'content', border: [false, false, false, false] }
+                                { text: this.adminViewStore.anecdoteAnecdotalReport.data.preparedBy, style: 'content', border: [false, false, false, false] }
                             ]
                         ]
                     }
@@ -84,39 +75,39 @@ export default {
                             body: [
                                 [
                                     { text: 'Report ID:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.reportID, style: 'content', border: [false, false, false, false] }
+                                    { text: rep.id, style: 'content', border: [false, false, false, false] }
                                 ],
                                 [
                                     { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.date, style: 'content', border: [false, false, false, false] }
+                                    { text: rep.data.dateOfIncident, style: 'content', border: [false, false, false, false] }
                                 ],
                                 [
                                     { text: 'Date Prepared:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.datePrepared, style: 'content', border: [false, false, false, false] }
+                                    { text: rep.data.datePrepared, style: 'content', border: [false, false, false, false] }
                                 ],
                                 [
                                     { text: 'Purpose:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.purpose, style: 'content', border: [false, false, false, false] }
+                                    { text: rep.data.purpose, style: 'content', border: [false, false, false, false] }
                                 ],
                                 [
                                     { text: 'Witnesses:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
+                                    { text: rep.data.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
                                 ],
                                 [
                                     { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.placeOfIncident, style: 'content', border: [false, false, false, false] }
+                                    { text: rep.data.placeOfIncident, style: 'content', border: [false, false, false, false] }
                                 ],
                                 [
                                     { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.thingsInvolved, style: 'content', border: [false, false, false, false] }
+                                    { text: rep.data.thingsInvolved, style: 'content', border: [false, false, false, false] }
                                 ],
                                 [
                                     { text: 'Details:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.details, style: 'content', border: [false, false, false, false] }
+                                    { text: rep.data.details, style: 'content', border: [false, false, false, false] }
                                 ],
                                 [
                                     { text: 'Adviser Remarks:', style: 'label', border: [false, false, false, false] },
-                                    { text: rep.adviserRemarks, style: 'content', border: [false, false, false, false] }
+                                    { text: rep.data.adviserRemarks, style: 'content', border: [false, false, false, false] }
                                 ]
                             ]
                         }
@@ -166,20 +157,7 @@ export default {
     },
 
     methods: {
-        async initData(studentId) {
-            // Find student data
-            this.studentData = student.find(s => s.studentId === studentId);
-            if (!this.studentData) return;
-
-            // Find anecdotal report
-            this.anecReport = anecdotalReport.find(
-                report => report.anecdotalDocID === this.studentData.anecdotalDocID
-            );
-        },
-
         displayPDF() {
-            if (!this.defineAnecdotalDoc) return;
-
             pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
                 const url = URL.createObjectURL(blob);
 

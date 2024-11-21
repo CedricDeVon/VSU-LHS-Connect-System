@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
     const { userId } = await readBody(event);
     const user = (await Databases.getOneUserViaId(userId)).data;
     const adviser = (await Databases.getOneAdviserViaUserId(userId)).data;
-    const timeline = (await Databases.getMostRecentTimeline()).data;
+    const timeline = (await Databases.getMostRecentTimeline()).data[0];
     adviser.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(adviser.data.profilePicture)).data;
 
     return new SuccessfulResult({

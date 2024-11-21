@@ -88,6 +88,8 @@
 import { section } from '~/data/section.js';
 import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
 
+console.log('K')
+
 export default {
     name: 'StudentDetailsModal',
     props: {

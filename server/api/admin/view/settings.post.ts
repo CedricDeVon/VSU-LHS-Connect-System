@@ -5,12 +5,13 @@ import { SuccessfulResult } from '~/library/results/successfulResult';
 export default defineEventHandler(async (event) => {
   try {
     const { userId } = await readBody(event);
-    const userData = (await Databases.getOneUserViaId(userId)).data;
-    const adminData = (await Databases.getOneAdminViaUserId(userId)).data;
-    adminData.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(adminData.data.profilePicture)).data;
+    const user = (await Databases.getOneUserViaId(userId)).data;
+    const admin = (await Databases.getOneAdminViaUserId(userId)).data;
+    const timeline = (await Databases.getMostRecentTimeline()).data[0];
+    admin.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(admin.data.profilePicture)).data;
 
     return new SuccessfulResult({
-      userData, adminData
+      user, admin, timeline
     }).cloneToObject();
 
   } catch (error: any) {

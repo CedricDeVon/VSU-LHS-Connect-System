@@ -1,9 +1,14 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
 import debounce from 'lodash/debounce';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
+import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateSearch();
@@ -12,6 +17,7 @@ const addNewSection = async (newSection: any) => {
   const result = await $fetch('/api/section/create', {
     method: 'POST',
     body: {
+      id: newSection.secitionId,
       name: newSection.sectionName,
       level: newSection.sectionLevel
     }
@@ -88,6 +94,14 @@ const filteredStudents = () => {
       level: section ? section.data.level : '---'
     };
   });
+}
+
+const viewStudentProfile = (studentId: any) => {
+  let student = adminViewStore.searchStudents.find((student: any) => {
+    return student.id === studentId;
+  });
+
+  adminViewStore.searchSelectedStudent = student;
 }
 
 </script>
@@ -198,12 +212,10 @@ const filteredStudents = () => {
       </div>
     </div>
     <AddSectionForm v-if="adminViewStore.searchShowAddSectionForm" @close="adminViewStore.searchShowAddSectionForm = false" @add-section="addNewSection" />
-    <AddSectionForm v-if="showAddSectionForm" @close="showAddSectionForm = false" @add-section="addNewSection" />
     <StudentDetailsModal 
-        v-if="selectedStudent"
-        :show="!!selectedStudent"
-        :studentData="selectedStudent"
-        @close="selectedStudent = null"
+        v-if="adminViewStore.searchSelectedStudent"
+        :studentData="adminViewStore.searchSelectedStudent"
+        @close="adminViewStore.searchSelectedStudent = null"
     />
   </div>
 </template>

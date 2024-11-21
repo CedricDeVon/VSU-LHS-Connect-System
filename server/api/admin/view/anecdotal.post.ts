@@ -6,9 +6,11 @@ export default defineEventHandler(async (event) => {
   try {
     const anecdotalReports = (await Databases.getAllAnecdotalReports()).data;
     const students = (await Databases.getAllStudents()).data;
+    const sections = (await Databases.getAllSections()).data;
+    const advisers = (await Databases.getAllAdvisers()).data;
 
     return new SuccessfulResult({
-      anecdotalReports, students
+      anecdotalReports, students, sections, advisers
     }).cloneToObject();
 
   } catch (error: any) {

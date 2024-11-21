@@ -19,6 +19,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const searchQuery = ref('');
   const searchDebouncedQuery = ref('');
   const searchSelectedSearch = ref('');
+  const searchSelectedStudent = useState('searchSelectedStudent');
   const searchShowAddSectionForm = ref(false);
   const searchSections = useState('searchSections');
   const searchStudents = useState('searchStudents');
@@ -43,19 +44,31 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const studentShowIncidentModal = ref(false);
 
   const incidentalIncidentalReports = useState('incidentalIncidentalalReports');
-  const incidentalStudentData = useState('incidentalStudentData');
+  const incidentalStudents = useState('incidentalStudents');
   const incidentalReportType = ref('INCIDENTAL REPORT');
   const incidentalReceivedBy = ref('');
   const incidentalReportedBy = ref('');
+  const incidentalSearchQuery = ref('');
+  const incidentalSelectedSort = ref('');
+  const incidentalStatusFilter = ref('all');
+  const incidentalSearchResults = useState('incidentalSearchResults');
 
-  const incidentIncidentalReport = useState('incidentIncidentalalReport');
-  const incidentStudentData = useState('incidentStudentData');
+  const incidentUser = useState('incidentUser');
+  const incidentAdmin = useState('incidentAdmin');
+  const incidentStudent = useState('incidentStudent');
+  const incidentInitialReport = useState('incidentInitialReport');
+  const incidentIncidentReport = useState('incidentIncidentReport');
   
   const anecdotalAnecdotalReports = useState('anecdotalAnecdotalReports');
-  const anecdotalStudentData = useState('anecdotalStudentData');
+  const anecdotalAnecdotalStudents = useState('anecdotalAnecdotalStudents');
+  const anecdotalAnecdotalSections = useState('anecdotalAnecdotalSections');
+  const anecdotalAnecdotalAdvisers = useState('anecdotalAnecdotalAdvisers');
 
   const anecdoteAnecdotalReport = useState('anecdoteAnecdotalReport');
-  const anecdoteStudentData = useState('anecdoteStudentData');
+  const anecdoteAnecdotalReports = useState('anecdoteAnecdotalReports');
+  const anecdoteReports = useState('anecdoteReports');
+  const anecdoteStudents = useState('anecdoteStudents');
+  const anecdoteStudent = useState('anecdoteStudent');
 
   const settingsUserData = useState('settingsUserData');
   const settingsAdminData = useState('settingsAdminData');
@@ -78,20 +91,28 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
         studentId
       }
     });
+    console.log(result)
 
     anecdoteAnecdotalReport.value = result.data.anecdotalReport;
-    anecdoteStudentData.value = result.data.studentData;
+    anecdoteAnecdotalReports.value = result.data.anecdotalReports;
+    anecdoteReports.value = result.data.reports;
+    anecdoteStudent.value = result.data.student;
+    anecdoteStudents.value = result.data.students;
   }
   
   const updateIncident = async (incidentId: string) => {
+    const currentUser = await getCurrentUser();
     const result: any = await $fetch('/api/admin/view/incident', {
       method: 'POST', body: {
-        incidentId
+        incidentId,
+        userId: currentUser?.uid
       }
     });
 
-    incidentIncidentalReport.value = result.data.incidentalReport;
-    incidentStudentData.value = result.data.studentData;
+    incidentUser.value = result.data.user;
+    incidentAdmin.value = result.data.admin;
+    incidentStudent.value = result.data.student;
+    incidentIncidentReport.value = result.data.incidentReport;
   }
   
   const updateAnecdotal = async () => {
@@ -99,8 +120,12 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
       method: 'POST', body: {}
     });
 
+    console.log(result)
+    
     anecdotalAnecdotalReports.value = result.data.anecdotalReports;
-    anecdotalStudentData.value = result.data.students;
+    anecdotalAnecdotalStudents.value = result.data.students;
+    anecdotalAnecdotalSections.value = result.data.sections;
+    anecdotalAnecdotalAdvisers.value = result.data.advisers;
   }
 
   const updateIncidental = async () => {
@@ -108,9 +133,9 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
       method: 'POST', body: {}
     });
     
-    
-    incidentalIncidentalReports.value = result.data.incidentalReports;
-    incidentalStudentData.value = result.data.studentData;
+    incidentalSearchResults.value = [];
+    incidentalIncidentalReports.value = result.data.incidentReports;
+    incidentalStudents.value = result.data.students;
   }
 
   const updateSectionPageData = async (sectionId: string) => {
@@ -192,7 +217,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     const { data }: any = await $fetch('/api/admin/view/dashboard', {
         method: 'POST', body: { email: currentUser?.email, id: currentUser?.uid }
     });
-    
+
     adminName.value = data.user.data.username;
     adminEmail.value = data.user.data.email;
     dashBoardReportsCount.value = data.reportsCount;
@@ -263,6 +288,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     searchSections,
     searchStudents,
     searchAdvisers,
+    searchSelectedStudent,
     searchSortBy,
     dashBoardReportsCount,
     dashBoardStudentsCount,
@@ -294,19 +320,32 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     getFullName,
     getGradeAndSection,
     incidentalIncidentalReports,
+    incidentalSelectedSort,
     incidentalReportType,
     incidentalReceivedBy,
-    incidentalReportedBy,    
+    incidentalReportedBy,
+    incidentalSearchQuery,    
+    incidentalSearchResults,
+    incidentalStatusFilter,
     anecdotalAnecdotalReports,
-    anecdotalStudentData,
-    incidentIncidentalReport,
-    incidentStudentData,
+    anecdotalAnecdotalStudents,
+    anecdotalAnecdotalSections,
+    incidentIncidentReport,
+    incidentalStudents,
     anecdoteAnecdotalReport,
-    anecdoteStudentData,
+    anecdoteStudent,
     updateSettings,
     updateAnecdote,
     updateIncident,
     updateAnecdotal,
     updateIncidental,
+    incidentStudent,
+    incidentUser,
+    incidentAdmin,
+    incidentInitialReport,
+    anecdotalAnecdotalAdvisers,
+    anecdoteAnecdotalReports,
+    anecdoteStudents,
+    anecdoteReports
   };
 });

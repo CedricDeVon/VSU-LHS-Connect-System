@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { Result } from "~/library/results/result";
 import { UserSecurity } from "~/library/security/userSecurity";
+
 const auth = useFirebaseAuth();
 
 const signOutUser = async () => {
@@ -9,25 +10,24 @@ const signOutUser = async () => {
 }
 
 const goToHomepage = () => {
-    useRoute().push('/adviser/homepage')
+    return navigateTo('/adviser/homepage');
 }
 
 const goToAdvisory = () => {
-    useRoute().push('/adviser/advisory')
+    return navigateTo('/adviser/advisory');
 }
 
 const goToReports = () => {
-    useRoute().push('/adviser/reports')
+    return navigateTo('/adviser/reports');
 }
 
 const goToSettings = () => {
-    useRoute().push('/adviser/settings')
+    return navigateTo('/adviser/settings');
 }
 
 const notifClick = () => {
-    $emit('notif-click')
+    // $emit('notif-click')
 }
-
 </script>
 
 <template>
@@ -35,7 +35,7 @@ const notifClick = () => {
 
         <div class="px-5 w-full flex justify-between items-center">
             <div class="flex space-x-4">
-                <button @click="goToHomepage" 
+            <button @click="goToHomepage" 
                     class="button px-7 py-2 rounded-lg focus:outline-none"
                     aria-label="Homepage">
                     Homepage
@@ -60,20 +60,18 @@ const notifClick = () => {
             <header class="flex justify-end items-center p-4">
             <div class="flex items-center gap-5">
                 <button class="hover:scale-110 cursor-pointer focus:outline-none">
-                    <img @click="notifClick" loading="lazy"
+                    <img @click="notifClick"
                     src="~/assets/icons/bell.svg"
                     alt="Notifications" class="w-8 object-contain aspect-square " />
                 </button>
                 
                 <button @click="goToSettings" class="hover:scale-110 cursor-pointer focus:outline-none">
-                    <img loading="lazy"
+                    <img
                     src="~/assets/icons/menu.svg"
                     alt="Menu" class="w-8 object-contain aspect-square " />
                 </button>
             </div>
             </header>
-           
-        
         </div>
     </div>
 </template>

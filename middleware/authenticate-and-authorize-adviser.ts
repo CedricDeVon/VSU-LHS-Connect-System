@@ -12,6 +12,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         method: 'POST', body: { jsonWebToken }
       })
       
+      console.log(result)
       const { role, status, email, password } = result.data.data;
       if (result.isNotSuccessful) {
         console.log('JWT Not Verified');
@@ -24,7 +25,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       }
 
       if (status !== 'active') {
-        console.log('User is not an adviser');
+        console.log('Adviser is not active');
         return navigateTo('/auth/login');
       }
 

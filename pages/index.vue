@@ -1,7 +1,8 @@
 <script setup lang="ts">
-// definePageMeta({
-//   // middleware: ['validate-user']
-// });
+
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
 
 </script>
 

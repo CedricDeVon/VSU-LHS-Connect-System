@@ -1,8 +1,10 @@
 <script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import { initialReport } from "~/data/initialReport";
 import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
-import { adviserReportStore } from "../../stores/adviserReport";
 import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
 
 const adviserViewStore = useAdviserViewStore();
@@ -27,12 +29,12 @@ const editReport = (report: any) => {
     adviserViewStore.reportsReportChosen = report;
     adviserViewStore.resetReports();
     if (report) {
-        adviserViewStore.reportsPeopleInvolved = report.peopleInvolved;
-        adviserViewStore.reportsWitness = report.witness;
-        adviserViewStore.reportsDateOfIncident = report.dateOfIncident;
-        adviserViewStore.reportsPlaceOfIncident = report.placeOfIncident;
-        adviserViewStore.reportsThingsInvolved = report.thingsInvolved;
-        adviserViewStore.reportsNarrativeReport = report.narrativeReport;
+        adviserViewStore.reportsPeopleInvolved = report.data.peopleInvolved;
+        adviserViewStore.reportsWitness = report.data.witnesses;
+        adviserViewStore.reportsDateOfIncident = report.data.dateOfIncident;
+        adviserViewStore.reportsPlaceOfIncident = report.data.placeOfIncident;
+        adviserViewStore.reportsThingsInvolved = report.data.thingsInvolved;
+        adviserViewStore.reportsNarrativeReport = report.data.narrativeReport;
     }
     adviserViewStore.reportsShowCreateReport = true;
 }
@@ -43,7 +45,7 @@ const viewDetails = (report: any) => {
 }
 
 const fetchReports = (id: any, ay: any) => {
-    adviserViewStore.reportsReports  = initialReport.filter((report)=> report.reportedBY === id && report.academicYear === ay);
+    adviserViewStore.reportsReports  = adviserViewStore.reportsInitialReports.filter((report: any)=> report.reportedBY === id && report.academicYear === ay);
     console.log(adviserViewStore.reportsReports);
 }
 
@@ -57,30 +59,31 @@ const creationClose = () => {
 <template>
     <div class="reports-page">
         <InitialReportModal
-        v-if="showCreateReport"
+        v-if="adviserViewStore.reportsShowCreateReport"
         :report="reportChosen"
         @close ="creationClose"
         /> 
-        <notification-modal v-if="showNotification"/>
+        <notification-modal v-if="adviserViewStore.reportsShowNotification"/>
         <AdviserHeader @notif-click="notifClick"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.reportsTimeline) }}</h1>
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
-                <div><h1 class="text-white text-2xl font-bold">Incident Reports</h1></div>
+            <div class="title flex justify-center items-center" :style="{width: adviserViewStore.reportsTitleWidth}">
+                <div><h1 class="text-white text-2xl font-bold">+
+                    Incident Reports</h1></div>
             </div>   
 
             <!--Content of the Page-->
-            <div class="contain " :style="{ width: containWidth}">
+            <div class="contain " :style="{ width: adviserViewStore.reportsContainWidth}">
                 <div class=" m-10  py-5 px-20 mx-20  ">
                         <!--Sort/Add student-->
                         <div class="grid-cols-2 pb-5 ml-6" >
                            <select
                                class="mr-8 xl:pr-24 lg:mr-5 lg:pr-2 py-4  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
-                               v-model="selectedSort">
+                               v-model="adviserViewStore.reportsSelectedSort">
                                <option value="" disabled selected hidden>Select View</option>
                                <option value="incident" >Incident Report</option>
                                <option value="anecdotal">Anecdotal Report</option>
@@ -122,7 +125,7 @@ const creationClose = () => {
                                         <td class=" py-5 text-center align-middle ">{{ report.data.peopleInvolved }}</td>
                                         <td class=" py-5 text-center align-middle ">{{ report.data.dateOfIncident }}</td>
                                         <td class=" py-5 text-center align-middle ">
-                                            <button v-if="report.isDraft"  @click="editReport(report)" 
+                                            <button v-if="report.data.isDraft"  @click="editReport(report)" 
                                                     class=" py-2 px-16 rounded-lg yellow-button text-white focus:outline-none"
                                                     aria-label="EditReport">
                                                     Edit

@@ -8,6 +8,10 @@ import { Databases } from '~/library/databases/databases';
 import { Result } from '~/library/results/result';
 import { UserSecurity } from '~/library/security/userSecurity';
 
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
 const auth = useFirebaseAuth();
 const adminViewStore = useAdminViewStore()
 await adminViewStore.updateAccountsAdvisers();

@@ -142,7 +142,6 @@
 <script >
 
 // import { emit } from 'process';
-import ShortDatepicker from '../used-components/ShortDatepicker.vue';
 // import DatePickerInput from '../used-components/DatePickerInput.vue';
 import { ref, watch, defineEmits } from 'vue';
 import { studentAddedStore } from '~/stores/studentAdded';
@@ -153,7 +152,7 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
 
   export default{
       name: 'AddStudentForm',
-      components: { ShortDatepicker, UnEnrolledStudents, StudentCSVUploadModal},
+      components: { UnEnrolledStudents, StudentCSVUploadModal},
       props: {
         AdviserID: {
           type: String,

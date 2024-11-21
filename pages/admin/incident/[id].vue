@@ -50,50 +50,106 @@
               </div>
             </div>
 
-            <!-- Primary Actions -->
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <!-- Case Conference Section - Show only if not resolved with conferences or if has conferences -->
+            <div v-if="showCaseConferenceSection" class="bg-white rounded-lg shadow-md overflow-hidden">
+              <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <h2 class="text-sm font-semibold text-gray-900">Case Conference Management</h2>
+              </div>
+              
+              <div class="p-4 space-y-4">
+                <!-- Conference Status -->
+                <div v-if="hasScheduledConferences" class="mb-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-medium text-gray-700">Next Conference</span>
+                    <span class="text-xs text-gray-500">{{ nextConferenceDate }}</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <div class="flex-1">
+                      <div class="h-2 bg-blue-100 rounded-full overflow-hidden">
+                        <div class="h-full bg-blue-500" :style="{ width: conferenceProgress + '%' }"></div>
+                      </div>
+                    </div>
+                    <span class="text-xs font-medium text-gray-600">
+                      {{ pendingConferencesCount }} pending
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Conference Actions -->
+                <div class="space-y-3">
+                  <!-- Schedule Conference - Show if unresolved and no pending conferences -->
+                  <button v-if="!isResolved && !hasScheduledConferences"
+                    @click="openScheduleDialog"
+                    class="w-full px-4 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white">
+                    <div class="flex items-center justify-center space-x-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span>Schedule New Conference</span>
+                    </div>
+                  </button>
+
+                  <!-- Create Conference Document - Show if has scheduled but undocumented conference -->
+                  <button v-if="hasUndocumentedConference"
+                    @click="openCreateConferenceDoc"
+                    class="w-full px-4 py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white">
+                    <div class="flex items-center justify-center space-x-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>Document Latest Conference</span>
+                    </div>
+                  </button>
+
+                  <!-- View Conference History -->
+                  <button v-if="hasCaseConference"
+                    @click="viewConferenceHistory"
+                    class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50">
+                    <div class="flex items-center justify-center space-x-2">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                      <span>View Conference History</span>
+                      <span class="text-xs bg-gray-200 px-2 py-1 rounded-full">{{ conferenceCount }}</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Message when resolved without conferences -->
+            <div v-else-if="isResolved && !hasCaseConference" class="bg-white rounded-lg shadow-md p-4">
+              <p class="text-center text-gray-600">This incident does not have any case conferences</p>
+            </div>
+
+            <!-- Primary Actions - Only show if incident is not resolved -->
+            <div v-if="!isResolved" class="bg-white rounded-lg shadow-md overflow-hidden">
               <div class="p-4 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-sm font-semibold text-gray-900">Case Actions</h2>
               </div>
               
               <div class="p-4 space-y-3">
-                <!-- Case Conference Button - Primary Action -->
-                 <div v-if="!isResolved">
-                <button
-                  @click="openScheduleDialog"
+                <!-- Create Case Conference Document Button -->
+                <button v-if="hasCaseConference"
+                  @click="openCreateConferenceDoc"
                   class="w-full px-4 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-200 flex items-center">
                   <div class="flex items-center justify-center w-full space-x-3">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span>Schedule Case Conference</span>
+                    <span>Create Case Conference Document</span>
                   </div>
                 </button>
-              </div>
-              <div v-else-if="!hasCaseConference">
-                <h3>The incident does not have a case conference</h3>
-              </div>
+                <div v-else>
+                  <h3>The incident does not have a case conference</h3>
+                </div>
 
-                <!-- View Conferences Button - Only show if has conferences -->
-                <button v-if="hasCaseConference"
-                  @click="viewConferenceHistory"
-                  class="w-full px-4 py-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white transition-colors duration-200 flex items-center">
-                  <div class="flex items-center justify-center w-full space-x-3">
-                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                    </svg>
-                    <span>Case Conference Documents</span>
-                    <span class="text-xs bg-white bg-opacity-20 px-2 py-1 rounded-full ml-2">
-                      {{ conferenceCount }}
-                    </span>
-                  </div>
-                </button>
-
-                <!-- Update Report - Only for Unresolved -->
-                <button v-if="!isResolved"
-                  @click="openUpdateForm"
+                <!-- Update Report -->
+                <button @click="openUpdateForm"
                   class="w-full px-4 py-3 rounded-lg bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 transition-colors duration-200 flex items-center justify-center space-x-2">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -102,9 +158,8 @@
                   <span>Update Case Details</span>
                 </button>
 
-                <!-- Resolution Button - Only for Unresolved -->
-                <button v-if="!isResolved"
-                  @click="confirmResolve"
+                <!-- Resolution Button -->
+                <button @click="confirmResolve"
                   class="w-full px-4 py-3 rounded-lg bg-white border-2 border-green-600 text-green-600 hover:bg-green-50 transition-colors duration-200 flex items-center justify-center space-x-2">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -158,6 +213,18 @@
       v-if="showScheduleModal && isViewingHistory"
       :conferences="caseConferences"
       @close="closeConferenceHistory" />
+
+    <CreateCaseConferenceModal 
+      v-if="showCreateConfDocModal"
+      :incident-id="incdReport.incidentDocID"
+      :student-info="showCreateConfDocModal ? {
+        name: incdReport.peopleInvolved?.join(', '),
+        gradeSection: incdReport.peopleInvolved ? 'Grade 7 - Javascript' : ''
+      } : null"
+      :saved-draft="savedConferenceDoc"
+      @close="showCreateConfDocModal = false"
+      @create="handleCreateConferenceDoc"
+      @save-draft="handleSaveDraft" />
   </div>
 </template>
 
@@ -176,6 +243,7 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import UpdateIncidentReportModal from '~/components/Modals/Incident Management/UpdateIncidentReportModal.vue';
 import ScheduleConferenceModal from '~/components/Modals/Incident Management/ScheduleConferenceModal.vue';
 import ViewCaseConferencesModal from '~/components/Modals/Incident Management/ViewCaseConferencesModal.vue';
+import CreateCaseConferenceModal from '~/components/Modals/Incident Management/CreateCaseConferenceModal.vue';
 import { caseConference } from '~/data/caseconference';
 
 export default {
@@ -185,6 +253,7 @@ export default {
     UpdateIncidentReportModal,
     ScheduleConferenceModal,
     ViewCaseConferencesModal,
+    CreateCaseConferenceModal,
   },
 
   data() {
@@ -198,6 +267,8 @@ export default {
       showScheduleModal: false,
       caseConferences: [], // Will store conference history
       isViewingHistory: false,
+      showCreateConfDocModal: false,
+      savedConferenceDoc: null,
     };
   },
 
@@ -389,7 +460,46 @@ export default {
       return Array.isArray(this.incidentData.hasCaseConference) 
         ? this.incidentData.hasCaseConference.length 
         : (this.incidentData.hasCaseConference ? 1 : 0);
-    }
+    },
+
+    hasScheduledConferences() {
+      return this.pendingConferences.length > 0;
+    },
+
+    hasUndocumentedConference() {
+      // Check if there are scheduled conferences without documentation
+      return this.pendingConferences.some(conf => !conf.documented);
+    },
+
+    pendingConferences() {
+      if (!this.caseConferences) return [];
+      return this.caseConferences.filter(conf => 
+        conf.status === 'Pending' && new Date(conf.conferenceDate) >= new Date()
+      );
+    },
+
+    pendingConferencesCount() {
+      return this.pendingConferences.length;
+    },
+
+    nextConferenceDate() {
+      if (!this.hasScheduledConferences) return null;
+      const nextConf = this.pendingConferences[0];
+      return new Date(nextConf.conferenceDate).toLocaleDateString();
+    },
+
+    conferenceProgress() {
+      const total = this.conferenceCount;
+      const completed = total - this.pendingConferencesCount;
+      return total ? (completed / total) * 100 : 0;
+    },
+
+    showCaseConferenceSection() {
+      // Show if:
+      // 1. Not resolved OR
+      // 2. Has case conferences (regardless of resolution status)
+      return !this.isResolved || this.hasCaseConference;
+    },
   },
 
   methods: {
@@ -442,6 +552,15 @@ export default {
     openScheduleDialog() {
       this.isViewingHistory = false;
       this.showScheduleModal = true;
+    },
+
+    openCreateConferenceDoc() {
+      // Check for existing draft when opening modal
+      const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
+      if (savedDraft) {
+        this.savedConferenceDoc = JSON.parse(savedDraft);
+      }
+      this.showCreateConfDocModal = true;
     },
 
     handleUpdate(updatedData) {
@@ -510,6 +629,51 @@ export default {
       }
     },
 
+    async handleCreateConferenceDoc(docData) {
+      try {
+        // Create new conference document ID
+        const newConfDocId = `caseConDoc${Date.now()}`;
+        
+        // Prepare document data
+        const newConfDoc = {
+          ...docData,
+          caseConDocID: newConfDocId,
+          status: 'Active',
+          createdBy: this.receivedBy,
+          createdAt: new Date().toISOString()
+        };
+
+        // Here you would typically save to your backend
+        // For now, just close the modal and show success message
+        this.showCreateConfDocModal = false;
+        alert('Case conference document created successfully');
+        
+        // Clear the draft after successful creation
+        localStorage.removeItem(`draft_conference_${this.incdReport.incidentDocID}`);
+        this.savedConferenceDoc = null;
+
+        // Refresh the conference list if needed
+        await this.loadCaseConferences();
+      } catch (error) {
+        console.error('Error creating conference document:', error);
+        alert('Failed to create case conference document');
+      }
+    },
+
+    async handleSaveDraft(draftData) {
+      try {
+        // In a real app, save to backend/localStorage
+        this.savedConferenceDoc = draftData;
+        localStorage.setItem(`draft_conference_${this.incdReport.incidentDocID}`, JSON.stringify(draftData));
+        
+        this.showCreateConfDocModal = false;
+        alert('Document saved as draft successfully');
+      } catch (error) {
+        console.error('Error saving draft:', error);
+        alert('Failed to save draft');
+      }
+    },
+
     async loadCaseConferences() {
       if (!this.incidentData?.hasCaseConference) {
         this.caseConferences = [];
@@ -524,7 +688,7 @@ export default {
       this.caseConferences = conferenceIds
         .map(id => caseConference.find(conf => conf.caseConDocID === id))
         .filter(conf => conf !== undefined)
-        .sort((a, b) => new Date(b.conferenceDate) - new Date(a.conferenceDate));
+        .sort((a, b) => new Date(a.conferenceDate) - new Date(b.conferenceDate));
     },
 
     downloadPDF() {

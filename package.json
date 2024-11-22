@@ -104,6 +104,7 @@
     "@types/node": "^22.7.9",
     "@types/nodemailer": "^6.4.16",
     "@types/validator": "^13.12.2",
+    "@types/vue": "^1.0.31",
     "@types/vue-router": "^2.0.0",
     "@vue/compiler-sfc": "^3.5.12",
     "@vueuse/core": "^11.1.0",

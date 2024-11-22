@@ -615,4 +615,25 @@ export const report = [
         details: 'Maintained highest academic standing while actively participating in multiple leadership roles.',
         adviserRemarks: 'Exceptional balance of academic excellence and extracurricular achievement.'
     }
-]; 
+];
+
+export const updateReport = (reportId, updates) => {
+    const index = report.findIndex(r => r.reportID === reportId);
+    if (index !== -1) {
+        report[index] = { ...report[index], ...updates };
+        // Save to localStorage for persistence
+        localStorage.setItem('reports', JSON.stringify(report));
+        return true;
+    }
+    return false;
+};
+
+export const initializeReports = () => {
+    const saved = localStorage.getItem('reports');
+    if (saved) {
+        const savedReports = JSON.parse(saved);
+        report.splice(0, report.length, ...savedReports);
+    } else {
+        localStorage.setItem('reports', JSON.stringify(report));
+    }
+};

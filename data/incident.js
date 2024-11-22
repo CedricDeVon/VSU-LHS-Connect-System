@@ -35,7 +35,7 @@ export const incidentReport = [
         lastModified: 'October 5, 2024',
         hasCaseConference: ["caseConID2", "caseConID7", "caseConID11"],
         AY: '2024-2025',
-        status: 'Resolved', // Read status in initial report
+        status: 'NotResolved', // Read status in initial report
     },
     {
         incidentDocID: 'incidentID3',
@@ -362,3 +362,24 @@ export const incidentReport = [
         status: 'Resolved',
     }
 ];
+
+export const updateIncidentReport = (incidentId, updates) => {
+    const index = incidentReport.findIndex(inc => inc.incidentDocID === incidentId);
+    if (index !== -1) {
+        incidentReport[index] = { ...incidentReport[index], ...updates };
+        // Save to localStorage for persistence
+        localStorage.setItem('incidentReports', JSON.stringify(incidentReport));
+        return true;
+    }
+    return false;
+};
+
+export const initializeIncidentReports = () => {
+    const saved = localStorage.getItem('incidentReports');
+    if (saved) {
+        const savedReports = JSON.parse(saved);
+        incidentReport.splice(0, incidentReport.length, ...savedReports);
+    } else {
+        localStorage.setItem('incidentReports', JSON.stringify(incidentReport));
+    }
+};

@@ -145,7 +145,7 @@
                   </div>
                 </button>
                 <div v-else>
-                  <h3>The incident does not have a case conference</h3>
+                  <h3><i>The incident does not have a case conference</i></h3>
                 </div>
 
                 <!-- Update Report -->
@@ -212,6 +212,7 @@
     <ViewCaseConferencesModal 
       v-if="showScheduleModal && isViewingHistory"
       :conferences="caseConferences"
+      :incident-id="incdReport.incidentDocID"
       @close="closeConferenceHistory" />
 
     <CreateCaseConferenceModal 

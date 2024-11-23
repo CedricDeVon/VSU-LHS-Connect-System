@@ -204,6 +204,11 @@ export default defineComponent({
 </template>
 
 <style scoped>
+
+.body {
+    background: #FFFEF1;
+}
+
 .contain {
     height: calc(98vh - 180px);
     /* Adjust based on your header and title heights */

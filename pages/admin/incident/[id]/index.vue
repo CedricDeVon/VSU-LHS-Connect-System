@@ -1,13 +1,13 @@
 <template>
-  <div class="flex h-screen bg-gray-100">
+  <div class="flex h-screen bg-[#FFFEF1]">  <!-- Changed bg-gray-100 to bg-[#FFFEF1] -->
     <AdminSidebar />
     <div class="flex-1 overflow-hidden">
       <AdminHeader />
       <div class="p-8 pt-0 overflow-y-auto h-[calc(100vh-64px)]">
         <!-- Page Title -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold text-gray-900">Incident Report Details</h1>
-          <p class="text-sm text-gray-600">Managing incident report and related actions</p>
+          <h1 class="text-2xl font-bold text-[#265630]">Incident Report Details</h1>
+          <p class="text-sm text-[#265630]">Managing incident report and related actions</p>
         </div>
 
         <div class="flex gap-6">
@@ -80,7 +80,7 @@
                   <!-- Schedule Conference - Show if unresolved and no pending conferences -->
                   <button v-if="!isResolved && !hasScheduledConferences"
                     @click="openScheduleDialog"
-                    class="w-full px-4 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white">
+                    class="w-full px-4 py-3 rounded-lg bg-[#265630] hover:bg-[#728B78] text-white">
                     <div class="flex items-center justify-center space-x-2">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -93,7 +93,7 @@
                   <!-- Create Conference Document - Show if has scheduled but undocumented conference -->
                   <button v-if="hasUndocumentedConference"
                     @click="openCreateConferenceDoc"
-                    class="w-full px-4 py-3 rounded-lg bg-green-600 hover:bg-green-700 text-white">
+                    class="w-full px-4 py-3 rounded-lg bg-[#265630] hover:bg-[#728B78] text-white">
                     <div class="flex items-center justify-center space-x-2">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -106,14 +106,14 @@
                   <!-- View Conference History - Only show if has actual conferences -->
                   <button v-if="shouldShowConferenceHistory"
                     @click="viewConferenceHistory"
-                    class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50">
+                    class="w-full px-4 py-3 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78]">
                     <div class="flex items-center justify-center space-x-2">
                       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                       </svg>
                       <span>View Conference History</span>
-                      <span class="text-xs bg-gray-200 px-2 py-1 rounded-full">{{ conferenceCount }}</span>
+                      <span class="text-xs text-gray-600 bg-gray-200 px-2 py-1 rounded-full">{{ conferenceCount }}</span>
                     </div>
                   </button>
                 </div>
@@ -135,7 +135,7 @@
                 <!-- Create Case Conference Document Button -->
                 <button v-if="hasCaseConference"
                   @click="openCreateConferenceDoc"
-                  class="w-full px-4 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-200 flex items-center">
+                  class="w-full px-4 py-3 rounded-lg bg-[#265630] hover:bg-[#728B78] text-white transition-colors duration-200 flex items-center">
                   <div class="flex items-center justify-center w-full space-x-3">
                     <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -150,7 +150,7 @@
 
                 <!-- Update Report -->
                 <button @click="openUpdateForm"
-                  class="w-full px-4 py-3 rounded-lg bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 transition-colors duration-200 flex items-center justify-center space-x-2">
+                  class="w-full px-4 py-3 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 flex items-center justify-center space-x-2">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -160,7 +160,7 @@
 
                 <!-- Resolution Button -->
                 <button @click="confirmResolve"
-                  class="w-full px-4 py-3 rounded-lg bg-white border-2 border-green-600 text-green-600 hover:bg-green-50 transition-colors duration-200 flex items-center justify-center space-x-2">
+                  class="w-full px-4 py-3 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 flex items-center justify-center space-x-2">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                   </svg>
@@ -177,7 +177,7 @@
               
               <div class="grid grid-cols-2 gap-3 p-4">
                 <button @click="downloadPDF"
-                  class="flex flex-col items-center justify-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+                  class="flex flex-col items-center justify-center p-4 rounded-lg border border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200">
                   <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -186,7 +186,7 @@
                 </button>
 
                 <button @click="printDocument"
-                  class="flex flex-col items-center justify-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+                  class="flex flex-col items-center justify-center p-4 rounded-lg border border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200">
                   <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />

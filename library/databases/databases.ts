@@ -121,6 +121,38 @@ export class Databases {
         return Databases._caseConferenceFirebaseStorage;
     }
 
+    public static async getOneCaseConferenceReportViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._caseConferenceFirebaseDatabase.readOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneCaseConferenceReportViaIncidentalReportId(incidentId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._caseConferenceFirebaseDatabase.queryOne(
+                where("incidentId", "==", incidentId)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllCaseConferenceReports(): Promise<Result> {
+        try {
+            const result: Result = await Databases._caseConferenceFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async getOneIncidentDividerViaIncidentId(incidentId: string): Promise<Result> {
         try {
             const result: Result = await Databases._incidentDividerFirebaseDatabase.queryOne(

@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 import { getCurrentUser } from 'vuefire';
-import { Databases } from '~/library/databases/databases';
 
 export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const adminName = ref('');
@@ -73,6 +72,27 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
 
   const settingsUserData = useState('settingsUserData');
   const settingsAdminData = useState('settingsAdminData');
+  const settingsAdviserData = useState('settingsAdviserData');
+
+  const caseConferenceCaseConferenceReport = useState('caseConferenceCaseConferenceReport');
+  const caseConferenceIncidentReport = useState('caseConferenceIncidentReport');
+  const caseConferenceStudent = useState('caseConferenceStudent');
+  const caseConferenceSection = useState('caseConferenceSection');
+  
+  const updateCaseConference = async (caseConferenceId: any) => {
+    // console.log('D', caseConferenceId);
+    const result: any = await $fetch('/api/admin/view/caseConference', {
+      method: 'POST', body: {
+        caseConferenceId
+      }
+    });
+    // console.log('A ', result);
+
+    caseConferenceCaseConferenceReport.value = result.data.caseConferenceReport;
+    caseConferenceIncidentReport.value = result.data.incidentReport;
+    caseConferenceStudent.value = result.data.student;
+    caseConferenceSection.value = result.data.section;
+  }
 
   const updateSettings = async () => {
     const currentUser = await getCurrentUser();
@@ -182,6 +202,10 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const studentGetGradeAndSection = (student: any) => {
     return (student.data.section) ? `Grade ${student.data.section.data.level}, ${student.data.section.data.name}` : 'N/A';
   }
+
+  const sectionGetGradeAndSection = (section: any) => {
+    return (section.data) ? `Grade ${section.data.level}, ${section.data.name}` : 'N/A';
+  }
   
   const resetAdviserAccountsCSVFileInputData = async (message: string) => {
     accountsMessage.value = message;
@@ -276,6 +300,13 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
 
   return {
+    sectionGetGradeAndSection,
+    caseConferenceStudent,
+    caseConferenceSection,
+    updateCaseConference,
+    caseConferenceIncidentReport,
+    caseConferenceCaseConferenceReport,
+    settingsAdviserData,
     searchShowStudentDetailsModal,
     adminName,
     adminEmail,

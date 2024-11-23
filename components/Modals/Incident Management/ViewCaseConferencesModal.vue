@@ -32,7 +32,8 @@
           <div class="overflow-y-auto p-6">
             <div class="space-y-4">
               <div v-for="conference in sortedConferences" :key="conference.caseConDocID"
-                   class="bg-white rounded-lg p-4 border border-gray-200 hover:border-[#265630] transition-all conference-item">
+                   @click="navigateToConference(conference.caseConDocID)"
+                   class="bg-white rounded-lg p-4 border border-gray-200 hover:border-[#265630] transition-all conference-item cursor-pointer">
                 <div class="flex justify-between items-start">
                   <div>
                     <h3 class="font-semibold text-[#265630]">
@@ -87,6 +88,10 @@ export default {
     conferences: {
       type: Array,
       required: true
+    },
+    incidentId: {  // Add this prop
+      type: String,
+      required: true
     }
   },
   computed: {
@@ -103,6 +108,11 @@ export default {
         month: 'long',
         day: 'numeric'
       })
+    },
+    navigateToConference(conferenceId) {
+      this.$emit('close');
+      // Simplified navigation with correct params
+      this.$router.push(`/admin/incident/${this.incidentId}/conference/${conferenceId}`);
     }
   }
 }

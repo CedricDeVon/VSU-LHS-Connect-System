@@ -103,8 +103,8 @@
                     </div>
                   </button>
 
-                  <!-- View Conference History -->
-                  <button v-if="hasCaseConference"
+                  <!-- View Conference History - Only show if has actual conferences -->
+                  <button v-if="shouldShowConferenceHistory"
                     @click="viewConferenceHistory"
                     class="w-full px-4 py-3 rounded-lg bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50">
                     <div class="flex items-center justify-center space-x-2">
@@ -141,7 +141,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span>Create Case Conference Document</span>
+                    <span>{{ hasConferenceDraft ? 'Update Case Conference' : 'Create Case Conference Document' }}</span>
                   </div>
                 </button>
                 <div v-else>
@@ -155,7 +155,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                   </svg>
-                  <span>Update Case Details</span>
+                  <span>Update Incident Report</span>
                 </button>
 
                 <!-- Resolution Button -->
@@ -501,14 +501,35 @@ export default {
       // 2. Has case conferences (regardless of resolution status)
       return !this.isResolved || this.hasCaseConference;
     },
+
+    hasConferenceDraft() {
+      const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
+      return !!savedDraft;
+    },
+
+    shouldShowConferenceHistory() {
+      const conferences = this.incidentData?.hasCaseConference;
+      if (!Array.isArray(conferences)) return false;
+      if (conferences.length === 0) return false;
+      // Only show if at least one conference ID exists and is valid
+      return conferences.some(id => typeof id === 'string' && id.includes('caseConID'));
+    }
   },
 
   methods: {
     async initIncidentByID(id) {
       const fetchedObject = incidentReport.find(item => item.incidentDocID === id);
       if (fetchedObject) {
-        this.incdReport = { ...fetchedObject };
-        this.incidentData = { ...fetchedObject };
+        // Ensure hasCaseConference is always an array
+        const hasCaseConference = Array.isArray(fetchedObject.hasCaseConference) 
+          ? fetchedObject.hasCaseConference.filter(id => id?.includes('caseConID'))
+          : [];
+
+        this.incdReport = { 
+          ...fetchedObject,
+          hasCaseConference 
+        };
+        this.incidentData = { ...this.incdReport };
       }
     },
 
@@ -702,8 +723,7 @@ export default {
         silent: false,
         printBackground: true
       });
-    },
-
-  },
-};
+    }
+  }
+}
 </script>

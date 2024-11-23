@@ -10,7 +10,9 @@ import { UserSecurity } from "~/library/security/userSecurity";
 
 const auth = useFirebaseAuth();
 const adviserViewStore = useAdviserViewStore();
-await adviserViewStore.updateSettings();
+onBeforeMount(async () => {
+    await adviserViewStore.updateSettings();
+})
 
 const handleRowClick = (item: any) => {
 

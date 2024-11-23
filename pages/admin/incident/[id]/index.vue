@@ -29,7 +29,7 @@ export default {
     };
   },
 
-  async mounted() {
+  async beforeMounted() {
     await this.adminViewStore.updateIncident(this.$route.params.id);
     console.log(this.adminViewStore.incidentIncidentReport);
     this.displayPDF();

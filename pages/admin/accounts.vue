@@ -16,6 +16,9 @@ const auth = useFirebaseAuth();
 const adminViewStore = useAdminViewStore()
 await adminViewStore.updateAccountsAdvisers();
 
+onBeforeMount(async () => {
+})
+
 const acceptRequest = async (adviser: any) => {
   const result = await $fetch('/api/adviser/request/accept', {
     method: 'POST', body: { adviserId: adviser.id }

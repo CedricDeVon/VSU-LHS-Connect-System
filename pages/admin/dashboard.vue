@@ -8,6 +8,10 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore'
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateDashboard();
 
+onBeforeMount(async () => {
+})
+
+
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 

@@ -7,7 +7,6 @@ import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-
 export default {
     name: 'admin-anecdotal',
     components: { AdminSidebar, AdminHeader },

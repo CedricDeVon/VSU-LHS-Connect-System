@@ -18,6 +18,10 @@ definePageMeta({
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 
+onBeforeMount(async () => {
+
+})
+
 export default {
     name: 'SettingsPage',
     components: { AdminSidebar, AdminHeader },

@@ -32,9 +32,10 @@ export class UserSecurity {
                     role
                 }
               });
-            window.localStorage!.setItem('userAuthToken',
-                jsonWebToken.data
-            );
+            useCookie('VSUConnectionSystemUserAuthToken').value = jsonWebToken.data;
+            // window.localStorage!.setItem('VSUConnectionSystemUserAuthToken',
+            //     jsonWebToken.data
+            // );
             return new SuccessfulResult(result.data);
 
         } catch (error: any) {
@@ -111,7 +112,7 @@ export class UserSecurity {
             }
 
             const jsonWebTokenData: any = await $fetch('/api/auth/jsonWebToken/verify', {
-                method: 'POST', body: { jsonWebToken: window.localStorage!.getItem('userAuthToken') }
+                method: 'POST', body: { jsonWebToken: useCookie('VSUConnectionSystemUserAuthToken').value }
             })
             let currentUser = await getCurrentUser();
             const advisers: any = [];
@@ -171,7 +172,9 @@ export class UserSecurity {
             UserSecurity._handleUndefinedOrNullArguments(auth);
 
             await signOut(auth);
-            window.localStorage?.removeItem('userAuthToken');
+            useCookie('VSUConnectionSystemUserAuthToken').value = null;
+            // window.localStorage?.removeItem('VSUConnectionSystemUserAuthToken');
+
             return new SuccessfulResult();
 
         } catch (error: any) {

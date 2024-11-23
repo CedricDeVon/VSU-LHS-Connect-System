@@ -8,10 +8,14 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
-await adminViewStore.updateSectionPageData(useRoute().params.id);
-console.log(useRoute().params.id);
-console.log(adminViewStore.sectionSection);
-console.log(adminViewStore.sectionAdviser);
+
+onBeforeMount(async () => {
+    await adminViewStore.updateSectionPageData(useRoute().params.id);
+})
+
+// console.log(useRoute().params.id);
+// console.log(adminViewStore.sectionSection);
+// console.log(adminViewStore.sectionAdviser);
 
 const viewStudentProfile = (studentId: any) => {
     return navigateTo(`/admin/student/${studentId}`, { replace: true });

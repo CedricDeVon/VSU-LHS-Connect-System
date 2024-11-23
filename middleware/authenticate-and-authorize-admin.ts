@@ -2,16 +2,18 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
-      const jsonWebToken: any = window.localStorage!.getItem('userAuthToken');
-      console.log(jsonWebToken);
+      const jsonWebToken: any = useCookie('VSUConnectionSystemUserAuthToken');
+      // console.log('Start', jsonWebToken);
       
-      if (jsonWebToken === undefined || jsonWebToken === null) {
+      if (jsonWebToken.value === undefined || jsonWebToken.value === null) {
         console.log('JWT Not Found');
         return navigateTo('/auth/login');
       }
 
       let result: any = await $fetch('/api/auth/jsonWebToken/verify', {
-        method: 'POST', body: { jsonWebToken }
+        method: 'POST', body: {
+          jsonWebToken: jsonWebToken.value
+        }
       })
       if (result.isNotSuccessful) {
         throw new Error(result.message);

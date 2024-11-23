@@ -11,6 +11,9 @@ import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateAdvisoryView();
 
+onBeforeMount(async () => {
+})
+
 function showAddStudentForm() {
     adviserViewStore.advisoryAddStudentForm = !adviserViewStore.advisoryAddStudentForm;
 }

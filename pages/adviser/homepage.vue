@@ -11,6 +11,10 @@ import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateHomePage();
 
+onBeforeMount(async () => {
+
+})
+
 </script>
 
 <template>

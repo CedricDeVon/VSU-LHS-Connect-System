@@ -13,6 +13,10 @@ import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateSearch();
 
+onBeforeMount(async () => {
+})
+
+
 const addNewSection = async (newSection: any) => {
   const result = await $fetch('/api/section/create', {
     method: 'POST',

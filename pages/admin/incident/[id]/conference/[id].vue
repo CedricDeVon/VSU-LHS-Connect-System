@@ -97,10 +97,38 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore'
 const route = useRoute()
 const loading = ref(true)
 const error = ref(null)
-const conferenceId = ref(route.params.id)
+// const conferenceId = ref(route.params.id)
 // console.log('E ', route.params)
 const adminViewStore = useAdminViewStore();
-await adminViewStore.updateCaseConference(conferenceId.value);
+
+onBeforeMount(async () => {
+    await adminViewStore.updateCaseConference(route.params.id);
+    try {
+        loading.value = true
+        // console.log('F ', conferenceId.value)
+        // console.log('C',
+        //     adminViewStore.caseConferenceIncidentReport,
+        //     adminViewStore.caseConferenceCaseConferenceReport,
+        //     adminViewStore.caseConferenceStudent,
+        //     adminViewStore.caseConferenceSection);
+        displayPDF()
+        loading.value = false
+
+        // const data = caseConference.find(conf => conf.caseConDocID === conferenceId.value)
+
+        // if (!data) {
+        //     throw new Error('Conference not found')
+        // }
+
+        // // Update the incidentId if needed
+        // incidentId.value = data.incidentID || route.params.id
+        // adminViewStore.caseConferenceIncidentReport = data
+
+    } catch (err) {
+        error.value = err.message || 'Failed to load conference data'
+        loading.value = false
+    }
+})
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -264,33 +292,6 @@ const printDocument = () => {
     pdfMake.createPdf(docDefinition).print()
 }
 
-onMounted(async () => {
-    try {
-        loading.value = true
-        // console.log('F ', conferenceId.value)
-        // console.log('C',
-        //     adminViewStore.caseConferenceIncidentReport,
-        //     adminViewStore.caseConferenceCaseConferenceReport,
-        //     adminViewStore.caseConferenceStudent,
-        //     adminViewStore.caseConferenceSection);
-        displayPDF()
-        loading.value = false
-
-        // const data = caseConference.find(conf => conf.caseConDocID === conferenceId.value)
-
-        // if (!data) {
-        //     throw new Error('Conference not found')
-        // }
-
-        // // Update the incidentId if needed
-        // incidentId.value = data.incidentID || route.params.id
-        // adminViewStore.caseConferenceIncidentReport = data
-
-    } catch (err) {
-        error.value = err.message || 'Failed to load conference data'
-        loading.value = false
-    }
-})
 </script>
 
 <style scoped>

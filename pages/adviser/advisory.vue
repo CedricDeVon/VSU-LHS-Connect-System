@@ -11,17 +11,32 @@ import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateAdvisoryView();
 
+function showAddStudentForm() {
+    adviserViewStore.advisoryAddStudentForm = !adviserViewStore.advisoryAddStudentForm;
+}
+
+function getStudents() {
+    const results = adviserViewStore.advisoryStudents;
+    if (adviserViewStore.adviserSelectedSort === 'surname') {
+      results.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
+    } else if (adviserViewStore.adviserSelectedSort === 'student_ID') {
+      results.sort((a: any, b: any) => a.id.localeCompare(b.id));
+    }
+
+    return results;
+}
+
 </script>
 
 <template>
     <div class="adviser-page">
         <AdviserHeader @notif-click="notifClick"  />
             <div >
-            <AddStudentForm v-if="showAddStudentForm"
-            @close="showAddStudentForm = false"
+            <AddStudentForm v-if="adviserViewStore.advisoryAddStudentForm"
+            @close="adviserViewStore.advisoryAddStudentForm = false"
             />
 
-            <notification-modal v-if="showNotification" />
+            <notification-modal v-if="adviserViewStore.advisoryShowNotification" />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
             </div>
@@ -46,7 +61,7 @@ await adviserViewStore.updateAdvisoryView();
                            </select>
 
                        
-                            <button @click="adviserViewStore.addNewStudent"
+                            <button @click="showAddStudentForm"
                                     class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
@@ -68,9 +83,9 @@ await adviserViewStore.updateAdvisoryView();
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    <tr class ="hover:bg-gray-200 " v-for="student in adviserViewStore.advisoryStudents" :key="student.id" @click="adviserViewStore.studentClick(student)" >
-                                        <td class="py-2 px-4 text-center align-middle ">{{ student.id }}</td>
-                                        <td class="py-2 px-4 text-center align-middle ">{{ `${student.data.lastName}, ${student.data.firstName} ${student.data.suffix}` }}</td>
+                                    <tr class ="hover:bg-gray-200 " v-for="student in getStudents()" :key="student.id" @click="adviserViewStore.studentClick(student)" >
+                                        <td class="py-2 px-4 text-center align-middle ">{{ student.id || '' }}</td>
+                                        <td class="py-2 px-4 text-center align-middle ">{{ adviserViewStore.getFullName(student) }}</td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -223,6 +223,18 @@ export class Databases {
         }
     }
 
+    public static async getAllIncidentalReportsViaAdviserId(adviserId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._incidentReportFirebaseDatabase.queryDuplicates(
+                where("adviserId", "==", adviserId)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async getAllAnecdotalReportsViaAdviserId(adviserId: string): Promise<Result> {
         try {
             const result: Result = await Databases._anecdotalReportFirebaseDatabase.queryDuplicates(
@@ -333,6 +345,18 @@ export class Databases {
         }
     }
 
+    public static async getAllUnEnrolledStudents(): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.queryDuplicates(
+                where('isEnrolled', '==', false)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async getOneSectionViaName(name: string): Promise<Result> {
         try {
             const result: Result = await Databases._sectionFirebaseDatabase.queryOne(
@@ -400,8 +424,8 @@ export class Databases {
         try {
             let result: Result;
             for (const studentId of studentIds) {
-                result = await Databases.getOneStudentViaId(studentId);
-                if (result.data !== undefined) {
+                result = (await Databases.getOneStudentViaId(studentId)).data;
+                if (result?.data !== undefined) {
                     throw new Error(`Student '${studentId}' already exists`);
                 }
             }

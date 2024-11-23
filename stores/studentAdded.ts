@@ -9,11 +9,11 @@ export const studentAddedStore = defineStore('studentAddedStore', () => {
     const suffix = ref('');
     const gender = ref('');
     const address = ref('');
-    const contactNum = ref('');
+    const contactNumber = ref('');
     const isEnrolled = ref(true);
     const incidentDocIDs = ref([]);
     const birthDate = ref('');
-    const profilePic = ref('');
+    const profilePicture = ref('default.png');
 
 
     const getStudentData = () => {
@@ -26,12 +26,36 @@ export const studentAddedStore = defineStore('studentAddedStore', () => {
             suffix : suffix.value,
             gender : gender.value,
             address : address.value,
-            contactNum : contactNum.value,
+            contactNumber : contactNumber.value,
             isEnrolled : isEnrolled.value,
             incidentDocIDs : incidentDocIDs.value,
             birthDate : birthDate.value,
-            profilePic : profilePic.value
+            profilePicture : profilePicture.value
         };
+    }
+
+    function getAllData() {
+        return {
+            studentId: studentId.value,
+            adviserId: '',
+            sectionId: '',
+            firstName: firstName.value,
+            lastName: lastName.value,
+            middleName: middleName.value,
+            suffix: suffix.value,
+            gender: gender.value,
+            address: address.value,
+            contactNumber: contactNumber.value,
+            isEnrolled: isEnrolled.value,
+            birthDate: convertDate(birthDate.value),
+            profilePicture: profilePicture.value
+        }
+    }
+
+    function convertDate(value: any) {
+        const date = new Date(value);
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+        return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
     }
 
     function resetAllData() {
@@ -43,11 +67,11 @@ export const studentAddedStore = defineStore('studentAddedStore', () => {
         suffix.value = '',
         gender.value ='',
         address.value = '',
-        contactNum.value ='',
+        contactNumber.value ='',
         isEnrolled.value = true,
         incidentDocIDs.value = [],
         birthDate.value = '',
-        profilePic.value =''
+        profilePicture.value =''
     }
 
     return { 
@@ -59,13 +83,15 @@ export const studentAddedStore = defineStore('studentAddedStore', () => {
         suffix,
         gender,
         address,
-        contactNum,
+        contactNumber,
         isEnrolled,
         incidentDocIDs,
         birthDate,
-        profilePic,
+        profilePicture,
         getStudentData,
-        resetAllData
+        resetAllData,
+        getAllData,
+        convertDate
     };
   });
   

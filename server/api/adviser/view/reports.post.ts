@@ -7,10 +7,16 @@ export default defineEventHandler(async (event) => {
     const { userId } = await readBody(event);
     const adviser = (await Databases.getOneAdviserViaUserId(userId)).data;
     const timeline = (await Databases.getMostRecentTimeline()).data[0];
-    const initialReports = (await Databases.getAllInitialReportsViaAdviserId(adviser.id)).data;
+    const incidentalReports = (await Databases.getAllIncidentalReportsViaAdviserId(adviser.id)).data;
+    for (const report of incidentalReports) {
+      report.data['student'] = (await Databases.getOneStudentViaId(report.data.studentId)).data;
+    }
     const anecdotalReports = (await Databases.getAllAnecdotalReportsViaAdviserId(adviser.id)).data;
+    for (const report of anecdotalReports) {
+      report.data['student'] = (await Databases.getOneStudentViaId(report.data.studentId)).data;
+    }
     return new SuccessfulResult({
-      timeline, initialReports, anecdotalReports
+      timeline, incidentalReports, anecdotalReports
     }).cloneToObject();
 
   } catch (error: any) {

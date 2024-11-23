@@ -1,8 +1,8 @@
 <template>
-    <div v-if="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic" @click="handleOverlayClick">
+    <div v-if="adminViewStore.searchShowStudentDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic" @click="handleOverlayClick">
         <div class="bg-[#FFFEF1] rounded-2xl w-[600px] max-h-[90vh] overflow-y-auto relative" @click.stop>
             <!-- Close button -->
-            <button @click="$emit('close')" 
+            <button @click="handleClose" 
                     class="absolute top-4 right-4 text-gray-600 hover:text-gray-800">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -16,38 +16,38 @@
 
             <!-- Student Details -->
             <div class="p-6">
-                <div v-if="studentData" class="flex flex-col items-center">
-                     <img :src="studentData?.profilePic || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS11c2VyLXJvdW5kIj48cGF0aCBkPSJNMTggMjBhNiA2IDAgMCAwLTEyIDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='"
-                         :alt="`${studentData.firstName}'s profile`"
+                <div v-if="adminViewStore.searchSelectedStudent" class="flex flex-col items-center">
+                     <img :src="adminViewStore.searchSelectedStudent.data.profilePicture || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWNpcmNsZS11c2VyLXJvdW5kIj48cGF0aCBkPSJNMTggMjBhNiA2IDAgMCAwLTEyIDAiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEwIiByPSI0Ii8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiLz48L3N2Zz4='"
+                         :alt="`${adminViewStore.searchSelectedStudent.data.firstName}'s profile`"
                          class="w-32 h-32 rounded-full object-cover mb-4"/>
                     
                     <h2 class="text-2xl font-bold text-green-900 mb-2">
-                        {{ `${studentData.firstName} ${studentData.middleName || ''} ${studentData.lastName}` }}
+                        {{ adminViewStore.getFullName(adminViewStore.searchSelectedStudent) }}
                     </h2>
 
-                    <p class="text-lg mb-6">ID NO: {{ studentData.studentId }}</p>
+                    <p class="text-lg mb-6">ID NO: {{ adminViewStore.searchSelectedStudent.id }}</p>
 
                     <!-- Student Details Grid -->
                     <div class="w-full space-y-4">
                         <div class="flex justify-between">
                             <span class="font-semibold">Gender:</span>
-                            <span>{{ studentData.gender }}</span>
+                            <span>{{ adminViewStore.searchSelectedStudent.data.gender }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-semibold">Birth Date:</span>
-                            <span>{{ studentData.birthDate }}</span>
+                            <span>{{ adminViewStore.searchSelectedStudent.data.birthDate }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-semibold">Age:</span>
-                            <span>{{ studentData.age }}</span>
+                            <span>{{ adminViewStore.searchSelectedStudent.data.age }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-semibold">Address:</span>
-                            <span>{{ studentData.address }}</span>
+                            <span>{{ adminViewStore.searchSelectedStudent.data.address }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="font-semibold">Contact:</span>
-                            <span>{{ studentData.contactNum }}</span>
+                            <span>{{ adminViewStore.searchSelectedStudent.data.contactNumber }}</span>
                         </div>
 
                         <!-- Updated Buttons Section -->
@@ -65,7 +65,7 @@
 
                             <!-- Warning/Alert Action -->
                             <button v-if="hasIncidents" 
-                                    @click="showIncidentModal = true"
+                                    @click="viewIncidents"
                                     class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
                                 View {{ incidentButtonText }}
                             </button>
@@ -74,28 +74,31 @@
                 </div>
             </div>
         </div>
+        <!-- Add Modal -->
+        <IncidentReportsModal 
+            :show="adminViewStore.studentShowIncidentModal"
+            :student-data="adminViewStore.searchSelectedStudent"
+            @close="adminViewStore.studentShowIncidentModal = false"
+        />
     </div>
-
-    <!-- Add Modal -->
-    <IncidentReportsModal 
-        :show="showIncidentModal"
-        :student-data="studentData"
-        @close="showIncidentModal = false"
-    />
 </template>
 
 <script>
-import { section } from '~/data/section.js';
 import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-console.log('K')
+const adminViewStore = useAdminViewStore();
+
+const handleClose = () => {
+    adminViewStore.searchShowStudentDetailsModal = false;
+}
 
 export default {
     name: 'StudentDetailsModal',
     props: {
         show: {
             type: Boolean,
-            default: false
+            default: true
         },
         studentData: {
             type: Object,
@@ -104,10 +107,10 @@ export default {
     },
     computed: {
         hasIncidents() {
-            return this.studentData?.incidentDocIDs?.length > 0;
+            return this.adminViewStore.searchSelectedStudent.data.incidentalReports.length > 0;
         },
         incidentButtonText() {
-            const count = this.studentData?.incidentDocIDs?.length || 0;
+            const count = this.adminViewStore.searchSelectedStudent.data.incidentalReports.length || 0;
             return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
         }
     },
@@ -119,25 +122,29 @@ export default {
             }
         },
         viewFullDetails() {
-            const studentSectionId = this.studentData.sectionID;
-            
+            const studentSectionId = this.adminViewStore.searchSelectedStudent.data.sectionId;
             if (studentSectionId) {
-                this.$emit('close');
-                this.$router.push({
-                    path: `/admin/section/${studentSectionId}`,
-                    query: { source: 'search' }
-                });
+                adminViewStore.searchShowStudentDetailsModal = false;
+                return navigateTo(`/admin/section/${studentSectionId}`);
+
             } else {
                 alert('Student is not assigned to any section');
             }
         },
         viewAnecdotalReport() {
-            if (this.studentData.anecdotalDocID) {
-                this.$emit('close');
-                this.$router.push(`/admin/anecdote/${this.studentData.studentId}`);
+            const studentId = this.adminViewStore.searchSelectedStudent.id;
+            const anecdotalId = this.adminViewStore.searchSelectedStudent.data.anecdotalReportId;
+            if (anecdotalId) {
+                adminViewStore.searchShowStudentDetailsModal = false;
+                return navigateTo(`/admin/anecdote/${studentId}`);
+
             } else {
                 alert('No anecdotal report available for this student');
             }
+        },
+        viewIncidents() {
+            adminViewStore.studentShowIncidentModal = true
+            adminViewStore.studentStudentData = this.adminViewStore.searchSelectedStudent;
         }
     },
     components: {
@@ -145,7 +152,9 @@ export default {
     },
     data() {
         return {
-            showIncidentModal: false
+            showIncidentModal: false,
+            adminViewStore,
+            handleClose
         }
     }
 }

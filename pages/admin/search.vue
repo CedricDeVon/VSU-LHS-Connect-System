@@ -102,6 +102,8 @@ const viewStudentProfile = (studentId: any) => {
   });
 
   adminViewStore.searchSelectedStudent = student;
+  adminViewStore.searchShowStudentDetailsModal = true;
+  console.log(adminViewStore.searchSelectedStudent)
 }
 
 </script>
@@ -213,7 +215,7 @@ const viewStudentProfile = (studentId: any) => {
     </div>
     <AddSectionForm v-if="adminViewStore.searchShowAddSectionForm" @close="adminViewStore.searchShowAddSectionForm = false" @add-section="addNewSection" />
     <StudentDetailsModal 
-        v-if="adminViewStore.searchSelectedStudent"
+        v-if="adminViewStore.searchShowStudentDetailsModal"
         :studentData="adminViewStore.searchSelectedStudent"
         @close="adminViewStore.searchSelectedStudent = null"
     />

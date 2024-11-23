@@ -159,8 +159,8 @@ export default {
               }
           };
       },
-
-    methods: {
+  },
+  methods: {
         displayPDF() {
             pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
                 const url = URL.createObjectURL(blob);
@@ -177,115 +177,115 @@ export default {
                 container.innerHTML = '';
                 container.appendChild(iframe);
             });
-    },
-    async initData(studentId) {
-      this.studentData = student.find(s => s.studentId === studentId);
-      if (!this.studentData) return;
-
-      this.anecReport = anecdotalReport.find(
-        report => report.anecdotalDocID === this.studentData.anecdotalDocID
-      );
-    },
-
-    displayPDF() {
-      if (!this.defineAnecdotalDoc) {
-        console.error('No document definition available');
-        return;
-      }
-
-      try {
-        pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
-          const url = URL.createObjectURL(blob);
-          const viewer = document.getElementById('pdf-viewer');
-          if (viewer) {
-            viewer.src = url;
-          } else {
-            console.error('PDF viewer element not found');
-          }
-        });
-      } catch (error) {
-        console.error('Error creating PDF:', error);
-      }
-    },
-
-    formatDate(date) {
-      return formatDate(date, 'MMMM DD, YYYY');
-    },
-
-    openUpdateForm() {
-      // Create a new report object with required fields
-      this.selectedReport = {
-        date: '',
-        purpose: '',
-        witnesses: [],
-        placeOfIncident: '',
-        thingsInvolved: '',
-        details: '',
-        remarks: '',
-        isReportedByGuidance: true
-      };
-      this.showUpdateModal = true;
-      console.log('Modal should open', this.showUpdateModal); // Debug log
-    },
-
-    closeUpdateModal() {
-      this.showUpdateModal = false;
-      this.selectedReport = null;
-    },
-
-    handleUpdate(updatedData) {
-      try {
-        const now = new Date();
-        const datePrepared = now.toISOString().split('T')[0];
-        const reportId = `REP-${datePrepared.replace(/-/g, '')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
-
-        const newReport = {
-          reportID: reportId,
-          date: updatedData.date,
-          datePrepared: datePrepared,
-          purpose: updatedData.purpose,
-          witnesses: updatedData.witnesses,
-          placeOfIncident: updatedData.placeOfIncident,
-          thingsInvolved: updatedData.thingsInvolved,
-          details: updatedData.details,
-          remarks: updatedData.remarks,
-          isReportedByGuidance: true,
-        };
-
-        report.push(newReport);
-
-        // Update anecdotal report with new report ID
-        this.anecReport.reportIDs.push(reportId);
-
-        // Update localStorage
-        localStorage.setItem('reports', JSON.stringify(report));
-
-        // Refresh the PDF display
-        this.displayPDF();
-        this.showUpdateModal = false;
-
-        alert('Report added successfully');
-
-      } catch (error) {
-        console.error('Error updating report:', error);
-        alert('Failed to update report');
-      }
-    },
-
-    downloadPDF() {
-      const fileName = `Anecdotal_Report_${this.anecReport.anecdotalDocID}_${new Date().toISOString().split('T')[0]}.pdf`;
-      pdfMake.createPdf(this.defineAnecdotalDoc).download(fileName);
-    },
-
-    printDocument() {
-      pdfMake.createPdf(this.defineAnecdotalDoc).print({
-        silent: false,
-        printBackground: true
-      });
-    },
-  },
+    },  
 }
 }
+    // async initData(studentId) {
+    //   this.studentData = student.find(s => s.studentId === studentId);
+    //   if (!this.studentData) return;
+
+    //   this.anecReport = anecdotalReport.find(
+    //     report => report.anecdotalDocID === this.studentData.anecdotalDocID
+    //   );
+    // },
+
+    // displayPDF() {
+    //   if (!this.defineAnecdotalDoc) {
+    //     console.error('No document definition available');
+    //     return;
+    //   }
+
+    //   try {
+    //     pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
+    //       const url = URL.createObjectURL(blob);
+    //       const viewer = document.getElementById('pdf-viewer');
+    //       if (viewer) {
+    //         viewer.src = url;
+    //       } else {
+    //         console.error('PDF viewer element not found');
+    //       }
+    //     });
+    //   } catch (error) {
+    //     console.error('Error creating PDF:', error);
+    //   }
+    // },
+
+    // formatDate(date) {
+    //   return formatDate(date, 'MMMM DD, YYYY');
+    // },
+
+    // openUpdateForm() {
+    //   // Create a new report object with required fields
+    //   this.selectedReport = {
+    //     date: '',
+    //     purpose: '',
+    //     witnesses: [],
+    //     placeOfIncident: '',
+    //     thingsInvolved: '',
+    //     details: '',
+    //     remarks: '',
+    //     isReportedByGuidance: true
+    //   };
+    //   this.showUpdateModal = true;
+    //   console.log('Modal should open', this.showUpdateModal); // Debug log
+    // },
+
+    // closeUpdateModal() {
+    //   this.showUpdateModal = false;
+    //   this.selectedReport = null;
+    // },
+
+    // handleUpdate(updatedData) {
+    //   try {
+    //     const now = new Date();
+    //     const datePrepared = now.toISOString().split('T')[0];
+    //     const reportId = `REP-${datePrepared.replace(/-/g, '')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+
+    //     const newReport = {
+    //       reportID: reportId,
+    //       date: updatedData.date,
+    //       datePrepared: datePrepared,
+    //       purpose: updatedData.purpose,
+    //       witnesses: updatedData.witnesses,
+    //       placeOfIncident: updatedData.placeOfIncident,
+    //       thingsInvolved: updatedData.thingsInvolved,
+    //       details: updatedData.details,
+    //       remarks: updatedData.remarks,
+    //       isReportedByGuidance: true,
+    //     };
+
+    //     report.push(newReport);
+
+    //     // Update anecdotal report with new report ID
+    //     this.anecReport.reportIDs.push(reportId);
+
+    //     // Update localStorage
+    //     localStorage.setItem('reports', JSON.stringify(report));
+
+    //     // Refresh the PDF display
+    //     this.displayPDF();
+    //     this.showUpdateModal = false;
+
+    //     alert('Report added successfully');
+
+    //   } catch (error) {
+    //     console.error('Error updating report:', error);
+    //     alert('Failed to update report');
+    //   }
+    // },
+
+    // downloadPDF() {
+    //   const fileName = `Anecdotal_Report_${this.anecReport.anecdotalDocID}_${new Date().toISOString().split('T')[0]}.pdf`;
+    //   pdfMake.createPdf(this.defineAnecdotalDoc).download(fileName);
+    // },
+
+    // printDocument() {
+    //   pdfMake.createPdf(this.defineAnecdotalDoc).print({
+    //     silent: false,
+    //     printBackground: true
+    //   });
+    // },
+
 </script>
 
 <template>

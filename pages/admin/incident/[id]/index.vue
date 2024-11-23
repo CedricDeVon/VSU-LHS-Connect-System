@@ -16,10 +16,10 @@ export default {
   components: {
     AdminSidebar,
     AdminHeader,
-    UpdateIncidentReportModal,
-    ScheduleConferenceModal,
-    ViewCaseConferencesModal,
-    CreateCaseConferenceModal,
+    // UpdateIncidentReportModal,
+    // ScheduleConferenceModal,
+    // ViewCaseConferencesModal,
+    // CreateCaseConferenceModal,
   },
 
   data() {
@@ -31,6 +31,7 @@ export default {
 
   async mounted() {
     await this.adminViewStore.updateIncident(this.$route.params.id);
+    console.log(this.adminViewStore.incidentIncidentReport);
     this.displayPDF();
   },
 
@@ -63,23 +64,23 @@ export default {
               body: [
                 [
                   { text: 'Name of People Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.adminViewStore.incidentIncidentReport.data.peopleInvolved?.join(', ') || 'None' }`, style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.peopleInvolved?.join(', ') || 'N/A' }`, style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Witness:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.adminViewStore.incidentIncidentReport.data.witness}` || 'None', style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.witness}` || 'N/A', style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.adminViewStore.incidentIncidentReport.data.dateOfIncident}` || 'None', style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.dateOfIncident}` || 'N/A', style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.adminViewStore.incidentIncidentReport.data.placeOfIncident}` || 'None', style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.placeOfIncident}` || 'N/A', style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.adminViewStore.incidentIncidentReport.data.thingsInvolved}` || 'None', style: 'content', border: [false, false, false, false] }
+                  { text: `${this.adminViewStore.incidentIncidentReport.data.thingsInvolved}` || 'N/A', style: 'content', border: [false, false, false, false] }
                 ],
               ]
             },
@@ -121,7 +122,7 @@ export default {
           { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
           { text: 'Additional Notes:', style: 'label', margin: [0, 15, 0, 5] },
           {
-            text: `${this.adminViewStore.incidentIncidentReport.data.others || 'None'}`,
+            text: `${this.adminViewStore.incidentIncidentReport.data.others || 'N/A'}`,
             style: 'content',
             margin: [30, 0, 30, 10],
             alignment: 'justify'
@@ -258,183 +259,191 @@ export default {
 
   methods: {
     displayPDF() {
-      pdfMake.createPdf(this.defineIncidentDoc).getBlob((blob) => {
-        const url = URL.createObjectURL(blob);
-        const viewer = document.getElementById('pdf-viewer');
-        if (viewer) {
-          viewer.src = url;
-        }
-      });
-    },
+        pdfMake.createPdf(this.defineIncidentDoc).getBlob((blob) => {
+            const url = URL.createObjectURL(blob);
 
-    openUpdateForm() {
-      this.showUpdateModal = true;
-    },
+            // Display in an iframe
+            const iframe = document.createElement('iframe');
+            iframe.style.width = '100%';
+            iframe.style.height = '80vh';
+            iframe.style.border = 'none';
+            iframe.src = url;
 
-    viewConferenceHistory() {
-      this.isViewingHistory = true;
-      this.loadCaseConferences();
-      this.showScheduleModal = true;
-    },
+            // Clear previous content and append new iframe
+            const container = document.getElementById('incident-display-container');
+            container.innerHTML = '';
+            container.appendChild(iframe);
+        })
+      },
 
-    closeConferenceHistory() {
-      this.showScheduleModal = false;
-      this.isViewingHistory = false;
-    },
+    // openUpdateForm() {
+    //   this.showUpdateModal = true;
+    // },
 
-    openScheduleDialog() {
-      this.isViewingHistory = false;
-      this.showScheduleModal = true;
-    },
+    // viewConferenceHistory() {
+    //   this.isViewingHistory = true;
+    //   this.loadCaseConferences();
+    //   this.showScheduleModal = true;
+    // },
 
-    openCreateConferenceDoc() {
-      // Check for existing draft when opening modal
-      const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
-      if (savedDraft) {
-        this.savedConferenceDoc = JSON.parse(savedDraft);
-      }
-      this.showCreateConfDocModal = true;
-    },
+    // closeConferenceHistory() {
+    //   this.showScheduleModal = false;
+    //   this.isViewingHistory = false;
+    // },
 
-    handleUpdate(updatedData) {
-      try {
-        // Update in data store and localStorage
-        if (updateIncidentReport(this.incdReport.incidentDocID, updatedData)) {
-          // Update local state
-          this.incdReport = {
-            ...this.incdReport,
-            ...updatedData
-          };
-          this.incidentData = {
-            ...this.incidentData,
-            ...updatedData
-          };
+    // openScheduleDialog() {
+    //   this.isViewingHistory = false;
+    //   this.showScheduleModal = true;
+    // },
 
-          // Refresh PDF
-          this.displayPDF();
+    // openCreateConferenceDoc() {
+    //   // Check for existing draft when opening modal
+    //   const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
+    //   if (savedDraft) {
+    //     this.savedConferenceDoc = JSON.parse(savedDraft);
+    //   }
+    //   this.showCreateConfDocModal = true;
+    // },
+
+    // handleUpdate(updatedData) {
+    //   try {
+    //     // Update in data store and localStorage
+    //     if (updateIncidentReport(this.incdReport.incidentDocID, updatedData)) {
+    //       // Update local state
+    //       this.incdReport = {
+    //         ...this.incdReport,
+    //         ...updatedData
+    //       };
+    //       this.incidentData = {
+    //         ...this.incidentData,
+    //         ...updatedData
+    //       };
+
+    //       // Refresh PDF
+    //       this.displayPDF();
           
-          // Close modal
-          this.showUpdateModal = false;
+    //       // Close modal
+    //       this.showUpdateModal = false;
           
-          alert('Incident report updated successfully');
-        } else {
-          throw new Error('Failed to update incident report');
-        }
-      } catch (error) {
-        console.error('Error updating incident:', error);
-        alert('Failed to update incident report');
-      }
-    },
+    //       alert('Incident report updated successfully');
+    //     } else {
+    //       throw new Error('Failed to update incident report');
+    //     }
+    //   } catch (error) {
+    //     console.error('Error updating incident:', error);
+    //     alert('Failed to update incident report');
+    //   }
+    // },
 
-    async handleScheduleConference(conferenceData) {
-      try {
-        // Create new conference ID
-        const newConferenceId = `caseConID${Date.now()}`;
+    // async handleScheduleConference(conferenceData) {
+    //   try {
+    //     // Create new conference ID
+    //     const newConferenceId = `caseConID${Date.now()}`;
         
-        // Prepare conference data
-        const newConference = {
-          caseConDocID: newConferenceId,
-          incidentID: this.incidentData.incidentDocID,
-          studentName: this.incidentData.peopleInvolved.join(', '),
-          conferenceDate: conferenceData.date,
-          time: conferenceData.time,
-          discussions: conferenceData.notes || '',
-          status: 'Pending',
-          scheduledBy: this.receivedBy
-        };
+    //     // Prepare conference data
+    //     const newConference = {
+    //       caseConDocID: newConferenceId,
+    //       incidentID: this.incidentData.incidentDocID,
+    //       studentName: this.incidentData.peopleInvolved.join(', '),
+    //       conferenceDate: conferenceData.date,
+    //       time: conferenceData.time,
+    //       discussions: conferenceData.notes || '',
+    //       status: 'Pending',
+    //       scheduledBy: this.receivedBy
+    //     };
 
-        // In a real application, you would save this to your backend
-        // For now, we'll just update the local state
+    //     // In a real application, you would save this to your backend
+    //     // For now, we'll just update the local state
         
-        // Update incident with new conference reference
-        const updatedData = {
-          hasCaseConference: [...(Array.isArray(this.incidentData.hasCaseConference) 
-            ? this.incidentData.hasCaseConference 
-            : []), newConferenceId]
-        };
+    //     // Update incident with new conference reference
+    //     const updatedData = {
+    //       hasCaseConference: [...(Array.isArray(this.incidentData.hasCaseConference) 
+    //         ? this.incidentData.hasCaseConference 
+    //         : []), newConferenceId]
+    //     };
 
-        await this.handleUpdate(updatedData);
-        this.showScheduleModal = false;
-        alert('Case conference scheduled successfully');
-      } catch (error) {
-        console.error('Error scheduling conference:', error);
-        alert('Failed to schedule case conference');
-      }
-    },
+    //     await this.handleUpdate(updatedData);
+    //     this.showScheduleModal = false;
+    //     alert('Case conference scheduled successfully');
+    //   } catch (error) {
+    //     console.error('Error scheduling conference:', error);
+    //     alert('Failed to schedule case conference');
+    //   }
+    // },
 
-    async handleCreateConferenceDoc(docData) {
-      try {
-        // Create new conference document ID
-        const newConfDocId = `caseConDoc${Date.now()}`;
+    // async handleCreateConferenceDoc(docData) {
+    //   try {
+    //     // Create new conference document ID
+    //     const newConfDocId = `caseConDoc${Date.now()}`;
         
-        // Prepare document data
-        const newConfDoc = {
-          ...docData,
-          caseConDocID: newConfDocId,
-          status: 'Active',
-          createdBy: this.receivedBy,
-          createdAt: new Date().toISOString()
-        };
+    //     // Prepare document data
+    //     const newConfDoc = {
+    //       ...docData,
+    //       caseConDocID: newConfDocId,
+    //       status: 'Active',
+    //       createdBy: this.receivedBy,
+    //       createdAt: new Date().toISOString()
+    //     };
 
-        // Here you would typically save to your backend
-        // For now, just close the modal and show success message
-        this.showCreateConfDocModal = false;
-        alert('Case conference document created successfully');
+    //     // Here you would typically save to your backend
+    //     // For now, just close the modal and show success message
+    //     this.showCreateConfDocModal = false;
+    //     alert('Case conference document created successfully');
         
-        // Clear the draft after successful creation
-        localStorage.removeItem(`draft_conference_${this.incdReport.incidentDocID}`);
-        this.savedConferenceDoc = null;
+    //     // Clear the draft after successful creation
+    //     localStorage.removeItem(`draft_conference_${this.incdReport.incidentDocID}`);
+    //     this.savedConferenceDoc = null;
 
-        // Refresh the conference list if needed
-        await this.loadCaseConferences();
-      } catch (error) {
-        console.error('Error creating conference document:', error);
-        alert('Failed to create case conference document');
-      }
-    },
+    //     // Refresh the conference list if needed
+    //     await this.loadCaseConferences();
+    //   } catch (error) {
+    //     console.error('Error creating conference document:', error);
+    //     alert('Failed to create case conference document');
+    //   }
+    // },
 
-    async handleSaveDraft(draftData) {
-      try {
-        // In a real app, save to backend/localStorage
-        this.savedConferenceDoc = draftData;
-        localStorage.setItem(`draft_conference_${this.incdReport.incidentDocID}`, JSON.stringify(draftData));
+    // async handleSaveDraft(draftData) {
+    //   try {
+    //     // In a real app, save to backend/localStorage
+    //     this.savedConferenceDoc = draftData;
+    //     localStorage.setItem(`draft_conference_${this.incdReport.incidentDocID}`, JSON.stringify(draftData));
         
-        this.showCreateConfDocModal = false;
-        alert('Document saved as draft successfully');
-      } catch (error) {
-        console.error('Error saving draft:', error);
-        alert('Failed to save draft');
-      }
-    },
+    //     this.showCreateConfDocModal = false;
+    //     alert('Document saved as draft successfully');
+    //   } catch (error) {
+    //     console.error('Error saving draft:', error);
+    //     alert('Failed to save draft');
+    //   }
+    // },
 
-    async loadCaseConferences() {
-      if (!this.incidentData?.hasCaseConference) {
-        this.caseConferences = [];
-        return;
-      }
+    // async loadCaseConferences() {
+    //   if (!this.incidentData?.hasCaseConference) {
+    //     this.caseConferences = [];
+    //     return;
+    //   }
 
-      // Handle both array and boolean cases
-      const conferenceIds = Array.isArray(this.incidentData.hasCaseConference) 
-        ? this.incidentData.hasCaseConference 
-        : [];
+    //   // Handle both array and boolean cases
+    //   const conferenceIds = Array.isArray(this.incidentData.hasCaseConference) 
+    //     ? this.incidentData.hasCaseConference 
+    //     : [];
 
-      this.caseConferences = conferenceIds
-        .map(id => caseConference.find(conf => conf.caseConDocID === id))
-        .filter(conf => conf !== undefined)
-        .sort((a, b) => new Date(a.conferenceDate) - new Date(b.conferenceDate));
-    },
+    //   this.caseConferences = conferenceIds
+    //     .map(id => caseConference.find(conf => conf.caseConDocID === id))
+    //     .filter(conf => conf !== undefined)
+    //     .sort((a, b) => new Date(a.conferenceDate) - new Date(b.conferenceDate));
+    // },
 
-    downloadPDF() {
-      const fileName = `Incident_Report_${this.incdReport.reportID}_${new Date().toISOString().split('T')[0]}.pdf`;
-      pdfMake.createPdf(this.defineIncidentDoc).download(fileName);
-    },
+    // downloadPDF() {
+    //   const fileName = `Incident_Report_${this.incdReport.reportID}_${new Date().toISOString().split('T')[0]}.pdf`;
+    //   pdfMake.createPdf(this.defineIncidentDoc).download(fileName);
+    // },
 
-    printDocument() {
-      pdfMake.createPdf(this.defineIncidentDoc).print({
-        silent: false,
-        printBackground: true
-      });
-    },
+    // printDocument() {
+    //   pdfMake.createPdf(this.defineIncidentDoc).print({
+    //     silent: false,
+    //     printBackground: true
+    //   });
+    // },
 
   },
 };

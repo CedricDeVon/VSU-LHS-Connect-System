@@ -9,10 +9,17 @@ export default defineEventHandler(async (event) => {
     const section = (await Databases.getOneSectionViaId(sectionId)).data;
     const adviser = (await Databases.getOneAdviserViaSectionId(sectionId)).data;
     const sectionStudents = (await Databases.getAllStudentsViaSectionId(sectionId)).data;
-    const sectionIncidentReports = (await Databases.getAllIncidentReportsViaFacultyId(adviser.data.facultyId)).data;
+    let sectionIncidentReports = (await Databases.getAllIncidentReports()).data;
+    console.log(section, adviser, sectionStudents, sectionIncidentReports);
+
     for (const student of sectionStudents) {
       student.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(student.data.profilePicture)).data;
     }
+    sectionIncidentReports = sectionIncidentReports.filter((incidentReport: any) => {
+      const student = sectionStudents.find((student: any) => { return incidentReport.data.studentId === student.id });
+      return (student) ? student.data.sectionId === adviser.data.sectionId : false;
+    })
+    
     adviser.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(adviser.data.profilePicture)).data;
 
     return new SuccessfulResult({
@@ -26,18 +33,3 @@ export default defineEventHandler(async (event) => {
     return new FailedResult(error.message).cloneToObject();
   }
 });
-//     async created() {
-//         const sectionId = this.$route.params.id;
-//         adminViewStore.sectionSection = section.find(sec => String(sec.id) === String(sectionId));
-
-//         if (!adminViewStore.sectionSection) {
-//             console.error('Section not found:', sectionId);
-//             return;
-//         }
-
-//         if (adminViewStore.sectionSection.adviserId) {
-//             adminViewStore.sectionAdviser = adviser.find(adv => adv.id === adminViewStore.sectionSection.adviserId);
-//         }
-//     },
-
-

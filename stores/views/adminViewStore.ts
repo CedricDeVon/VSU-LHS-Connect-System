@@ -21,6 +21,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const searchSelectedSearch = ref('');
   const searchSelectedStudent = useState('searchSelectedStudent');
   const searchShowAddSectionForm = ref(false);
+  const searchShowStudentDetailsModal = ref(false);
   const searchSections = useState('searchSections');
   const searchStudents = useState('searchStudents');
   const searchAdvisers = useState('searchAdvisers');
@@ -91,7 +92,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
         studentId
       }
     });
-    console.log(result)
+    // console.log(result)
 
     anecdoteAnecdotalReport.value = result.data.anecdotalReport;
     anecdoteAnecdotalReports.value = result.data.anecdotalReports;
@@ -120,7 +121,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
       method: 'POST', body: {}
     });
 
-    console.log(result)
+    // console.log(result)
     
     anecdotalAnecdotalReports.value = result.data.anecdotalReports;
     anecdotalAnecdotalStudents.value = result.data.students;
@@ -139,17 +140,18 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
 
   const updateSectionPageData = async (sectionId: string) => {
-    const { data }: any = await $fetch('/api/admin/view/section', {
+    const result: any = await $fetch('/api/admin/view/section', {
       method: 'POST', body: {
         sectionId
       }
     });
-    sectionSection.value = data.section;
-    sectionAdviser.value = data.adviser;
-    sectionSections.value = data.sections;
-    sectionSectionStudents.value = data.sectionStudents;
-    sectionSectionAdvisers.value = data.sectionAdvisers;
-    sectionSectionIncidentReports.value = data.sectionIncidentReports;
+    // console.log(result);
+    sectionSection.value = result.data.section;
+    sectionAdviser.value = result.data.adviser;
+    sectionSections.value = result.data.sections;
+    sectionSectionStudents.value = result.data.sectionStudents;
+    sectionSectionAdvisers.value = result.data.sectionAdvisers;
+    sectionSectionIncidentReports.value = result.data.sectionIncidentReports;
   }
 
   const updateStudentPageData = async (studentId: string) => {
@@ -165,7 +167,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
   
   const getFullName = (person: any) => {
-    return `${person.data.lastName}, ${person.data.firstName} ${person.data.middleName} ${person.data.suffix}`.trim();
+    return `${person.data.lastName || ''}, ${person.data.firstName || ''} ${person.data.middleName || ''} ${person.data.suffix || ''}`.trim();
   }
 
   const getGradeAndSection = () => {
@@ -274,6 +276,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
 
   return {
+    searchShowStudentDetailsModal,
     adminName,
     adminEmail,
     accountsAdvisers,

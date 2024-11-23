@@ -16,27 +16,6 @@ const auth = useFirebaseAuth();
 const adminViewStore = useAdminViewStore()
 await adminViewStore.updateAccountsAdvisers();
 
-// const handleFileUpload = async (event: any) => {
-//   // adminViewStore.accountsfile = event.target.files[0];
-//   // console.log(adminViewStore.accountsfile)
-// }
-
-// const uploadFile = () => {
-//   console.log("Ok")
-//   // console.log('File ready for upload:', adminViewStore.accountsFile);
-//   // adminViewStore.accountsShowUploadModal = false;
-//   // adminViewStore.accountsFile = null;
-//   // console.log(adminViewStore.accountsfile)
-//   // if (adminViewStore.accountsfile) {
-//   //   // adminViewStore.accounts$emit('file-uploaded', adminViewStore.accountsfile);
-//   //   adminViewStore.accountsMessage.value = 'File uploaded successfully!';
-//   //   adminViewStore.accountsfile = null;
-//   //   setTimeout(() => {
-//   //     // $emit('close');
-//   //   }, 1000);
-//   // }
-// }
-
 const acceptRequest = async (adviser: any) => {
   const result = await $fetch('/api/adviser/request/accept', {
     method: 'POST', body: { adviserId: adviser.id }

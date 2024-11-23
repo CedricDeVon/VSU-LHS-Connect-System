@@ -101,7 +101,7 @@ const error = ref(null)
 // console.log('E ', route.params)
 const adminViewStore = useAdminViewStore();
 
-onBeforeMount(async () => {
+onMounted(async () => {
     await adminViewStore.updateCaseConference(route.params.id);
     try {
         loading.value = true

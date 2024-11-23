@@ -7,11 +7,16 @@ export default defineEventHandler(async (event) => {
         const { id, email } = await readBody(event);
 
         const adminUser = (await Databases.getOneAdminViaUserId(id)).data;
+        const user = (await Databases.getOneUserViaEmail(email)).data;
+        const reportsCount = (await Databases.getAllAdminReportsCount(adminUser.id)).data;
+        const studentsCount = (await Databases.getAllStudentsCount()).data;
+        const approvalsCount = (await Databases.getAllPendingAdvisersCount()).data;
+
         return new SuccessfulResult({
-            user: (await Databases.getOneUserViaEmail(email)).data,
-            reportsCount: (await Databases.getAllAdminReportsCount(adminUser.id)).data,
-            studentsCount: (await Databases.getAllStudentsCount()).data,
-            approvalsCount: (await Databases.getAllPendingAdvisersCount()).data,
+            user,
+            reportsCount,
+            studentsCount,
+            approvalsCount,
           }).cloneToObject();
 
     } catch (error: any) {

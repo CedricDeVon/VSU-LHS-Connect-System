@@ -30,7 +30,7 @@ export default {
       };
   },
 
-  async beforeMounted() {
+  async mounted() {
       await this.adminViewStore.updateAnecdote(this.$route.params.id);
       this.displayPDF();
   },

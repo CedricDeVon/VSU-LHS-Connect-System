@@ -6,7 +6,10 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const auth = useFirebaseAuth()
 const adminViewStore = useAdminViewStore();
-await adminViewStore.updateDashboard();
+
+onBeforeMount(async () => {
+  await adminViewStore.updateDashboard();
+})
 
 const signOutUser = async () => {
   const result: Result = await UserSecurity.signOutUser(auth);

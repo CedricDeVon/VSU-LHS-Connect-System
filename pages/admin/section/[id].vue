@@ -8,9 +8,9 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
+await adminViewStore.updateSectionPageData(useRoute().params.id);
 
 onBeforeMount(async () => {
-    await adminViewStore.updateSectionPageData(useRoute().params.id);
 })
 
 // console.log(useRoute().params.id);

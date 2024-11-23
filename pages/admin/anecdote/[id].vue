@@ -28,7 +28,7 @@
               <div class="p-4 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-sm font-semibold text-gray-900">Update Report</h2>
               </div>
-              
+
               <div class="p-4 space-y-3">
                 <button @click="openUpdateForm"
                   class="w-full px-4 py-3 rounded-lg bg-white border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 transition-colors duration-200 flex items-center justify-center space-x-2">
@@ -45,7 +45,7 @@
               <div class="p-4 bg-gray-50 border-b border-gray-200">
                 <h2 class="text-sm font-semibold text-gray-900">Document Actions</h2>
               </div>
-              
+
               <div class="grid grid-cols-2 gap-3 p-4">
                 <button @click="downloadPDF"
                   class="flex flex-col items-center justify-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
@@ -67,19 +67,15 @@
               </div>
             </div>
 
-            
+
           </div>
         </div>
       </div>
     </div>
 
     <!-- Modals -->
-    <UpdateAnecdotalModal 
-      v-if="showUpdateModal" 
-      :report="selectedReport"
-      @close="closeUpdateModal"
-      @update="handleUpdate"
-    />
+    <UpdateAnecdotalModal v-if="showUpdateModal" :report="selectedReport" @close="closeUpdateModal"
+      @update="handleUpdate" />
   </div>
 </template>
 
@@ -133,7 +129,7 @@ export default {
         { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 0] },
         {
           table: {
-            widths: ['30%', '70%'], 
+            widths: ['30%', '70%'],
             headerRows: 0,
             body: [
               [
@@ -147,10 +143,6 @@ export default {
               [
                 { text: 'Academic Year:', style: 'label', border: [false, false, false, false] },
                 { text: this.anecReport.AY, style: 'content', border: [false, false, false, false] }
-              ],
-              [
-                { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
-                { text: this.anecReport.preparedBy, style: 'content', border: [false, false, false, false] }
               ]
             ]
           }
@@ -174,7 +166,7 @@ export default {
         });
 
         content.push(
-          { 
+          {
             text: formattedDate,
             style: 'subheader',
             margin: [0, 20, 0, 10],
@@ -211,9 +203,22 @@ export default {
 
           { text: 'Details:', style: 'label', margin: [0, 15, 0, 5] },
           { text: rep.details, style: 'content', margin: [30, 0, 30, 15] },
-          
-          { text: 'Remarks:', style: 'label', margin: [0, 15, 0, 5] },
-          { text: rep.adviserRemarks, style: 'content', margin: [30, 0, 30, 15] }
+
+          { text: rep.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', style: 'label', margin: [0, 15, 0, 5] },
+          { text: rep.remarks, style: 'content', margin: [30, 0, 30, 15] },
+
+          {
+            table: {
+              widths: ['30%', '70%'],
+              headerRows: 0,
+              body: [
+                [
+                  { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
+                  { text: rep.isReportedByGuidance ? 'Guidance' : this.anecReport.preparedBy, style: 'content', border: [false, false, false, false] }
+                ]
+              ]
+            }
+          }
         );
       });
 
@@ -274,7 +279,6 @@ export default {
       }
 
       try {
-        // Create new PDF with updated content
         pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
           const url = URL.createObjectURL(blob);
           const viewer = document.getElementById('pdf-viewer');
@@ -302,7 +306,8 @@ export default {
         placeOfIncident: '',
         thingsInvolved: '',
         details: '',
-        adviserRemarks: ''
+        remarks: '',
+        isReportedByGuidance: true
       };
       this.showUpdateModal = true;
       console.log('Modal should open', this.showUpdateModal); // Debug log
@@ -319,7 +324,6 @@ export default {
         const datePrepared = now.toISOString().split('T')[0];
         const reportId = `REP-${datePrepared.replace(/-/g, '')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
 
-        // Prepare new report data with the correct field label
         const newReport = {
           reportID: reportId,
           date: updatedData.date,
@@ -329,10 +333,10 @@ export default {
           placeOfIncident: updatedData.placeOfIncident,
           thingsInvolved: updatedData.thingsInvolved,
           details: updatedData.details,
-          adviserRemarks: updatedData.adviserRemarks // This will be displayed as "Remarks from the Guidance Counsel" in the PDF
+          remarks: updatedData.remarks,
+          isReportedByGuidance: true,
         };
 
-        // Add new report to reports array
         report.push(newReport);
 
         // Update anecdotal report with new report ID
@@ -344,7 +348,7 @@ export default {
         // Refresh the PDF display
         this.displayPDF();
         this.showUpdateModal = false;
-        
+
         alert('Report added successfully');
 
       } catch (error) {

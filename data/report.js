@@ -8,7 +8,8 @@ export const report = [
         placeOfIncident: 'Faculty Room',
         thingsInvolved: 'Progress Reports, Grade Sheets',
         details: 'Student showed significant improvement in Mathematics and Science subjects. Particularly strong in problem-solving activities.',
-        adviserRemarks: 'Consistent progress observed. Recommend continued support and recognition of effort.'
+        remarks: 'Consistent progress observed. Recommend continued support and recognition of effort.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240315-002',
@@ -19,7 +20,8 @@ export const report = [
         placeOfIncident: 'Classroom 2B',
         thingsInvolved: 'Class Project Materials',
         details: 'Demonstrated exceptional leadership skills during group project. Helped organize team members and ensure equal participation.',
-        adviserRemarks: 'Excellent teamwork and communication skills. Shows natural leadership abilities.'
+        remarks: 'Excellent teamwork and communication skills. Shows natural leadership abilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240307-001',
@@ -30,7 +32,8 @@ export const report = [
         placeOfIncident: 'Classroom 2A',
         thingsInvolved: 'Progress Reports, Assessment Materials',
         details: 'Demonstrated significant improvement in academic performance across all subjects.',
-        adviserRemarks: 'Consistent progress and dedication to studies.'
+        remarks: 'Consistent progress and dedication to studies.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240307-090',
@@ -41,7 +44,8 @@ export const report = [
         placeOfIncident: 'Classroom 2A',
         thingsInvolved: 'Progress Reports, Assessment Materials',
         details: 'Demonstrated significant improvement in academic performance across all subjects.',
-        adviserRemarks: 'Consistent progress and dedication to studies.'
+        remarks: 'Consistent progress and dedication to studies.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240320-003',
@@ -52,7 +56,8 @@ export const report = [
         placeOfIncident: 'Student Council Room',
         thingsInvolved: 'Project Plans, Meeting Minutes',
         details: 'Successfully led student council initiative for campus improvement.',
-        adviserRemarks: 'Excellent leadership and organizational skills.'
+        remarks: 'Excellent leadership and organizational skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240310-007',
@@ -63,7 +68,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Service Project Materials',
         details: 'Led community outreach program for local elderly residents.',
-        adviserRemarks: 'Shows strong commitment to community service.'
+        remarks: 'Shows strong commitment to community service.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240325-004',
@@ -74,7 +80,8 @@ export const report = [
         placeOfIncident: 'Student Council Room',
         thingsInvolved: 'Project Plans, Meeting Minutes',
         details: 'Successfully led student council initiative for campus improvement.',
-        adviserRemarks: 'Excellent leadership and organizational skills.'
+        remarks: 'Excellent leadership and organizational skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240312-005',
@@ -85,7 +92,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Service Project Materials',
         details: 'Organized successful community outreach program.',
-        adviserRemarks: 'Strong commitment to community service.'
+        remarks: 'Strong commitment to community service.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240328-006',
@@ -96,7 +104,8 @@ export const report = [
         placeOfIncident: 'Science Laboratory',
         thingsInvolved: 'Research Materials, Project Documentation',
         details: 'Completed advanced research project with exceptional results.',
-        adviserRemarks: 'Outstanding research capabilities and dedication.'
+        remarks: 'Outstanding research capabilities and dedication.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240315-007',
@@ -107,7 +116,8 @@ export const report = [
         placeOfIncident: 'Mathematics Laboratory',
         thingsInvolved: 'Competition Materials, Awards',
         details: 'Won first place in Regional Mathematics Competition.',
-        adviserRemarks: 'Outstanding mathematical ability and competitive spirit.'
+        remarks: 'Outstanding mathematical ability and competitive spirit.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240330-008',
@@ -118,7 +128,8 @@ export const report = [
         placeOfIncident: 'Student Council Room',
         thingsInvolved: 'Project Plans, Meeting Minutes',
         details: 'Led successful student council project for academic support.',
-        adviserRemarks: 'Excellent leadership and organizational abilities.'
+        remarks: 'Excellent leadership and organizational abilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240320-009',
@@ -129,7 +140,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Service Materials, Project Records',
         details: 'Organized and led community literacy program.',
-        adviserRemarks: 'Strong commitment to community service and leadership.'
+        remarks: 'Strong commitment to community service and leadership.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240405-010',
@@ -140,7 +152,8 @@ export const report = [
         placeOfIncident: 'School Auditorium',
         thingsInvolved: 'Performance Materials, Program',
         details: 'Led cultural dance ensemble in regional competition.',
-        adviserRemarks: 'Exceptional artistic talent and leadership abilities.'
+        remarks: 'Exceptional artistic talent and leadership abilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240322-011',
@@ -151,7 +164,8 @@ export const report = [
         placeOfIncident: 'Computer Laboratory',
         thingsInvolved: 'Programming Equipment, Project Documentation',
         details: 'Developed innovative solution for school resource management.',
-        adviserRemarks: 'Outstanding technical skills and practical application.'
+        remarks: 'Outstanding technical skills and practical application.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240408-012',
@@ -162,7 +176,8 @@ export const report = [
         placeOfIncident: 'Science Laboratory',
         thingsInvolved: 'Research Materials, Project Documentation',
         details: 'Completed advanced research project in environmental science.',
-        adviserRemarks: 'Exceptional research capabilities and scientific insight.'
+        remarks: 'Exceptional research capabilities and scientific insight.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240415-027',
@@ -173,7 +188,8 @@ export const report = [
         placeOfIncident: 'Technology Lab',
         thingsInvolved: 'Robotics Equipment, Competition Documentation',
         details: 'Led team to first place in Regional Robotics Competition. Innovative design for environmental monitoring system.',
-        adviserRemarks: 'Exceptional technical skills and creative problem-solving abilities.'
+        remarks: 'Exceptional technical skills and creative problem-solving abilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240425-028',
@@ -184,7 +200,8 @@ export const report = [
         placeOfIncident: 'School Grounds',
         thingsInvolved: 'Recycling Equipment, Project Plans',
         details: 'Implemented school-wide waste management system. Reduced campus waste by 40%.',
-        adviserRemarks: 'Outstanding environmental leadership and project management skills.'
+        remarks: 'Outstanding environmental leadership and project management skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240402-029',
@@ -195,7 +212,8 @@ export const report = [
         placeOfIncident: 'School Auditorium',
         thingsInvolved: 'Research Materials, Presentation Notes',
         details: 'Won Best Speaker award in Regional Debate Championship. Topic: Sustainable Energy.',
-        adviserRemarks: 'Excellent research, articulation, and critical thinking skills.'
+        remarks: 'Excellent research, articulation, and critical thinking skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240418-030',
@@ -206,7 +224,8 @@ export const report = [
         placeOfIncident: 'Music Hall',
         thingsInvolved: 'Musical Instruments, Performance Program',
         details: 'Composed and performed original piece at Spring Concert. Standing ovation received.',
-        adviserRemarks: 'Remarkable musical talent and creative expression.'
+        remarks: 'Remarkable musical talent and creative expression.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240505-031',
@@ -217,7 +236,8 @@ export const report = [
         placeOfIncident: 'Research Laboratory',
         thingsInvolved: 'Lab Equipment, Research Journal',
         details: 'Conducted groundbreaking research on local biodiversity. Published in school science journal.',
-        adviserRemarks: 'Exceptional scientific methodology and analytical skills.'
+        remarks: 'Exceptional scientific methodology and analytical skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240508-033',
@@ -228,7 +248,8 @@ export const report = [
         placeOfIncident: 'Student Center',
         thingsInvolved: 'Workshop Materials, Survey Results',
         details: 'Organized mental health awareness week. Facilitated peer support workshops.',
-        adviserRemarks: 'Strong leadership in promoting student well-being and community support.'
+        remarks: 'Strong leadership in promoting student well-being and community support.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240512-034',
@@ -239,7 +260,8 @@ export const report = [
         placeOfIncident: 'Art Gallery',
         thingsInvolved: 'Digital Equipment, Art Portfolios',
         details: 'Curated digital art exhibition featuring student works. Integrated AR technology.',
-        adviserRemarks: 'Innovative approach to art curation and technology integration.'
+        remarks: 'Innovative approach to art curation and technology integration.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240525-080',
@@ -250,7 +272,8 @@ export const report = [
         placeOfIncident: 'Innovation Lab',
         thingsInvolved: 'Project Prototype, Technical Documentation',
         details: 'Developed and presented innovative smart waste management system. Won first place in Regional Innovation Fair.',
-        adviserRemarks: 'Exceptional creativity and technical implementation skills.'
+        remarks: 'Exceptional creativity and technical implementation skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240610-081',
@@ -261,7 +284,8 @@ export const report = [
         placeOfIncident: 'Conference Hall',
         thingsInvolved: 'Presentation Materials, Leadership Portfolio',
         details: 'Organized and led student leadership summit. Facilitated workshops on effective communication and team building.',
-        adviserRemarks: 'Outstanding leadership and organizational capabilities.'
+        remarks: 'Outstanding leadership and organizational capabilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240525-083',
@@ -272,7 +296,8 @@ export const report = [
         placeOfIncident: 'School Auditorium',
         thingsInvolved: 'Cultural Artifacts, Performance Materials',
         details: 'Coordinated international cultural exchange program. Showcased local traditions and facilitated cross-cultural dialogue.',
-        adviserRemarks: 'Excellent cultural awareness and event management skills.'
+        remarks: 'Excellent cultural awareness and event management skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240610-084',
@@ -283,7 +308,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Project Documentation, Impact Assessment Reports',
         details: 'Led community outreach program focusing on digital literacy for senior citizens.',
-        adviserRemarks: 'Strong commitment to social responsibility and community engagement.'
+        remarks: 'Strong commitment to social responsibility and community engagement.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240530-085',
@@ -294,7 +320,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Outreach Materials, Project Documentation',
         details: 'Organized successful literacy program for local elementary students.',
-        adviserRemarks: 'Outstanding community service and leadership demonstrated.'
+        remarks: 'Outstanding community service and leadership demonstrated.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240530-092',
@@ -305,7 +332,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Outreach Materials, Project Documentation',
         details: 'Organized successful literacy program for local elementary students.',
-        adviserRemarks: 'Outstanding community service and leadership demonstrated.'
+        remarks: 'Outstanding community service and leadership demonstrated.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240602-088',
@@ -316,7 +344,8 @@ export const report = [
         placeOfIncident: 'Science Laboratory',
         thingsInvolved: 'Research Materials, Project Documentation',
         details: 'Completed advanced science research project. Published findings in school journal.',
-        adviserRemarks: 'Outstanding research capabilities and academic dedication.'
+        remarks: 'Outstanding research capabilities and academic dedication.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240618-089',
@@ -327,7 +356,8 @@ export const report = [
         placeOfIncident: 'Conference Room',
         thingsInvolved: 'Academic Records, Achievement Portfolio',
         details: 'Completed academic year with exceptional performance across all areas.',
-        adviserRemarks: 'Exemplary student achievement and consistent excellence.'
+        remarks: 'Exemplary student achievement and consistent excellence.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240310-003',
@@ -338,7 +368,8 @@ export const report = [
         placeOfIncident: 'Classroom 3A',
         thingsInvolved: 'Progress Reports, Assessment Materials',
         details: 'Demonstrated consistent improvement in academic performance.',
-        adviserRemarks: 'Shows dedication to studies and strong work ethic.'
+        remarks: 'Shows dedication to studies and strong work ethic.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240325-004',
@@ -349,7 +380,8 @@ export const report = [
         placeOfIncident: 'Student Council Room',
         thingsInvolved: 'Project Plans, Meeting Minutes',
         details: 'Successfully led student council initiative for campus improvement.',
-        adviserRemarks: 'Excellent leadership and organizational skills.'
+        remarks: 'Excellent leadership and organizational skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240312-005',
@@ -360,7 +392,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Service Project Materials',
         details: 'Organized successful community outreach program.',
-        adviserRemarks: 'Strong commitment to community service.'
+        remarks: 'Strong commitment to community service.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240328-006',
@@ -371,7 +404,8 @@ export const report = [
         placeOfIncident: 'Science Laboratory',
         thingsInvolved: 'Research Materials, Project Documentation',
         details: 'Completed advanced research project with exceptional results.',
-        adviserRemarks: 'Outstanding research capabilities and dedication.'
+        remarks: 'Outstanding research capabilities and dedication.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240315-007',
@@ -382,7 +416,8 @@ export const report = [
         placeOfIncident: 'Mathematics Laboratory',
         thingsInvolved: 'Competition Materials, Awards',
         details: 'Won first place in Regional Mathematics Competition.',
-        adviserRemarks: 'Outstanding mathematical ability and competitive spirit.'
+        remarks: 'Outstanding mathematical ability and competitive spirit.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240330-008',
@@ -393,7 +428,8 @@ export const report = [
         placeOfIncident: 'Student Council Room',
         thingsInvolved: 'Project Plans, Meeting Minutes',
         details: 'Led successful student council project for academic support.',
-        adviserRemarks: 'Excellent leadership and organizational abilities.'
+        remarks: 'Excellent leadership and organizational abilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240320-009',
@@ -404,7 +440,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Service Materials, Project Records',
         details: 'Organized and led community literacy program.',
-        adviserRemarks: 'Strong commitment to community service and leadership.'
+        remarks: 'Strong commitment to community service and leadership.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240405-010',
@@ -415,7 +452,8 @@ export const report = [
         placeOfIncident: 'School Auditorium',
         thingsInvolved: 'Performance Materials, Program',
         details: 'Led cultural dance ensemble in regional competition.',
-        adviserRemarks: 'Exceptional artistic talent and leadership abilities.'
+        remarks: 'Exceptional artistic talent and leadership abilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240322-011',
@@ -426,7 +464,8 @@ export const report = [
         placeOfIncident: 'Computer Laboratory',
         thingsInvolved: 'Programming Equipment, Project Documentation',
         details: 'Developed innovative solution for school resource management.',
-        adviserRemarks: 'Outstanding technical skills and practical application.'
+        remarks: 'Outstanding technical skills and practical application.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240408-012',
@@ -437,7 +476,8 @@ export const report = [
         placeOfIncident: 'Science Laboratory',
         thingsInvolved: 'Research Materials, Project Documentation',
         details: 'Completed advanced research project in environmental science.',
-        adviserRemarks: 'Exceptional research capabilities and scientific insight.'
+        remarks: 'Exceptional research capabilities and scientific insight.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240415-027',
@@ -448,7 +488,8 @@ export const report = [
         placeOfIncident: 'Technology Lab',
         thingsInvolved: 'Robotics Equipment, Competition Documentation',
         details: 'Led team to first place in Regional Robotics Competition. Innovative design for environmental monitoring system.',
-        adviserRemarks: 'Exceptional technical skills and creative problem-solving abilities.'
+        remarks: 'Exceptional technical skills and creative problem-solving abilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240425-028',
@@ -459,7 +500,8 @@ export const report = [
         placeOfIncident: 'School Grounds',
         thingsInvolved: 'Recycling Equipment, Project Plans',
         details: 'Implemented school-wide waste management system. Reduced campus waste by 40%.',
-        adviserRemarks: 'Outstanding environmental leadership and project management skills.'
+        remarks: 'Outstanding environmental leadership and project management skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240402-029',
@@ -470,7 +512,8 @@ export const report = [
         placeOfIncident: 'School Auditorium',
         thingsInvolved: 'Research Materials, Presentation Notes',
         details: 'Won Best Speaker award in Regional Debate Championship. Topic: Sustainable Energy.',
-        adviserRemarks: 'Excellent research, articulation, and critical thinking skills.'
+        remarks: 'Excellent research, articulation, and critical thinking skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240418-030',
@@ -481,7 +524,8 @@ export const report = [
         placeOfIncident: 'Music Hall',
         thingsInvolved: 'Musical Instruments, Performance Program',
         details: 'Composed and performed original piece at Spring Concert. Standing ovation received.',
-        adviserRemarks: 'Remarkable musical talent and creative expression.'
+        remarks: 'Remarkable musical talent and creative expression.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240505-031',
@@ -492,7 +536,8 @@ export const report = [
         placeOfIncident: 'Research Laboratory',
         thingsInvolved: 'Lab Equipment, Research Journal',
         details: 'Conducted groundbreaking research on local biodiversity. Published in school science journal.',
-        adviserRemarks: 'Exceptional scientific methodology and analytical skills.'
+        remarks: 'Exceptional scientific methodology and analytical skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240508-033',
@@ -503,7 +548,8 @@ export const report = [
         placeOfIncident: 'Student Center',
         thingsInvolved: 'Workshop Materials, Survey Results',
         details: 'Organized mental health awareness week. Facilitated peer support workshops.',
-        adviserRemarks: 'Strong leadership in promoting student well-being and community support.'
+        remarks: 'Strong leadership in promoting student well-being and community support.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240512-034',
@@ -514,7 +560,8 @@ export const report = [
         placeOfIncident: 'Art Gallery',
         thingsInvolved: 'Digital Equipment, Art Portfolios',
         details: 'Curated digital art exhibition featuring student works. Integrated AR technology.',
-        adviserRemarks: 'Innovative approach to art curation and technology integration.'
+        remarks: 'Innovative approach to art curation and technology integration.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240525-080',
@@ -525,7 +572,8 @@ export const report = [
         placeOfIncident: 'Innovation Lab',
         thingsInvolved: 'Project Prototype, Technical Documentation',
         details: 'Developed and presented innovative smart waste management system. Won first place in Regional Innovation Fair.',
-        adviserRemarks: 'Exceptional creativity and technical implementation skills.'
+        remarks: 'Exceptional creativity and technical implementation skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240610-081',
@@ -536,7 +584,8 @@ export const report = [
         placeOfIncident: 'Conference Hall',
         thingsInvolved: 'Presentation Materials, Leadership Portfolio',
         details: 'Organized and led student leadership summit. Facilitated workshops on effective communication and team building.',
-        adviserRemarks: 'Outstanding leadership and organizational capabilities.'
+        remarks: 'Outstanding leadership and organizational capabilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240525-083',
@@ -547,7 +596,8 @@ export const report = [
         placeOfIncident: 'School Auditorium',
         thingsInvolved: 'Cultural Artifacts, Performance Materials',
         details: 'Coordinated international cultural exchange program. Showcased local traditions and facilitated cross-cultural dialogue.',
-        adviserRemarks: 'Excellent cultural awareness and event management skills.'
+        remarks: 'Excellent cultural awareness and event management skills.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240610-084',
@@ -558,7 +608,8 @@ export const report = [
         placeOfIncident: 'Community Center',
         thingsInvolved: 'Project Documentation, Impact Assessment Reports',
         details: 'Led community outreach program focusing on digital literacy for senior citizens.',
-        adviserRemarks: 'Strong commitment to social responsibility and community engagement.'
+        remarks: 'Strong commitment to social responsibility and community engagement.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240530-085',
@@ -569,7 +620,8 @@ export const report = [
         placeOfIncident: 'Science Laboratory',
         thingsInvolved: 'Research Equipment, Data Analysis Reports',
         details: 'Conducted innovative research on sustainable energy solutions. Published findings in school research journal.',
-        adviserRemarks: 'Exceptional research methodology and analytical thinking.'
+        remarks: 'Exceptional research methodology and analytical thinking.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240615-086',
@@ -580,7 +632,8 @@ export const report = [
         placeOfIncident: 'Computer Laboratory',
         thingsInvolved: 'Programming Tools, Project Documentation',
         details: 'Developed mobile application for campus resource management. Successfully implemented across departments.',
-        adviserRemarks: 'Outstanding technical skills and practical problem-solving abilities.'
+        remarks: 'Outstanding technical skills and practical problem-solving abilities.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240620-087',
@@ -591,7 +644,8 @@ export const report = [
         placeOfIncident: 'School Gardens',
         thingsInvolved: 'Sustainability Plans, Project Reports',
         details: 'Initiated and led campus-wide sustainability program. Reduced energy consumption by 25%.',
-        adviserRemarks: 'Exemplary environmental leadership and project management.'
+        remarks: 'Exemplary environmental leadership and project management.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240602-088',
@@ -602,7 +656,8 @@ export const report = [
         placeOfIncident: 'Art Studio',
         thingsInvolved: 'Art Materials, Exhibition Portfolio',
         details: 'Curated student art exhibition integrating traditional and digital media. Received regional recognition.',
-        adviserRemarks: 'Creative excellence and innovative artistic vision.'
+        remarks: 'Creative excellence and innovative artistic vision.',
+        isReportedByGuidance: false
     },
     {
         reportID: 'REP-20240618-089',
@@ -613,7 +668,8 @@ export const report = [
         placeOfIncident: 'Academic Hall',
         thingsInvolved: 'Academic Records, Achievement Portfolio',
         details: 'Maintained highest academic standing while actively participating in multiple leadership roles.',
-        adviserRemarks: 'Exceptional balance of academic excellence and extracurricular achievement.'
+        remarks: 'Exceptional balance of academic excellence and extracurricular achievement.',
+        isReportedByGuidance: false
     }
 ];
 
@@ -632,7 +688,21 @@ export const initializeReports = () => {
     const saved = localStorage.getItem('reports');
     if (saved) {
         const savedReports = JSON.parse(saved);
-        report.splice(0, report.length, ...savedReports);
+        // Migrate old data format if needed
+        const migratedReports = savedReports.map(report => {
+            if ('adviserRemarks' in report) {
+                const { adviserRemarks, ...rest } = report;
+                return {
+                    ...rest,
+                    remarks: adviserRemarks,
+                    isReportedByGuidance: false 
+                };
+            }
+            return report;
+        });
+        report.splice(0, report.length, ...migratedReports);
+        // Update localStorage with migrated data
+        localStorage.setItem('reports', JSON.stringify(report));
     } else {
         localStorage.setItem('reports', JSON.stringify(report));
     }

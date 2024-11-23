@@ -7,7 +7,8 @@
       </div>
 
       <!-- Modal panel -->
-      <div class="inline-block w-full max-w-2xl overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle">
+      <div
+        class="inline-block w-full max-w-2xl overflow-hidden text-left align-bottom transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:align-middle">
         <!-- Header -->
         <div class="px-6 py-4 bg-gray-50 border-b">
           <div class="flex items-center justify-between">
@@ -28,50 +29,49 @@
             <div>
               <label class="block text-sm font-medium text-gray-700">Date of Incident</label>
               <input type="date" v-model="formData.date" required
-                class="mt-1 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                class="mt-1 px-4 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             </div>
 
             <!-- Purpose -->
             <div>
               <label class="block text-sm font-medium text-gray-700">Purpose</label>
               <input type="text" v-model="formData.purpose" required
-                class="mt-1 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                class="mt-1 px-4 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             </div>
 
             <!-- Witnesses -->
             <div>
               <label class="block text-sm font-medium text-gray-700">Witnesses</label>
-              <input type="text" v-model="formData.witnesses" required
-                placeholder="Separate names with commas"
-                class="mt-1 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+              <input type="text" v-model="formData.witnesses" required placeholder="Separate names with commas"
+                class="mt-1 px-4 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             </div>
 
             <!-- Place of Incident -->
             <div>
               <label class="block text-sm font-medium text-gray-700">Place of Incident</label>
               <input type="text" v-model="formData.placeOfIncident" required
-                class="mt-1 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                class="mt-1 px-4 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             </div>
 
             <!-- Things Involved -->
             <div>
               <label class="block text-sm font-medium text-gray-700">Things Involved</label>
               <input type="text" v-model="formData.thingsInvolved" required
-                class="mt-1 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                class="mt-1 px-4 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             </div>
 
             <!-- Details -->
             <div>
               <label class="block text-sm font-medium text-gray-700">Details</label>
               <textarea v-model="formData.details" rows="4" required
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
             </div>
 
             <!-- Change the label here -->
             <div>
-              <label class="block text-sm font-medium text-gray-700">Remarks from the Guidance Counsel</label>
-              <textarea v-model="formData.adviserRemarks" rows="3" required
-                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+              <label class="block text-sm font-medium text-gray-700">Remarks from the Guidance Office</label>
+              <textarea v-model="formData.remarks" rows="3" required
+                class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
             </div>
           </div>
 
@@ -81,15 +81,27 @@
           </div>
 
           <!-- Form actions -->
-          <div class="mt-6 flex items-center justify-end space-x-3">
-            <button type="button" @click="$emit('close')"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
-              Cancel
-            </button>
-            <button type="submit"
-              class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700">
-              Update Report
-            </button>
+          <div class="mt-6 flex items-center justify-between space-x-3">
+            <div>
+              <button type="button" @click="$emit('close')"
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                Cancel
+              </button>
+            </div>
+            <div class="flex items-center gap-3">
+              <button type="button" @click="clearForm"
+                class="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50">
+                Clear
+              </button>
+              <button type="button" @click="saveDraft"
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                Save Draft
+              </button>
+              <button type="submit"
+                class="px-4 py-2 text-sm font-medium text-white bg-[#265630] border border-transparent rounded-md hover:bg-indigo-700">
+                Update Report
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -115,15 +127,20 @@ export default {
         placeOfIncident: '',
         thingsInvolved: '',
         details: '',
-        adviserRemarks: ''
+        remarks: '',
+        isReportedByGuidance: true
       },
       error: null
     }
   },
 
   created() {
-    // Initialize form with existing report data
-    if (this.report) {
+    // Check for saved draft first
+    const savedDraft = localStorage.getItem('reportDraft');
+    if (savedDraft) {
+      this.formData = JSON.parse(savedDraft);
+    } else if (this.report) {
+      // Initialize with report data if no draft exists
       this.formData = {
         date: this.report.date,
         purpose: this.report.purpose,
@@ -131,7 +148,8 @@ export default {
         placeOfIncident: this.report.placeOfIncident,
         thingsInvolved: this.report.thingsInvolved,
         details: this.report.details,
-        adviserRemarks: this.report.adviserRemarks
+        remarks: this.report.remarks,
+        isReportedByGuidance: this.report.isReportedByGuidance
       }
     }
   },
@@ -146,9 +164,36 @@ export default {
         }
 
         this.$emit('update', updatedData)
+        localStorage.removeItem('reportDraft'); // Clear draft after successful submission
       } catch (err) {
         this.error = 'Failed to update report. Please try again.'
         console.error('Update error:', err)
+      }
+    },
+
+    saveDraft() {
+      try {
+        localStorage.setItem('reportDraft', JSON.stringify(this.formData));
+        alert('Draft saved successfully!');
+      } catch (err) {
+        console.error('Error saving draft:', err);
+        this.error = 'Failed to save draft. Please try again.';
+      }
+    },
+
+    clearForm() {
+      if (confirm('Are you sure you want to clear all fields? This cannot be undone.')) {
+        this.formData = {
+          date: '',
+          purpose: '',
+          witnesses: '',
+          placeOfIncident: '',
+          thingsInvolved: '',
+          details: '',
+          remarks: '',
+          isReportedByGuidance: true
+        };
+        localStorage.removeItem('reportDraft'); // Clear saved draft as well
       }
     }
   }

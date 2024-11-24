@@ -46,6 +46,12 @@
 export default {
 name: 'AdviserHeader',
 
+props: {
+    AdviserId: {
+        type: String,
+        Required: true,
+    } 
+},
 methods: {
     goToHomepage(){
          this.$router.push('/adviser/homepage')
@@ -71,6 +77,7 @@ methods: {
 .admin-header{
     font-family: 'Century Gothic', sans-serif;
     background: #265630;
+    z-index: 50;
 }
 
 .button{

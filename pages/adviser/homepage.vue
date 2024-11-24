@@ -4,16 +4,16 @@
         <notification-modal v-if="showNotification" />
         <div class="h-screen ">
             <div>
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">Academic Year {{AcademicYear}}</h1>
             </div>
             <div class="w-screen h-full ">
                
                 <div class="contain m-16 " :style="{width: containWidth}">
                      <!--Title of the Content?-->
                     <div class="title flex justify-center items-center justify-self-center m-3">
-                        <div><h1 class="text-white text-5xl font-bold">Welcome, Pawwy!</h1></div>
+                        <div><h1 class="text-white text-5xl font-bold">Welcome, {{adviser.firstName}}!</h1></div>
                     </div>   
-                    <div class="mini-contain h-full flex justify-self-center m-3 ">
+                    <div class="mini-contain h-full flex justify-self-center m-3  pr-6">
                         <div class="black-text w-full grid grid-flow-col auto-rows-fr">
                             <div class="flex flex-col justify-center items-center">
                                 <img src="assets/icons/default-user.png"
@@ -21,17 +21,17 @@
                                 class="w-auto h-3/4 rounded-full object-scale-down "/>
                             </div>
                             <div class=" h-full pt-10 pl-10">
-                                <header class=" text-3xl pb-5">Juan Dela Cruz Jr.</header>
+                                <header class=" text-3xl pb-5">{{ `${adviser.firstName} ${adviser.middleName} ${adviser.lastName} ${adviser.suffix}` }}</header>
                                 <div>
-                                    <h2 class="p-1">Username: <span class="black-small">usernameSample</span></h2>
-                                    <h2 class="p-1">Advisory: <span class="black-small">Grade 7 - Pogi </span></h2>
-                                    <h2 class="p-1">Email Address: <span class="black-small">sampleEmailAdd@vsu.edu.ph</span></h2>
+                                    <h2 class="p-1">Username: <span class="black-small">{{user.username}}</span></h2>
+                                    <h2 class="p-1">Advisory: <span class="black-small">Grade {{section.sectionLevel}} - {{section.sectionName}} </span></h2>
+                                    <h2 class="p-1">Email Address: <span class="black-small">{{user.emailAdd}}</span></h2>
                                 </div>
                             </div>
                             <div class=" pt-24">
                                 <div>
-                                    <h2 class="p-1">Faculty Identification Number: <span class="black-small">F-5083</span></h2>
-                                    <h2 class="p-1">Birth Date: <span class="black-small">12/13/1990</span></h2>
+                                    <h2 class="p-1 text-md">Faculty Identification Number: <span class="black-small">{{adviser.facultyId}}</span></h2>
+                                    <h2 class="p-1">Birth Date: <span class="black-small">{{ adviser.bdate }}</span></h2>
                                 </div>
                             </div>
                         </div>
@@ -77,20 +77,76 @@
     import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
     import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
     import NotificationModal from '~/components/Modals/NotificationModal.vue';
+    import { adviser } from "~/data/adviser";
+    import { users } from "~/data/user";
+    import { section } from "~/data/section";
+
     export default {
         name: "Advisory",
         components: {AdviserHeader, StudentBasicInfo, AddStudentForm, NotificationModal,},
-        props: {},
+        props: {
+            AdviserID: {
+                type: String,
+                required: true,
+                default: "adviserid1" // this should be the adviserID of the logged in user
+            },
+            AcademicYear: {
+                type: String,
+                required: true,
+                default: "2024-2025" // this should be the current academic year
+            },
+            section: {
+                type: Object,
+                required: true,
+                default:{
+                    id: 'sectionid1',
+                    adviserId: 'adviserid1',
+                    sectionPopulation: '20',
+                    sectionName: 'Javascript',
+                    sectionLevel: '7',
+                    sectionSchoolYear: '2024-2025',
+                    sectionStudents: [
+                        'sample22-1-10076',
+                        'sample22-1-10077',
+                        'sample22-1-10078',
+                        'sample22-1-10079',
+                        'sample22-1-10080',
+                        'sample22-1-10081',
+                        'sample22-1-10082',
+                        'sample22-1-10083',
+                        'sample22-1-10084',
+                        'sample22-1-10085',
+                        'sample22-1-10086'
+                    ]
+                } // I think it would be better if these are global variables
+            },
+        },
         data() {return {
             selectedSort: "",
             items: [],
             showStudentInfo: false,
             showAddStudentForm: false,
             showNotification: false,
+            adviser: {},
+            user: {},
+            section: {},
             containWidth: '93%'
         };},
 
         methods: {
+
+            getAdviser () {
+                this.adviser = adviser.find((adv) => adv.id === this.AdviserID);
+            },
+
+            getUser () {
+                this.user = users.find((usr) => usr.userId === this.adviser.userId);
+            },
+
+            getSection() {
+                this.section = section.find((sec)=> sec.adviserId === this.AdviserID);
+            },
+
             notifClick() {
                 this.containWidth = this.containWidth === '93%' ? '70%': '93%';
                 this.showNotification = !this.showNotification;
@@ -103,7 +159,16 @@
             goToReports(){
                 this.$router.push('/adviser/reports')
             },
+
         },
+
+        created() {
+                this.getAdviser();
+                this.getUser();
+                this.getSection();
+                console.log(this.user);
+            }
+   
     }
 </script>
 

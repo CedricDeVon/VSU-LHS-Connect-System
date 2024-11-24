@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-70">
+    <div class="fixed inset-0 overlap flex justify-center bg-black bg-opacity-70">
       <div class="flex items-center justify-center h-full w-full">
         <div class="h-5/6 w-1/2 bg-white rounded-2xl">
             <button @click="$emit('close')" 
@@ -102,7 +102,6 @@
   
   <script lang="ts">
   import { defineComponent, ref } from 'vue';
-//   import { useStore } from 'vuex'; // Import useStore from vuex
   import { adviserReportStore } from '../../stores/adviserReport'; // Correct import path
   import { initialReport } from '../../data/initialReport';
   
@@ -117,6 +116,21 @@
         report: {
             type: Object,
             required: true,
+            default:{
+              initialDocID: '',
+              reportIDRef: '',
+              reportedBY: '',
+              peopleInvolved: [],
+              witness: '',
+              dateOfIncident: '',
+              placeOfIncident: '',
+              thingsInvolved: '',
+              narrativeReport: '',
+              dateReported: '',
+              status: '',
+              isDraft:true,
+              academicYear: ''
+            }
         }
     },
     setup(_, { emit }) {
@@ -224,5 +238,9 @@
   .whitebutton:hover {
     background-color: #f8f1ba;
     color: #4a5e4e;
+  }
+
+  .overlap{
+    z-index: 3;
   }
   </style>

@@ -9,7 +9,7 @@
         <AdviserHeader @notif-click="notifClick"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">Academic Year {{ AcademicYear }}</h1>
             </div>
 
                 <!--Title of the Content?-->
@@ -31,7 +31,7 @@
                            </select>
 
                        
-                            <button @click="report" 
+                            <button v-if="selectedSort !== 'anecdotal'" @click="report" 
                                     class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="ReportIncident">
                                     Report an Incident
@@ -60,7 +60,8 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody >
+                                <tbody v-if="selectedSort === 'anecdotal'" class=" absolute  text-5xl p-9" >Coming Soon...</tbody>
+                                <tbody v-else>
                                     <tr class =" hover:bg-gray-200 text " v-for="report in reports" :key="report.reportIDRef"  >
                                         <td class=" py-5 text-center align-middle ">{{ report.reportIDRef }}</td>
                                         <td class=" py-5 text-center align-middle ">{{ `${report.peopleInvolved.join(', ')}` }}</td>

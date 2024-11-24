@@ -1,143 +1,305 @@
 <script setup lang="ts">
-import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
+import { computed, onMounted } from 'vue';
+import { Chart, registerables } from 'chart.js';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-import { signOut } from "firebase/auth";
+import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
+import { incidentReport } from '~/data/incident';
+import { initialReport } from '~/data/initialReport';
+import { caseConference } from '~/data/caseconference';
 
-// definePageMeta({
-//   middleware: ['validate-user']
-// });
+Chart.register(...registerables);
 
-const reportsCount = useState('reportsCount');
-const studentsCount = useState('studentsCount');
-const accountsCount = useState('accountsCount');
+// Update state to include unread reports
+const recentSubmissions = useState('recentSubmissions', () => []);
+const pendingCases = useState('pendingCases', () => 0);
+const scheduledConferences = useState('scheduledConferences', () => 0);
+const totalIncidents = useState('totalIncidents', () => 0);
+const unreadReports = useState('unreadReports', () => 0);
 
-reportsCount.value = studentsCount.value = accountsCount.value = 0;
+// Modified data loading function
+const loadDashboardData = () => {
+  // Get pending cases count
+  pendingCases.value = incidentReport.filter(inc => inc.status === 'NotResolved').length;
 
+  // Get scheduled conferences count
+  scheduledConferences.value = caseConference.filter(conf => new Date(conf.conferenceDate) > new Date()).length;
+
+  // Get total incidents for current AY
+  totalIncidents.value = incidentReport.filter(inc => inc.AY === '2024-2025').length;
+
+  // Get recent submissions with proper formatting
+  recentSubmissions.value = initialReport
+    .filter(report => !report.isDraft)
+    .sort((a, b) => new Date(b.dateReported).getTime() - new Date(a.dateReported).getTime())
+    .slice(0, 5)
+    .map(report => ({
+      title: report.narrativeReport.substring(0, 60) + '...',
+      people: report.peopleInvolved.join(', '),
+      date: new Date(report.dateReported).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }),
+      status: report.status
+    }));
+
+  // Add unread reports count
+  unreadReports.value = initialReport.filter(report => report.status === 'Unread' && !report.isDraft).length;
+};
+
+// Add back monthly incident counts
+const monthlyIncidentCounts = computed(() => {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  return months.map(month => {
+    return incidentReport.filter(inc => {
+      const incidentMonth = new Date(inc.dateOfIncident).toLocaleString('en-US', { month: 'short' });
+      return incidentMonth === month;
+    }).length;
+  });
+});
+
+// Update dashboard stats to include unread reports
+const dashboardStats = computed(() => ([
+  {
+    label: 'Scheduled Conferences',
+    value: scheduledConferences.value,
+    icon: 'lucide:calendar',
+    color: 'blue'
+  },
+  {
+    label: 'Pending Cases',
+    value: pendingCases.value,
+    icon: 'lucide:alert-circle',
+    color: 'yellow'
+  },
+  {
+    label: 'Unread Report Submissions',
+    value: unreadReports.value,
+    icon: 'lucide:mail',
+    color: 'red'
+  },
+  {
+    label: 'Total Incident Reports',
+    value: totalIncidents.value,
+    icon: 'lucide:file-text',
+    color: 'green'
+  }
+]));
+
+// Chart configuration
+const chartConfig = computed(() => ({
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  datasets: [{
+    label: 'Monthly Incidents',
+    data: monthlyIncidentCounts.value,
+    borderColor: '#265630',
+    backgroundColor: 'rgba(38, 86, 48, 0.1)',
+    tension: 0.4,
+    fill: true
+  }]
+}));
+
+// Initialize chart on mount
+onMounted(() => {
+  loadDashboardData();
+  
+  const trendsCtx = document.getElementById('trendsChart') as HTMLCanvasElement;
+  if (trendsCtx) {
+    new Chart(trendsCtx, {
+      type: 'line',
+      data: chartConfig.value,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: 'rgba(38, 86, 48, 0.9)',
+            titleColor: 'white',
+            bodyColor: 'white',
+            padding: 12,
+            cornerRadius: 8
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  }
+});
+
+// Gradient colors for stats
+const gradientColors = {
+  green: 'from-green-50 to-green-100',
+  yellow: 'from-amber-50 to-amber-100',
+  blue: 'from-blue-50 to-blue-100',
+  red: 'from-red-50 to-red-100'
+};
 </script>
 
 <template>
-  <div class="general flex h-screen">
-    <!-- Sidebar -->
+  <div class="flex h-screen bg-[#FFFEF1]">
     <AdminSidebar />
-
-    <div class="flex-grow dashboard-page">
-      <!-- Header -->
+    <div class="flex-1 overflow-hidden">
       <AdminHeader />
 
-        <!-- Welcome Section -->
-      <section class="welcome-message mt-11">
-          <h1 class="text-4xl font-bold text-green-900" >Welcome to your dashboard</h1>
-          <hr class="mt-3.5 border-2 border-green-900" />
-        </section>
+      <main class="p-8 overflow-y-auto h-[calc(100vh-64px)] space-y-6">
+        <!-- Academic Year Header -->
+        <div class="text-center text-lg font-semibold text-gray-600">
+          1st Semester, Academic Year 2024-2025
+        </div>
 
-      <!-- Main Dashboard Content -->
-      <main class="main-container">
-        <section class="mt-10 flex gap-5">
-          <article class="flex-col justify-between mt-1">
-            <section class="flex gap-10 justify-between">
-              <div class="flex flex-row w-[80%] justify-between">
-                <div class="flex flex-col items-start gap-5 text-4xl font-bold text-green-900">
-                  <div class="flex flex-row items-center gap-10">
-                    <img loading="lazy"
-                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/7c60d16a8e36909a44f9f80aa566bf7473375c2826a2dd18236b1b237a36b114?placeholderIfAbsent=true&apiKey=a61ecd0d5bec4c4f94bc2ce5eda3f7bc"
-                      alt="Incidents icon" class="w-[30px] object-contain" />
-                    <h2> {{ reportsCount }} Reports</h2>
-                  </div>
-                  <p class="short-description">View reports by class advisers and track report progress.</p>
-                </div>
+        <!-- Welcome Banner -->
+        <div class="relative p-8 rounded-xl bg-gradient-to-r from-[#1B4221] to-[#265630] text-white">
+          <div class="relative z-10">
+            <h1 class="text-3xl font-bold mb-2">Welcome back, Admin</h1>
+            <p class="text-green-100 opacity-90">
+              Monitor and manage student incidents, track cases, and schedule conferences.
+            </p>
+          </div>
+          <div class="absolute inset-0 opacity-10">
+            <div class="absolute inset-0 bg-repeat pattern-grid"></div>
+          </div>
+        </div>
+
+        <!-- Statistics Grid - now 4 items -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div v-for="stat in dashboardStats" :key="stat.label"
+            class="relative bg-gradient-to-br rounded-xl p-6 shadow-sm border border-gray-100"
+            :class="gradientColors[stat.color]">
+            <div class="flex items-start space-x-4">
+              <div class="p-3 bg-white/80 rounded-lg shadow-sm">
+                <Icon :name="stat.icon" class="w-6 h-6" :class="`text-${stat.color}-600`" />
               </div>
-              <div class="w-[20%] mt-5 text-white">
-              <button class="w-full py-3 rounded-lg bg-728B78 ease" aria-label="View sections">
-                View
-              </button>
-            </div>
-            </section>
-            <section class="flex gap-10 justify-between">
-              <div class="flex flex-row  w-[80%] justify-between">
-                <div class="flex flex-col items-start gap-5 text-4xl font-bold text-green-900">
-                  <div class="flex flex-row items-center gap-10">
-                    <img loading="lazy"
-                      src="@/assets/icons/reading-book-dark.png"
-                      alt="Incidents icon" class="w-[40px] object-contain" />
-                    <h2> {{ studentsCount }} Students</h2>
-                  </div>
-                  <p class="short-description">Search for a student and view relevant information.</p>
-                </div>
+              <div>
+                <p class="text-sm font-medium text-gray-600">{{ stat.label }}</p>
+                <p class="text-2xl font-bold text-gray-900 mt-1">{{ stat.value }}</p>
               </div>
-              <div class="w-[20%] mt-5 text-white">
-              <button class="w-full py-3 rounded-lg bg-728B78 ease" aria-label="View sections">
-                View
-              </button>
             </div>
-            </section>
-            <section class="flex gap-10 justify-between">
-              <div class="flex flex-row w-[80%] justify-between">
-                <div class="flex flex-col items-start gap-5 text-4xl font-bold text-green-900">
-                  <div class="flex flex-row items-center gap-10">
-                    <img loading="lazy"
-                      src="@/assets/icons/approved-dark.png"
-                      alt="Incidents icon" class="w-[30px] object-contain" />
-                    <h2>{{ accountsCount }} Account Approvals</h2>
-                  </div>
-                  <p class="short-description">See pending account approvals by class advisers and track account status.</p>
+          </div>
+        </div>
+
+        <!-- Charts and Quick Actions in 2-column layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Incident Trends Chart -->
+          <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100">
+            <div class="p-4 border-b border-gray-100">
+              <h3 class="text-lg font-semibold text-gray-900">Incident Trends</h3>
+              <p class="text-sm text-gray-500">Monthly incident reports (2024)</p>
+            </div>
+            <div class="p-4">
+              <canvas id="trendsChart" height="200"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-xl h-auto shadow-sm border border-gray-100">
+            <div class="p-4 border-b border-gray-100">
+              <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
+            </div>
+            <div class="p-4 flex flex-col gap-2">
+              <NuxtLink v-for="(action, idx) in [
+                { text: 'New Report', link: '/admin/reports/create', icon: 'lucide:file-plus' },
+                { text: 'Schedule Conference', link: '/admin/conferences/schedule', icon: 'lucide:calendar-plus' },
+                { text: 'View Incident Reports', link: '/admin/incidental', icon: 'lucide:clipboard-list' },
+                { text: 'View Anecdotal Reports', link: '/admin/anecdotal', icon: 'lucide:book-open' },
+                { text: 'Manage Users', link: '/admin/users', icon: 'lucide:users' },
+                { text: 'Make Announcements', link: '/admin/announcements', icon: 'lucide:megaphone' }
+              ]" 
+                :key="idx" 
+                :to="action.link"
+                class="flex items-center gap-3 p-3 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors">
+                <Icon :name="action.icon" class="w-5 h-5" />
+                <span class="font-medium">{{ action.text }}</span>
+              </NuxtLink>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+          <div class="p-4 border-b border-gray-100">
+            <h3 class="text-lg font-semibold text-gray-900">Recent Report Submissions by Advisers</h3>
+          </div>
+          <div class="divide-y divide-gray-100">
+            <div v-for="(activity, idx) in recentSubmissions" :key="idx" class="p-4 hover:bg-gray-50 transition-colors">
+              <div class="flex items-start space-x-3">
+                <div class="flex-1">
+                  <p class="font-medium text-gray-900">{{ activity.title }}</p>
+                  <p class="text-sm text-gray-600 mt-1">Students Involved: {{ activity.people }}</p>
+                  <p class="text-xs text-gray-500 mt-1">{{ activity.date }}</p>
                 </div>
+                <span class="px-2 py-1 text-xs font-medium rounded-full"
+                  :class="activity.status === 'Read' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+                  {{ activity.status }}
+                </span>
               </div>
-              <div class="w-[20%] mt-5 text-white">
-              <button class="w-full py-3 rounded-lg bg-728B78 ease" aria-label="View sections">
-                View
-              </button>
             </div>
-            </section>
-          </article>
-        </section>
+          </div>
+        </div>
       </main>
     </div>
   </div>
 </template>
 
 <style scoped>
-.dashboard-page {
-  background-color: #FFFEF1;
-  font-family: 'Century Gothic', sans-serif;
+.dashboard-card {
+  @apply bg-white rounded-xl shadow-sm border border-gray-100;
+  transition: all 0.3s ease-in-out;
 }
 
-.main-container {
-  padding: 0 150px;
-  padding-right: 160px;
+.section-header {
+  @apply text-xl font-semibold text-gray-900 mb-1;
 }
 
-.logout-button {
-  background-color: #FFFEF1;
-  font-size: 0.875rem;
+.section-subtext {
+  @apply text-sm text-gray-500;
 }
 
-.short-description {
-  font-size: 1.3rem;
-  font-weight: 500;
-  line-height: normal;
-  padding-left: 5rem;
-  
+/* Remove the problematic transition-all class and use standard CSS instead */
+.hover-animate {
+  transition: all 0.3s ease-in-out;
 }
 
-.welcome-message {
-  font-weight: 500;
-  padding: 0 5rem;
+.pattern-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-h2 {
-  font-size: 2rem;
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
 }
 
-section {
-  margin-bottom: 4rem;
+.animate-fade-in-delayed {
+  animation: fadeIn 0.5s ease-out 0.2s both;
 }
 
-.bg-728B78 {
-  background-color: #728B78;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.bg-728B78:hover {
-  background-color: #556859;
+/* Add smooth transitions */
+.transition-all {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Card hover effects */
+.hover-lift {
+  @apply transform transition-transform duration-300;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+}
 </style>

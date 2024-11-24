@@ -1,12 +1,36 @@
 <script setup lang="ts">
 import { defineComponent } from 'vue';
+import { student } from '~/data/student.js';
+import { section } from '~/data/section.js';
+import { incidentReport, initializeIncidentReports } from '~/data/incident'; // Add this import
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
-import { useAdminViewStore } from '~/stores/views/adminViewStore';
+import CreateIncidentReportModal from '~/components/Modals/Incident Management/CreateIncidentReportModal.vue';
 
-const adminViewStore = useAdminViewStore();
-await adminViewStore.updateStudentPageData(useRoute().params.id);
+export default defineComponent({
+    name: 'StudentInformation',
+    components: {
+        AdminSidebar,
+        AdminHeader,
+        IncidentReportsModal,
+        CreateIncidentReportModal
+    },
+    data() {
+        return {
+            studentData: null,
+            studentSection: null,
+            selectedSort: '',
+            allSectionStudents: [], // To store all students from the section
+            showIncidentModal: false,
+            showCreateIncidentModal: false
+        }
+    },
+    created() {
+        // Initialize incident reports from localStorage
+        initializeIncidentReports();
+        // Get student ID from route params
+        const studentId = this.$route.params.id;
 
 onBeforeMount(async () => {
 })
@@ -141,6 +165,14 @@ const viewStudent = (studentId: any) => {
                                                 @click="adminViewStore.studentShowIncidentModal = true"
                                                 class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             {{ incidentButtonText() }}
+                                        </button>
+                                        <button @click="createIncidentReport"
+                                            class="w-full px-4 py-2 rounded-md bg-[#265630] hover:bg-[#728B78] text-white transition-colors duration-200 flex items-center justify-center space-x-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            <span>Create Incident Report</span>
                                         </button>
                                         <button @click="createIncidentReport"
                                             class="w-full px-4 py-2 rounded-md bg-[#265630] hover:bg-[#728B78] text-white transition-colors duration-200 flex items-center justify-center space-x-2">

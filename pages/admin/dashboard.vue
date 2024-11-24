@@ -9,7 +9,6 @@ import { caseConference } from '~/data/caseconference';
 
 Chart.register(...registerables);
 
-// Update state to include unread reports
 const recentSubmissions = useState('recentSubmissions', () => []);
 const pendingCases = useState('pendingCases', () => 0);
 const scheduledConferences = useState('scheduledConferences', () => 0);
@@ -27,7 +26,7 @@ const loadDashboardData = () => {
   // Get total incidents for current AY
   totalIncidents.value = incidentReport.filter(inc => inc.AY === '2024-2025').length;
 
-  // Get recent submissions with proper formatting
+  // Get recent submissions 
   recentSubmissions.value = initialReport
     .filter(report => !report.isDraft)
     .sort((a, b) => new Date(b.dateReported).getTime() - new Date(a.dateReported).getTime())
@@ -43,11 +42,9 @@ const loadDashboardData = () => {
       status: report.status
     }));
 
-  // Add unread reports count
-  unreadReports.value = initialReport.filter(report => report.status === 'Unread' && !report.isDraft).length;
+  unreadReports.value = initialReport.filter(report => report.status === 'Unread').length;
 };
 
-// Add back monthly incident counts
 const monthlyIncidentCounts = computed(() => {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
   return months.map(month => {
@@ -58,7 +55,6 @@ const monthlyIncidentCounts = computed(() => {
   });
 });
 
-// Update dashboard stats to include unread reports
 const dashboardStats = computed(() => ([
   {
     label: 'Scheduled Conferences',
@@ -86,7 +82,6 @@ const dashboardStats = computed(() => ([
   }
 ]));
 
-// Chart configuration
 const chartConfig = computed(() => ({
   labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
   datasets: [{
@@ -99,7 +94,6 @@ const chartConfig = computed(() => ({
   }]
 }));
 
-// Initialize chart on mount
 onMounted(() => {
   loadDashboardData();
   
@@ -132,7 +126,6 @@ onMounted(() => {
   }
 });
 
-// Gradient colors for stats
 const gradientColors = {
   green: 'from-green-50 to-green-100',
   yellow: 'from-amber-50 to-amber-100',
@@ -289,12 +282,11 @@ const gradientColors = {
   }
 }
 
-/* Add smooth transitions */
+
 .transition-all {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Card hover effects */
 .hover-lift {
   @apply transform transition-transform duration-300;
 }

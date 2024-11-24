@@ -44,7 +44,7 @@ const viewStudent = (studentId: any) => {
         <AdminSidebar />
         <div class="general flex-grow  flex flex-col">
             <AdminHeader />
-            
+
             <!-- Main content -->
             <main class="flex-1 bg-[#FFFEF1] p-4 relative">
                 <!-- Title Bar -->
@@ -68,7 +68,8 @@ const viewStudent = (studentId: any) => {
                             </div>
 
                             <!-- Student Table -->
-                            <div class  ="overflow-auto max-h-[80%] text-opacity-50 transition-all duration-300 rounded-lg">
+                            <div
+                                class="overflow-auto max-h-[60%] text-opacity-50 transition-all duration-300 rounded-lg">
                                 <table class="min-w-full">
                                     <thead class="sticky top-0">
                                         <tr class="bg-[#728B78] text-white">
@@ -130,7 +131,8 @@ const viewStudent = (studentId: any) => {
                                     <!-- Buttons with adjusted margins -->
                                     <div class="space-y-2 mt-4">
                                         <!-- Secondary Action -->
-                                        <button @click="viewAnecdotalReport" class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
+                                        <button @click="viewAnecdotalReport"
+                                            class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             View Anecdotal Report
                                         </button>
 
@@ -139,6 +141,14 @@ const viewStudent = (studentId: any) => {
                                                 @click="adminViewStore.studentShowIncidentModal = true"
                                                 class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             {{ incidentButtonText() }}
+                                        </button>
+                                        <button @click="createIncidentReport"
+                                            class="w-full px-4 py-2 rounded-md bg-[#265630] hover:bg-[#728B78] text-white transition-colors duration-200 flex items-center justify-center space-x-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            <span>Create Incident Report</span>
                                         </button>
                                     </div>
                                 </div>
@@ -161,8 +171,13 @@ const viewStudent = (studentId: any) => {
 </template>
 
 <style scoped>
+.body {
+    background: #FFFEF1;
+}
+
 .contain {
-    height: calc(98vh - 180px); /* Adjust based on your header and title heights */
+    height: calc(98vh - 180px);
+    /* Adjust based on your header and title heights */
 }
 
 /* Scrollbar styles */

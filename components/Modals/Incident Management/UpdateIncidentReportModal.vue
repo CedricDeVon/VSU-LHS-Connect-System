@@ -155,15 +155,23 @@
           </div>
 
           <!-- Actions -->
-          <div class="flex justify-end space-x-3 mt-6 pt-4 border-t">
+          <div class="flex justify-between space-x-3 mt-6 pt-4 border-t">
+            <div>
             <button type="button" @click="$emit('close')"
-              class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
               Cancel
             </button>
+          </div>
+            <div class="flex items-center gap-3">
+            <button type="button" @click="clearForm"
+                class="px-4 py-2 text-sm font-medium text-red-600 bg-white border border-red-300 rounded-md hover:bg-red-50">
+                Clear
+              </button>
             <button type="submit"
-              class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+              class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#265630] hover:bg-[#728B78] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
               Save Changes
             </button>
+          </div>
           </div>
         </form>
       </div>
@@ -210,6 +218,20 @@ export default {
       if (value && !this.formData.peopleInvolved.includes(value)) {
         this.formData.peopleInvolved.push(value);
         this.peopleInput = '';
+      }
+    },
+
+    clearForm() {
+      this.formData = {
+        peopleInvolved: [],
+        witness: [],
+        dateOfIncident: '',
+        placeOfIncident: '',
+        thingsInvolved: '',
+        narrativeReport: '',
+        actionTaken: '',
+        reasonOfAction: '',
+        others: ''
       }
     },
 

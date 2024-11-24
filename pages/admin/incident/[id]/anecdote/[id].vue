@@ -1,20 +1,21 @@
+
 <template>
     <div class="flex h-screen bg-[#FFFEF1]">
         <AdminSidebar />
         <div class="flex-1 overflow-hidden">
-            <!-- <AdminHeader /> -->
+            <AdminHeader />
             <div class="p-8 pt-0 overflow-y-auto h-[calc(100vh-64px)]">
                 <!-- Breadcrumb navigation -->
                 <div class="mb-4">
                     <nav class="flex" aria-label="Breadcrumb">
                         <ol class="inline-flex items-center space-x-1 md:space-x-3">
                             <li>
-                                <NuxtLink :to="`/admin/incident/${adminViewStore.caseConferenceCaseConferenceReport.data.incidentId}`" class="text-[#265630] hover:text-gray-700">
+                                <NuxtLink :to="`/admin/incident/${incidentId}`" class="text-gray-500 hover:text-gray-700">
                                     Incident Document
                                 </NuxtLink>
                             </li>
                             <li>/</li>
-                            <li class="text-[#265630]">
+                            <li class="text-gray-900">
                                 Case Conference Document
                             </li>
                         </ol>
@@ -33,13 +34,13 @@
 
                 <!-- Conference document content -->
                 <div v-else class="bg-[white] rounded-lg shadow-md p-6">
-                    <div v-if="adminViewStore.caseConferenceCaseConferenceReport" class="space-y-6">
+                    <div v-if="conferenceData" class="space-y-6">
                         <!-- Header Info -->
                         <div class="flex justify-between items-start border-b pb-4">
                             <div class="space-y-1">
-                                <h2 class="text-xl font-semibold text-[#265630]">Case Conference Document</h2>
-                                <p class="text-sm text-[#265630]">
-                                    Conference ID: {{ adminViewStore.caseConferenceCaseConferenceReport.id }}
+                                <h2 class="text-xl font-semibold text-gray-900">Case Conference Document</h2>
+                                <p class="text-sm text-gray-600">
+                                    Conference ID: {{ conferenceData.caseConDocID }}
                                 </p>
                             </div>
                             <div class="flex space-x-3">
@@ -48,7 +49,7 @@
                                     Download PDF
                                 </button>
                                 <button @click="printDocument"
-                                    class="px-4 py-2 text-sm border border-[#265630] text-[#265630] rounded-md hover:bg-[#728B78] hover:text-white hover:border-[#728B78]">
+                                    class="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
                                     Print
                                 </button>
                             </div>
@@ -58,13 +59,13 @@
                         <div class="grid grid-cols-2 gap-6">
                             <div>
                                 <h3 class="text-sm font-medium text-gray-500">Student Information</h3>
-                                <p class="mt-1 text-sm text-gray-900">{{ adminViewStore.getFullName(adminViewStore.caseConferenceStudent) }}</p>
-                                <p class="text-sm text-gray-600">{{ adminViewStore.sectionGetGradeAndSection(adminViewStore.caseConferenceSection) }}</p>
+                                <p class="mt-1 text-sm text-gray-900">{{ conferenceData.studentName }}</p>
+                                <p class="text-sm text-gray-600">{{ conferenceData.gradeAndSection }}</p>
                             </div>
                             <div>
                                 <h3 class="text-sm font-medium text-gray-500">Conference Schedule</h3>
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ formatDate(adminViewStore.caseConferenceCaseConferenceReport.data.conferenceDate) }}
+                                    {{ formatDate(conferenceData.conferenceDate) }}
                                 </p>
                             </div>
                         </div>
@@ -92,43 +93,13 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue'
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue'
 import {footer} from '~/assets/images/footer'
 import {headerImage} from '~/assets/images/sample-header'
-import { useAdminViewStore } from '~/stores/views/adminViewStore'
 
 const route = useRoute()
 const loading = ref(true)
 const error = ref(null)
-// const conferenceId = ref(route.params.id)
-// console.log('E ', route.params)
-const adminViewStore = useAdminViewStore();
-
-onMounted(async () => {
-    await adminViewStore.updateCaseConference(route.params.id);
-    try {
-        loading.value = true
-        // console.log('F ', conferenceId.value)
-        // console.log('C',
-        //     adminViewStore.caseConferenceIncidentReport,
-        //     adminViewStore.caseConferenceCaseConferenceReport,
-        //     adminViewStore.caseConferenceStudent,
-        //     adminViewStore.caseConferenceSection);
-        displayPDF()
-        loading.value = false
-
-        // const data = caseConference.find(conf => conf.caseConDocID === conferenceId.value)
-
-        // if (!data) {
-        //     throw new Error('Conference not found')
-        // }
-
-        // // Update the incidentId if needed
-        // incidentId.value = data.incidentID || route.params.id
-        // adminViewStore.caseConferenceIncidentReport = data
-
-    } catch (err) {
-        error.value = err.message || 'Failed to load conference data'
-        loading.value = false
-    }
-})
+const conferenceData = ref(null)
+const incidentId = ref(route.params.id)
+const conferenceId = ref(route.params.conferenceId || route.params.id)
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -160,13 +131,13 @@ const defineConferenceDoc = (data) => ({
                     width: 100
                 },
                 {
-                    text: adminViewStore.getFullName(adminViewStore.caseConferenceStudent),
+                    text: data.studentName,
                     style: 'content'
                 },
                 {
                     text: [
                         { text: 'Grade & Section: ', style: 'label' },
-                        { text: adminViewStore.sectionGetGradeAndSection(adminViewStore.caseConferenceSection), style: 'content' }
+                        { text: data.gradeAndSection, style: 'content' }
                     ],
                     alignment: 'right'
                 }
@@ -175,16 +146,16 @@ const defineConferenceDoc = (data) => ({
 
         // Main Content
         { text: '\nCircumstance:', style: 'label' },
-        { text: adminViewStore.caseConferenceCaseConferenceReport.data.circumstance, style: 'content', margin: [10, 0, 0, 20] },
+        { text: data.circumstance, style: 'content', margin: [10, 0, 0, 20] },
 
         { text: 'Discussions:', style: 'label' },
-        { text: adminViewStore.caseConferenceCaseConferenceReport.data.discussions, style: 'content', margin: [10, 0, 0, 20] },
+        { text: data.discussions, style: 'content', margin: [10, 0, 0, 20] },
 
         { text: 'Agreement:', style: 'label' },
-        { text: adminViewStore.caseConferenceCaseConferenceReport.data.agreement, style: 'content', margin: [10, 0, 0, 20] },
+        { text: data.agreement, style: 'content', margin: [10, 0, 0, 20] },
 
         { text: 'Remarks:', style: 'label' },
-        { text: adminViewStore.caseConferenceCaseConferenceReport.data.remarks, style: 'content', margin: [10, 0, 0, 20] },
+        { text: data.remarks, style: 'content', margin: [10, 0, 0, 20] },
 
         // Signatures
         {
@@ -269,8 +240,8 @@ const defineConferenceDoc = (data) => ({
 })
 
 const displayPDF = () => {
-    if (!adminViewStore.caseConferenceIncidentReport) return
-    const docDefinition = defineConferenceDoc(adminViewStore.caseConferenceIncidentReport)
+    if (!conferenceData.value) return
+    const docDefinition = defineConferenceDoc(conferenceData.value)
     pdfMake.createPdf(docDefinition).getBlob((blob) => {
         const url = URL.createObjectURL(blob)
         const viewer = document.getElementById('pdf-viewer')
@@ -281,17 +252,36 @@ const displayPDF = () => {
 }
 
 const downloadPDF = () => {
-    if (!adminViewStore.caseConferenceIncidentReport) return
-    const docDefinition = defineConferenceDoc(adminViewStore.caseConferenceIncidentReport)
-    pdfMake.createPdf(docDefinition).download(`${adminViewStore.caseConferenceCaseConferenceReport.id}_${adminViewStore.caseConferenceIncidentReport.id}.pdf`)
+    if (!conferenceData.value) return
+    const docDefinition = defineConferenceDoc(conferenceData.value)
+    pdfMake.createPdf(docDefinition).download(`conference_${conferenceData.value.caseConDocID}.pdf`)
 }
 
 const printDocument = () => {
-    if (!adminViewStore.caseConferenceIncidentReport) return
-    const docDefinition = defineConferenceDoc(adminViewStore.caseConferenceIncidentReport)
+    if (!conferenceData.value) return
+    const docDefinition = defineConferenceDoc(conferenceData.value)
     pdfMake.createPdf(docDefinition).print()
 }
 
+onMounted(async () => {
+    try {
+        loading.value = true
+        const data = caseConference.find(conf => conf.caseConDocID === conferenceId.value)
+
+        if (!data) {
+            throw new Error('Conference not found')
+        }
+
+        // Update the incidentId if needed
+        incidentId.value = data.incidentID || route.params.id
+        conferenceData.value = data
+        loading.value = false
+        displayPDF()
+    } catch (err) {
+        error.value = err.message || 'Failed to load conference data'
+        loading.value = false
+    }
+})
 </script>
 
 <style scoped>

@@ -1,3 +1,4 @@
+
 <script>
 definePageMeta({
   middleware: ['authenticate-and-authorize-admin']
@@ -305,9 +306,13 @@ export default {
 </template>
 
 <style scoped>
+
+.body {
+  background: #FFFEF1;
+}
+
 #incident-display-container {
   min-height: 80vh;
-  background: white;
   padding: 1rem;
   border-radius: 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -317,3 +322,83 @@ iframe {
   border-radius: 0.5rem;
 }
 </style>
+
+<!-- <template>
+  <div class="flex h-screen bg-[#FFFEF1]">
+    <AdminSidebar />
+    <div class="flex-1 overflow-hidden">
+      <AdminHeader />
+      <div class="p-8 pt-0 overflow-y-auto h-[calc(100vh-64px)]">
+        
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-[#265630]">Anecdotal Report Details</h1>
+          <p class="text-sm text-[#265630]">Managing anecdotal report and related actions</p>
+        </div>
+
+        <div class="flex gap-6">
+          
+          <div class="flex-1 bg-white rounded-lg shadow-md min-h-[80vh] overflow-hidden">
+            
+            <div class="bg-gray-50 px-6 py-3 border-b border-gray-200 flex items-center justify-between">
+              <h2 class="text-lg font-semibold text-gray-800">Document Preview</h2>
+            </div>
+            
+            <iframe id="pdf-viewer" class="w-full h-[calc(100%-48px)] border-none"></iframe>
+          </div>
+
+          
+          <div class="w-96 space-y-6">
+            
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <h2 class="text-sm font-semibold text-gray-900">Update Report</h2>
+              </div>
+
+              <div class="p-4 space-y-3">
+                <button @click="openUpdateForm"
+                  class="w-full px-4 py-3 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 flex items-center justify-center space-x-2">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                  <span>Update Report Details</span>
+                </button>
+              </div>
+            </div>
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+              <div class="p-4 bg-gray-50 border-b border-gray-200">
+                <h2 class="text-sm font-semibold text-gray-900">Document Actions</h2>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3 p-4">
+                <button @click="downloadPDF"
+                  class="flex flex-col items-center justify-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+                  <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  <span class="mt-2 text-sm font-medium text-gray-600">Download</span>
+                </button>
+
+                <button @click="printDocument"
+                  class="flex flex-col items-center justify-center p-4 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors duration-200">
+                  <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                  </svg>
+                  <span class="mt-2 text-sm font-medium text-gray-600">Print</span>
+                </button>
+              </div>
+            </div>
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <UpdateAnecdotalModal v-if="showUpdateModal" :report="selectedReport" @close="closeUpdateModal"
+      @update="handleUpdate" />
+  </div>
+</template>
+-->

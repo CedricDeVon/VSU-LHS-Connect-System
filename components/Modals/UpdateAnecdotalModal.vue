@@ -98,7 +98,7 @@
                 Save Draft
               </button>
               <button type="submit"
-                class="px-4 py-2 text-sm font-medium text-white bg-[#265630] border border-transparent rounded-md hover:bg-indigo-700">
+                class="px-4 py-2 text-sm font-medium text-white bg-[#265630] border border-transparent rounded-md hover:bg-[#728B78]">
                 Update Report
               </button>
             </div>

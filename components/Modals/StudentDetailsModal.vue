@@ -27,41 +27,57 @@
 
                     <p class="text-lg mb-6">ID NO: {{ adminViewStore.searchSelectedStudent.id }}</p>
 
-                    <!-- Student Details Grid -->
-                    <div class="w-full space-y-4">
-                        <div class="flex justify-between">
-                            <span class="font-semibold">Gender:</span>
-                            <span>{{ adminViewStore.searchSelectedStudent.data.gender }}</span>
+                    <!-- Student Details Grid - Updated styling -->
+                    <div class="w-full space-y-4 bg-gray-50 rounded-lg p-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-4">
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-500">Gender</span>
+                                    <span class="font-medium">{{ adminViewStore.searchSelectedStudent.data.gender || 'N/A' }}</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-500">Birth Date</span>
+                                    <span class="font-medium">{{ adminViewStore.searchSelectedStudent.data.birthDate || 'N/A' }}</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-500">Age</span>
+                                    <span class="font-medium">{{ adminViewStore.searchSelectedStudent.data.age || 'N/A' }}</span>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-500">Address</span>
+                                    <span class="font-medium">{{ adminViewStore.searchSelectedStudent.data.address || 'N/A' }}</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="text-sm text-gray-500">Contact</span>
+                                    <span class="font-medium">{{ adminViewStore.searchSelectedStudent.data.contactNumber || 'N/A' }}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex justify-between">
-                            <span class="font-semibold">Birth Date:</span>
-                            <span>{{ adminViewStore.searchSelectedStudent.data.birthDate }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-semibold">Age:</span>
-                            <span>{{ adminViewStore.searchSelectedStudent.data.age }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-semibold">Address:</span>
-                            <span>{{ adminViewStore.searchSelectedStudent.data.address }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span class="font-semibold">Contact:</span>
-                            <span>{{ adminViewStore.searchSelectedStudent.data.contactNumber }}</span>
-                        </div>
+                    </div>
 
-                        <!-- Updated Buttons Section -->
-                        <div class="space-y-2 mt-4">
-                            <!-- Primary Action -->
+                    <!-- Action Buttons - Updated hierarchy and styling -->
+                    <div class="w-full space-y-4 mt-6">
+                        <!-- Primary Actions -->
+                        <div class="space-y-2">
                             <button @click="viewFullDetails" 
-                                    class="bg-[#265630] hover:bg-[#1a3d21] w-full text-white px-4 py-2 rounded-md transition-colors">
-                                View Section
+                                    class="w-full px-4 py-3 rounded-md bg-[#265630] hover:bg-[#1a3d21] text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                <span>View Section Details</span>
                             </button>
 
-                            <!-- Secondary Action -->
-                            <button @click="viewAnecdotalReport" class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
-                                View Anecdotal Report
+                            <button @click="createIncidentReport"
+                                    class="w-full px-4 py-3 rounded-md border-2 border-[#265630] text-[#265630] hover:bg-[#265630] hover:text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                <span>Create Incident Report</span>
                             </button>
+                        </div>
 
                             <!-- Warning/Alert Action -->
                             <button v-if="hasIncidents" 
@@ -69,7 +85,34 @@
                                     class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
                                 View {{ incidentButtonText }}
                             </button>
-                        </div>
+                        <!-- Secondary Actions -->
+                            <!-- Record Actions -->
+                                <!-- View Incidents - Only show if has incidents -->
+                        <!-- <div class="pt-4 border-t border-gray-200 space-y-2">
+                            <div :class="[
+                                hasIncidents ? 'grid grid-cols-2 gap-3' : 'w-full'
+                            ]">
+                                <button @click="viewAnecdotalReport"
+                                        :class="[
+                                            'px-4 py-3 rounded-md bg-[#728B78] hover:bg-[#536757] text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2',
+                                            hasIncidents ? '' : 'w-full'
+                                        ]">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    <span>Anecdotal Report</span>
+                                </button>
+
+                                <button v-if="hasIncidents" 
+                                        @click="showIncidentModal = true"
+                                        class="px-4 py-3 rounded-md bg-white border-2 border-[#728B78] text-[#728B78] hover:bg-[#728B78] hover:text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-.586-1.414l-3.5-3.5a2 2 0 00-1.414-.586h-1"/>
+                                    </svg>
+                                    <span>{{ incidentButtonText }}</span>
+                                </button>
+                            </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -80,12 +123,26 @@
             :student-data="adminViewStore.searchSelectedStudent"
             @close="adminViewStore.studentShowIncidentModal = false"
         />
+    <!-- Add Create Incident Modal -->
+    <!-- <CreateIncidentReportModal 
+        v-if="showCreateIncidentModal"
+        :show="showCreateIncidentModal"
+        :student-info="{
+            name: studentData ? `${studentData.firstName} ${studentData.lastName}` : '',
+            section: studentData?.sectionID || ''
+        }"
+        @close="showCreateIncidentModal = false"
+        @create="handleCreateIncident"
+    /> -->
     </div>
+
 </template>
 
 <script>
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
+import CreateIncidentReportModal from '~/components/Modals/Incident Management/CreateIncidentReportModal.vue';
+import { incidentReport } from '~/data/incident.js';
 
 const adminViewStore = useAdminViewStore();
 
@@ -148,10 +205,38 @@ export default {
         viewIncidents() {
             adminViewStore.studentShowIncidentModal = true
             adminViewStore.studentStudentData = this.adminViewStore.searchSelectedStudent;
+        },
+        createIncidentReport() {
+            console.log('Opening create incident modal');
+            this.showCreateIncidentModal = true;
+        },
+        async handleCreateIncident(newIncident) {
+            try {
+                // Update incidentReport array
+                incidentReport.push(newIncident);
+                localStorage.setItem('incidentReports', JSON.stringify(incidentReport));
+                
+                // Update student's incidentDocIDs
+                const updatedStudent = {
+                    ...this.studentData,
+                    incidentDocIDs: [...(this.studentData.incidentDocIDs || []), newIncident.incidentDocID]
+                };
+                
+                // Close modals
+                this.showCreateIncidentModal = false;
+                this.$emit('close');
+
+                // Navigate to new incident report
+                await this.$router.push(`/admin/incident/${newIncident.incidentDocID}`);
+            } catch (error) {
+                console.error('Error creating incident:', error);
+                alert('Failed to create incident report');
+            }
         }
     },
     components: {
-        IncidentReportsModal
+        IncidentReportsModal,
+        CreateIncidentReportModal
     },
     data() {
         return {
@@ -199,4 +284,23 @@ export default {
     scrollbar-width: thin;
     scrollbar-color: #728B78 #f1f1f1;
 }
-</style> 
+
+/* Add new styles */
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+button {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+button:active {
+  transform: translateY(0);
+}
+</style>

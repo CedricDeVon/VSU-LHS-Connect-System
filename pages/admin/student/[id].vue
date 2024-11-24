@@ -2,16 +2,19 @@
 import { defineComponent } from 'vue';
 import { student } from '~/data/student.js';
 import { section } from '~/data/section.js';
+import { incidentReport, initializeIncidentReports } from '~/data/incident'; // Add this import
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
+import CreateIncidentReportModal from '~/components/Modals/Incident Management/CreateIncidentReportModal.vue';
 
 export default defineComponent({
     name: 'StudentInformation',
     components: {
         AdminSidebar,
         AdminHeader,
-        IncidentReportsModal
+        IncidentReportsModal,
+        CreateIncidentReportModal
     },
     data() {
         return {
@@ -19,10 +22,13 @@ export default defineComponent({
             studentSection: null,
             selectedSort: '',
             allSectionStudents: [], // To store all students from the section
-            showIncidentModal: false
+            showIncidentModal: false,
+            showCreateIncidentModal: false
         }
     },
     created() {
+        // Initialize incident reports from localStorage
+        initializeIncidentReports();
         // Get student ID from route params
         const studentId = this.$route.params.id;
 
@@ -59,11 +65,12 @@ export default defineComponent({
             return sorted;
         },
         hasIncidents() {
-            return this.studentData?.incidentDocIDs?.length > 0;
+            return Array.isArray(this.studentData?.incidentDocIDs) && this.studentData.incidentDocIDs.length > 0;
         },
         incidentButtonText() {
-            const count = this.studentData?.incidentDocIDs?.length || 0;
-            return count > 1 ? `Incident Reports (${count})` : 'Incident Report';
+            if (!this.studentData?.incidentDocIDs) return 'Incident Report';
+            const count = Array.isArray(this.studentData.incidentDocIDs) ? this.studentData.incidentDocIDs.length : 0;
+            return `Incident Report${count > 0 ? ` (${count})` : ''}`;
         }
     },
     methods: {
@@ -80,6 +87,48 @@ export default defineComponent({
                 this.$router.push(`/admin/anecdote/${this.studentData.studentId}`);
             } else {
                 alert('No anecdotal report available for this student');
+            }
+        },
+        createIncidentReport() {
+            console.log('Opening create incident modal');
+            this.showCreateIncidentModal = true;
+        },
+        async handleCreateIncident(newIncident) {
+            try {
+                // Get existing incidents from localStorage or initialize empty array
+                const existingIncidents = JSON.parse(localStorage.getItem('incidentReports') || '[]');
+                
+                // Add new incident
+                existingIncidents.push(newIncident);
+                
+                // Update localStorage
+                localStorage.setItem('incidentReports', JSON.stringify(existingIncidents));
+
+                // Update student's incident IDs
+                if (!this.studentData.incidentDocIDs) {
+                    this.studentData.incidentDocIDs = [];
+                }
+                this.studentData.incidentDocIDs.push(newIncident.incidentDocID);
+
+                // Save updated student data to localStorage
+                const students = JSON.parse(localStorage.getItem('students') || '[]');
+                const studentIndex = students.findIndex(s => s.studentId === this.studentData.studentId);
+                if (studentIndex !== -1) {
+                    students[studentIndex] = this.studentData;
+                    localStorage.setItem('students', JSON.stringify(students));
+                }
+
+                // Close modal
+                this.showCreateIncidentModal = false;
+
+                // Navigate to new incident report
+                this.$router.push({
+                    path: `/admin/incident/${newIncident.incidentDocID}`,
+                    query: { refresh: 'true' }
+                });
+            } catch (error) {
+                console.error('Error creating incident:', error);
+                alert('Failed to create incident report');
             }
         }
     }
@@ -166,7 +215,7 @@ export default defineComponent({
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Address:</span>
-                                        <span>{{ studentData.Address || 'N/A' }}</span>
+                                        <span>{{ studentData.address || 'N/A' }}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="font-semibold">Contact:</span>
@@ -181,10 +230,18 @@ export default defineComponent({
                                             View Anecdotal Report
                                         </button>
 
-                                        <!-- Warning/Alert Action - Only show if student has incidents -->
+                                        <!-- Incident Report Button - Show create or view based on hasIncidents -->
                                         <button v-if="hasIncidents" @click="showIncidentModal = true"
                                             class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             View {{ incidentButtonText }}
+                                        </button>
+                                        <button @click="createIncidentReport"
+                                            class="w-full px-4 py-2 rounded-md bg-[#265630] hover:bg-[#728B78] text-white transition-colors duration-200 flex items-center justify-center space-x-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 4v16m8-8H4" />
+                                            </svg>
+                                            <span>Create Incident Report</span>
                                         </button>
                                     </div>
                                 </div>
@@ -199,11 +256,20 @@ export default defineComponent({
         </div>
         <IncidentReportsModal :show="showIncidentModal" :student-data="studentData"
             @close="showIncidentModal = false" />
+
+        <CreateIncidentReportModal v-if="showCreateIncidentModal" :show="showCreateIncidentModal" :student-info="{
+            name: studentData ? `${studentData.firstName} ${studentData.lastName}` : '',
+            section: studentData?.sectionID || ''
+        }" @close="showCreateIncidentModal = false" @create="handleCreateIncident" />
     </div>
 
 </template>
 
 <style scoped>
+.body {
+    background: #FFFEF1;
+}
+
 .contain {
     height: calc(98vh - 180px);
     /* Adjust based on your header and title heights */

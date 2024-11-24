@@ -1,3 +1,4 @@
+
 <template>
     <div class="flex h-screen bg-[#FFFEF1]">
         <AdminSidebar />
@@ -9,12 +10,12 @@
                     <nav class="flex" aria-label="Breadcrumb">
                         <ol class="inline-flex items-center space-x-1 md:space-x-3">
                             <li>
-                                <NuxtLink :to="`/admin/incident/${incidentId}`" class="text-[#265630] hover:text-gray-700">
+                                <NuxtLink :to="`/admin/incident/${incidentId}`" class="text-gray-500 hover:text-gray-700">
                                     Incident Document
                                 </NuxtLink>
                             </li>
                             <li>/</li>
-                            <li class="text-[#265630]">
+                            <li class="text-gray-900">
                                 Case Conference Document
                             </li>
                         </ol>
@@ -37,8 +38,8 @@
                         <!-- Header Info -->
                         <div class="flex justify-between items-start border-b pb-4">
                             <div class="space-y-1">
-                                <h2 class="text-xl font-semibold text-[#265630]">Case Conference Document</h2>
-                                <p class="text-sm text-[#265630]">
+                                <h2 class="text-xl font-semibold text-gray-900">Case Conference Document</h2>
+                                <p class="text-sm text-gray-600">
                                     Conference ID: {{ conferenceData.caseConDocID }}
                                 </p>
                             </div>
@@ -48,7 +49,7 @@
                                     Download PDF
                                 </button>
                                 <button @click="printDocument"
-                                    class="px-4 py-2 text-sm border border-[#265630] text-[#265630] rounded-md hover:bg-[#728B78] hover:text-white hover:border-[#728B78]">
+                                    class="px-4 py-2 text-sm border border-gray-300 rounded-md hover:bg-gray-50">
                                     Print
                                 </button>
                             </div>

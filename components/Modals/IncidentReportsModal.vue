@@ -3,6 +3,10 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
 
+onBeforeMount(async () => {
+})
+
+
 const viewIncidentDetails = (incidentId: any) => {
     useRouter().push(`/admin/incident/${incidentId}`);
 }

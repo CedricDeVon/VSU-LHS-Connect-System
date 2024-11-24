@@ -3,11 +3,11 @@ definePageMeta({
   middleware: ['authenticate-and-authorize-admin']
 });
 
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
 import debounce from 'lodash/debounce';
-import { useAdminViewStore } from '~/stores/views/adminViewStore';
 import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 
 const adminViewStore = useAdminViewStore();

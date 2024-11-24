@@ -84,10 +84,13 @@
 </template>
 
 <script>
-import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
+import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
 
 const adminViewStore = useAdminViewStore();
+
+onBeforeMount(async () => {
+})
 
 const handleClose = () => {
     adminViewStore.searchShowStudentDetailsModal = false;

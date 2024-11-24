@@ -1,8 +1,8 @@
 <template>
   <div class="flex h-screen bg-[#FFFEF1]">
-    <AdminSidebar />
+    <!-- <AdminSidebar /> -->
     <div class="flex-1 overflow-hidden">
-      <AdminHeader />
+      <!-- <AdminHeader /> -->
       <div class="p-8 pt-0 overflow-y-auto h-[calc(100vh-64px)]">
         <!-- Page Title -->
         <div class="mb-6">
@@ -80,6 +80,10 @@
 </template>
 
 <script>
+// definePageMeta({
+//   middleware: ['authenticate-and-authorize-admin']
+// });
+
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -88,15 +92,16 @@ import { footer } from '~/assets/images/footer';
 import { anecdotalReport } from '~/data/anecdotal';
 import { student } from '~/data/student';
 import { report, updateReport, initializeReports } from '~/data/report';
-import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
-import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+// import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
+// import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
 import { formatDate } from '@vueuse/core';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 export default {
   components: {
-    AdminSidebar,
-    AdminHeader,
+    // AdminSidebar,
+    // AdminHeader,
     UpdateAnecdotalModal,
   },
 
@@ -106,13 +111,13 @@ export default {
       studentData: null,
       showUpdateModal: false,
       selectedReport: null,
+      adminViewStore: useAdminViewStore(),
     };
   },
 
-  async created() {
+  async mounted() {
     initializeReports(); // Initialize from localStorage
-    const studentId = this.$route.params.id;
-    await this.initData(studentId);
+    await this.initData();
     this.displayPDF();
   },
 
@@ -120,10 +125,10 @@ export default {
     defineAnecdotalDoc() {
       if (!this.anecReport || !this.studentData) return null;
 
-      const associatedReports = report.filter(r => this.anecReport.reportIDs.includes(r.reportID));
+      const associatedReports = this.adminViewStore.anecdoteReports.filter(r => this.anecReport.data.reportIds.includes(r.id));
 
       // Sort reports by date prepared
-      associatedReports.sort((a, b) => new Date(a.datePrepared) - new Date(b.datePrepared));
+      associatedReports.sort((a, b) => new Date(a.data.datePrepared) - new Date(b.data.datePrepared));
 
       const content = [
         { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 0] },
@@ -134,15 +139,15 @@ export default {
             body: [
               [
                 { text: 'Student Name:', style: 'label', border: [false, false, false, false] },
-                { text: `${this.studentData.firstName} ${this.studentData.middleName} ${this.studentData.lastName}`, style: 'content', border: [false, false, false, false] }
+                { text: this.adminViewStore.getFullName(this.studentData), style: 'content', border: [false, false, false, false] }
               ],
               [
                 { text: 'Student ID:', style: 'label', border: [false, false, false, false] },
-                { text: this.studentData.studentId, style: 'content', border: [false, false, false, false] }
+                { text: this.studentData.id, style: 'content', border: [false, false, false, false] }
               ],
               [
                 { text: 'Academic Year:', style: 'label', border: [false, false, false, false] },
-                { text: this.anecReport.AY, style: 'content', border: [false, false, false, false] }
+                { text: this.anecReport.data.schoolYear, style: 'content', border: [false, false, false, false] }
               ]
             ]
           }
@@ -151,14 +156,14 @@ export default {
 
       associatedReports.forEach((rep) => {
         // Format the date using the Date object
-        const preparedDate = new Date(rep.datePrepared);
+        const preparedDate = new Date(rep.data.datePrepared);
         const formattedDate = preparedDate.toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
           day: 'numeric'
         });
 
-        const incidentDate = new Date(rep.date);
+        const incidentDate = new Date(rep.data.dateOfIncident);
         const formattedIncidentDate = incidentDate.toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
@@ -183,29 +188,29 @@ export default {
                 ],
                 [
                   { text: 'Purpose:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.purpose, style: 'content', border: [false, false, false, false] }
+                  { text: rep.data.purpose, style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Witnesses:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
+                  { text: rep.data.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.placeOfIncident, style: 'content', border: [false, false, false, false] }
+                  { text: rep.data.placeOfIncident, style: 'content', border: [false, false, false, false] }
                 ],
                 [
                   { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.thingsInvolved, style: 'content', border: [false, false, false, false] }
+                  { text: rep.data.thingsInvolved, style: 'content', border: [false, false, false, false] }
                 ],
               ]
             }
           },
 
           { text: 'Details:', style: 'label', margin: [0, 15, 0, 5] },
-          { text: rep.details, style: 'content', margin: [30, 0, 30, 15] },
+          { text: rep.data.details, style: 'content', margin: [30, 0, 30, 15] },
 
-          { text: rep.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', style: 'label', margin: [0, 15, 0, 5] },
-          { text: rep.remarks, style: 'content', margin: [30, 0, 30, 15] },
+          { text: rep.data.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', style: 'label', margin: [0, 15, 0, 5] },
+          { text: rep.data.remarks, style: 'content', margin: [30, 0, 30, 15] },
 
           {
             table: {
@@ -214,7 +219,7 @@ export default {
               body: [
                 [
                   { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.isReportedByGuidance ? 'Guidance' : this.anecReport.preparedBy, style: 'content', border: [false, false, false, false] }
+                  { text: rep.data.isReportedByGuidance ? 'Guidance' : this.anecReport.data.preparedBy, style: 'content', border: [false, false, false, false] }
                 ]
               ]
             }
@@ -263,13 +268,13 @@ export default {
   },
 
   methods: {
-    async initData(studentId) {
-      this.studentData = student.find(s => s.studentId === studentId);
+    async initData() {
+      await this.adminViewStore.updateAnecdote(useRoute().params.id);
+
+      this.studentData = this.adminViewStore.anecdoteStudent;
       if (!this.studentData) return;
 
-      this.anecReport = anecdotalReport.find(
-        report => report.anecdotalDocID === this.studentData.anecdotalDocID
-      );
+      this.anecReport = this.adminViewStore.anecdoteAnecdotalReport;
     },
 
     displayPDF() {
@@ -318,15 +323,14 @@ export default {
       this.selectedReport = null;
     },
 
-    handleUpdate(updatedData) {
+    async handleUpdate(updatedData) {
       try {
         const now = new Date();
         const datePrepared = now.toISOString().split('T')[0];
         const reportId = `REP-${datePrepared.replace(/-/g, '')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
 
         const newReport = {
-          reportID: reportId,
-          date: updatedData.date,
+          dateOfIncident: updatedData.dateOfIncident,
           datePrepared: datePrepared,
           purpose: updatedData.purpose,
           witnesses: updatedData.witnesses,
@@ -337,15 +341,14 @@ export default {
           isReportedByGuidance: true,
         };
 
-        report.push(newReport);
-
-        // Update anecdotal report with new report ID
-        this.anecReport.reportIDs.push(reportId);
-
-        // Update localStorage
-        localStorage.setItem('reports', JSON.stringify(report));
-
-        // Refresh the PDF display
+        const result = await $fetch('/api/anecdote/update', {
+          method: 'POST', body: {
+            id: reportId, data: newReport, anecdote: this.adminViewStore.anecdoteAnecdotalReport
+          }
+        });
+        await this.adminViewStore.updateAnecdote(this.adminViewStore.anecdoteStudent.id);
+        this.anecReport = this.adminViewStore.anecdoteAnecdotalReport;
+        
         this.displayPDF();
         this.showUpdateModal = false;
 
@@ -358,7 +361,7 @@ export default {
     },
 
     downloadPDF() {
-      const fileName = `Anecdotal_Report_${this.anecReport.anecdotalDocID}_${new Date().toISOString().split('T')[0]}.pdf`;
+      const fileName = `Anecdotal_Report_${this.anecReport.id}_${new Date().toISOString().split('T')[0]}.pdf`;
       pdfMake.createPdf(this.defineAnecdotalDoc).download(fileName);
     },
 

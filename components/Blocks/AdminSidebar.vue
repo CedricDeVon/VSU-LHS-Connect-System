@@ -106,8 +106,8 @@ const bottomNav = [
             <div class="flex items-center gap-3 pb-8">
               <div class="flex items-center gap-3">
                 <div>
-                  <p class="text-sm font-semibold" v-html="adminViewStore.adminName" />
-                  <p class="text-sm text-white" v-html="adminViewStore.adminEmail" />
+                  <p class="text-sm font-semibold">{{ adminViewStore.adminName }}</p>
+                  <p class="text-sm text-white">{{ adminViewStore.adminEmail }}</p>
                 </div>
               </div>
               <UiTooltip>

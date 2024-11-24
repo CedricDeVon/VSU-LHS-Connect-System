@@ -121,6 +121,47 @@ export class Databases {
         return Databases._caseConferenceFirebaseStorage;
     }
 
+    public static async updateOneAnecdoteViaId(id: string, data: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._anecdotalReportFirebaseDatabase.updateOneDocument(id, data);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateOneIncidentViaId(id: string, data: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._incidentReportFirebaseDatabase.updateOneDocument(id, data);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateOneCaseConferenceViaId(id: string, data: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._caseConferenceFirebaseDatabase.updateOneDocument(id, data);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async createOneReport(id: string, data: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._reportFirebaseDatabase.createOneDocumentWithId(id, data);
+            // console.log(result);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async getOneCaseConferenceReportViaId(id: string): Promise<Result> {
         try {
             const result: Result = await Databases._caseConferenceFirebaseDatabase.readOneDocument(id);
@@ -328,13 +369,14 @@ export class Databases {
             let result: Result = await Databases._sectionFirebaseDatabase.createOneDocumentWithId(id, {
                 name, level, schoolYear
             });
-            console.log(result);
+            // console.log(result);
             return result;
 
         } catch (error: any) {
             return new FailedResult(error.message);
         }
     }
+
     public static async getAllIncidentalReports(): Promise<Result> {
         try {
             const result: Result = await Databases._incidentReportFirebaseDatabase.queryDuplicates();

@@ -6,19 +6,20 @@ export default defineEventHandler(async (event) => {
   try {
     const { studentId } = await readBody(event);
     const student = (await Databases.getOneStudentViaId(studentId)).data;
-    console.log(student);
-    const students = (await Databases.getAllStudents()).data;
-    console.log(students);
+    // console.log(student);
+    // const students = (await Databases.getAllStudents()).data;
+    // console.log(students);
     const anecdotalReport = (await Databases.getOneAnecdotalReportViaStudentId(studentId)).data;
-    console.log(anecdotalReport);
-    const anecdotalReports = (await Databases.getAllAnecdotalReports()).data;
+    // console.log(anecdotalReport);
+    const reports = [];
     for (const index in anecdotalReport.data.reportIds) {
-      anecdotalReport.data.reportIds[index] = (await Databases.getOneReportViaId(anecdotalReport.data.reportIds[index])).data;
+      reports.push((await Databases.getOneReportViaId(anecdotalReport.data.reportIds[index])).data);
+      // anecdotalReport.data.reportIds[index] = (await Databases.getOneReportViaId(anecdotalReport.data.reportIds[index])).data;
     }
-    console.log(anecdotalReports);
+    // console.log(anecdotalReports);
 
     return new SuccessfulResult({
-      student, students, anecdotalReport, anecdotalReports
+      student, anecdotalReport, reports
     }).cloneToObject();
 
   } catch (error: any) {

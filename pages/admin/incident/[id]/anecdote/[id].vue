@@ -1,4 +1,3 @@
-
 <template>
     <div class="flex h-screen bg-[#FFFEF1]">
         <AdminSidebar />
@@ -93,13 +92,40 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue'
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue'
 import {footer} from '~/assets/images/footer'
 import {headerImage} from '~/assets/images/sample-header'
+import { useAdminViewStore } from '~/stores/views/adminViewStore'
 
+const adminViewStore = useAdminViewStore();
 const route = useRoute()
 const loading = ref(true)
 const error = ref(null)
 const conferenceData = ref(null)
 const incidentId = ref(route.params.id)
 const conferenceId = ref(route.params.conferenceId || route.params.id)
+
+console.log(route);
+
+onBeforeMount(async () => {
+    try {
+        loading.value = true
+        
+        
+        const data = caseConference.find(conf => conf.caseConDocID === conferenceId.value)
+
+        if (!data) {
+            throw new Error('Conference not found')
+        }
+
+        // Update the incidentId if needed
+        incidentId.value = data.incidentID || route.params.id
+        conferenceData.value = data
+        loading.value = false
+        displayPDF()
+
+    } catch (err) {
+        error.value = err.message || 'Failed to load conference data'
+        loading.value = false
+    }
+})
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -263,25 +289,6 @@ const printDocument = () => {
     pdfMake.createPdf(docDefinition).print()
 }
 
-onMounted(async () => {
-    try {
-        loading.value = true
-        const data = caseConference.find(conf => conf.caseConDocID === conferenceId.value)
-
-        if (!data) {
-            throw new Error('Conference not found')
-        }
-
-        // Update the incidentId if needed
-        incidentId.value = data.incidentID || route.params.id
-        conferenceData.value = data
-        loading.value = false
-        displayPDF()
-    } catch (err) {
-        error.value = err.message || 'Failed to load conference data'
-        loading.value = false
-    }
-})
 </script>
 
 <style scoped>

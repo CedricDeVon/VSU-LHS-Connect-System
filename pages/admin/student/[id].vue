@@ -1,36 +1,13 @@
 <script setup lang="ts">
 import { defineComponent } from 'vue';
-import { student } from '~/data/student.js';
-import { section } from '~/data/section.js';
-import { incidentReport, initializeIncidentReports } from '~/data/incident'; // Add this import
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
 import CreateIncidentReportModal from '~/components/Modals/Incident Management/CreateIncidentReportModal.vue';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-export default defineComponent({
-    name: 'StudentInformation',
-    components: {
-        AdminSidebar,
-        AdminHeader,
-        IncidentReportsModal,
-        CreateIncidentReportModal
-    },
-    data() {
-        return {
-            studentData: null,
-            studentSection: null,
-            selectedSort: '',
-            allSectionStudents: [], // To store all students from the section
-            showIncidentModal: false,
-            showCreateIncidentModal: false
-        }
-    },
-    created() {
-        // Initialize incident reports from localStorage
-        initializeIncidentReports();
-        // Get student ID from route params
-        const studentId = this.$route.params.id;
+const adminViewStore = useAdminViewStore();
+// await adminViewStore.updateStudent();
 
 onBeforeMount(async () => {
 })

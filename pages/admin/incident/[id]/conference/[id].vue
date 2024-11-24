@@ -39,7 +39,7 @@
                             <div class="space-y-1">
                                 <h2 class="text-xl font-semibold text-[#265630]">Case Conference Document</h2>
                                 <p class="text-sm text-[#265630]">
-                                    Conference ID: {{ conferenceData.caseConDocID }}
+                                    Conference ID: {{ conferenceData.id }}
                                 </p>
                             </div>
                             <div class="flex space-x-3">
@@ -58,13 +58,13 @@
                         <div class="grid grid-cols-2 gap-6">
                             <div>
                                 <h3 class="text-sm font-medium text-gray-500">Student Information</h3>
-                                <p class="mt-1 text-sm text-gray-900">{{ conferenceData.studentName }}</p>
-                                <p class="text-sm text-gray-600">{{ conferenceData.gradeAndSection }}</p>
+                                <p class="mt-1 text-sm text-gray-900">{{ adminViewStore.getFullName(adminViewStore.caseConferenceStudent) }}</p>
+                                <p class="text-sm text-gray-600">{{ adminViewStore.sectionGetGradeAndSection(adminViewStore.caseConferenceSection) }}</p>
                             </div>
                             <div>
                                 <h3 class="text-sm font-medium text-gray-500">Conference Schedule</h3>
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ formatDate(conferenceData.conferenceDate) }}
+                                    {{ formatDate(conferenceData.data.conferenceDate) }}
                                 </p>
                             </div>
                         </div>
@@ -82,6 +82,9 @@
 </template>
 
 <script setup>
+import { useAdminViewStore } from '~/stores/views/adminViewStore'
+const adminViewStore = useAdminViewStore();
+
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import pdfMake from 'pdfmake/build/pdfmake'
@@ -90,15 +93,15 @@ import { caseConference } from '~/data/caseconference'
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 import AdminHeader from '~/components/Blocks/AdminHeader.vue'
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue'
-import {footer} from '~/assets/images/footer'
-import {headerImage} from '~/assets/images/sample-header'
+import { footer } from '~/assets/images/footer'
+import { headerImage } from '~/assets/images/sample-header'
 
 const route = useRoute()
 const loading = ref(true)
 const error = ref(null)
-const conferenceData = ref(null)
-const incidentId = ref(route.params.id)
-const conferenceId = ref(route.params.conferenceId || route.params.id)
+const conferenceData = ref(null);
+const incidentId = ref('');
+const conferenceId = ref('');
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -130,13 +133,13 @@ const defineConferenceDoc = (data) => ({
                     width: 100
                 },
                 {
-                    text: data.studentName,
+                    text: adminViewStore.getFullName(adminViewStore.caseConferenceStudent),
                     style: 'content'
                 },
                 {
                     text: [
                         { text: 'Grade & Section: ', style: 'label' },
-                        { text: data.gradeAndSection, style: 'content' }
+                        { text: adminViewStore.sectionGetGradeAndSection(adminViewStore.caseConferenceSection), style: 'content' }
                     ],
                     alignment: 'right'
                 }
@@ -145,16 +148,16 @@ const defineConferenceDoc = (data) => ({
 
         // Main Content
         { text: '\nCircumstance:', style: 'label' },
-        { text: data.circumstance, style: 'content', margin: [10, 0, 0, 20] },
+        { text: adminViewStore.caseConferenceCaseConferenceReport.data.circumstance, style: 'content', margin: [10, 0, 0, 20] },
 
         { text: 'Discussions:', style: 'label' },
-        { text: data.discussions, style: 'content', margin: [10, 0, 0, 20] },
+        { text: adminViewStore.caseConferenceCaseConferenceReport.data.discussions, style: 'content', margin: [10, 0, 0, 20] },
 
         { text: 'Agreement:', style: 'label' },
-        { text: data.agreement, style: 'content', margin: [10, 0, 0, 20] },
+        { text: adminViewStore.caseConferenceCaseConferenceReport.data.agreement, style: 'content', margin: [10, 0, 0, 20] },
 
         { text: 'Remarks:', style: 'label' },
-        { text: data.remarks, style: 'content', margin: [10, 0, 0, 20] },
+        { text: adminViewStore.caseConferenceCaseConferenceReport.data.remarks, style: 'content', margin: [10, 0, 0, 20] },
 
         // Signatures
         {
@@ -253,7 +256,7 @@ const displayPDF = () => {
 const downloadPDF = () => {
     if (!conferenceData.value) return
     const docDefinition = defineConferenceDoc(conferenceData.value)
-    pdfMake.createPdf(docDefinition).download(`conference_${conferenceData.value.caseConDocID}.pdf`)
+    pdfMake.createPdf(docDefinition).download(`conference_${conferenceData.value.id}.pdf`)
 }
 
 const printDocument = () => {
@@ -262,20 +265,22 @@ const printDocument = () => {
     pdfMake.createPdf(docDefinition).print()
 }
 
-onMounted(async () => {
+onBeforeMount(async () => {
     try {
         loading.value = true
-        const data = caseConference.find(conf => conf.caseConDocID === conferenceId.value)
+        await adminViewStore.updateCaseConference(route.params.id);
 
+        const data = adminViewStore.caseConferenceCaseConferenceReport;
         if (!data) {
             throw new Error('Conference not found')
         }
 
         // Update the incidentId if needed
-        incidentId.value = data.incidentID || route.params.id
+        incidentId.value = adminViewStore.caseConferenceIncidentReport.id
         conferenceData.value = data
         loading.value = false
         displayPDF()
+
     } catch (err) {
         error.value = err.message || 'Failed to load conference data'
         loading.value = false

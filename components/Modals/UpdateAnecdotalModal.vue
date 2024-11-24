@@ -25,10 +25,10 @@
         <!-- Form content -->
         <form @submit.prevent="handleSubmit" class="px-6 py-4">
           <div class="space-y-4">
-            <!-- Date field - only date of incident -->
+            <!-- Date field - only dateOfIncident of incident -->
             <div>
               <label class="block text-sm font-medium text-gray-700">Date of Incident</label>
-              <input type="date" v-model="formData.date" required
+              <input type="date" v-model="formData.dateOfIncident" required
                 class="mt-1 px-4 h-10 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
             </div>
 
@@ -110,6 +110,9 @@
 </template>
 
 <script>
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+
 export default {
   props: {
     report: {
@@ -121,28 +124,29 @@ export default {
   data() {
     return {
       formData: {
-        date: '',
+        dateOfIncident: '',
         purpose: '',
         witnesses: '',
         placeOfIncident: '',
         thingsInvolved: '',
         details: '',
         remarks: '',
-        isReportedByGuidance: true
+        isReportedByGuidance: true,
       },
-      error: null
+      error: null,
+      adminViewStore: useAdminViewStore(),
     }
   },
 
-  created() {
+  mounted() {
     // Check for saved draft first
-    const savedDraft = localStorage.getItem('reportDraft');
+    const savedDraft = localStorage.getItem('vsu-ihs-connect-system-update-anecdotal-modal');
     if (savedDraft) {
       this.formData = JSON.parse(savedDraft);
     } else if (this.report) {
       // Initialize with report data if no draft exists
       this.formData = {
-        date: this.report.date,
+        dateOfIncident: this.report.dateOfIncident,
         purpose: this.report.purpose,
         witnesses: Array.isArray(this.report.witnesses) ? this.report.witnesses.join(', ') : this.report.witnesses,
         placeOfIncident: this.report.placeOfIncident,
@@ -164,7 +168,8 @@ export default {
         }
 
         this.$emit('update', updatedData)
-        localStorage.removeItem('reportDraft'); // Clear draft after successful submission
+        localStorage.removeItem('vsu-ihs-connect-system-update-anecdotal-modal'); // Clear draft after successful submission
+      
       } catch (err) {
         this.error = 'Failed to update report. Please try again.'
         console.error('Update error:', err)
@@ -173,8 +178,9 @@ export default {
 
     saveDraft() {
       try {
-        localStorage.setItem('reportDraft', JSON.stringify(this.formData));
+        localStorage.setItem('vsu-ihs-connect-system-update-anecdotal-modal', JSON.stringify(this.formData));
         alert('Draft saved successfully!');
+
       } catch (err) {
         console.error('Error saving draft:', err);
         this.error = 'Failed to save draft. Please try again.';
@@ -184,7 +190,7 @@ export default {
     clearForm() {
       if (confirm('Are you sure you want to clear all fields? This cannot be undone.')) {
         this.formData = {
-          date: '',
+          dateOfIncident: '',
           purpose: '',
           witnesses: '',
           placeOfIncident: '',
@@ -193,7 +199,7 @@ export default {
           remarks: '',
           isReportedByGuidance: true
         };
-        localStorage.removeItem('reportDraft'); // Clear saved draft as well
+        localStorage.removeItem('vsu-ihs-connect-system-update-anecdotal-modal'); // Clear saved draft as well
       }
     }
   }

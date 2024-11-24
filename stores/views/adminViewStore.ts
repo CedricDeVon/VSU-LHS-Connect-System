@@ -106,6 +106,11 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     settingsAdminData.value = result.data.adminData;
   }
 
+  const updateIncidentAnecdote = async (id: string, data: any, anecdote: any) => {
+    
+    
+  }
+
   const updateAnecdote = async (studentId: string) => {
     const result: any = await $fetch('/api/admin/view/anecdote', {
       method: 'POST', body: {
@@ -114,11 +119,11 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     });
     // console.log(result)
 
-    anecdoteAnecdotalReport.value = result.data.anecdotalReport;
-    anecdoteAnecdotalReports.value = result.data.anecdotalReports;
-    anecdoteReports.value = result.data.reports;
     anecdoteStudent.value = result.data.student;
-    anecdoteStudents.value = result.data.students;
+    anecdoteAnecdotalReport.value = result.data.anecdotalReport;
+    anecdoteReports.value = result.data.reports;
+    // anecdoteAnecdotalReports.value = result.data.anecdotalReports;
+    // anecdoteStudents.value = result.data.students;
   }
   
   const updateIncident = async (incidentId: string) => {
@@ -300,6 +305,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
 
   return {
+    updateIncidentAnecdote,
     sectionGetGradeAndSection,
     caseConferenceStudent,
     caseConferenceSection,

@@ -161,6 +161,8 @@
           textarea.dispatchEvent(new Event('input'));
         }
       };
+
+      
   
       const draft = () => {
         // Handle saving as draft

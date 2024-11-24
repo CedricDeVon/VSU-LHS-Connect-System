@@ -141,8 +141,6 @@
 
 <script >
 
-// import { emit } from 'process';
-// import DatePickerInput from '../used-components/DatePickerInput.vue';
 import { ref, watch, defineEmits } from 'vue';
 import { studentAddedStore } from '~/stores/studentAdded';
 import UnEnrolledStudents from './UnEnrolledStudents.vue';
@@ -230,6 +228,11 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
 
     const hoverAddingType = (box) => {
       hoveredAddingType.value = box;
+    };
+
+    const addStudentClick = () => {
+      store.addStudent();
+      emit('close');
     };
 
     return {

@@ -1,5 +1,5 @@
 <template>
-    <div class="inset-0 z-50 flex items-center justify-center ">
+    <div class=" z-50 flex items-center justify-center ">
         <div class=" p-20 pt-8 w-full ml-10 mr-10">
             <label class="header text-green-900 ">Basic Information</label>
             <!--Student Info Scrollable-->
@@ -21,34 +21,41 @@
                 </div>
 
                 <!--Buttons-->
-                <div v-if="student.hasAnecdotal" class="flex justify-center items-center m-3">
-                    <button class=" updateAnecdotal shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Update Anecdotal">
-                        Update Anecdotal Report
-                    </button>
-                </div>
-                <div v-else class="flex justify-center items-center m-3">
-                    <button class=" updateAnecdotal shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Create Anecdotal">
-                        Create Anecdotal Report
+                <div class="flex justify-center items-center m-3">
+                    <button @click="viewReport(student.anecdotalDocID)"
+                     class=" updateAnecdotal shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Create Anecdotal">
+                         Anecdotal Report
                     </button>
                 </div>
                 <div class="flex justify-center m-3">
-                    <button class=" submitComplaint shadow w-9/12 px-10 py-2 rounded-lg gray text-green-900 hover:bg-gray-600 focus:outline-none" aria-label="Submit Complaint">
+                    <button @click="showReport" class=" submitComplaint shadow w-9/12 px-10 py-2 rounded-lg gray text-green-900 hover:bg-gray-600 focus:outline-none" aria-label="Submit Complaint">
                         Submit and Report a Complaint
                     </button>
                 </div>
-                <div class="flex justify-center m-3 ">
+                <div @click ="removeStudent" class="flex justify-center m-3 ">
                     <button class=" removeStudent shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Remove Student">
                         Remove Student
                     </button>
                 </div>
             </div>
         </div>
+        <!-- <adviser-anecdotal v-if="showAnecdotal" :Student="student" @close="showAnecdotal = false"/> -->
+        <initial-report-modal v-if="report" @close="report = false"/>
+        <RemoveStudent v-if="remove" @close="handleRemoveStudent" :student ="student" :section="this.section" />
     </div>
+
 </template>
 
 <script>
+import InitialReportModal from './InitialReportModal.vue';
+import { student } from '~/data/student';
+import AdviserAnecdotal from '../../pages/adviser/anecdotal/[id].vue';
+import RemoveStudent from './removeStudent.vue';
+
 export default {
+  components: { InitialReportModal, AdviserAnecdotal, RemoveStudent },
   name: 'StudentBasicInfo',
+  emits: ['close'],
   props: {
     student: {
       type: Object,
@@ -61,8 +68,43 @@ export default {
     },
   },
   data() {
-    return {};
+    return {
+        report: false,
+        showAnecdotal: false,
+        remove: false,
+
+    };
   },
+methods: {
+    showReport() {
+        this.report = true;
+    },
+
+    creationClose(){
+        this.report = false;
+    },
+
+    viewReport(anecdotalDocID) {
+            // Find the student with this anecdotal report
+            if (anecdotalDocID && anecdotalDocID !== '') {
+                this.$router.push(`/adviser/anecdotal/${this.student.studentId}`);
+               
+            } else {
+                alert('No student found with this anecdotal report'); //Create new anecdotal report
+            }
+        },
+    removeStudent(){
+        this.remove = true; 
+    },
+    handleRemoveStudent(){
+        this.remove = false;
+        this.$emit('close');
+    }
+
+
+},
+   
+
 };
 </script>
 

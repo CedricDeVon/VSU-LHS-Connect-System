@@ -4,7 +4,7 @@
         <notification-modal v-if="showNotification" />  
         <div >
             <div class="m-5 flex justify-start ml-20">
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">Academic Year {{AcademicYear}}</h1>
             </div>
 
                 <!--Title of the Content?-->

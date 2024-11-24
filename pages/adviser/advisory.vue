@@ -8,16 +8,19 @@
 
             <notification-modal v-if="showNotification" />
             <div>
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">Academic Year  {{AcademicYear}}</h1>
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
-                <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
-            </div>   
+           
 
             <!--Content of the Page-->
             <div class="contain " :style="{width: containWidth}">
+
+                <div class="title  flex justify-center items-center" >
+                    <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
+                </div>   
+
                 <div class="grid grid-cols-10">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <!--Sort/Add student-->
@@ -68,8 +71,8 @@
                         <h1 class="text-2xl">Select a student to display their details</h1>
                     </div>
                     
-                        <StudentBasicInfo v-if="showStudentInfo" :student="studentInfo" :section="mySection" />
-                       
+                        <StudentBasicInfo v-if="showStudentInfo" :student="studentInfo" :section="section" @close="removeStudent" />
+    
                     </div>
                   
                 </div>
@@ -89,63 +92,45 @@
     import { student } from "~/data/student";
     import { section } from "~/data/section";
     import NotificationModal from '~/components/Modals/NotificationModal.vue';
+    import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
 
     export default {
         name: "Advisory",
-        components: {AdviserHeader, StudentBasicInfo, AddStudentForm, NotificationModal,},
+        components: {AdviserHeader, StudentBasicInfo, AddStudentForm, NotificationModal, InitialReportModal,},
         props: {
             AdviserID: {
                 type: String,
                 required: true,
-                default: "adviserid1" // this should be the adviserID of the logged in user
+                default: "adviserid12" // this should be the adviserID of the logged in user
             },
             AcademicYear: {
                 type: String,
                 required: true,
                 default: "2024-2025" // this should be the current academic year
             },
-            section: {
-                type: Object,
-                required: true, // I think it would be better if these are global variables
-            },
+    
         },
+
         data() {return {
-            mySection: {
-                id: 'sectionid1',
-                adviserId: 'adviserid1',
-                sectionPopulation: '20',
-                sectionName: 'Javascript',
-                sectionLevel: '7',
-                sectionSchoolYear: '2024-2025',
-                sectionStudents: [
-                    'sample22-1-10076',
-                    'sample22-1-10077',
-                    'sample22-1-10078',
-                    'sample22-1-10079',
-                    'sample22-1-10080',
-                    'sample22-1-10081',
-                    'sample22-1-10082',
-                    'sample22-1-10083',
-                    'sample22-1-10084',
-                    'sample22-1-10085',
-                    'sample22-1-10086'
-                ]
-            },
             selectedSort: "",
             students: [],
             showStudentInfo: false,
             showAddStudentForm: false,
             studentInfo: {},
+            section: {},
             showNotification:false,
             containWidth:'89%',
-            titleWidth:'87%'
         };},
 
         methods: {
             addStudent() {
-                //this.items.push({ column1: "2022-00000", column2: "New Student" });
                 this.showAddStudentForm = true;
             },
+
+            getSection(){
+                this.section = section.find((sec)=> sec.adviserId === this.AdviserID);
+            },
+
             handleRowClick(student) {
                 this.studentInfo = student;
                 this.showStudentInfo = true;
@@ -162,15 +147,16 @@
                 this.students = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
             },
 
-            /*handleRowClick(item) {
-      // Handle row click event
-      console.log('Row clicked:', item);
-    }*/
+            removeStudent(){
+                 this.fetchStudents(this.AdviserID, this.AcademicYear);
+                this.showStudentInfo = false;
+            },
 
         },
 
         mounted() {
             this.fetchStudents(this.AdviserID, this.AcademicYear);
+            this.getSection();
         }
         
   };
@@ -181,6 +167,7 @@
         height: 850px;
         position: relative;
         overflow: hidden; 
+        
         }
 
     .backPic{
@@ -229,14 +216,16 @@
     }
 
     .title{
-        position: absolute;
-        height: 6.1%;
+        height: 8.8%;
+        width: 98%;
+        justify-self: center;
         background: #265630;
         border-radius: 15px;
+        margin-top: -35px;
         left: 95px;
         top: 135px;
-        z-index: 2;
     }
+
 
     .table-text{
         font-size: 16px;

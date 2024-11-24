@@ -1,12 +1,38 @@
 <script setup lang='ts'>
 import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+import InitialReportModal from './InitialReportModal.vue';
+import AdviserAnecdotal from '../../pages/adviser/anecdotal/[id].vue';
+import RemoveStudent from './removeStudent.vue';
 
 const adviserViewStore = useAdviserViewStore();
+// showReport() {
+//     this.report = true;
+// },
 
+// creationClose(){
+//     this.report = false;
+// },
+
+// viewReport(anecdotalDocID) {
+//         // Find the student with this anecdotal report
+//         if (anecdotalDocID && anecdotalDocID !== '') {
+//             this.$router.push(`/adviser/anecdotal/${this.student.studentId}`);
+            
+//         } else {
+//             alert('No student found with this anecdotal report'); //Create new anecdotal report
+//         }
+//     },
+// removeStudent(){
+//     this.remove = true; 
+// },
+// handleRemoveStudent(){
+//     this.remove = false;
+//     this.$emit('close');
+// }
 </script>
 
 <template>
-    <div class="inset-0 z-50 flex items-center justify-center ">
+    <div class=" z-50 flex items-center justify-center ">
         <div class=" p-20 pt-8 w-full ml-10 mr-10">
             <label class="header text-green-900 ">Basic Information</label>
             <!--Student Info Scrollable-->
@@ -39,18 +65,22 @@ const adviserViewStore = useAdviserViewStore();
                     </button>
                 </div>
                 <div class="flex justify-center m-3">
-                    <button class=" submitComplaint shadow w-9/12 px-10 py-2 rounded-lg gray text-green-900 hover:bg-gray-600 focus:outline-none" aria-label="Submit Complaint">
+                    <button @click="showReport" class=" submitComplaint shadow w-9/12 px-10 py-2 rounded-lg gray text-green-900 hover:bg-gray-600 focus:outline-none" aria-label="Submit Complaint">
                         Submit and Report a Complaint
                     </button>
                 </div>
-                <div class="flex justify-center m-3 ">
+                <div @click ="removeStudent" class="flex justify-center m-3 ">
                     <button class=" removeStudent shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Remove Student">
                         Remove Student
                     </button>
                 </div>
             </div>
         </div>
+        <!-- <adviser-anecdotal v-if="showAnecdotal" :Student="student" @close="showAnecdotal = false"/> -->
+        <initial-report-modal v-if="report" @close="report = false"/>
+        <RemoveStudent v-if="remove" @close="handleRemoveStudent" :student ="student" :section="this.section" />
     </div>
+
 </template>
 
 <style scoped>

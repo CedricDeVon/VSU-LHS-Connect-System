@@ -80,6 +80,7 @@ const notifClick = () => {
 .admin-header{
     font-family: 'Century Gothic', sans-serif;
     background: #265630;
+    z-index: 50;
 }
 
 .button{

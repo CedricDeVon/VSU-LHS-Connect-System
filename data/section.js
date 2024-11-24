@@ -215,7 +215,7 @@ export const section = [
     sectionStudents: [
         'sample22-1-10087',
         'sample22-1-10088',
-        'sample22-1-10089',
+        'sample22-1-10389',
         'sample22-1-10090',
         'sample22-1-10091',
         'sample22-1-10092' 

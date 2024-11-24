@@ -72,7 +72,17 @@ const routes = [
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('../pages/error.vue')
-  }
+  },
+
+
+  //Adviser routes
+  {
+    path: '/adviser/anecdotal/:studentId',
+    name: 'Anecdotal',
+    component: () => import('../pages/adviser/anecdotal/[id].vue'),
+    props: true,
+  },
+
 ];
 
 const router = createRouter({

@@ -99,7 +99,7 @@ const creationClose = () => {
                            </select>
 
                        
-                            <button @click="createReport" 
+                            <button v-if="adviserViewStore.reportsSelectedSort !== 'anecdotal'" @click="createReport" 
                                     class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="ReportIncident">
                                     Report an Incident
@@ -131,7 +131,7 @@ const creationClose = () => {
                                 <tbody >
                                     <tr class =" hover:bg-gray-200 text " v-for="report in getReports()" :key="report.id"  >
                                         <td class=" py-5 text-center align-middle ">{{ report.id || 'N/A' }}</td>
-                                        <td class=" py-5 text-center align-middle ">{{ report.data.studentId || 'N/A' }}</td>
+                                        <td class=" py-5 text-center align-middle ">{{ report.data.peopleInvolved.join(', ') || 'N/A' }}</td>
                                         <td class=" py-5 text-center align-middle ">{{ report.data.dateOfIncident || 'N/A' }}</td>
                                         <td class=" py-5 text-center align-middle ">
                                             <button v-if="report.data.isDraft"  @click="editReport(report)" 

@@ -267,7 +267,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-11-09'),
         sectionID: 'sectionid12',
-        anecdotalDocID: 'ANEC-2024-10087'
+        anecdotalDocID: ''
     },
     {
         studentId: 'sample22-1-10088',

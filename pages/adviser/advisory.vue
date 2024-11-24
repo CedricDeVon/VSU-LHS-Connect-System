@@ -1,37 +1,3 @@
-<script setup lang="ts">
-definePageMeta({
-  middleware: ['authenticate-and-authorize-adviser']
-});
-
-import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
-import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
-
-const adviserViewStore = useAdviserViewStore();
-await adviserViewStore.updateAdvisoryView();
-
-onBeforeMount(async () => {
-    await adviserViewStore.updateAdvisoryView();
-})
-
-function showAddStudentForm() {
-    adviserViewStore.advisoryAddStudentForm = !adviserViewStore.advisoryAddStudentForm;
-}
-
-function getStudents() {
-    const results = adviserViewStore.advisoryStudents;
-    if (adviserViewStore.adviserSelectedSort === 'surname') {
-      results.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
-    } else if (adviserViewStore.adviserSelectedSort === 'student_ID') {
-      results.sort((a: any, b: any) => a.id.localeCompare(b.id));
-    }
-
-    return results;
-}
-
-</script>
-
 <template>
     <div class="adviser-page">
         <AdviserHeader @notif-click="notifClick"  />
@@ -46,12 +12,15 @@ function getStudents() {
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
-                <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
-            </div>   
+           
 
             <!--Content of the Page-->
             <div class="contain " :style="{width: containWidth}">
+
+                <div class="title  flex justify-center items-center" >
+                    <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
+                </div>   
+
                 <div class="grid grid-cols-10">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <!--Sort/Add student-->
@@ -114,12 +83,47 @@ function getStudents() {
     </div>
 </template>
 
+<script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
+import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+
+const adviserViewStore = useAdviserViewStore();
+await adviserViewStore.updateAdvisoryView();
+
+onBeforeMount(async () => {
+    await adviserViewStore.updateAdvisoryView();
+})
+
+function showAddStudentForm() {
+    adviserViewStore.advisoryAddStudentForm = !adviserViewStore.advisoryAddStudentForm;
+}
+
+function getStudents() {
+    const results = adviserViewStore.advisoryStudents;
+    if (adviserViewStore.adviserSelectedSort === 'surname') {
+      results.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
+    } else if (adviserViewStore.adviserSelectedSort === 'student_ID') {
+      results.sort((a: any, b: any) => a.id.localeCompare(b.id));
+    }
+
+    return results;
+}
+
+</script>
+
 <style scoped>
     .adviser-page{
         background: #fffef1;
         height: 850px;
         position: relative;
         overflow: hidden; 
+        
         }
 
     .backPic{
@@ -168,14 +172,16 @@ function getStudents() {
     }
 
     .title{
-        position: absolute;
-        height: 6.1%;
+        height: 8.8%;
+        width: 98%;
+        justify-self: center;
         background: #265630;
         border-radius: 15px;
+        margin-top: -35px;
         left: 95px;
         top: 135px;
-        z-index: 2;
     }
+
 
     .table-text{
         font-size: 16px;

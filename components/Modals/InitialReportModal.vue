@@ -1,5 +1,5 @@
 <template>
-    <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-70">
+    <div class="fixed inset-0 overlap flex justify-center bg-black bg-opacity-70">
       <div class="flex items-center justify-center h-full w-full">
         <div class="h-5/6 w-1/2 bg-white rounded-2xl">
             <button @click="$emit('close')" 
@@ -116,6 +116,21 @@
         report: {
             type: Object,
             required: true,
+            default:{
+              initialDocID: '',
+              reportIDRef: '',
+              reportedBY: '',
+              peopleInvolved: [],
+              witness: '',
+              dateOfIncident: '',
+              placeOfIncident: '',
+              thingsInvolved: '',
+              narrativeReport: '',
+              dateReported: '',
+              status: '',
+              isDraft:true,
+              academicYear: ''
+            }
         }
     },
     setup(_, { emit }) {
@@ -146,6 +161,8 @@
           textarea.dispatchEvent(new Event('input'));
         }
       };
+
+      
   
       const draft = () => {
         // Handle saving as draft
@@ -223,5 +240,9 @@
   .whitebutton:hover {
     background-color: #f8f1ba;
     color: #4a5e4e;
+  }
+
+  .overlap{
+    z-index: 3;
   }
   </style>

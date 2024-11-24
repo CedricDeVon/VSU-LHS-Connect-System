@@ -12,6 +12,7 @@ const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateAdvisoryView();
 
 onBeforeMount(async () => {
+    await adviserViewStore.updateAdvisoryView();
 })
 
 function showAddStudentForm() {

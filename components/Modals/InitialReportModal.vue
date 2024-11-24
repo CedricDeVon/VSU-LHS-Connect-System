@@ -102,7 +102,6 @@
   
   <script lang="ts">
   import { defineComponent, ref } from 'vue';
-// import { useStore } from 'vuex'; // Import useStore from vuex
   import { adviserReportStore } from '../../stores/adviserReport'; // Correct import path
   import { initialReport } from '../../data/initialReport';
   

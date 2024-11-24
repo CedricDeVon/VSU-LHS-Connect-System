@@ -9,6 +9,7 @@ const adminViewStore = useAdminViewStore();
 await adminViewStore.updateDashboard();
 
 onBeforeMount(async () => {
+  await adminViewStore.updateDashboard();
 })
 
 

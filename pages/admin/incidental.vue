@@ -12,6 +12,7 @@ const adminViewStore = useAdminViewStore();
 await adminViewStore.updateIncidental();
 
 onBeforeMount(async () => {
+    await adminViewStore.updateIncidental();
 })
 
 function handleSearch() {

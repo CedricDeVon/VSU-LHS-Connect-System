@@ -17,6 +17,7 @@ const adminViewStore = useAdminViewStore()
 await adminViewStore.updateAccountsAdvisers();
 
 onBeforeMount(async () => {
+  await adminViewStore.updateAccountsAdvisers();
 })
 
 const acceptRequest = async (adviser: any) => {

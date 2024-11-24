@@ -7,9 +7,10 @@ import CreateIncidentReportModal from '~/components/Modals/Incident Management/C
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
-// await adminViewStore.updateStudent();
+await adminViewStore.updateStudentPageData(useRoute().params.id);
 
 onBeforeMount(async () => {
+    await adminViewStore.updateStudentPageData(useRoute().params.id);
 })
 
 const sortedStudents = () => {
@@ -17,10 +18,10 @@ const sortedStudents = () => {
 
     switch (adminViewStore.studentSelectedSort) {
         case 'surname':
-            sorted.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
+            sorted = sorted.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
             break;
         case 'studentID':
-            sorted.sort((a: any, b: any) => a.id.localeCompare(b.id));
+            sorted = sorted.sort((a: any, b: any) => a.id.localeCompare(b.id));
             break;
     }
     
@@ -32,10 +33,15 @@ const incidentButtonText = () => {
     return (count > 1) ? `Incident Reports (${count})` : 'Incident Report';
 }
 
-const viewStudent = (studentId: any) => {
-    if (studentId !== adminViewStore.studentStudentData.id) {
-        useRoute().push(`/admin/student/${studentId}`);
+const viewStudent = (student: any) => {
+    if (student.id !== adminViewStore.studentStudentData.id) {
+        adminViewStore.studentStudentData = student;
+        useRouter().push(`/admin/student/${student.id}`);
     }
+}
+
+const viewAnecdotalReport = (student: any) => {
+    return navigateTo(`/admin/anecdote/${student.id}`);
 }
 
 </script>
@@ -81,7 +87,7 @@ const viewStudent = (studentId: any) => {
                                     <tbody>
                                         <tr v-for="student in sortedStudents()" 
                                             :key="student.id"
-                                            @click="viewStudent(student.id)"
+                                            @click="viewStudent(student)"
                                             :class="[
                                                 'hover:bg-gray-100 cursor-pointer',
                                                 student.id === adminViewStore.studentStudentData?.id ? 'bg-green-50' : ''
@@ -132,7 +138,8 @@ const viewStudent = (studentId: any) => {
                                     <!-- Buttons with adjusted margins -->
                                     <div class="space-y-2 mt-4">
                                         <!-- Secondary Action -->
-                                        <button @click="viewAnecdotalReport"
+                                        <button v-if="adminViewStore.studentStudentData.data.anecdotalReportId" 
+                                                @click="viewAnecdotalReport(adminViewStore.studentStudentData)"
                                             class="bg-[#728B78] hover:bg-[#536757] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             View Anecdotal Report
                                         </button>
@@ -142,14 +149,6 @@ const viewStudent = (studentId: any) => {
                                                 @click="adminViewStore.studentShowIncidentModal = true"
                                                 class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             {{ incidentButtonText() }}
-                                        </button>
-                                        <button @click="createIncidentReport"
-                                            class="w-full px-4 py-2 rounded-md bg-[#265630] hover:bg-[#728B78] text-white transition-colors duration-200 flex items-center justify-center space-x-2">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M12 4v16m8-8H4" />
-                                            </svg>
-                                            <span>Create Incident Report</span>
                                         </button>
                                         <button @click="createIncidentReport"
                                             class="w-full px-4 py-2 rounded-md bg-[#265630] hover:bg-[#728B78] text-white transition-colors duration-200 flex items-center justify-center space-x-2">

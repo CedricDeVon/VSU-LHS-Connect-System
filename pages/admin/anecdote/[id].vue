@@ -1,8 +1,8 @@
 <template>
   <div class="flex h-screen bg-[#FFFEF1]">
-    <!-- <AdminSidebar /> -->
+    <AdminSidebar />
     <div class="flex-1 overflow-hidden">
-      <!-- <AdminHeader /> -->
+      <AdminHeader />
       <div class="p-8 pt-0 overflow-y-auto h-[calc(100vh-64px)]">
         <!-- Page Title -->
         <div class="mb-6">
@@ -89,19 +89,17 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
-import { anecdotalReport } from '~/data/anecdotal';
-import { student } from '~/data/student';
 import { report, updateReport, initializeReports } from '~/data/report';
-// import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
-// import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
+import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
 import { formatDate } from '@vueuse/core';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 export default {
   components: {
-    // AdminSidebar,
-    // AdminHeader,
+    AdminSidebar,
+    AdminHeader,
     UpdateAnecdotalModal,
   },
 
@@ -116,6 +114,7 @@ export default {
   },
 
   async mounted() {
+    await this.adminViewStore.updateAnecdote(useRoute().params.id);
     initializeReports(); // Initialize from localStorage
     await this.initData();
     this.displayPDF();

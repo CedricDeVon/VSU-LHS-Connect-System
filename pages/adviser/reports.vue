@@ -10,6 +10,10 @@ import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateReports();
 
+onBeforeMount(async () => {
+    await adviserViewStore.updateReports();
+})
+
 const handleRowClick = (item: any) => {
 
 }

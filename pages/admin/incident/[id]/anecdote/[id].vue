@@ -102,13 +102,9 @@ const conferenceData = ref(null)
 const incidentId = ref(route.params.id)
 const conferenceId = ref(route.params.conferenceId || route.params.id)
 
-console.log(route);
-
 onBeforeMount(async () => {
     try {
         loading.value = true
-        
-        
         const data = caseConference.find(conf => conf.caseConDocID === conferenceId.value)
 
         if (!data) {

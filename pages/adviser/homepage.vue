@@ -12,7 +12,7 @@ const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateHomePage();
 
 onBeforeMount(async () => {
-
+    await adviserViewStore.updateHomePage();
 })
 
 </script>

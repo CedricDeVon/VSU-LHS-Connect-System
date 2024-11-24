@@ -14,6 +14,7 @@ const adminViewStore = useAdminViewStore();
 await adminViewStore.updateSearch();
 
 onBeforeMount(async () => {
+  await adminViewStore.updateSearch();
 })
 
 
@@ -110,6 +111,10 @@ const viewStudentProfile = (studentId: any) => {
   console.log(adminViewStore.searchSelectedStudent)
 }
 
+const viewSection = (sectionId: any) => {
+  return navigateTo(`/admin/section/${sectionId}`);
+}
+
 </script>
 
 <template>
@@ -189,6 +194,7 @@ const viewStudentProfile = (studentId: any) => {
                       </td>
                       <td class="px-6 py-4">
                         <button
+                          @click="viewSection(section.id)"
                           :class="section.data.adviser ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'"
                           class="px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
                           {{ section.data.adviser ? 'View Details' : 'Add Adviser' }}

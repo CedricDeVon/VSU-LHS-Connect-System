@@ -89,7 +89,7 @@ export const section = [
 {
     id: 'sectionid01',
     adviserId: 'adviserid1',
-    sectionPopulation: '1',
+    sectionPopulation: 1,
     sectionName: 'Javascript',
     sectionLevel: '7',
     sectionSchoolYear: '2023-2024',
@@ -149,7 +149,7 @@ export const section = [
 {
     id: 'sectionid6',
     adviserId: null,
-    sectionPopulation: 0,
+    sectionPopulation: 1,
     sectionName: 'Python Basics',
     sectionLevel: '8',
     sectionSchoolYear: '2023-2024',
@@ -186,6 +186,22 @@ export const section = [
     sectionStudents: [],
 },
 {
+    id: 'sectionid9',
+    adviserId: 'adviserid9',
+    sectionPopulation: 6,
+    sectionName: 'Game Development',
+    sectionLevel: '8',
+    sectionSchoolYear: '2023-2024',
+    sectionStudents: [
+        'sample22-1-10087',
+        'sample22-1-10088',
+        'sample22-1-10389',
+        'sample22-1-10090',
+        'sample22-1-10091',
+        'sample22-1-10092' 
+    ],
+},
+{
     id: 'sectionid10',
     adviserId: null,
     sectionPopulation: 0,
@@ -208,7 +224,7 @@ export const section = [
 {
     id: 'sectionid12',
     adviserId: 'adviserid12',
-    sectionPopulation: 10,
+    sectionPopulation: 6,
     sectionName: 'Machine Learning',
     sectionLevel: '9',
     sectionSchoolYear: '2024-2025',
@@ -233,7 +249,7 @@ export const section = [
 {
     id: 'sectionid14',
     adviserId: 'adviserid14',
-    sectionPopulation: 0,
+    sectionPopulation: 4,
     sectionName: 'Cloud Computing',
     sectionLevel: '9',
     sectionSchoolYear: '2024-2025',
@@ -280,7 +296,7 @@ export const section = [
 {
     id: 'sectionid61',
     adviserId: 'adviserid16',
-    sectionPopulation: 11,
+    sectionPopulation: 1,
     sectionName: 'DevOps',
     sectionLevel: '10',
     sectionSchoolYear: '2023-2024',

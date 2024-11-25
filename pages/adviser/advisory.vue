@@ -92,6 +92,8 @@ import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
 import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
 import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
 import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
+import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
 
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateAdvisoryView();
@@ -103,6 +105,20 @@ onBeforeMount(async () => {
 function showAddStudentForm() {
     adviserViewStore.advisoryAddStudentForm = !adviserViewStore.advisoryAddStudentForm;
 }
+        // setup() {
+        //     const section = sectionStore();
+        //     return { sectionStore };
+        // },
+
+        // methods: {
+        //     addStudent() {
+        //         this.showAddStudentForm = true;
+        //     },
+
+        //     getSection(){
+        //         this.sectionStore = section.find((sec)=> sec.adviserId === this.AdviserID);
+        //         this.section =  this.sectionStore;
+        //     },
 
 function getStudents() {
     const results = adviserViewStore.advisoryStudents;
@@ -115,6 +131,30 @@ function getStudents() {
     return results;
 }
 
+//             fetchStudents(id,ay) {
+//                 this.getSection();
+//                 const studentIDs = (section.find((sec)=> sec.adviserId === id && sec.sectionSchoolYear === ay)).sectionStudents;
+        
+//                 this.students = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
+//             },
+
+//             removeStudent(){
+//                  this.fetchStudents(this.AdviserID, this.AcademicYear);
+//                 this.showStudentInfo = false;
+//             },
+
+//             handleAddedStudent(student){
+//                 this.fetchStudents(this.AdviserID, this.AcademicYear);
+//                 this.showAddStudentForm = false;
+//             }
+
+//         },
+
+//         mounted() {
+//             this.fetchStudents(this.AdviserID, this.AcademicYear);
+//         }
+
+//   };
 </script>
 
 <style scoped>

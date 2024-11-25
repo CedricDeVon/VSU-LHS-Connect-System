@@ -70,6 +70,7 @@ const creationClose = () => {
         <InitialReportModal
         v-if="adviserViewStore.reportsShowCreateReport"
         :report="reportChosen"
+        :adviserId="AdviserID"
         @close ="creationClose"
         /> 
         <notification-modal v-if="adviserViewStore.reportsShowNotification"/>

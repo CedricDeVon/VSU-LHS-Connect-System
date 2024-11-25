@@ -60,41 +60,39 @@
                 <form @submit.prevent="addStudentClick">
                   <div class=" w-11/12 h-fit">
 
-                    <div class="flex justify-center pt-5">
-                      <img src="~/assets/icons/default-user.png" alt="user profile" class=" h-52">
+                  <div class="flex justify-center pt-5">
+                    <img src="~/assets/icons/default-user.png" alt="user profile" class=" h-52">
+                  </div>
+
+                  <div>
+                    <div class="p-2 pb-0 ">
+                      <div class="pb-1">Student ID:</div>
+                      <label>
+                        <input v-model="store.studentId" type="text" class="input px-2 py-2 rounded-sm w-1/2 focus outline-green-400 " placeholder="Enter Student ID">
+                      </label>
+                    </div>
+                    <div class="p-2 ">
+                      <div class="pb-1">Student's Full Name: </div>
+                      <label>
+                        <input v-model="store.firstName" type="text" class=" inputName px-2 py-2 rounded-sm focus outline-green-400 " placeholder="Enter First Name">
+                        <input v-model="store.lastName" type="text" class=" inputName px-2 py-2 rounded-sm  ml-2 focus outline-green-400" placeholder="Enter Last Name">
+                        <input v-model="store.suffix" type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2 focus outline-green-400" placeholder="Suffix">
+                      </label>
                     </div>
 
-                    <div>
-                      <div class="p-2 pb-0 ">
-                        <div class="pb-1">Student ID:</div>
-                        <label>
-                          <input v-model="store.studentId" type="text" class="input px-2 py-2 rounded-sm w-1/2 focus outline-green-400 " placeholder="Enter Student ID">
-                        </label>
-                      </div>
-                      <div class="p-2 ">
-                        <div class="pb-1">Student's Full Name: </div>
-                        <label>
-                          <input v-model="store.firstName" type="text" class=" inputName px-2 py-2 rounded-sm focus outline-green-400 " placeholder="Enter First Name">
-                          <input v-model="store.lastName" type="text" class=" inputName px-2 py-2 rounded-sm  ml-2 focus outline-green-400" placeholder="Enter Last Name">
-                          <input v-model="store.suffix" type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2 focus outline-green-400" placeholder="Suffix">
-                        </label>
-                      </div>
-                    </div>
+                  <div class="grid grid-flow-col p-2">
+                      <label>Birtdate: </label>
+                      <UiVeeDatepicker v-model="store.birthDate" placeholder="MM/DD/YYYY"/>     
 
-                    <div class="grid grid-flow-col p-2">
-                        <label>Birtdate: </label>
-                        <UiVeeDatepicker v-model="store.birthDate" placeholder="MM/DD/YYYY"/>     
-
-                        <label class="mx-5">Sex Assigned at Birth:
-                        <select
-                                class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-green-400"
-                                v-model="store.gender">
-                                <option value="" disabled selected hidden>Gender</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                        </select>
-                      </label> 
-                      
+                      <label class="mx-5">Sex at Birth:
+                      <select
+                               class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-green-400"
+                               v-model="store.gender">
+                               <option value="" disabled selected hidden>Gender</option>
+                               <option value="male">Male</option>
+                               <option value="female">Female</option>
+                      </select>
+                    </label> 
                     
                     </div>
                     <div class="p-1 px-2 pb-0 ">
@@ -119,7 +117,28 @@
                       </button>
                     </div>
                   </div>
-                </form>
+                  <div class="p-1 px-2 pb-0 ">
+                     Address:
+                    <label>
+                      <input v-model="store.address" type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3 focus outline-green-400 " placeholder="Enter Student Address">
+                    </label>
+                  </div>
+                  <div class=" mt-2 p-1 px-2 pb-0 ">
+                     Contact Number:
+                    <label>
+                      <input v-model="store.contactNum" type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/5 focus outline-green-400" placeholder="Enter Contact Number">
+                      <!-- <button class="pl-5 wordbutton ">Add +</button> -->
+                    </label>
+                  </div>
+                  <div class="flex justify-end mt-7 mb-7 ">
+                    <button @click ="handleBack" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Back">
+                      Back
+                    </button>
+                    <button @click ="addStudentClick" class=" button2 px-11 py-2 m-2 rounded-lg focus:outline-none" aria-label="Add Student">
+                      Add Student
+                    </button>
+                  </div>
+                </div>
               </div>
               <div v-if="showSingleContStudentForm" class="w-full">
                 <div class="smallText flex justify-center m-4">
@@ -154,8 +173,9 @@ import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
         },
       },
 
-      setup() {
-        const emit = defineEmits(['update:modelValue', 'close']);
+      setup(props, {emit}) {
+        // const emit = defineEmits('close');
+        const secStore = sectionStore();
         const store = studentAddedStore();
         const initPreparation = ref(true);
         const showSingleNewStudentForm = ref(false);

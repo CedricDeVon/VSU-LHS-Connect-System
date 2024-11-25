@@ -278,24 +278,27 @@ export default {
     },
 
     displayPDF() {
-      if (!this.defineAnecdotalDoc) {
-        console.error('No document definition available');
+      if (!this.anecReport || !this.studentData) {
+        console.error('Required data not available');
         return;
       }
 
-      try {
-        pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
-          const url = URL.createObjectURL(blob);
-          const viewer = document.getElementById('pdf-viewer');
-          if (viewer) {
-            viewer.src = url;
-          } else {
-            console.error('PDF viewer element not found');
-          }
-        });
-      } catch (error) {
-        console.error('Error creating PDF:', error);
-      }
+      const associatedReports = report.filter(r => this.anecReport.reportIDs.includes(r.reportID))
+        .sort((a, b) => new Date(a.datePrepared) - new Date(b.datePrepared));
+
+      const docDefinition = defineAnecdotalDoc({
+        studentData: this.studentData,
+        anecdotalData: this.anecReport,
+        associatedReports
+      });
+
+      pdfMake.createPdf(docDefinition).getBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const viewer = document.getElementById('pdf-viewer');
+        if (viewer) {
+          viewer.src = url;
+        }
+      });
     },
 
     formatDate(date) {

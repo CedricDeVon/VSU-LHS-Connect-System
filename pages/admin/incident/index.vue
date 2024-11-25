@@ -197,6 +197,14 @@
             </div>
           </div>
         </div>
+        <!-- Add Case Conference Button -->
+        <!-- <div class="mt-4">
+          <button
+            @click="navigateToCreateConference"
+            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+            Create Case Conference
+          </button>
+        </div> -->
       </div>
     </div>
 
@@ -228,7 +236,6 @@
       @save-draft="handleSaveDraft" />
   </div>
 </template>
-
 <script>
 import pdfMake from 'pdfmake/build/pdfmake';
 // import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -246,6 +253,14 @@ import ScheduleConferenceModal from '~/components/Modals/Incident Management/Sch
 import ViewCaseConferencesModal from '~/components/Modals/Incident Management/ViewCaseConferencesModal.vue';
 import CreateCaseConferenceModal from '~/components/Modals/Incident Management/CreateCaseConferenceModal.vue';
 import { caseConference } from '~/data/caseconference';
+import { defineIncidentDoc } from '~/utils/documentDefinitions';
+
+const route = useRoute();
+const router = useRouter();
+
+const navigateToCreateConference = () => {
+  router.push(`/admin/conferences/create?incidentId=${route.params.id}`);
+};
 
 export default {
   components: {
@@ -288,157 +303,6 @@ export default {
         ...this.incidentData,
         status: this.incidentData.status === 'Resolved' ? 'NotResolved' : this.incidentData.status
       }
-    },
-    defineIncidentDoc() {
-      return {
-        pageMargins: [72, 120, 72, 90],
-        header: {
-          image: headerImage,
-          width: 600,
-          height: 100,
-          alignment: 'center',
-          margin: [0, 10, 0, 0],
-        },
-        content: [
-          [
-            { text: `${this.reportType}`, style: 'header', margin: [0, 0, 0, 30] },
-          ],
-          {
-            table: {
-              widths: ['30%', '70%'],
-              headerRows: 0,
-              body: [
-                [
-                  { text: 'Name of People Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.peopleInvolved?.join(', ')}`, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Witness:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.witness}`, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.dateOfIncident}`, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.placeOfIncident}`, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.thingsInvolved}`, style: 'content', border: [false, false, false, false] }
-                ],
-              ]
-            },
-            layout: {
-              hLineWidth: function (i, node) {
-                return 0.5;
-              },
-              vLineWidth: function (i, node) {
-                return 0;
-              },
-              hLineColor: function (i, node) {
-                return '#cccccc';
-              },
-            }
-          },
-          { text: 'Narrative Report:', style: 'label', margin: [0, 15, 0, 5] },
-          {
-            text: `${this.incdReport.narrativeReport}`,
-            style: 'content',
-            margin: [30, 0, 30, 10],
-            alignment: 'justify'
-          },
-          { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
-          { text: 'Action Taken:', style: 'label', margin: [0, 15, 0, 5] },
-          {
-            text: `${this.incdReport.actionTaken || 'Pending'}`,
-            style: 'content',
-            margin: [30, 0, 30, 10],
-            alignment: 'justify'
-          },
-          { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
-          { text: 'Reason for Action:', style: 'label', margin: [0, 15, 0, 5] },
-          {
-            text: `${this.incdReport.reasonOfAction || 'Pending'}`,
-            style: 'content',
-            margin: [30, 0, 30, 10],
-            alignment: 'justify'
-          },
-          { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
-          { text: 'Additional Notes:', style: 'label', margin: [0, 15, 0, 5] },
-          {
-            text: `${this.incdReport.others || 'None'}`,
-            style: 'content',
-            margin: [30, 0, 30, 10],
-            alignment: 'justify'
-          },
-          { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
-          {
-            table: {
-              widths: ['30%', '70%'],
-              headerRows: 0,
-              body: [
-                [
-                  { text: 'Date Reported:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.dateReported}`, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Last Modified:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.lastModified || 'Not modified'}`, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Status:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.incdReport.status}`, style: 'content', border: [false, false, false, false] }
-                ],
-              ]
-            },
-            layout: {
-              hLineWidth: function (i, node) {
-                return 0.5;
-              },
-              vLineWidth: function (i, node) {
-                return 0;
-              },
-              hLineColor: function (i, node) {
-                return '#cccccc';
-              },
-            }
-          }
-        ],
-        styles: {
-          header: {
-            fontSize: 18,
-            bold: true,
-            alignment: 'center',
-          },
-          label: {
-            bold: true,
-            fontSize: 11,
-            margin: [0, 10, 0, 10],
-          },
-          content: {
-            fontSize: 11,
-            margin: [0, 10, 0, 10],
-          }
-        },
-        footer: (currentPage, pageCount) => {
-          return [
-            {
-              image: footer,
-              width: 480,
-              alignment: 'center',
-              margin: [0, 10, 0, 0]
-            },
-            {
-              text: `FM-OOP-05                                    Rev.: 01                                    ${new Date().toLocaleDateString()}                                       Page ${currentPage} of ${pageCount}                                  Control Number:______`,
-              alignment: 'justify',
-              margin: [70, 0],
-              fontSize: 7,
-            },
-          ];
-        },
-      };
     },
     isResolved() {
       return this.incidentData?.status === 'Resolved';
@@ -547,7 +411,14 @@ export default {
     },
 
     displayPDF() {
-      pdfMake.createPdf(this.defineIncidentDoc).getBlob((blob) => {
+      const docDefinition = defineIncidentDoc({
+        reportType: this.reportType,
+        incidentData: this.incdReport,
+        reportedBy: this.reportedBy,
+        receivedBy: this.receivedBy
+      });
+
+      pdfMake.createPdf(docDefinition).getBlob((blob) => {
         const url = URL.createObjectURL(blob);
         const viewer = document.getElementById('pdf-viewer');
         if (viewer) {
@@ -715,11 +586,25 @@ export default {
 
     downloadPDF() {
       const fileName = `Incident_Report_${this.incdReport.reportID}_${new Date().toISOString().split('T')[0]}.pdf`;
-      pdfMake.createPdf(this.defineIncidentDoc).download(fileName);
+      const docDefinition = defineIncidentDoc({
+        reportType: this.reportType,
+        incidentData: this.incdReport,
+        reportedBy: this.reportedBy,
+        receivedBy: this.receivedBy
+      });
+      
+      pdfMake.createPdf(docDefinition).download(fileName);
     },
 
     printDocument() {
-      pdfMake.createPdf(this.defineIncidentDoc).print({
+      const docDefinition = defineIncidentDoc({
+        reportType: this.reportType,
+        incidentData: this.incdReport,
+        reportedBy: this.reportedBy,
+        receivedBy: this.receivedBy
+      });
+
+      pdfMake.createPdf(docDefinition).print({
         silent: false,
         printBackground: true
       });

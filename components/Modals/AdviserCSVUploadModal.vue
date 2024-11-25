@@ -9,16 +9,8 @@ const { handleFileInput, files } = useFileStorage();
 
 const uploadFile = async () => {
   const result: Result = await UserSecurity.signUpManyUsersViaCSVFile(files.value);
-  console.log(result)
+  // console.log(result)
   $emit('close');
-  // if (result.isNotSuccessful) {
-  //     await adminViewStore.resetAdviserAccountsCSVFileInputData(result.message);
-  //     return;
-  // }
-
-  // if (adminViewStore.accountsfile) {
-  //   await adminViewStore.resetAdviserAccountsCSVFileInputData('File uploaded successfully!');
-  // }
 }
 
 </script>
@@ -35,8 +27,8 @@ const uploadFile = async () => {
           </p>
           <ul class="list-disc list-inside text-sm ml-4 mt-2">
             <li><strong>Column 1:</strong> Email</li>
-            <li><strong>Column 2:</strong> Adviser First Name</li>
-            <li><strong>Column 3:</strong> Adviser Last Name</li>
+            <li><strong>Column 2:</strong> First Name</li>
+            <li><strong>Column 3:</strong> Last Name</li>
             <li><strong>Column 4:</strong> Faculty ID</li>
           </ul>
           <p class="text-sm mt-2">Only .csv files are accepted.</p>
@@ -65,25 +57,23 @@ const uploadFile = async () => {
         <p v-if="adminViewStore.accountsMessage" class="text-gray-500 mt-4">{{ adminViewStore.accountsMessage }}</p>
       </div>
     </div>
-  </template>
-  
-  <style scoped>
-  .bg-opacity-50 {
-    background: rgba(0, 0, 0, 0.5);
-  }
-  .shadow-lg {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
-  input[type="file"]::file-selector-button {
-    color: white;
-    background-color: rgb(163, 163, 163);
-    padding: 8px 12px;
-    border-radius: 0px;
-    margin-right: 10px;
-  }
-  button:hover {
-    cursor: pointer;
-  }
-  </style>
+</template>
 
-  // @change="handleFileChange"
+<style scoped>
+.bg-opacity-50 {
+  background: rgba(0, 0, 0, 0.5);
+}
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+input[type="file"]::file-selector-button {
+  color: white;
+  background-color: rgb(163, 163, 163);
+  padding: 8px 12px;
+  border-radius: 0px;
+  margin-right: 10px;
+}
+button:hover {
+  cursor: pointer;
+}
+</style>

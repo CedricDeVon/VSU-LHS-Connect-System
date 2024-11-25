@@ -25,7 +25,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       }
 
       if (status !== 'active') {
-        console.log('Adviser is not active');
         console.error('Adviser is currently inactive. Returning to Log-in Page');
         return navigateTo('/auth/login');
       }

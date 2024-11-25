@@ -10,9 +10,7 @@ export default defineEventHandler(async (event) => {
     const timeline = (await Databases.getMostRecentTimeline()).data[0];
     admin.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(admin.data.profilePicture)).data;
 
-    return new SuccessfulResult({
-      user, admin, timeline
-    }).cloneToObject();
+    return new SuccessfulResult({ user, admin, timeline }).cloneToObject();
 
   } catch (error: any) {
     return new FailedResult(error.message).cloneToObject();

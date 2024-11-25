@@ -2,9 +2,23 @@ import type { Result } from "../results/result";
 import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
 import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
-import { signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { signOut, updatePassword, signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
 
 export class UserSecurity {
+    public static async updateUserPassword(data: any): Promise<Result> {
+        try {
+            UserSecurity._handleUndefinedOrNullArguments(data);
+
+            const { auth, newPassword } = data;
+            await updatePassword(auth.currentUser, newPassword);
+
+            return new SuccessfulResult();
+
+        } catch (error: any) {
+            return UserSecurity._handleFailedResult(error);
+        }
+    }
+
     public static async logInUser(data: any): Promise<Result> {
         try {
             UserSecurity._handleUndefinedOrNullArguments(data);

@@ -25,8 +25,9 @@
   </div>
 </template>
 
-<script>
+<script lang='ts'>
 import { announcement } from '~/data/announcement';
+
 export default {
   name: 'NotificationModal',
 
@@ -35,8 +36,8 @@ export default {
 
       const getActiveNotifications = () => {
       activeNotifications.value = announcement
-          .filter((notification) => notification.isActive)
-          .sort((a, b) => {
+          .filter((notification: any) => notification.isActive)
+          .sort((a: any, b: any) => {
               if (a.isNew && !b.isNew) {
                   return -1;
               } else if (!a.isNew && b.isNew) {
@@ -45,10 +46,13 @@ export default {
                   return new Date(b.announcementDate) - new Date(a.announcementDate);
               }
           });
-  };
-  onMounted(() => {
-      getActiveNotifications();
-  }) ;
+    };
+
+    onMounted(() => {
+        getActiveNotifications();
+    });
+    
+  
     return { getActiveNotifications, activeNotifications };
   },
 };

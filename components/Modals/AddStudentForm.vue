@@ -67,27 +67,27 @@
                     <div class="p-2 pb-0 ">
                       <div class="pb-1">Student ID:</div>
                       <label>
-                        <input type="text" class="input px-2 py-2 rounded-sm w-1/2 focus outline-green-400 " placeholder="Enter Student ID">
+                        <input v-model="store.studentId" type="text" class="input px-2 py-2 rounded-sm w-1/2 focus outline-green-400 " placeholder="Enter Student ID">
                       </label>
                     </div>
                     <div class="p-2 ">
                       <div class="pb-1">Student's Full Name: </div>
                       <label>
-                        <input type="text" class=" inputName px-2 py-2 rounded-sm focus outline-green-400 " placeholder="Enter First Name">
-                        <input type="text" class=" inputName px-2 py-2 rounded-sm  ml-2 focus outline-green-400" placeholder="Enter Last Name">
-                        <input type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2 focus outline-green-400" placeholder="Suffix">
+                        <input v-model="store.firstName" type="text" class=" inputName px-2 py-2 rounded-sm focus outline-green-400 " placeholder="Enter First Name">
+                        <input v-model="store.lastName" type="text" class=" inputName px-2 py-2 rounded-sm  ml-2 focus outline-green-400" placeholder="Enter Last Name">
+                        <input v-model="store.suffix" type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2 focus outline-green-400" placeholder="Suffix">
                       </label>
                     </div>
                   </div>
 
                   <div class="grid grid-flow-col p-2">
                       <label>Birtdate: </label>
-                      <UiVeeDatepicker placeholder="MM/DD/YYYY"/>     
+                      <UiVeeDatepicker v-model="store.birthDate" placeholder="MM/DD/YYYY"/>     
 
                       <label class="mx-5">Sex at Birth:
                       <select
                                class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-green-400"
-                               v-model="selectedGender">
+                               v-model="store.gender">
                                <option value="" disabled selected hidden>Gender</option>
                                <option value="male">Male</option>
                                <option value="female">Female</option>
@@ -99,14 +99,14 @@
                   <div class="p-1 px-2 pb-0 ">
                      Address:
                     <label>
-                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3 focus outline-green-400 " placeholder="Enter Student Address">
+                      <input v-model="store.address" type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3 focus outline-green-400 " placeholder="Enter Student Address">
                     </label>
                   </div>
                   <div class=" mt-2 p-1 px-2 pb-0 ">
-                     Contact Number/s:
+                     Contact Number:
                     <label>
-                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-1/3 focus outline-green-400" placeholder="Enter Contact Number">
-                      <button class="pl-5 wordbutton ">Add +</button>
+                      <input v-model="store.contactNum" type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/5 focus outline-green-400" placeholder="Enter Contact Number">
+                      <!-- <button class="pl-5 wordbutton ">Add +</button> -->
                     </label>
                   </div>
                   <div class="flex justify-end mt-7 mb-7 ">
@@ -145,6 +145,8 @@ import { ref, watch, defineEmits } from 'vue';
 import { studentAddedStore } from '~/stores/studentAdded';
 import UnEnrolledStudents from './UnEnrolledStudents.vue';
 import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
+import { section } from '~/data/section';
+import { sectionStore } from '~/stores/section';
   
 
 
@@ -158,8 +160,9 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
         },
       },
 
-      setup() {
-        const emit = defineEmits(['update:modelValue', 'close']);
+      setup(props, {emit}) {
+        // const emit = defineEmits('close');
+        const secStore = sectionStore();
         const store = studentAddedStore();
         const initPreparation = ref(true);
         const showSingleNewStudentForm = ref(false);
@@ -171,10 +174,6 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
         const selectedAddingType = ref('');
         const hoveredAddingType = ref('');
 
-        watch(() => store.birthDate, (newValue) => {
-          emit('update:modelValue', newValue);
-          console.log('Birthdate changed:', newValue);
-        });
 
 
         const nextClick = () => {
@@ -231,12 +230,38 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
     };
 
     const addStudentClick = () => {
-      store.addStudent();
-      emit('close');
+      try{
+        store.AdviserId = props.AdviserID;
+        const studentData = store.getStudentData();
+        const newStudent = {
+          studentId: studentData.studentId,
+          firstName: studentData.firstName,
+          lastName: studentData.lastName,
+          suffix: studentData.suffix,
+          birthDate: studentData.birthDate,
+          gender: studentData.gender,
+          address: studentData.address,
+          contactNum: studentData.contactNum
+        };
+        
+        // const sec = section.find((sec) => sec.adviserId === props.AdviserID);
+        const sec = secStore.section;
+        // sec.sectionStudents.push(newStudent.studentId);
+        console.log(sec);
+        console.log(newStudent);
+        store.resetAllData();
+        alert('Student added successfully');
+        emit('close');
+      } catch (error) {
+        alert('Something went wrong. Please try refreshing the page.');
+        return;
+      }
+     
     };
 
     return {
      // date,
+     addStudentClick,
       emit,
       store,
       initPreparation,

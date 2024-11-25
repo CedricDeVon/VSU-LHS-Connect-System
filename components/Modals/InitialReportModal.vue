@@ -19,12 +19,30 @@
                     <h2 v-if="!report.isDraft && report.peopleInvolved" class="input-text">{{ `${report.peopleInvolved}` }}</h2>
                     <input  v-else
                     type="text"
-                    v-model="store.peopleInvolved"
-                    placeholder="Enumerate student/s involved separated by comma ' , '"
+                    v-model="peopleInput"
+                    @keydown.enter.prevent="addPerson"
+                    @keydown.tab.prevent="addPerson"
+                    @keydown.comma.prevent="addPerson"
+                    placeholder="Enumerate student/s involved separated by 'enter' or 'tab'"
                     class="w-full py-3 px-3 border input-style"
                     required
                     />
-            
+
+                    <div class="mt-2 flex flex-wrap gap-2">
+                    <span 
+                      v-for="(person, index) in store.peopleInvolved" 
+                      :key="index"
+                      class="inline-flex items-center px-2 py-1 rounded-full text-sm bg-blue-100 text-blue-700">
+                      {{ person }}
+                      <button 
+                        type="button"
+                        @click="removePerson(index)"
+                        class="ml-1 text-blue-600 hover:text-blue-800">
+                        ×
+                      </button>
+                    </span>
+                  </div>
+
                 </div>
             <div>
               <h2 class="p-3 pt-5 pl-0">Witness/es Involved</h2>
@@ -32,7 +50,7 @@
               <input v-else
                 type="text"
                 v-model="store.witness"
-                placeholder="Enumerate Witness/es"
+                placeholder="Enumerate Witness/es, or N/A if none"
                 class="w-full py-3 px-3 border input-style"
                 required
               />
@@ -104,6 +122,7 @@
   import { defineComponent, ref } from 'vue';
   import { adviserReportStore } from '../../stores/adviserReport'; // Correct import path
   import { initialReport } from '../../data/initialReport';
+import { adviser } from '~/data/adviser';
   
   export default defineComponent({
     name: 'InitialReportModal',
@@ -111,6 +130,12 @@
         show: {
         type: Boolean,
         default: false
+        },
+
+        adviserId: {
+          type: String,
+          required: true,
+          
         },
 
         report: {
@@ -121,7 +146,7 @@
               reportIDRef: '',
               reportedBY: '',
               peopleInvolved: [],
-              witness: '',
+              witness: [], // Update the type to string
               dateOfIncident: '',
               placeOfIncident: '',
               thingsInvolved: '',
@@ -133,7 +158,17 @@
             }
         }
     },
-    setup(_, { emit }) {
+    setup(props, { emit }) {
+      
+        const peopleInput = ref('');
+        const errors = ref({
+          peopleInvolved: false,
+          witness: false,
+          dateOfIncident: false,
+          placeOfIncident: false,
+          thingsInvolved: false,
+          narrativeReport: false,
+        });
         const store = adviserReportStore();
         const messageTextarea = ref<HTMLTextAreaElement | null>(null);
         const autoExpand = () => {
@@ -162,7 +197,26 @@
         }
       };
 
+      const addPerson = () => {
+      const value = peopleInput.value.trim();
+      if (value && !store.peopleInvolved.includes(value)) {
+        store.peopleInvolved.push(value);
+        peopleInput.value = '';
+      }
+    };
+
+
+    const removePerson = (index: number) => {
+      store.peopleInvolved.splice(index, 1);
+    };
+
+
+    const initialize = () => {
+      store.reportIDRef = 'Pending Action';
+      store.reportedBY = props.adviserId;
+      console.log(store.reportedBY);
       
+    };
   
       const draft = () => {
         // Handle saving as draft
@@ -170,16 +224,24 @@
         store.resetAllData();
         emit('close'); // Emit close event to parent component
       };
+      
+
   
       const submit = () => {
         // Handle submitting the report
         // store.dispatch('adviserReportStore/submitReport', { ...store });
+        initialize();
+        const initRep = store.getAllData();
+        
+        initialReport.push(initRep);
         store.resetAllData();
+        
+        console.log(initialReport);
         emit('close'); // Emit close event to parent component
       };
 
       
-      return { messageTextarea, autoExpand, handleTab, store, draft, submit, };
+      return {initialize,  messageTextarea, autoExpand, handleTab, store, draft, submit, peopleInput, addPerson, removePerson };
     },
   });
   </script>

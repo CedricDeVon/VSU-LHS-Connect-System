@@ -3,6 +3,7 @@
         <InitialReportModal
         v-if="showCreateReport"
         :report="reportChosen"
+        :adviserId="AdviserID"
         @close ="creationClose"
         /> 
         <notification-modal v-if="showNotification"/>
@@ -174,6 +175,7 @@
             creationClose(){
                 this.showCreateReport = false;
                 this.reportChosen = {isDraft:true};
+                fetchReports(this.AdviserID, this.AcademicYear);
             },
 
             /*handleRowClick(item) {

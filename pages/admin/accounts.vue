@@ -151,6 +151,10 @@ export default {
   created() {
     // Fetch advisers when the component is created
     this.fetchAdvisers();
+    const accountType = this.$route.query.accountType;
+    if (accountType) {
+      this.selectedAccount = accountType;
+    }
   },
 
   computed: {
@@ -232,6 +236,12 @@ export default {
     },
     rejectRequest(adviser) {
       this.advisers = this.advisers.filter(a => a.facultyId !== adviser.facultyId);
+    },
+
+    selectAdviser(adviser) {
+      // Handle the selection of an adviser
+      console.log('Adviser selected:', adviser);
+      // You can add further logic here to handle the selection
     }
   }
 };

@@ -12,7 +12,7 @@ just comment the line window something and remove comment to line below iframe--
   
   <script>
   import pdfMake from 'pdfmake/build/pdfmake';
-  import pdfFonts from 'pdfmake/build/vfs_fonts';
+  import * as pdfFonts from 'pdfmake/build/vfs_fonts';
   pdfMake.vfs = pdfFonts.pdfMake.vfs;
   import { headerImage } from '~/assets/images/sample-header';
   import { footer } from '~/assets/images/footer';

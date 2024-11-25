@@ -96,9 +96,9 @@
 <script>
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
     import { initialReport } from "~/data/initialReport";
-    import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
+    import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
     import { adviserReportStore } from "../../stores/adviserReport";
-    import NotificationModal from '~/components/Modals/NotificationModal.vue';
+    import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
    
 
 

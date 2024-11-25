@@ -47,10 +47,10 @@
 </template>
 
 <script>
-import InitialReportModal from './InitialReportModal.vue';
+import InitialReportModal from '../AdviserReport/InitialReportModal.vue';
 import { student } from '~/data/student';
-import AdviserAnecdotal from '../../pages/adviser/anecdotal/[id].vue';
-import RemoveStudent from './removeStudent.vue';
+import AdviserAnecdotal from '../../../pages/adviser/anecdotal/[id].vue';
+import RemoveStudent from './RemoveStudent.vue';
 
 export default {
   components: { InitialReportModal, AdviserAnecdotal, RemoveStudent },

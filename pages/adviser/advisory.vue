@@ -88,13 +88,13 @@
 
 <script>
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-    import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+    import StudentBasicInfo from "~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue";
+    import AddStudentForm from "~/components/Modals/Advisory/AddStudentForm.vue";
     import { sectionStore } from "~/stores/section";
     import { student } from "~/data/student";
     import { section } from "~/data/section";
-    import NotificationModal from '~/components/Modals/NotificationModal.vue';
-    import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
+    import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
+    import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
 
     export default {
         name: "Advisory",

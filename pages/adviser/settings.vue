@@ -81,7 +81,7 @@
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
     import { student } from "~/data/student";
     import { section } from "~/data/section";
-    import NotificationModal from '~/components/Modals/NotificationModal.vue';
+    import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
 
     export default {
         name: "Settings",

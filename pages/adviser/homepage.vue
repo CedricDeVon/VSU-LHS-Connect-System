@@ -74,9 +74,9 @@
 
 <script>
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-    import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
-    import NotificationModal from '~/components/Modals/NotificationModal.vue';
+    import StudentBasicInfo from "~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue";
+    import AddStudentForm from "~/components/Modals/Advisory/AddStudentForm.vue";
+    import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
     import { adviser } from "~/data/adviser";
     import { users } from "~/data/user";
     import { section } from "~/data/section";

@@ -120,8 +120,8 @@
   
   <script lang="ts">
   import { defineComponent, ref } from 'vue';
-  import { adviserReportStore } from '../../stores/adviserReport'; // Correct import path
-  import { initialReport } from '../../data/initialReport';
+  import { adviserReportStore } from '../../../stores/adviserReport'; // Correct import path
+  import { initialReport } from '../../../data/initialReport';
 import { adviser } from '~/data/adviser';
   
   export default defineComponent({

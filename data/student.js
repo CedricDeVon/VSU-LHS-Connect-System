@@ -31,6 +31,27 @@ export const student = [
         sectionID: '',
         anecdotalDocID: null
     },
+
+    {
+        studentId: 'sample22-1-10000',
+        firstName: 'Agar',
+        lastName: 'Gomeg',
+        middleName: 'Casses',
+        suffix: '',
+        gender: 'Male',
+        address: 'Albuera, Leyte',
+        contactNum: '09268021698',
+        isEnrolled: false,
+        incidentDocIDs: [],
+        birthDate: '2004-01-01',
+        profilePic: null,
+        age: calculateAge('2004-01-01'),
+        sectionID: '',
+        anecdotalDocID: null
+    },
+
+
+
     {
         studentId: 'sample22-1-10075',
         firstName: 'Jade',
@@ -285,6 +306,23 @@ export const student = [
         age: calculateAge('2002-08-15'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10088'
+    },
+    {
+        studentId: 'sample22-1-10801',
+        firstName: 'Marcopolo',
+        lastName: 'Santores',
+        middleName: 'Riveral',
+        suffix: '',
+        gender: 'Male',
+        address: 'Tacloban City',
+        contactNum: '09120456789',
+        isEnrolled: true,
+        incidentDocIDs: [],
+        birthDate: '2002-08-15',
+        profilePic: null,
+        age: calculateAge('2002-08-15'),
+        sectionID: 'sectionid26',
+        anecdotalDocID: ''
     },
     {
         studentId: 'sample22-1-10090',

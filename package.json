@@ -105,6 +105,7 @@
     "@types/libsodium-wrappers": "^0.7.14",
     "@types/node": "^22.7.9",
     "@types/nodemailer": "^6.4.16",
+    "@types/pdfmake": "^0.2.9",
     "@types/validator": "^13.12.2",
     "@types/vue": "^1.0.31",
     "@types/vue-router": "^2.0.0",

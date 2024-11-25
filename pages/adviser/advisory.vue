@@ -3,7 +3,8 @@
         <AdviserHeader @notif-click="notifClick"  />
             <div >
             <AddStudentForm v-if="showAddStudentForm"
-            @close="showAddStudentForm = false"
+            @close="handleAddedStudent"
+            :AdviserID="AdviserID" 
             />
 
             <notification-modal v-if="showNotification" />
@@ -89,6 +90,7 @@
     import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
     import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
     import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+    import { sectionStore } from "~/stores/section";
     import { student } from "~/data/student";
     import { section } from "~/data/section";
     import NotificationModal from '~/components/Modals/NotificationModal.vue';
@@ -122,13 +124,19 @@
             containWidth:'89%',
         };},
 
+        setup() {
+            const section = sectionStore();
+            return { sectionStore };
+        },
+
         methods: {
             addStudent() {
                 this.showAddStudentForm = true;
             },
 
             getSection(){
-                this.section = section.find((sec)=> sec.adviserId === this.AdviserID);
+                this.sectionStore = section.find((sec)=> sec.adviserId === this.AdviserID);
+                this.section =  this.sectionStore;
             },
 
             handleRowClick(student) {
@@ -143,7 +151,9 @@
             },
 
             fetchStudents(id,ay) {
+                this.getSection();
                 const studentIDs = (section.find((sec)=> sec.adviserId === id && sec.sectionSchoolYear === ay)).sectionStudents;
+                
                 this.students = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
             },
 
@@ -152,11 +162,15 @@
                 this.showStudentInfo = false;
             },
 
+            handleAddedStudent(student){
+                this.fetchStudents(this.AdviserID, this.AcademicYear);
+                this.showAddStudentForm = false;
+            }
+
         },
 
         mounted() {
             this.fetchStudents(this.AdviserID, this.AcademicYear);
-            this.getSection();
         }
         
   };

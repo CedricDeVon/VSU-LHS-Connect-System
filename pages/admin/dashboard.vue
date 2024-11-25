@@ -252,7 +252,7 @@ const gradientColors = {
                 <div class="flex items-baseline gap-2 mt-2">
                   <span class="text-3xl font-bold text-gray-900">{{ stat.value }}</span>
                   <span class="text-sm text-gray-500">
-                    {{ stat.label === 'Total Incidents' ? 'this aca demic year' : 'total' }}
+                    {{ stat.label === 'Total Incidents' ? 'this year' : 'total' }}
                   </span>
                 </div>
               </div>
@@ -352,7 +352,6 @@ const gradientColors = {
   @apply text-sm text-gray-500;
 }
 
-/* Remove the problematic transition-all class and use standard CSS instead */
 .hover-animate {
   transition: all 0.3s ease-in-out;
 }

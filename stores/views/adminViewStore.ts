@@ -122,8 +122,6 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     anecdoteStudent.value = result.data.student;
     anecdoteAnecdotalReport.value = result.data.anecdotalReport;
     anecdoteReports.value = result.data.reports;
-    // anecdoteAnecdotalReports.value = result.data.anecdotalReports;
-    // anecdoteStudents.value = result.data.students;
   }
   
   const updateIncident = async (incidentId: string) => {

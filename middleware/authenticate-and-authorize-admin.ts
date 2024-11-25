@@ -26,7 +26,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         return navigateTo('/auth/login');
       }
 
-      console.log('ok', email, password)
+      // console.log('ok', email, password)
       await signInWithEmailAndPassword(getAuth(), email, password);
       console.log('done')
       

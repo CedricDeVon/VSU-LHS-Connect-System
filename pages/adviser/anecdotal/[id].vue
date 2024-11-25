@@ -1,8 +1,6 @@
 <template>
-    
     <div>
       <adviser-header/>
-    
     <div class="flex inset-0 h-screen bg-gray-100">
       <div class="flex-1 overflow-hidden">
         <div class="p-8 pt-0 overflow-y-auto h-[calc(100vh-64px)]">
@@ -80,306 +78,310 @@
         @update="handleUpdate" />
     </div>
     </div>
-  </template>
+</template>
   
-  <script>
-  import pdfMake from 'pdfmake/build/pdfmake';
-  import pdfFonts from 'pdfmake/build/vfs_fonts';
-  pdfMake.vfs = pdfFonts.pdfMake.vfs;
-  import { headerImage } from '~/assets/images/sample-header';
-  import { footer } from '~/assets/images/footer';
-  import { anecdotalReport } from '~/data/anecdotal';
-  import { student } from '~/data/student';
-  import { report, updateReport, initializeReports } from '~/data/report';
-  import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
-  import { formatDate } from '@vueuse/core';
-import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
-  
-  export default {
-    components: {
-      UpdateAnecdotalModal,
-        AdviserHeader,
-        AdviserHeader,
-    },
+<script>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
 
-    props: {
-      Student: {
-        type: Object,
-        required: true,
-      },
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+import { headerImage } from '~/assets/images/sample-header';
+import { footer } from '~/assets/images/footer';
+import { anecdotalReport } from '~/data/anecdotal';
+import { student } from '~/data/student';
+import { report, updateReport, initializeReports } from '~/data/report';
+import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
+import { formatDate } from '@vueuse/core';
+import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+
+export default {
+  components: {
+    UpdateAnecdotalModal,
+      AdviserHeader,
+      AdviserHeader,
+  },
+
+  props: {
+    Student: {
+      type: Object,
+      required: true,
     },
-  
-    data() {
-      return {
-        anecReport: null,
-        studentData: null,
-        showUpdateModal: false,
-        selectedReport: null,
-      };
-    },
-  
-    async created() {
-      initializeReports(); // Initialize from localStorage
-      const studentId = this.$route.params.id;
-      await this.initData(studentId);
-      this.displayPDF();
-    },
-  
-    computed: {
-      defineAnecdotalDoc() {
-        if (!this.anecReport || this.anecReport === '' || !this.studentData) return null;
-  
-        const associatedReports = report.filter(r => this.anecReport.reportIDs.includes(r.reportID));
-  
-        // Sort reports by date prepared
-        associatedReports.sort((a, b) => new Date(a.datePrepared) - new Date(b.datePrepared));
-  
-        const content = [
-          { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 0] },
+  },
+
+  data() {
+    return {
+      anecReport: null,
+      studentData: null,
+      showUpdateModal: false,
+      selectedReport: null,
+      adviserViewStore: useAdviserViewStore(),
+    };
+  },
+
+  async mounted() {
+    await this.adviserViewStore.updateAnecdote(useRoute().params.id);
+    initializeReports(); // Initialize from localStorage
+    await this.initData();
+    this.displayPDF();
+  },
+
+  computed: {
+    defineAnecdotalDoc() {
+      if (!this.anecReport || this.anecReport === '' || !this.studentData) return null;
+
+      const associatedReports = this.adviserViewStore.anecdoteReports.filter(r => this.anecReport.data.reportIds.includes(r.id));
+
+      // Sort reports by date prepared
+      associatedReports.sort((a, b) => new Date(a.data.datePrepared) - new Date(b.data.datePrepared));
+
+      const content = [
+        { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 0] },
+        {
+          table: {
+            widths: ['30%', '70%'],
+            headerRows: 0,
+            body: [
+              [
+                { text: 'Student Name:', style: 'label', border: [false, false, false, false] },
+                { text: this.adviserViewStore.getFullName(this.studentData), style: 'content', border: [false, false, false, false] }
+              ],
+              [
+                { text: 'Student ID:', style: 'label', border: [false, false, false, false] },
+                { text: this.studentData.id, style: 'content', border: [false, false, false, false] }
+              ],
+              [
+                { text: 'Academic Year:', style: 'label', border: [false, false, false, false] },
+                { text: this.anecReport.data.schoolYear, style: 'content', border: [false, false, false, false] }
+              ]
+            ]
+          }
+        }
+      ];
+
+      associatedReports.forEach((rep) => {
+        // Format the date using the Date object
+        const preparedDate = new Date(rep.data.datePrepared);
+        const formattedDate = preparedDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        const incidentDate = new Date(rep.data.dateOfIncident);
+        const formattedIncidentDate = incidentDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+
+        content.push(
+          {
+            text: formattedDate,
+            style: 'subheader',
+            margin: [0, 20, 0, 10],
+            color: '#1f2937'
+          },
           {
             table: {
               widths: ['30%', '70%'],
               headerRows: 0,
               body: [
                 [
-                  { text: 'Student Name:', style: 'label', border: [false, false, false, false] },
-                  { text: `${this.studentData.firstName} ${this.studentData.middleName} ${this.studentData.lastName}`, style: 'content', border: [false, false, false, false] }
+                  { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
+                  { text: formattedIncidentDate, style: 'content', border: [false, false, false, false] }
                 ],
                 [
-                  { text: 'Student ID:', style: 'label', border: [false, false, false, false] },
-                  { text: this.studentData.studentId, style: 'content', border: [false, false, false, false] }
+                  { text: 'Purpose:', style: 'label', border: [false, false, false, false] },
+                  { text: rep.data.purpose, style: 'content', border: [false, false, false, false] }
                 ],
                 [
-                  { text: 'Academic Year:', style: 'label', border: [false, false, false, false] },
-                  { text: this.anecReport.AY, style: 'content', border: [false, false, false, false] }
+                  { text: 'Witnesses:', style: 'label', border: [false, false, false, false] },
+                  { text: rep.data.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
+                ],
+                [
+                  { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
+                  { text: rep.data.placeOfIncident, style: 'content', border: [false, false, false, false] }
+                ],
+                [
+                  { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
+                  { text: rep.data.thingsInvolved, style: 'content', border: [false, false, false, false] }
+                ],
+              ]
+            }
+          },
+
+          { text: 'Details:', style: 'label', margin: [0, 15, 0, 5] },
+          { text: rep.data.details, style: 'content', margin: [30, 0, 30, 15] },
+
+          { text: rep.data.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', style: 'label', margin: [0, 15, 0, 5] },
+          { text: rep.data.remarks, style: 'content', margin: [30, 0, 30, 15] },
+
+          {
+            table: {
+              widths: ['30%', '70%'],
+              headerRows: 0,
+              body: [
+                [
+                  { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
+                  { text: rep.data.isReportedByGuidance ? 'Guidance' : this.anecReport.data.preparedBy, style: 'content', border: [false, false, false, false] }
                 ]
               ]
             }
           }
-        ];
-  
-        associatedReports.forEach((rep) => {
-          // Format the date using the Date object
-          const preparedDate = new Date(rep.datePrepared);
-          const formattedDate = preparedDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          });
-  
-          const incidentDate = new Date(rep.date);
-          const formattedIncidentDate = incidentDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          });
-  
-          content.push(
-            {
-              text: formattedDate,
-              style: 'subheader',
-              margin: [0, 20, 0, 10],
-              color: '#1f2937'
-            },
-            {
-              table: {
-                widths: ['30%', '70%'],
-                headerRows: 0,
-                body: [
-                  [
-                    { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-                    { text: formattedIncidentDate, style: 'content', border: [false, false, false, false] }
-                  ],
-                  [
-                    { text: 'Purpose:', style: 'label', border: [false, false, false, false] },
-                    { text: rep.purpose, style: 'content', border: [false, false, false, false] }
-                  ],
-                  [
-                    { text: 'Witnesses:', style: 'label', border: [false, false, false, false] },
-                    { text: rep.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
-                  ],
-                  [
-                    { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                    { text: rep.placeOfIncident, style: 'content', border: [false, false, false, false] }
-                  ],
-                  [
-                    { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                    { text: rep.thingsInvolved, style: 'content', border: [false, false, false, false] }
-                  ],
-                ]
-              }
-            },
-  
-            { text: 'Details:', style: 'label', margin: [0, 15, 0, 5] },
-            { text: rep.details, style: 'content', margin: [30, 0, 30, 15] },
-  
-            { text: rep.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', style: 'label', margin: [0, 15, 0, 5] },
-            { text: rep.remarks, style: 'content', margin: [30, 0, 30, 15] },
-  
-            {
-              table: {
-                widths: ['30%', '70%'],
-                headerRows: 0,
-                body: [
-                  [
-                    { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
-                    { text: rep.isReportedByGuidance ? 'Guidance' : this.anecReport.preparedBy, style: 'content', border: [false, false, false, false] }
-                  ]
-                ]
-              }
-            }
-          );
-        });
-  
-        return {
-          pageMargins: [72, 120, 72, 90],
+        );
+      });
+
+      return {
+        pageMargins: [72, 120, 72, 90],
+        header: {
+          image: headerImage,
+          width: 600,
+          height: 100,
+          alignment: 'center',
+          margin: [0, 10, 0, 0],
+        },
+        content: content,
+        styles: {
           header: {
-            image: headerImage,
-            width: 600,
-            height: 100,
+            fontSize: 20,
+            bold: true,
             alignment: 'center',
-            margin: [0, 10, 0, 0],
           },
-          content: content,
-          styles: {
-            header: {
-              fontSize: 20,
-              bold: true,
-              alignment: 'center',
-            },
-            subheader: {
-              fontSize: 15,
-              bold: true,
-            },
-            label: {
-              bold: true,
-              fontSize: 11,
-              margin: [0, 10, 0, 10],
-            },
-            content: {
-              fontSize: 11,
-              margin: [0, 10, 0, 10],
-            }
+          subheader: {
+            fontSize: 15,
+            bold: true,
           },
-          footer: {
-            image: footer,
-            width: 480,
-            alignment: 'center',
-            margin: [0, 10, 0, 0]
+          label: {
+            bold: true,
+            fontSize: 11,
+            margin: [0, 10, 0, 10],
+          },
+          content: {
+            fontSize: 11,
+            margin: [0, 10, 0, 10],
           }
-        };
+        },
+        footer: {
+          image: footer,
+          width: 480,
+          alignment: 'center',
+          margin: [0, 10, 0, 0]
+        }
+      };
+    }
+  },
+
+  methods: {
+    async initData() {
+      await this.adviserViewStore.updateAnecdote(useRoute().params.id);
+
+      this.studentData = this.adviserViewStore.anecdoteStudent;
+      if (!this.studentData) return;
+
+      this.anecReport = this.adviserViewStore.anecdoteAnecdotalReport;
+    },
+
+    displayPDF() {
+      if (!this.defineAnecdotalDoc) {
+        console.error('No document definition available');
+        return;
+      }
+
+      try {
+        pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
+          const url = URL.createObjectURL(blob);
+          const viewer = document.getElementById('pdf-viewer');
+          if (viewer) {
+            viewer.src = url;
+          } else {
+            console.error('PDF viewer element not found');
+          }
+        });
+      } catch (error) {
+        console.error('Error creating PDF:', error);
       }
     },
-  
-    methods: {
-      async initData(studentId) {
-        this.studentData = student.find(s => s.studentId === studentId);
-        if (!this.studentData) return;
-  
-        this.anecReport = anecdotalReport.find(
-          report => report.anecdotalDocID === this.studentData.anecdotalDocID
-        );
-      },
-  
-      displayPDF() {
-        if (!this.defineAnecdotalDoc) {
-          console.error('No document definition available');
-          return;
-        }
-  
-        try {
-          pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
-            const url = URL.createObjectURL(blob);
-            const viewer = document.getElementById('pdf-viewer');
-            if (viewer) {
-              viewer.src = url;
-            } else {
-              console.error('PDF viewer element not found');
-            }
-          });
-        } catch (error) {
-          console.error('Error creating PDF:', error);
-        }
-      },
-  
-      formatDate(date) {
-        return formatDate(date, 'MMMM DD, YYYY');
-      },
-  
-      openUpdateForm() {
-        // Create a new report object with required fields
-        this.selectedReport = {
-          date: '',
-          purpose: '',
-          witnesses: [],
-          placeOfIncident: '',
-          thingsInvolved: '',
-          details: '',
-          remarks: '',
-          isReportedByGuidance: true
-        };
-        this.showUpdateModal = true;
-        console.log('Modal should open', this.showUpdateModal); // Debug log
-      },
-  
-      closeUpdateModal() {
-        this.showUpdateModal = false;
-        this.selectedReport = null;
-      },
-  
-      handleUpdate(updatedData) {
-        try {
-          const now = new Date();
-          const datePrepared = now.toISOString().split('T')[0];
-          const reportId = `REP-${datePrepared.replace(/-/g, '')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
-  
-          const newReport = {
-            reportID: reportId,
-            date: updatedData.date,
-            datePrepared: datePrepared,
-            purpose: updatedData.purpose,
-            witnesses: updatedData.witnesses,
-            placeOfIncident: updatedData.placeOfIncident,
-            thingsInvolved: updatedData.thingsInvolved,
-            details: updatedData.details,
-            remarks: updatedData.remarks,
-            isReportedByGuidance: true,
-          };
-  
-          report.push(newReport);
-  
-          // Update anecdotal report with new report ID
-          this.anecReport.reportIDs.push(reportId);
-  
-          // Update localStorage
-          localStorage.setItem('reports', JSON.stringify(report));
-  
-          // Refresh the PDF display
-          this.displayPDF();
-          this.showUpdateModal = false;
-  
-          alert('Report added successfully');
-  
-        } catch (error) {
-          console.error('Error updating report:', error);
-          alert('Failed to update report');
-        }
-      },
-  
-      downloadPDF() {
-        const fileName = `Anecdotal_Report_${this.anecReport.anecdotalDocID}_${new Date().toISOString().split('T')[0]}.pdf`;
-        pdfMake.createPdf(this.defineAnecdotalDoc).download(fileName);
-      },
-  
-      printDocument() {
-        pdfMake.createPdf(this.defineAnecdotalDoc).print({
-          silent: false,
-          printBackground: true
-        });
-      },
+
+    formatDate(date) {
+      return formatDate(date, 'MMMM DD, YYYY');
     },
-  };
-  </script>
+
+    openUpdateForm() {
+      // Create a new report object with required fields
+      this.selectedReport = {
+        date: '',
+        purpose: '',
+        witnesses: [],
+        placeOfIncident: '',
+        thingsInvolved: '',
+        details: '',
+        remarks: '',
+        isReportedByGuidance: true
+      };
+      this.showUpdateModal = true;
+      console.log('Modal should open', this.showUpdateModal); // Debug log
+    },
+
+    closeUpdateModal() {
+      this.showUpdateModal = false;
+      this.selectedReport = null;
+    },
+
+    async handleUpdate(updatedData) {
+      try {
+        const now = new Date();
+        const datePrepared = now.toISOString().split('T')[0];
+        const reportId = `REP-${datePrepared.replace(/-/g, '')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
+
+        const newReport = {
+          dateOfIncident: updatedData.dateOfIncident,
+          datePrepared: datePrepared,
+          purpose: updatedData.purpose,
+          witnesses: updatedData.witnesses,
+          placeOfIncident: updatedData.placeOfIncident,
+          thingsInvolved: updatedData.thingsInvolved,
+          details: updatedData.details,
+          remarks: updatedData.remarks,
+          isReportedByGuidance: true,
+        };
+
+        const result = await $fetch('/api/anecdote/update', {
+          method: 'POST', body: {
+            id: reportId, data: newReport, anecdote: this.adviserViewStore.anecdoteAnecdotalReport
+          }
+        });
+        await this.adviserViewStore.updateAnecdote(this.adviserViewStore.anecdoteStudent.id);
+        this.anecReport = this.adviserViewStore.anecdoteAnecdotalReport;
+        
+        this.displayPDF();
+        this.showUpdateModal = false;
+
+        alert('Report added successfully');
+
+      } catch (error) {
+        console.error('Error updating report:', error);
+        alert('Failed to update report');
+      }
+    },
+
+    downloadPDF() {
+      const fileName = `Anecdotal_Report_${this.anecReport.id}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdfMake.createPdf(this.defineAnecdotalDoc).download(fileName);
+    },
+
+    printDocument() {
+      pdfMake.createPdf(this.defineAnecdotalDoc).print({
+        silent: false,
+        printBackground: true
+      });
+    },
+  },
+};
+</script>
   
   <style scoped>
   #incident-display-container {

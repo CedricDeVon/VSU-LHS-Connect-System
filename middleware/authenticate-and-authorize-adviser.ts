@@ -13,7 +13,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         method: 'POST', body: { jsonWebToken: jsonWebToken.value }
       })
       
-      console.log(result)
+      // console.log(result)
       const { role, status, email, password } = result.data.data;
       if (result.isNotSuccessful) {
         console.log('JWT Not Verified');

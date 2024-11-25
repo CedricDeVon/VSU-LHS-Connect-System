@@ -66,6 +66,23 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     const studentCSVUpdateModalSuccessMessage = ref('');
     const studentCSVUpdateModalSuccessBulkContStudentForm = ref(false);
 
+    const anecdoteAnecdotalReport = useState('anecdoteAnecdotalReport');
+    const anecdoteReports = useState('anecdoteReports');
+    const anecdoteStudent = useState('anecdoteStudent');
+    
+    const updateAnecdote = async (studentId: string) => {
+        const result: any = await $fetch('/api/adviser/view/anecdote', {
+          method: 'POST', body: {
+            studentId
+          }
+        });
+        // console.log(result)
+    
+        anecdoteStudent.value = result.data.student;
+        anecdoteAnecdotalReport.value = result.data.anecdotalReport;
+        anecdoteReports.value = result.data.reports;
+    }
+      
     const createManyStudentsViaCSV = async (file: any) => {
         const result: any = await $fetch('/api/adviser/view/studentCSVUploadModal/createMany', {
             method: 'POST', body: {
@@ -198,6 +215,10 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     }
 
     return {
+        updateAnecdote,
+        anecdoteStudent,
+        anecdoteReports,
+        anecdoteAnecdotalReport,
         studentCSVUpdateModalSuccessBulkContStudentForm,
         createManyStudentsViaCSV,
         studentCSVUpdateModalFile,

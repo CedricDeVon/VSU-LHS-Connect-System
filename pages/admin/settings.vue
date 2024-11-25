@@ -48,7 +48,9 @@
                 </div>
             </div>
             <div class=" shadow-inner rounded-md">
-              <img src="../../assets/icons/default-user.png" alt="Profile Picture" class="pt-5 h-auto w-2/5 flex justify-self-center">
+              <div class = "profile-container">
+                <img src="../../assets/icons/default-user.png" alt="Profile Picture" class="profile-picture">
+              </div>
               <div class="flex justify-center items-center m-5">
                 <button @click="triggerFileInput"
                   class="w-2/5 px-4 py-3 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 flex items-center justify-center ">
@@ -218,3 +220,24 @@ export default {
 
 }
 </script>
+
+
+
+<style scoped>
+.profile-container {
+  width: 300px;
+  height: auto;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+}
+
+.profile-picture {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+</style>

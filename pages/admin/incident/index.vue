@@ -231,8 +231,8 @@
 
 <script>
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// import pdfFonts from 'pdfmake/build/vfs_fonts';
+// pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
 import { incidentReport, updateIncidentReport, initializeIncidentReports } from '~/data/incident';

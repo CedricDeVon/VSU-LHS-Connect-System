@@ -85,8 +85,9 @@
 // });
 
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+// import pdfFonts from 'pdfmake/build/vfs_fonts';
+// console.log(pdfFonts);
+// pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
 import { report, updateReport, initializeReports } from '~/data/report';

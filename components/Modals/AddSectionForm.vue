@@ -43,7 +43,7 @@ export default {
       <input v-model="sectionId" type="text"
         class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-5">
       <label>Grade Level</label>
-      <input v-model="sectionLevel" type="number" min="7" max="12" value="7"
+      <input v-model="sectionLevel" type="number" min="7" max="12"
         class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-5">
       <label>Section Name</label>
       <input v-model="sectionName" type="text"

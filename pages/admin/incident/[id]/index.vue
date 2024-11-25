@@ -197,6 +197,14 @@
             </div>
           </div>
         </div>
+        <!-- Add Case Conference Button -->
+        <!-- <div class="mt-4">
+          <button
+            @click="navigateToCreateConference"
+            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+            Create Case Conference
+          </button>
+        </div> -->
       </div>
     </div>
 
@@ -228,7 +236,6 @@
       @save-draft="handleSaveDraft" />
   </div>
 </template>
-
 <script>
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -247,6 +254,13 @@ import ViewCaseConferencesModal from '~/components/Modals/Incident Management/Vi
 import CreateCaseConferenceModal from '~/components/Modals/Incident Management/CreateCaseConferenceModal.vue';
 import { caseConference } from '~/data/caseconference';
 import { defineIncidentDoc } from '~/utils/documentDefinitions';
+
+const route = useRoute();
+const router = useRouter();
+
+const navigateToCreateConference = () => {
+  router.push(`/admin/conferences/create?incidentId=${route.params.id}`);
+};
 
 export default {
   components: {

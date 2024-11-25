@@ -2,7 +2,7 @@
 import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
 import InitialReportModal from './InitialReportModal.vue';
 import AdviserAnecdotal from '../../pages/adviser/anecdotal/[id].vue';
-import RemoveStudent from './removeStudent.vue';
+// import RemoveStudent from './removeStudent.vue';
 
 const adviserViewStore = useAdviserViewStore();
 // showReport() {

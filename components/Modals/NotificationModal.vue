@@ -1,58 +1,58 @@
 <template>
-    <div class="notification-modal ">
-      <!-- Other modal content -->
-    
-      <div class="floating-chip ">
-        <div class="mb-10 max-h-full">
-          <div class="bg-white rounded-lg p-5 m-5  ">
-            <h1 class="header text-center">Notifications & Announcements</h1>
-          </div>
-          <div class=" overflow-x-auto overflow-y-auto max-h ">
-            <div 
-            v-for = "(notification, index) in activeNotifications"
-            :key="index"   
-            class="bg-white rounded-lg p-4 m-5  shadow-2xl "
-            :class="{' new-announcement ': notification.isNew }"
-            >
-            <h1 class="subHeader">{{ notification.announcementTitle }}</h1>
-            <p class="text-xs font-bold ">{{ notification.announcementDate }}<span class="text-xs">  : {{ notification.announcementBy }}</span></p> 
-            <p class="p-2 px-0">{{ notification.announcementContent }}</p>
-            <p class="text-xs"></p>
-            </div> 
-          </div>
+  <div class="notification-modal ">
+    <!-- Other modal content -->
+  
+    <div class="floating-chip ">
+      <div class="mb-10 max-h-full">
+        <div class="bg-white rounded-lg p-5 m-5  ">
+          <h1 class="header text-center">Notifications & Announcements</h1>
+        </div>
+        <div class=" overflow-x-auto overflow-y-auto max-h ">
+          <div 
+          v-for = "(notification, index) in activeNotifications"
+          :key="index"   
+          class="bg-white rounded-lg p-4 m-5  shadow-2xl "
+          :class="{' new-announcement ': notification.isNew }"
+          >
+          <h1 class="subHeader">{{ notification.announcementTitle }}</h1>
+          <p class="text-xs font-bold ">{{ notification.announcementDate }}<span class="text-xs">  : {{ notification.announcementBy }}</span></p> 
+          <p class="p-2 px-0">{{ notification.announcementContent }}</p>
+          <p class="text-xs"></p>
+          </div> 
         </div>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import { announcement } from '~/data/announcement';
-  export default {
-    name: 'NotificationModal',
+  </div>
+</template>
 
-    setup() {
-        const activeNotifications = ref([]);
+<script>
+import { announcement } from '~/data/announcement';
+export default {
+  name: 'NotificationModal',
 
-        const getActiveNotifications = () => {
-        activeNotifications.value = announcement
-            .filter((notification) => notification.isActive)
-            .sort((a, b) => {
-                if (a.isNew && !b.isNew) {
-                    return -1;
-                } else if (!a.isNew && b.isNew) {
-                    return 1;
-                } else {
-                    return new Date(b.announcementDate) - new Date(a.announcementDate);
-                }
-            });
-    };
-    onMounted(() => {
-        getActiveNotifications();
-    }) ;
-      return { getActiveNotifications, activeNotifications };
-    },
+  setup() {
+      const activeNotifications = ref([]);
+
+      const getActiveNotifications = () => {
+      activeNotifications.value = announcement
+          .filter((notification) => notification.isActive)
+          .sort((a, b) => {
+              if (a.isNew && !b.isNew) {
+                  return -1;
+              } else if (!a.isNew && b.isNew) {
+                  return 1;
+              } else {
+                  return new Date(b.announcementDate) - new Date(a.announcementDate);
+              }
+          });
   };
-  </script>
+  onMounted(() => {
+      getActiveNotifications();
+  }) ;
+    return { getActiveNotifications, activeNotifications };
+  },
+};
+</script>
   
   <style scoped>
   .notification-modal {

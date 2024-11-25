@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { signOut, getAuth } from "firebase/auth";
+// import { signOut, getAuth } from "firebase/auth";
 import { Result } from "~/library/results/result";
 import { UserSecurity } from "~/library/security/userSecurity";
 

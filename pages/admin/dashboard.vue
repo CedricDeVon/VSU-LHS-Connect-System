@@ -1,30 +1,50 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import { incidentReport } from '~/data/incident';
-import { initialReport } from '~/data/initialReport';
-import { caseConference } from '~/data/caseconference';
+import { initialReport, IncidentReport } from '~/data/initialReport';
+import { caseConference, CaseConference } from '~/data/caseconference';
+import ScheduledCaseConferences from '~/components/Modals/Dashboard/ScheduledCaseConferences.vue'; // Import the modal component
 
 Chart.register(...registerables);
 
-const recentSubmissions = useState('recentSubmissions', () => []);
+interface DashboardStat {
+  label: string;
+  value: number;
+  icon: string;
+  color: 'blue' | 'yellow' | 'red' | 'green';
+}
+
+interface RecentSubmission {
+  title: string;
+  people: string;
+  date: string;
+  status: 'Read' | 'Unread';
+}
+
+const recentSubmissions = useState<RecentSubmission[]>('recentSubmissions', () => []);
 const pendingCases = useState('pendingCases', () => 0);
 const scheduledConferences = useState('scheduledConferences', () => 0);
 const totalIncidents = useState('totalIncidents', () => 0);
 const unreadReports = useState('unreadReports', () => 0);
 
+let trendsChart: Chart | null = null;
+
 // Modified data loading function
 const loadDashboardData = () => {
   // Get pending cases count
   pendingCases.value = incidentReport.filter(inc => inc.status === 'NotResolved').length;
+  console.log('Pending Cases:', pendingCases.value);
 
   // Get scheduled conferences count
   scheduledConferences.value = caseConference.filter(conf => new Date(conf.conferenceDate) > new Date()).length;
+  console.log('Scheduled Conferences:', scheduledConferences.value);
 
   // Get total incidents for current AY
   totalIncidents.value = incidentReport.filter(inc => inc.AY === '2024-2025').length;
+  console.log('Total Incidents:', totalIncidents.value);
 
   // Get recent submissions 
   recentSubmissions.value = initialReport
@@ -41,12 +61,53 @@ const loadDashboardData = () => {
       }),
       status: report.status
     }));
+  console.log('Recent Submissions:', recentSubmissions.value);
 
   unreadReports.value = initialReport.filter(report => report.status === 'Unread').length;
+  console.log('Unread Reports:', unreadReports.value);
+
+  // Ensure the chart is updated when data changes
+  if (trendsChart) {
+    trendsChart.data.datasets[0].data = monthlyIncidentCounts.value;
+    trendsChart.update();
+  }
+};
+
+const showModal = ref(false); // State to control modal visibility
+const selectedConferences = ref<CaseConference[]>([]); // Define with type
+
+const unresolvedIncidentIds = computed(() => 
+  incidentReport
+    .filter(inc => inc.status === 'NotResolved')
+    .map(inc => inc.incidentDocID)
+);
+
+const openModal = () => {
+  const today = new Date();
+  selectedConferences.value = caseConference
+    .filter(conf => {
+      const confDate = new Date(conf.conferenceDate);
+      // Only include conferences for unresolved incidents
+      return confDate > today && unresolvedIncidentIds.value.includes(conf.incidentID);
+    })
+    .map(conf => ({
+      ...conf,
+      conferenceDate: new Date(conf.conferenceDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    }))
+    .sort((a, b) => new Date(a.conferenceDate).getTime() - new Date(b.conferenceDate).getTime());
+  showModal.value = true;
+};
+
+const closeModal = () => {
+  showModal.value = false;
 };
 
 const monthlyIncidentCounts = computed(() => {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return months.map(month => {
     return incidentReport.filter(inc => {
       const incidentMonth = new Date(inc.dateOfIncident).toLocaleString('en-US', { month: 'short' });
@@ -55,10 +116,13 @@ const monthlyIncidentCounts = computed(() => {
   });
 });
 
-const dashboardStats = computed(() => ([
+const dashboardStats = computed<DashboardStat[]>(() => ([
   {
     label: 'Scheduled Conferences',
-    value: scheduledConferences.value,
+    value: caseConference.filter(conf => {
+      const confDate = new Date(conf.conferenceDate);
+      return confDate > new Date() && unresolvedIncidentIds.value.includes(conf.incidentID);
+    }).length,
     icon: 'lucide:calendar',
     color: 'blue'
   },
@@ -75,7 +139,7 @@ const dashboardStats = computed(() => ([
     color: 'red'
   },
   {
-    label: 'Total Incident Reports',
+    label: 'Total Incidents',
     value: totalIncidents.value,
     icon: 'lucide:file-text',
     color: 'green'
@@ -83,7 +147,7 @@ const dashboardStats = computed(() => ([
 ]));
 
 const chartConfig = computed(() => ({
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
   datasets: [{
     label: 'Monthly Incidents',
     data: monthlyIncidentCounts.value,
@@ -99,7 +163,7 @@ onMounted(() => {
   
   const trendsCtx = document.getElementById('trendsChart') as HTMLCanvasElement;
   if (trendsCtx) {
-    new Chart(trendsCtx, {
+    trendsChart = new Chart(trendsCtx, {
       type: 'line',
       data: chartConfig.value,
       options: {
@@ -163,7 +227,8 @@ const gradientColors = {
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div v-for="stat in dashboardStats" :key="stat.label"
             class="relative bg-gradient-to-br rounded-xl p-6 shadow-sm border border-gray-100"
-            :class="gradientColors[stat.color]">
+            :class="gradientColors[stat.color]"
+            @click="stat.label === 'Scheduled Conferences' && openModal()"> <!-- Add click event -->
             <div class="flex items-start space-x-4">
               <div class="p-3 bg-white/80 rounded-lg shadow-sm">
                 <Icon :name="stat.icon" class="w-6 h-6" :class="`text-${stat.color}-600`" />
@@ -236,6 +301,14 @@ const gradientColors = {
       </main>
     </div>
   </div>
+
+  <!-- Modal for Scheduled Conferences -->
+  <ScheduledCaseConferences 
+    v-if="showModal" 
+    :conferences="selectedConferences"
+    :unresolved-incidents="unresolvedIncidentIds"
+    @close="closeModal"
+  />
 </template>
 
 <style scoped>

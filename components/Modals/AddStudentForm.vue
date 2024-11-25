@@ -131,9 +131,7 @@
                 <div class="smallText flex justify-center m-4">
                   <StudentCSVUploadModal @close = "$emit('close')"/>
                 </div>
-
               </div>
-
             </div>
         </div>
     </div>

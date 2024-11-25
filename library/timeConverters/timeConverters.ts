@@ -1,3 +1,4 @@
+import { DateConverter } from "./dateConverter";
 import { ISOTimeConverter } from "./isoTimeConverter";
 import { DateTimeConverter } from "./dateTimeConverter";
 import { LinuxTimeConverter } from "./linuxTimeConverter";
@@ -6,6 +7,8 @@ import { LocaleDateTimeConverter } from "./localeDateTimeConverter";
 
 export class TimeConverters {
     private static readonly _isoTimeConverter: ISOTimeConverter = new ISOTimeConverter();
+
+    private static readonly _dateConverter: DateTimeConverter = new DateConverter();
 
     private static readonly _dateTimeConverter: DateTimeConverter = new DateTimeConverter();
 
@@ -19,16 +22,20 @@ export class TimeConverters {
         return TimeConverters._isoTimeConverter;
     }
 
+    public static get dateConverter(): DateConverter {
+        return TimeConverters._dateConverter;
+    }
+
     public static get dateTimeConverter(): DateTimeConverter {
-        return TimeConverters.dateTimeConverter;
+        return TimeConverters._dateTimeConverter;
     }
 
     public static get linuxTimeConverter(): LinuxTimeConverter {
-        return TimeConverters.linuxTimeConverter;
+        return TimeConverters._linuxTimeConverter;
     }
 
     public static get localeTimeConverter(): LocaleTimeConverter {
-        return TimeConverters.localeTimeConverter;
+        return TimeConverters._localeTimeConverter;
     }
 
     public static get localeDateTimeConverter(): LocaleDateTimeConverter {

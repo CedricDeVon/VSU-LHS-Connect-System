@@ -3,7 +3,6 @@ import { Result } from '~/library/results/result';
 import { goToPreviousPage } from '~/composables/navigation';
 import { UserSecurity } from '~/library/security/userSecurity';
 import { useUserSignUpStore } from '~/stores/auth/userSignUpStore';
-import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
 
 const auth = useFirebaseAuth()!;
 const userSignUpStore = useUserSignUpStore();
@@ -76,7 +75,7 @@ onMounted(() => {
 
                   <div :class="userSignUpStore.hasSuffix ? 'w-3/4' : 'w-full'">
                     <label class="block text-green-800 mb-1">Birthdate</label>
-                    <DatePickerInput v-model="userSignUpStore.birthdate"></DatePickerInput>
+                    <input type="date" v-model="userSignUpStore.birthdate" required class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                   </div>
                 </div>
 
@@ -96,54 +95,7 @@ onMounted(() => {
               class="w-full bg-green-400 text-white p-2 rounded-md hover:bg-green-500 transition duration-300">
               BACK
             </button>
-
-          <!-- Faculty ID -->
-          <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
-            <label class="block text-[#2B5741] text-sm mb-1">Faculty Identification Number</label>
-            <input 
-              type="text" 
-              v-model="store.facultyId" 
-              placeholder="Enter faculty ID"
-              class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
-                     transition-all duration-300
-                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20"
-              required 
-            />
-          </div>
-
-          <!-- Error Message -->
-          <div v-if="store.errorMessage" 
-               class="text-red-500 text-sm animate-shake bg-red-50 p-3 rounded-lg">
-            {{ store.errorMessage }}
-          </div>
         </form>
-
-          <!-- Proceed Button -->
-          <button
-            type="submit"
-            class="w-full py-3 bg-[#2B5741] text-white rounded-lg text-sm uppercase tracking-wider
-                   transform transition-all duration-300
-                   hover:bg-[#1e3d2d] hover:scale-[1.02] hover:shadow-lg
-                   active:scale-95"
-          >
-            PROCEED
-          </button>
-
-          <!-- Divider -->
-          <div class="text-center text-gray-500 my-2">OR</div>
-
-          <!-- Back Button -->
-          <button
-            type="button"
-            @click="goBack"
-            class="w-full py-3 bg-[#6B8E76] text-white rounded-lg text-sm uppercase tracking-wider
-                   transform transition-all duration-300
-                   hover:bg-[#5a7862] hover:scale-[1.02] hover:shadow-lg
-                   active:scale-95"
-          >
-            BACK
-          </button>
-       
       </div>
     </div>
 
@@ -186,9 +138,7 @@ onMounted(() => {
 }
 
 @keyframes shake {
-
-  0%,
-  100% {
+  0%, 100% {
     transform: translateX(0);
   }
 
@@ -283,30 +233,5 @@ onMounted(() => {
 .animate-float {
   animation: float 6s ease-in-out infinite;
 }
+
 </style>
-
-
-  // let result: any = await $fetch('/api/user/signUpSpecifics', {
-  //   method: 'POST', body: store.getAdviserData()
-  // });
-
-  // if (result.isNotSuccessful) {
-  //   store.errorMessage = result.message;
-  //   return;
-  // }
-  // try {
-  //   createUserWithEmailAndPassword(auth, store.email, store.password);
-  // } catch (error: any) {
-  //   store.errorMessage = error.message;
-  // }
-
-  // result = await $fetch('/api/user/signUp', { method: 'POST', body: {
-  //   id: auth.currentUser?.uid,
-  //   ...store.getAllData()
-  // }});
-  // if (result.isNotSuccessful) {
-  //   store.errorMessage = result.message;
-  //   return;
-  // }
-  
-  // store.resetAllData();

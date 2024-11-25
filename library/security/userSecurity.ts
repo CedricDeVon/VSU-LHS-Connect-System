@@ -1,12 +1,8 @@
-
-import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
-import type { IFile } from "../files/iFile";
-import { FailedResult } from "../results/failedResult";
 import type { Result } from "../results/result";
+import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
+import { ConfigurationReaders } from "../configurationReaders/configurationReaders";
 import { signOut, signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { useFirebaseAuth } from "vuefire";
-
 
 export class UserSecurity {
     public static async logInUser(data: any): Promise<Result> {
@@ -33,9 +29,6 @@ export class UserSecurity {
                 }
               });
             useCookie('VSUConnectionSystemUserAuthToken').value = jsonWebToken.data;
-            // window.localStorage!.setItem('VSUConnectionSystemUserAuthToken',
-            //     jsonWebToken.data
-            // );
             return new SuccessfulResult(result.data);
 
         } catch (error: any) {
@@ -173,8 +166,7 @@ export class UserSecurity {
 
             await signOut(auth);
             useCookie('VSUConnectionSystemUserAuthToken').value = null;
-            // window.localStorage?.removeItem('VSUConnectionSystemUserAuthToken');
-
+            
             return new SuccessfulResult();
 
         } catch (error: any) {

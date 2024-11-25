@@ -2,10 +2,9 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
-      // const jsonWebToken: any = window.localStorage!.getItem('VSUConnectionSystemUserAuthToken');
       const jsonWebToken: any = useCookie('VSUConnectionSystemUserAuthToken');
       if (jsonWebToken.value === undefined || jsonWebToken.value === null) {
-        console.log('JWT Not Found');
+        console.error(`User has not yet Loged-in. Returning to Log-in Page`);
         return navigateTo('/auth/login');
       }
 
@@ -16,24 +15,25 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       // console.log(result)
       const { role, status, email, password } = result.data.data;
       if (result.isNotSuccessful) {
-        console.log('JWT Not Verified');
+        console.error('User is not an Adviser. Returning to Log-in Page');
         return navigateTo('/auth/login');
       }
 
       if (role !== 'adviser') {
-        console.log('User is not an adviser');
+        console.error('User is not an Adviser. Returning to Log-in Page');
         return navigateTo('/auth/login');
       }
 
       if (status !== 'active') {
         console.log('Adviser is not active');
+        console.error('Adviser is currently inactive. Returning to Log-in Page');
         return navigateTo('/auth/login');
       }
 
       await signInWithEmailAndPassword(getAuth(), email, password);
       
     } catch (error: any) {
-      console.log(error);
+      console.error(`Application Error: ${error.message}`);
       return navigateTo('/auth/login');
     }
   });

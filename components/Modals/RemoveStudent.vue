@@ -8,7 +8,7 @@
                         <button @click="closeModal" class="text-lg font-bold">X</button>
                     </div>
                     <div class="flex flex-col items-center justify-center">
-                        <p class="text-lg pt-8 p-5">Are you sure you want to<span class="font-bold"> remove student 22-1-01059</span> from your advisory?</p>
+                        <p class="text-lg pt-8 p-5">Are you sure you want to<span class="font-bold"> remove student {{ student.studentId }}</span> from your advisory?</p>
                         <div class="flex justify-center items-center mt-10">
                             <button @click="removeStudent" class="bg-red-500 text-white px-10 py-2 rounded-lg">Yes</button>
                             <button @click="closeModal" class="bg-green-500 text-white px-10 py-2 rounded-lg ml-5">No</button>

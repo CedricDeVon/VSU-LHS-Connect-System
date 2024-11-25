@@ -92,6 +92,7 @@ import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
 import { formatDate } from '@vueuse/core';
+import { defineAnecdotalDoc } from '~/utils/documentDefinitions';
 
 export default {
   components: {
@@ -116,152 +117,6 @@ export default {
     this.displayPDF();
   },
 
-  computed: {
-    defineAnecdotalDoc() {
-      if (!this.anecReport || !this.studentData) return null;
-
-      const associatedReports = report.filter(r => this.anecReport.reportIDs.includes(r.reportID));
-
-      // Sort reports by date prepared
-      associatedReports.sort((a, b) => new Date(a.datePrepared) - new Date(b.datePrepared));
-
-      const content = [
-        { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 0] },
-        {
-          table: {
-            widths: ['30%', '70%'],
-            headerRows: 0,
-            body: [
-              [
-                { text: 'Student Name:', style: 'label', border: [false, false, false, false] },
-                { text: `${this.studentData.firstName} ${this.studentData.middleName} ${this.studentData.lastName}`, style: 'content', border: [false, false, false, false] }
-              ],
-              [
-                { text: 'Student ID:', style: 'label', border: [false, false, false, false] },
-                { text: this.studentData.studentId, style: 'content', border: [false, false, false, false] }
-              ],
-              [
-                { text: 'Academic Year:', style: 'label', border: [false, false, false, false] },
-                { text: this.anecReport.AY, style: 'content', border: [false, false, false, false] }
-              ]
-            ]
-          }
-        }
-      ];
-
-      associatedReports.forEach((rep) => {
-        // Format the date using the Date object
-        const preparedDate = new Date(rep.datePrepared);
-        const formattedDate = preparedDate.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-
-        const incidentDate = new Date(rep.date);
-        const formattedIncidentDate = incidentDate.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-
-        content.push(
-          {
-            text: formattedDate,
-            style: 'subheader',
-            margin: [0, 20, 0, 10],
-            color: '#1f2937'
-          },
-          {
-            table: {
-              widths: ['30%', '70%'],
-              headerRows: 0,
-              body: [
-                [
-                  { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: formattedIncidentDate, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Purpose:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.purpose, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Witnesses:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.placeOfIncident, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.thingsInvolved, style: 'content', border: [false, false, false, false] }
-                ],
-              ]
-            }
-          },
-
-          { text: 'Details:', style: 'label', margin: [0, 15, 0, 5] },
-          { text: rep.details, style: 'content', margin: [30, 0, 30, 15] },
-
-          { text: rep.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', style: 'label', margin: [0, 15, 0, 5] },
-          { text: rep.remarks, style: 'content', margin: [30, 0, 30, 15] },
-
-          {
-            table: {
-              widths: ['30%', '70%'],
-              headerRows: 0,
-              body: [
-                [
-                  { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.isReportedByGuidance ? 'Guidance' : this.anecReport.preparedBy, style: 'content', border: [false, false, false, false] }
-                ]
-              ]
-            }
-          }
-        );
-      });
-
-      return {
-        pageMargins: [72, 120, 72, 90],
-        header: {
-          image: headerImage,
-          width: 600,
-          height: 100,
-          alignment: 'center',
-          margin: [0, 10, 0, 0],
-        },
-        content: content,
-        styles: {
-          header: {
-            fontSize: 20,
-            bold: true,
-            alignment: 'center',
-          },
-          subheader: {
-            fontSize: 15,
-            bold: true,
-          },
-          label: {
-            bold: true,
-            fontSize: 11,
-            margin: [0, 10, 0, 10],
-          },
-          content: {
-            fontSize: 11,
-            margin: [0, 10, 0, 10],
-          }
-        },
-        footer: {
-          image: footer,
-          width: 480,
-          alignment: 'center',
-          margin: [0, 10, 0, 0]
-        }
-      };
-    }
-  },
-
   methods: {
     async initData(studentId) {
       this.studentData = student.find(s => s.studentId === studentId);
@@ -273,24 +128,27 @@ export default {
     },
 
     displayPDF() {
-      if (!this.defineAnecdotalDoc) {
-        console.error('No document definition available');
+      if (!this.anecReport || !this.studentData) {
+        console.error('Required data not available');
         return;
       }
 
-      try {
-        pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
-          const url = URL.createObjectURL(blob);
-          const viewer = document.getElementById('pdf-viewer');
-          if (viewer) {
-            viewer.src = url;
-          } else {
-            console.error('PDF viewer element not found');
-          }
-        });
-      } catch (error) {
-        console.error('Error creating PDF:', error);
-      }
+      const associatedReports = report.filter(r => this.anecReport.reportIDs.includes(r.reportID))
+        .sort((a, b) => new Date(a.datePrepared) - new Date(b.datePrepared));
+
+      const docDefinition = defineAnecdotalDoc({
+        studentData: this.studentData,
+        anecdotalData: this.anecReport,
+        associatedReports
+      });
+
+      pdfMake.createPdf(docDefinition).getBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const viewer = document.getElementById('pdf-viewer');
+        if (viewer) {
+          viewer.src = url;
+        }
+      });
     },
 
     formatDate(date) {

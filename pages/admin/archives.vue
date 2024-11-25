@@ -232,6 +232,12 @@ import { footer } from '~/assets/images/footer';
 import { initialReport } from '~/data/initialReport';
 import { adviser } from '~/data/adviser';
 
+// Import the defineIncidentDoc util if it exists, or create a util file if it doesn't
+import { defineIncidentDoc, defineAnecdotalDoc } from '~/utils/documentDefinitions';
+
+// Add missing import
+import { report } from '~/data/report';
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const router = useRouter();
@@ -309,104 +315,20 @@ const viewAnecdotalReport = async (studentId: string) => {
     const anecdotalData = anecdotalReport.find(a => a.studentId === studentId);
     if (!anecdotalData) throw new Error('Anecdotal report not found');
 
-    // Get student data
     const studentData = student.find(s => s.studentId === studentId);
     if (!studentData) throw new Error('Student not found');
 
-    // Get associated reports
     const associatedReports = report.filter(r => anecdotalData.reportIDs.includes(r.reportID))
       .sort((a, b) => new Date(a.datePrepared) - new Date(b.datePrepared));
 
-    // Generate content array for reports
-    const reportsContent = [];
-    
-    for (const rep of associatedReports) {
-      const preparedDate = new Date(rep.datePrepared).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+    if (!associatedReports.length) throw new Error('No reports found');
 
-      const incidentDate = new Date(rep.date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
+    const docDefinition = defineAnecdotalDoc({
+      studentData,
+      anecdotalData,
+      associatedReports
+    });
 
-      reportsContent.push(
-        {
-          text: preparedDate,
-          style: 'subheader',
-          margin: [0, 20, 0, 10],
-          color: '#1f2937'
-        },
-        {
-          table: {
-            widths: ['30%', '70%'],
-            headerRows: 0,
-            body: [
-              ['Date of Incident:', incidentDate],
-              ['Purpose:', rep.purpose],
-              ['Witnesses:', rep.witnesses.join(', ')],
-              ['Place of Incident:', rep.placeOfIncident],
-              ['Things Involved:', rep.thingsInvolved]
-            ].map(row => [
-              { text: row[0], style: 'label', border: [false, false, false, false] },
-              { text: row[1], style: 'content', border: [false, false, false, false] }
-            ])
-          }
-        },
-        { text: 'Details:', style: 'label', margin: [0, 15, 0, 5] },
-        { text: rep.details, style: 'content', margin: [30, 0, 30, 15] },
-        { text: rep.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', 
-          style: 'label', margin: [0, 15, 0, 5] },
-        { text: rep.remarks, style: 'content', margin: [30, 0, 30, 15] }
-      );
-    }
-
-    // Create document definition
-    const docDefinition = {
-      pageMargins: [72, 120, 72, 90],
-      header: {
-        image: headerImage,
-        width: 600,
-        height: 100,
-        alignment: 'center',
-        margin: [0, 10, 0, 0],
-      },
-      content: [
-        { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 0] },
-        {
-          table: {
-            widths: ['30%', '70%'],
-            headerRows: 0,
-            body: [
-              ['Student Name:', `${studentData.firstName} ${studentData.middleName} ${studentData.lastName}`],
-              ['Student ID:', studentData.studentId],
-              ['Academic Year:', anecdotalData.AY]
-            ].map(row => [
-              { text: row[0], style: 'label', border: [false, false, false, false] },
-              { text: row[1], style: 'content', border: [false, false, false, false] }
-            ])
-          }
-        },
-        ...reportsContent
-      ],
-      styles: {
-        header: { fontSize: 20, bold: true, alignment: 'center' },
-        subheader: { fontSize: 15, bold: true },
-        label: { bold: true, fontSize: 11, margin: [0, 10, 0, 10] },
-        content: { fontSize: 11, margin: [0, 10, 0, 10] }
-      },
-      footer: {
-        image: footer,
-        width: 480,
-        alignment: 'center',
-        margin: [0, 10, 0, 0]
-      }
-    };
-
-    // Generate and display PDF
     pdfMake.createPdf(docDefinition).getBlob((blob) => {
       const url = URL.createObjectURL(blob);
       currentPdfUrl.value = url;
@@ -416,6 +338,7 @@ const viewAnecdotalReport = async (studentId: string) => {
 
   } catch (error) {
     console.error('Error viewing anecdotal report:', error);
+    alert('Could not load anecdotal report: ' + error.message);
   }
 };
 
@@ -443,50 +366,13 @@ const viewIncidentReport = async (incidentId: string) => {
       }
     }
 
-    // Generate PDF document definition
-    const docDefinition = {
-      pageMargins: [72, 120, 72, 90],
-      header: {
-        image: headerImage,
-        width: 600,
-        height: 100,
-        alignment: 'center',
-        margin: [0, 10, 0, 0],
-      },
-      content: [
-        { text: reportType.value, style: 'header', margin: [0, 0, 0, 30] },
-        {
-          table: {
-            widths: ['30%', '70%'],
-            headerRows: 0,
-            body: [
-              ['Name of People Involved:', incident.peopleInvolved?.join(', ')],
-              ['Witness:', incident.witness],
-              ['Date of Incident:', incident.dateOfIncident],
-              ['Place of Incident:', incident.placeOfIncident],
-              ['Things Involved:', incident.thingsInvolved]
-            ].map(row => [
-              { text: row[0], style: 'label', border: [false, false, false, false] },
-              { text: row[1], style: 'content', border: [false, false, false, false] }
-            ])
-          }
-        },
-        { text: 'Narrative Report:', style: 'label', margin: [0, 15, 0, 5] },
-        { text: incident.narrativeReport, style: 'content', margin: [30, 0, 30, 10] },
-        // ...add other sections like Action Taken, Reason, etc...
-      ],
-      styles: {
-        header: { fontSize: 18, bold: true, alignment: 'center' },
-        label: { bold: true, fontSize: 11, margin: [0, 10, 0, 10] },
-        content: { fontSize: 11, margin: [0, 10, 0, 10] }
-      },
-      footer: {
-        image: footer,
-        width: 480,
-        alignment: 'center',
-        margin: [0, 10, 0, 0]
-      }
-    };
+    // Use the shared document definition utility
+    const docDefinition = defineIncidentDoc({
+      reportType: reportType.value,
+      incidentData: incident,
+      reportedBy: reportedBy.value,
+      receivedBy: receivedBy.value
+    });
 
     // Display PDF in modal
     pdfMake.createPdf(docDefinition).getBlob((blob) => {

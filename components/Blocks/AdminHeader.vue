@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { signOut } from "firebase/auth";
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 
 const auth = useFirebaseAuth()!;
 const showNotifications = ref(false);
 const notifications = ref<Notification[]>([]);
 const unreadCount = ref(0);
+const notificationRef = ref(null);
 
 interface Notification {
   id: string;
+  type: 'incident' | 'account' | 'system';  // Added type field
   title: string;
   message: string;
   timestamp: Date;
@@ -20,7 +22,7 @@ const router = useRouter();
 
 const logout = async () => {
   await signOut(auth);
-  navigateTo("/LoginPage");
+  navigateTo("/LoginPage"); 
 };
 
 const toggleNotifications = () => {
@@ -68,21 +70,53 @@ const formatTimeAgo = (date: Date) => {
   return 'Just now';
 };
 
-// Mock function to simulate receiving new notifications
-const simulateNewNotification = () => {
+// Add new notification type helpers
+const getNotificationTypeClass = (type: string) => {
+  const classes = {
+    incident: 'bg-red-500',
+    account: 'bg-blue-500',
+    system: 'bg-green-500'
+  };
+  return classes[type] || classes.system;
+};
+
+const getNotificationIcon = (type: string) => {
+  const icons = {
+    incident: 'heroicons:exclamation-circle',
+    account: 'heroicons:user-circle',
+    system: 'heroicons:bell'
+  };
+  return icons[type] || icons.system;
+};
+
+// Add sorting for notifications
+const sortedNotifications = computed(() => {
+  return [...notifications.value].sort((a, b) => {
+    // Sort by unread first, then by timestamp
+    if (a.read !== b.read) return a.read ? 1 : -1;
+    return b.timestamp.getTime() - a.timestamp.getTime();
+  });
+});
+
+// Modified notification creation for pending accounts
+const createAccountRequestNotification = (adviser: any) => {
   const newNotification: Notification = {
     id: `notif-${Date.now()}`,
-    title: 'New Incident Report',
-    message: 'A new incident has been reported by Adviser John Doe',
+    type: 'account',
+    title: 'New Account Request',
+    message: `${adviser.firstName} ${adviser.lastName} has requested to register as an adviser.`,
     timestamp: new Date(),
-    read: false,
-    incidentId: `incident-${Date.now()}`
+    read: false
   };
   notifications.value.unshift(newNotification);
   updateUnreadCount();
-  // Store in localStorage
   localStorage.setItem('admin-notifications', JSON.stringify(notifications.value));
 };
+
+// Expose the function for use in other components
+defineExpose({
+  createAccountRequestNotification
+});
 
 onMounted(() => {
   // Load notifications from localStorage
@@ -95,22 +129,34 @@ onMounted(() => {
     updateUnreadCount();
   }
   
-  // Simulate receiving new notifications periodically (for demo purposes)
-  setInterval(simulateNewNotification, 300000); // Every 5 minutes
+  document.addEventListener('click', handleClickOutside);
 });
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+});
+
+const closeNotifications = () => {
+  showNotifications.value = false;
+};
+
+const handleClickOutside = (event: Event) => {
+  if (notificationRef.value && !notificationRef.value.contains(event.target as Node)) {
+    showNotifications.value = false;
+  }
+};
 </script>
 
 <template>
   <header class="flex justify-between items-center p-4 shadow-sm">
-    <!-- Left side - Empty for now or you can add branding -->
+
     <div></div>
-    
-    <!-- Right side - Notifications and User Actions -->
     <div class="flex items-center gap-6"> <!-- Increased gap from gap-4 to gap-6 -->
       <!-- Notification Bell -->
-      <div class="relative flex items-center"> <!-- Added flex and items-center -->
-        <button @click="toggleNotifications" 
-          class="relative p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center h-10 w-10"> <!-- Added fixed height/width and centering -->
+      <div class="relative" ref="notificationRef"> <!-- Added flex and items-center -->
+        <button @click.stop="toggleNotifications" 
+          class="relative p-2 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center h-10 w-10"
+          ref="notificationBell"> <!-- Add ref to the button -->
           <Icon name="mdi:bell-outline" class="w-6 h-6 text-[#265630]" />
           <span v-if="unreadCount > 0"
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -118,45 +164,59 @@ onMounted(() => {
           </span>
         </button>
 
-        <!-- Notification Dropdown -->
-        <div v-if="showNotifications"
-          class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-          <div class="p-4 border-b border-gray-200">
-            <div class="flex justify-between items-center">
-              <h3 class="text-lg font-semibold text-gray-900">Notifications</h3>
-              <button v-if="unreadCount > 0" @click="markAllAsRead"
-                class="text-sm text-[#265630] hover:text-[#728B78]">
-                Mark all as read
-              </button>
+        <!-- Notification Dropdown - Updated positioning -->
+        <Transition
+          enter-active-class="transition ease-out duration-200"
+          enter-from-class="opacity-0 translate-y-1"
+          enter-to-class="opacity-100 translate-y-0"
+          leave-active-class="transition ease-in duration-150"
+          leave-from-class="opacity-100 translate-y-0"
+          leave-to-class="opacity-0 translate-y-1"
+        >
+          <div v-if="showNotifications"
+            class="absolute right-0 mt-2 w-96 bg-white rounded-xl shadow-xl border border-gray-100 z-50"
+            :style="{ maxHeight: 'calc(100vh - 80px)' }">
+            <div class="p-4 border-b border-gray-100">
+              <div class="flex justify-between items-center">
+                <h3 class="text-lg font-semibold text-gray-900">Notifications</h3>
+                <button v-if="unreadCount > 0" @click="markAllAsRead"
+                  class="text-sm text-green-600 hover:text-green-700 font-medium">
+                  Mark all as read
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div class="max-h-96 overflow-y-auto">
-            <div v-if="notifications.length === 0" class="p-4 text-center text-gray-500">
-              No notifications
-            </div>
-            <div v-else>
-              <div v-for="notification in notifications" :key="notification.id"
-                @click="handleNotificationClick(notification)"
-                class="p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100"
-                :class="{ 'bg-blue-50': !notification.read }">
-                <div class="flex items-start gap-3">
-                  <div class="flex-shrink-0">
-                    <div class="w-8 h-8 bg-[#265630] rounded-full flex items-center justify-center">
-                      <Icon name="mdi:file-document-outline" class="w-5 h-5 text-white" />
+            <div class="max-h-[480px] overflow-y-auto">
+              <div v-if="notifications.length === 0" 
+                class="p-8 text-center text-gray-500 flex flex-col items-center">
+                <Icon name="heroicons:bell-slash" class="w-12 h-12 text-gray-300 mb-2" />
+                <p>No notifications yet</p>
+              </div>
+              <div v-else>
+                <div v-for="notification in sortedNotifications" :key="notification.id"
+                  @click="handleNotificationClick(notification)"
+                  class="p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100 transition-colors"
+                  :class="{ 'bg-green-50': !notification.read }">
+                  <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                      <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                        :class="getNotificationTypeClass(notification.type)">
+                        <Icon :name="getNotificationIcon(notification.type)" class="w-5 h-5 text-white" />
+                      </div>
                     </div>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-medium text-gray-900 mb-0.5">{{ notification.title }}</p>
+                      <p class="text-sm text-gray-600 line-clamp-2">{{ notification.message }}</p>
+                      <p class="text-xs text-gray-500 mt-1">{{ formatTimeAgo(notification.timestamp) }}</p>
+                    </div>
+                    <div v-if="!notification.read" 
+                      class="w-2.5 h-2.5 bg-green-500 rounded-full flex-shrink-0"></div>
                   </div>
-                  <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-900">{{ notification.title }}</p>
-                    <p class="text-sm text-gray-600">{{ notification.message }}</p>
-                    <p class="text-xs text-gray-500 mt-1">{{ formatTimeAgo(notification.timestamp) }}</p>
-                  </div>
-                  <div v-if="!notification.read" class="w-2 h-2 bg-blue-500 rounded-full"></div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </Transition>
       </div>
 
       <!-- User Profile and Logout -->
@@ -206,9 +266,50 @@ onMounted(() => {
 .max-h-96::-webkit-scrollbar-thumb:hover {
   background-color: rgba(85, 104, 89, 0.5); /* Slightly more visible on hover */
 }
-</style>
 
-<!-- extra notification
- src="https://cdn.builder.io/api/v1/image/assets/TEMP/28ac4a43bf80933a5cd7ae9089be6c5d7b9dae50c8259bbef6892eb66f590acf?placeholderIfAbsent=true&apiKey=a61ecd0d5bec4c4f94bc2ce5eda3f7bc"
-        alt="User profile" class="w-8 object-contain aspect-square hover:scale-110 cursor-pointer" />
-   -->
+/* Add smooth transition for notification dropdown */
+.transform {
+  transform: none;
+}
+
+.transition-all {
+  transition: all 0.2s ease-out;
+}
+
+/* Improve scrollbar styling */
+.max-h-[480px] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(114, 139, 120, 0.3) transparent;
+}
+
+.max-h-[480px]::-webkit-scrollbar {
+  width: 4px;
+}
+
+.max-h-[480px]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.max-h-[480px]::-webkit-scrollbar-thumb {
+  background-color: rgba(114, 139, 120, 0.3);
+  border-radius: 4px;
+}
+
+/* Add new dropdown positioning styles */
+.top-full {
+  top: calc(100% + 0.25rem);
+}
+
+/* Add new transition classes */
+.transition {
+  transition-property: opacity, transform;
+}
+
+.translate-y-1 {
+  transform: translateY(0.25rem);
+}
+
+.translate-y-0 {
+  transform: translateY(0);
+}
+</style>

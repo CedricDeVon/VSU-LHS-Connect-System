@@ -100,8 +100,6 @@
     import { adviserReportStore } from "../../stores/adviserReport";
     import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
    
-
-
     export default {
         name: "reports",
         components: {AdviserHeader, InitialReportModal, NotificationModal, },
@@ -162,6 +160,7 @@
                 }
                 this.showCreateReport=true;
             },
+            
             viewDetails(rep){
                 this.reportChosen = rep;
                 this.showCreateReport=true;

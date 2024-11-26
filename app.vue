@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
 useHead({
-    title: "VSU-IHS Connect System",
+    title: "VSU-LHS Connect System",
     link: [
       {
         rel: "icon",

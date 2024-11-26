@@ -26,15 +26,23 @@
               <ul class="mt-2 text-sm text-blue-700 space-y-1">
                 <li class="flex items-center">
                   <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
-                  Column 1: Adviser Name
+                  Column 1: First Name
                 </li>
                 <li class="flex items-center">
                   <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
-                  Column 2: Email Address
+                  Column 2: Middle Name
                 </li>
                 <li class="flex items-center">
                   <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
-                  Column 3: Department
+                  Column 3: Last Name
+                </li>
+                <li class="flex items-center">
+                  <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
+                  Column 4: Email
+                </li>
+                <li class="flex items-center">
+                  <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
+                  Column 5: Faculty ID 
                 </li>
               </ul>
             </div>

@@ -22,8 +22,8 @@
                     <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
                 </div>   
 
-                <div class="grid grid-cols-10">
-                   <div class=" m-10 col-span-4 pt-5 ">
+                <div class="grid grid-cols-12">
+                   <div class=" m-10 col-span-6 pt-5 ">
                         <!--Sort/Add student-->
                         <div class="grid-cols-2 pb-5 ml-6" >
                            <select
@@ -42,7 +42,7 @@
                             </button>
                         </div>
                         <!--Table of Students-->
-                        <div class=" overflow-x-auto overflow-y-auto max-h-96">
+                        <div class=" overflow-x-auto overflow-y-auto max-h-96 ">
                             <table class="min-w-full ">
                                 <thead class="sticky top-0" >
                                     <tr class=" gray  text-white">

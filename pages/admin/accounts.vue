@@ -13,7 +13,8 @@
               <div class="w-[30%] mr-4">
                 <select
                   class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
-                  v-model="selectedAccount">
+                  v-model="selectedAccount"
+                  :disabled="add">
                   <option value="all">All Accounts</option>
                   <option value="active">Active Accounts</option>
                   <option value="inactive">Inactive Accounts</option>
@@ -35,26 +36,30 @@
               <thead class="bg-green-700 sticky top-0 z-10">
                 <tr>
                   <th scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
+                    class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-1/3">
                     Adviser Name
                   </th>
                   <th scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
+                    class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-1/3">
                     Faculty ID
                   </th>
                   <th v-if="selectedAccount === 'pending'" scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
+                    class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-1/3">
                     Actions
                   </th>
                   <th v-else scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
+                    class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-1/3">
                     Status
                   </th>
-                </tr>
+                  <th v-if="add && selectedAccount === 'inactive'" scope="col"
+                  class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-1/3">
+                  Action
+                  </th>   
+                  </tr>
               </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
+              <tbody class="bg-white divide-y divide-gray-200 text-center">
                 <tr v-for="adviser in filteredAdvisers" :key="adviser.facultyId">
-                  <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words">
+                  <td class="text-left px-6 py-4 text-sm font-medium text-gray-900 break-words">
                     {{adviser.firstName+ ' '+ adviser.lastName}}
                   </td>
                   <td class="px-6 py-4 text-sm text-gray-500 break-words">
@@ -77,6 +82,12 @@
                     ]">
                       {{ adviser.status }}
                     </span>
+                  </td>
+                  <td v-if="add && selectedAccount === 'inactive'" class="px-6 py-4 break-words">
+                    <button 
+                      class="px-5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
+                      Add to Section
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -128,6 +139,7 @@ export default {
   data() {
     return {
       selectedAccount: 'all', // Default selected option
+      add: false,
       showUploadModal: false,
       file: null,
       // Sample data
@@ -154,6 +166,7 @@ export default {
     const accountType = this.$route.query.accountType;
     if (accountType) {
       this.selectedAccount = accountType;
+      this.add = true;  //this must be disabled after adding or cancelling
     }
   },
 

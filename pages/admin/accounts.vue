@@ -47,6 +47,10 @@
                   <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     {{ selectedAccount === 'pending' ? 'Actions' : 'Status' }}
                   </th>
+                  <th v-if="add && selectedAccount === 'inactive'" scope="col"
+                  class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-1/3">
+                  Action
+                  </th>   
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">

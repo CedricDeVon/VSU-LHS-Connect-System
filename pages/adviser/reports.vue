@@ -12,15 +12,16 @@
             <div class="m-5 flex justify-start ml-20">
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year {{ AcademicYear }}</h1>
             </div>
+ 
 
-                <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
-                <div><h1 class="text-white text-2xl font-bold">Incident Reports</h1></div>
-            </div>   
-
-            <!--Content of the Page-->
             <div class="contain " :style="{ width: containWidth}">
-                <div class=" m-10  py-5 px-20 mx-20  ">
+                    <!--Title of the Content?-->
+                <div class="title flex justify-center items-center" >
+                    <div><h1 class="text-white text-2xl font-bold">Incident Reports</h1></div>
+                </div>  
+
+                    <!--Content of the Page-->
+                <div class=" m-5  py-5 px-20 mx-20  ">
                         <!--Sort/Add student-->
                         <div class="grid-cols-2 pb-5 ml-6" >
                            <select
@@ -259,13 +260,13 @@
     }
 
     .title{
-        position: absolute;
-        height: 6.1%;
+        height: 8.8%;
+        width: 98%;
         background: rgba(38, 86, 48, 1); /* Using rgba for consistency */
         border-radius: 15px;
-        left: 95px;
-        top: 135px;
+        justify-self: center;
         z-index: 2;
+        margin-top: -35px;
     }
 
     .text{

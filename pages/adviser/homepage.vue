@@ -196,14 +196,14 @@
                         </div>
                     </div>
 
-                    <div class="floating-chip">
-                        <div class="mb-6">
+                    <div class="floating-chip ">
+                        <div class="mb-6 h-50">
                             <div class="bg-[#265630] opacity-90% rounded-xl p-4 -mt-8 shadow-lg">
                                 <h1 class="text-white text-xl font-semibold tracking-wide text-center">
                                     Notifications & Announcements
                                 </h1>
                             </div>
-                            <div class="overflow-y-auto max-h-[600px] pr-2 mt-4">
+                            <div class="overflow-y-auto max-h-[500px] pr-2 mt-4">
                                 <div v-for="(notification, index) in activeNotifications" :key="index"
                                     class="bg-white rounded-xl p-4 mb-4 shadow-md transition-all duration-200 hover:shadow-lg"
                                     :class="{
@@ -395,7 +395,8 @@ export default {
 
 .floating-chip {
     width: 28%;
-    height: calc(100vh - 6rem);
+    height: fit-content;
+    /* height: calc(100vh - 6rem); */
     background-color: rgba(248, 241, 186, 0.75);
     /* Reduced opacity from 0.95 to 0.75 */
     color: #265630;

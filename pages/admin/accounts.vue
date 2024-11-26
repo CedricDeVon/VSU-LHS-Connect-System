@@ -48,7 +48,7 @@
                     {{ selectedAccount === 'pending' ? 'Actions' : 'Status' }}
                   </th>
                   <th v-if="add && selectedAccount === 'inactive'" scope="col"
-                  class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-1/3">
+                  class="px-10 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-1/3">
                   Action
                   </th>   
                 </tr>
@@ -89,7 +89,7 @@
                   </td>
                   <td v-if="add && selectedAccount === 'inactive'" class="px-6 py-4 break-words">
                     <button 
-                      class="px-5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
+                      class="px-5 py-1 text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
                       Add to Section
                     </button>
                   </td>

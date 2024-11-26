@@ -7,7 +7,7 @@
         @close ="creationClose"
         /> 
         <notification-modal v-if="showNotification"/>
-        <AdviserHeader @notif-click="notifClick"/>
+        <AdviserHeader @notif-click="notifClick" class="relative z-10"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year {{ AcademicYear }}</h1>
@@ -85,10 +85,6 @@
                         </div>  
                    </div>
             </div>
-        </div>
-        <!--Background Image-->
-        <div>
-            <img class="backPic" src="~/assets/images/vsu-main-the-search-for-truth-statue.png" alt="img" >
         </div>
     </div>
 </template>
@@ -192,11 +188,13 @@
 </script>
 <style scoped>
     .reports-page{
-        background: #fffef1;
+        background: #fffef1 url('~/assets/images/vsu-main-the-search-for-truth-statue.png') no-repeat;
+        background-position: 90% 20px;
+        background-size: 50% auto;
         height: 850px;
         position: relative;
         overflow: hidden; 
-        }
+    }
 
     .backPic{
         position: absolute;
@@ -251,11 +249,11 @@
     .contain{
         position:absolute;
         height: 70%;
-        background: rgba(255, 255, 255, 0.89);
+        background: rgba(255, 255, 255, 0.9);
         border-radius: 15px;
         left: 80px;
         top: 170px;
-        z-index: 1;
+        z-index: 2;
         box-shadow: 2px 7px 26.6px 0px rgba(0, 0, 0, 0.25);
         
     }
@@ -263,7 +261,7 @@
     .title{
         position: absolute;
         height: 6.1%;
-        background: #265630;
+        background: rgba(38, 86, 48, 1); /* Using rgba for consistency */
         border-radius: 15px;
         left: 95px;
         top: 135px;

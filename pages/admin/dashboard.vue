@@ -7,6 +7,7 @@ import { incidentReport } from '~/data/incident';
 import { initialReport, IncidentReport } from '~/data/initialReport';
 import { caseConference, CaseConference } from '~/data/caseconference';
 import ScheduledCaseConferences from '~/components/Modals/Dashboard/ScheduledCaseConferences.vue'; // Import the modal component
+import PendingCases from '~/components/Modals/Dashboard/PendingCases.vue';
 
 Chart.register(...registerables);
 

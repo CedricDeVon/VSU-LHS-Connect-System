@@ -3,15 +3,15 @@
       <div class="flex items-center justify-center h-full w-full">
         <div class="h-5/6 w-1/2 bg-white rounded-2xl">
             <button @click="$emit('close')" 
-                        class=" flex justify-self-end p-5 text-black hover:text-red-500 z-20">
+                        class=" flex justify-self-end p-3 text-black hover:text-red-500 z-20">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             <div class="flex justify-self-center">   
-            <h1 class="header p-10">INCIDENT DETAILS</h1>
+            <h1 class="header pb-10">INCIDENT DETAILS</h1>
             </div>
-            <div class="body overflow-x-auto overflow-y-auto max-h-96 px-24">
+            <div class="body overflow-x-auto overflow-y-auto max-h-36 px-24">
                 
                 <div>
                     <h2 class="p-3 pl-0 pr-7">Name of People Involved</h2>

@@ -88,8 +88,6 @@ const adminViewStore = useAdminViewStore();
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import pdfMake from 'pdfmake/build/pdfmake'
-// import pdfFonts from 'pdfmake/build/vfs_fonts'
-// pdfMake.vfs = pdfFonts.pdfMake.vfs
 import AdminHeader from '~/components/Blocks/AdminHeader.vue'
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue'
 import { footer } from '~/assets/images/footer'

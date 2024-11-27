@@ -5,10 +5,14 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import PendingCases from '~/components/Modals/Dashboard/PendingCases.vue';
 import ScheduledCaseConferences from '~/components/Modals/Dashboard/ScheduledCaseConferences.vue'; // Import the modal component
+import UnreadReportSubmissions from '~/components/Modals/Dashboard/UnreadReportSubmissions.vue';
+import MakeAnnouncements from '~/components/Modals/Dashboard/MakeAnnouncements.vue'; // Add import
+import CreateReportFromDashboard from '~/components/Modals/Dashboard/CreateReportFromDashboard.vue'; // Add import
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateDashboard();
+
 
 Chart.register(...registerables);
 
@@ -128,19 +132,22 @@ const dashboardStats = computed<DashboardStat[]>(() => ([
       return confDate > new Date() && unresolvedIncidentIds.value.includes(conf.id);
     }).length,
     icon: 'lucide:calendar',
-    color: 'blue'
+    color: 'blue',
+    onClick: openModal  // Add onClick handler just like pendingCases
   },
   {
     label: 'Pending Cases',
     value: pendingCases.value,
     icon: 'lucide:alert-circle',
-    color: 'yellow'
+    color: 'yellow',
+    onClick: openPendingModal // Add onClick handler
   },
   {
     label: 'Unread Report Submissions',
     value: unreadReports.value,
     icon: 'lucide:mail',
-    color: 'red'
+    color: 'red',
+    onClick: openUnreadModal
   },
   {
     label: 'Total Incidents',
@@ -200,12 +207,118 @@ const gradientColors = {
   blue: 'from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-50',
   red: 'from-red-50 to-red-100 hover:from-red-100 hover:to-red-50'
 };
+
+// Add these new refs for pending cases modal
+const showPendingModal = ref(false);
+const selectedPendingCases = ref<any[]>([]);
+
+const openPendingModal = () => {
+  selectedPendingCases.value = adminViewStore.dashBoardIncidentReports
+    .filter((inc: any) => inc.data.status === 'NotResolved' && inc.data.schoolYear === adminViewStore.dashBoardTimeline.data.schoolYear)
+    .map((inc: any) => ({
+      ...inc,
+      dateFormatted: new Date(inc.data.dateOfIncident).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    }));
+  showPendingModal.value = true;
+};
+
+const closePendingModal = () => {
+  showPendingModal.value = false;
+};
+
+// Add these new refs for unread reports modal
+const showUnreadModal = ref(false);
+const selectedUnreadReports = ref<any[]>([]);
+
+const openUnreadModal = () => {
+  selectedUnreadReports.value = adminViewStore.dashBoardInitialReports
+    .filter((report: any) => report.data.status === 'Unread' && !report.data.isDraft)
+    .map((report: any) => ({
+      ...report,
+      dateFormatted: new Date(report.data.dateReported).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    }));
+  showUnreadModal.value = true;
+};
+
+const closeUnreadModal = () => {
+  showUnreadModal.value = false;
+};
+
+// Add state for announcements modal
+const showAnnouncementsModal = ref(false);
+
+const openAnnouncementsModal = () => {
+  // Check for existing draft
+  const savedDraft = localStorage.getItem('announcementDraft');
+  existingDraft.value = savedDraft ? JSON.parse(savedDraft) : null;
+  showAnnouncementsModal.value = true;
+};
+
+const closeAnnouncementsModal = () => {
+  showAnnouncementsModal.value = false;
+};
+
+const handleAnnouncementSubmit = (announcement: any) => {
+  // Handle the announcement submission here
+  console.log('New announcement:', announcement);
+  // You can add the announcement to your state/database here
+  closeAnnouncementsModal();
+};
+
+const handleAnnouncementDraft = (draft: any) => {
+  console.log('Saved draft:', draft);
+  // Save to localStorage or your drafts state
+  localStorage.setItem('announcementDraft', JSON.stringify({
+    ...draft,
+    lastSaved: new Date().toLocaleTimeString()
+  }));
+};
+
+const existingDraft = ref(null);
+
+// Add state for schedule conference modal
+const showScheduleModal = ref(false);
+
+const openScheduleModal = () => {
+  showScheduleModal.value = true;
+};
+
+const closeScheduleModal = () => {
+  showScheduleModal.value = false;
+};
+
+const handleScheduleSubmit = (data: any) => {
+  console.log('Schedule conference:', data);
+  // Handle the scheduling logic here
+  closeScheduleModal();
+};
+
+// Add state for create report modal
+const showCreateReportModal = ref(false);
+
+const openCreateReportModal = () => {
+  showCreateReportModal.value = true;
+};
+
+const closeCreateReportModal = () => {
+  showCreateReportModal.value = false;
+};
+
+const handleReportSubmit = (data: any) => {
+  console.log('New report:', data);
+  // Handle the report submission here
+  closeCreateReportModal();
+};
+
 </script>
-
-
-
-
-
 
 <template>
   <div class="flex h-screen bg-[#FFFEF1]">
@@ -237,7 +350,7 @@ const gradientColors = {
           <div v-for="stat in dashboardStats" :key="stat.label"
             class="relative group overflow-hidden rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300"
             :class="gradientColors[stat.color]"
-            @click="stat.label === 'Scheduled Conferences' && openModal()">
+            @click="stat.onClick ? stat.onClick() : null">
             <div class="absolute inset-0 opacity-50 bg-gradient-to-br" 
               :class="`from-${stat.color}-200 to-${stat.color}-400`">
             </div>
@@ -294,13 +407,18 @@ const gradientColors = {
                 <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
               </div>
               <div class="p-2 flex flex-col gap-2">
+                <!-- Replace 'New Report' link with button -->
+                <button
+                  @click="openCreateReportModal"
+                  class="flex items-center gap-3 p-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors w-full text-left"
+                >
+                  <Icon name="lucide:file-plus" class="w-5 h-5" />
+                  <span class="font-small">New Report</span>
+                </button>
                 <NuxtLink v-for="(action, idx) in [
-                  { text: 'New Report', link: '/admin/reports/create', icon: 'lucide:file-plus' },
-                  { text: 'Schedule Conference', link: '/admin/conferences/schedule', icon: 'lucide:calendar-plus' },
                   { text: 'View Incident Reports', link: '/admin/incidental', icon: 'lucide:clipboard-list' },
                   { text: 'View Anecdotal Reports', link: '/admin/anecdotal', icon: 'lucide:book-open' },
-                  { text: 'Manage Users', link: '/admin/users', icon: 'lucide:users' },
-                  { text: 'Make Announcements', link: '/admin/announcements', icon: 'lucide:megaphone' }
+                  { text: 'Manage Users', link: '/admin/accounts', icon: 'lucide:users' }
                 ]" 
                   :key="idx" 
                   :to="action.link"
@@ -308,6 +426,22 @@ const gradientColors = {
                   <Icon :name="action.icon" class="w-5 h-5" />
                   <span class="font-small">{{ action.text }}</span>
                 </NuxtLink>
+                <!-- Add Schedule Conference button -->
+                <button
+                  @click="openScheduleModal"
+                  class="flex items-center gap-3 p-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors w-full text-left"
+                >
+                  <Icon name="lucide:calendar-plus" class="w-5 h-5" />
+                  <span class="font-small">Schedule Conference</span>
+                </button>
+                <!-- Add Make Announcements button -->
+                <button
+                  @click="openAnnouncementsModal"
+                  class="flex items-center gap-3 p-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors w-full text-left"
+                >
+                  <Icon name="lucide:megaphone" class="w-5 h-5" />
+                  <span class="font-small">Make Announcement</span>
+                </button>
               </div>
             </div>
 
@@ -344,6 +478,43 @@ const gradientColors = {
     :conferences="selectedConferences"
     :unresolved-incidents="unresolvedIncidentIds"
     @close="closeModal"
+  />
+
+  <!-- Add PendingCases Modal -->
+  <PendingCases 
+    v-if="showPendingModal"
+    :incidents="selectedPendingCases"
+    @close="closePendingModal"
+  />
+
+  <!-- Add UnreadReportSubmissions Modal -->
+  <UnreadReportSubmissions 
+    v-if="showUnreadModal"
+    :reports="selectedUnreadReports"
+    @close="closeUnreadModal"
+  />
+
+  <!-- Add MakeAnnouncements Modal -->
+  <MakeAnnouncements
+    v-if="showAnnouncementsModal"
+    :existing-draft="existingDraft"
+    @close="closeAnnouncementsModal"
+    @submit="handleAnnouncementSubmit"
+    @save-draft="handleAnnouncementDraft"
+  />
+
+  <!-- Add ScheduleConferenceFromDashboard Modal -->
+  <ScheduleConferenceFromDashboard
+    v-if="showScheduleModal"
+    @close="closeScheduleModal"
+    @submit="handleScheduleSubmit"
+  />
+
+  <!-- Add CreateReportFromDashboard Modal -->
+  <CreateReportFromDashboard
+    v-if="showCreateReportModal"
+    @close="closeCreateReportModal"
+    @submit="handleReportSubmit"
   />
 </template>
 
@@ -392,7 +563,7 @@ const gradientColors = {
 
 
 .transition-all {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 2, 1);
 }
 
 .hover-lift {

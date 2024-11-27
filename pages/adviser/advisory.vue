@@ -1,6 +1,6 @@
 <template>
     <div class="adviser-page">
-        <AdviserHeader @notif-click="notifClick"  />
+        <AdviserHeader @notif-click="notifClick" class="relative z-10" />
             <div >
             <AddStudentForm v-if="adviserViewStore.advisoryAddStudentForm"
             @close="adviserViewStore.advisoryAddStudentForm = false"
@@ -21,8 +21,8 @@
                     <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
                 </div>   
 
-                <div class="grid grid-cols-10">
-                   <div class=" m-10 col-span-4 pt-5 ">
+                <div class="grid grid-cols-12">
+                   <div class=" m-10 col-span-6 pt-5 ">
                         <!--Sort/Add student-->
                         <div class="grid-cols-2 pb-5 ml-6" >
                            <select
@@ -41,7 +41,7 @@
                             </button>
                         </div>
                         <!--Table of Students-->
-                        <div class="overflow-x-auto overflow-y-auto max-h-96">
+                        <div class=" overflow-x-auto overflow-y-auto max-h-96 ">
                             <table class="min-w-full ">
                                 <thead class="sticky top-0" >
                                     <tr class=" gray  text-white">
@@ -75,10 +75,6 @@
 
                 </div>
             </div>
-        </div>
-        <!--Background Image-->
-        <div>
-            <img class="backPic" src="~/assets/images/vsu-main-the-search-for-truth-statue.png" alt="img" >
         </div>
     </div>
 </template>
@@ -123,23 +119,26 @@ function getStudents() {
 
 <style scoped>
     .adviser-page{
-        background: #fffef1;
+        background: #fffef1 url('~/assets/images/vsu-main-the-search-for-truth-statue.png') no-repeat;
+        background-position: 90% 20px;
+        background-size: 50% auto;
         height: 850px;
         position: relative;
         overflow: hidden; 
         
         }
 
-    .backPic{
-        position: absolute;
-        width: 50%;
-        height: auto;
+    .contain{
+        position:absolute;
+        height: 70%;
+        background: rgba(255, 255, 255, 0.9);
         border-radius: 15px;
-        left: 50%;
-        top: 20px;
-        z-index: 0;
+        left: 80px;
+        top: 170px;
+        z-index: 2;
+        box-shadow: 2px 7px 26.6px 0px rgba(0, 0, 0, 0.25);
+        
     }
-
 
     .AY_Sem {
     color: #000000;
@@ -162,18 +161,6 @@ function getStudents() {
     background-color: #4a5e4e;
 }
 
-
-    .contain{
-        position:absolute;
-        height: 70%;
-        background: rgba(255, 255, 255, 0.89);
-        border-radius: 15px;
-        left: 80px;
-        top: 170px;
-        z-index: 1;
-        box-shadow: 2px 7px 26.6px 0px rgba(0, 0, 0, 0.25);
-        
-    }
 
     .title{
         height: 8.8%;

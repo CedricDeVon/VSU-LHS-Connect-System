@@ -32,7 +32,6 @@
               </div>
             </div>
 
-
           <!-- Table Section - Make this scrollable -->
           <div class="flex-1 overflow-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -89,7 +88,7 @@
                   </td>
                   <td v-if="add && selectedAccount === 'inactive'" class="px-6 py-4 break-words">
                     <button 
-                      class="px-5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
+                      class="px-5 py-1 text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
                       Add to Section
                     </button>
                   </td>

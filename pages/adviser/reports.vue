@@ -1,70 +1,3 @@
-<script setup lang='ts'>
-definePageMeta({
-  middleware: ['authenticate-and-authorize-adviser']
-});
-
-import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
-import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
-
-const adviserViewStore = useAdviserViewStore();
-await adviserViewStore.updateReports();
-
-onBeforeMount(async () => {
-    await adviserViewStore.updateReports();
-})
-
-const handleRowClick = (item: any) => {
-
-}
-
-const notifClick = () => {
-    adviserViewStore.reportsContainWidth = adviserViewStore.reportsContainWidth === '89%' ? '70%': '89%';
-    adviserViewStore.reportsTitleWidth = adviserViewStore.reportsTitleWidth === '87%' ? '68%': '87%';
-    adviserViewStore.reportsShowNotification = !adviserViewStore.reportsShowNotification;
-}
-
-const createReport = () => {
-    adviserViewStore.resetReports();
-    adviserViewStore.reportsShowCreateReport = true;
-}
-
-const editReport = (report: any) => {
-    adviserViewStore.reportsReportChosen = report;
-    adviserViewStore.resetReports();
-    if (report) {
-        adviserViewStore.reportsPeopleInvolved = report.data.peopleInvolved;
-        adviserViewStore.reportsWitness = report.data.witnesses;
-        adviserViewStore.reportsDateOfIncident = report.data.dateOfIncident;
-        adviserViewStore.reportsPlaceOfIncident = report.data.placeOfIncident;
-        adviserViewStore.reportsThingsInvolved = report.data.thingsInvolved;
-        adviserViewStore.reportsNarrativeReport = report.data.narrativeReport;
-    }
-    adviserViewStore.reportsShowCreateReport = true;
-}
-
-const viewDetails = (report: any) => {
-    adviserViewStore.reportsReportChosen = report;
-    adviserViewStore.reportsShowCreateReport = true;
-}
-
-const getReports = () => {
-    if (adviserViewStore.reportsSelectedSort === 'incident') {
-      return adviserViewStore.reportsIncidentalReports;
-
-    } else if (adviserViewStore.reportsSelectedSort === 'anecdotal') {
-      return adviserViewStore.reportsAnecdotalReports;
-    }
-    return [];
-}
-
-const creationClose = () => {
-    adviserViewStore.reportsShowCreateReport = false;
-    adviserViewStore.reportsReportChosen = {isDraft:true};
-}
-
-</script>
-
 <template>
     <div class="reports-page">
         <InitialReportModal
@@ -74,11 +7,12 @@ const creationClose = () => {
         @close ="creationClose"
         /> 
         <notification-modal v-if="adviserViewStore.reportsShowNotification"/>
-        <AdviserHeader @notif-click="notifClick"/>
+        <AdviserHeader @notif-click="notifClick" class="relative z-10"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
                 <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.reportsTimeline) }}</h1>
             </div>
+ 
 
                 <!--Title of the Content?-->
             <div class="title flex justify-center items-center" :style="{width: adviserViewStore.reportsTitleWidth}">
@@ -153,20 +87,85 @@ const creationClose = () => {
                    </div>
             </div>
         </div>
-        <!--Background Image-->
-        <div>
-            <img class="backPic" src="~/assets/images/vsu-main-the-search-for-truth-statue.png" alt="img" >
-        </div>
     </div>
 </template>
 
+<script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
+import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+
+const adviserViewStore = useAdviserViewStore();
+await adviserViewStore.updateReports();
+
+onBeforeMount(async () => {
+    await adviserViewStore.updateReports();
+})
+
+const handleRowClick = (item: any) => {
+
+}
+
+const notifClick = () => {
+    adviserViewStore.reportsContainWidth = adviserViewStore.reportsContainWidth === '89%' ? '70%': '89%';
+    adviserViewStore.reportsTitleWidth = adviserViewStore.reportsTitleWidth === '87%' ? '68%': '87%';
+    adviserViewStore.reportsShowNotification = !adviserViewStore.reportsShowNotification;
+}
+
+const createReport = () => {
+    adviserViewStore.resetReports();
+    adviserViewStore.reportsShowCreateReport = true;
+}
+
+const editReport = (report: any) => {
+    adviserViewStore.reportsReportChosen = report;
+    adviserViewStore.resetReports();
+    if (report) {
+        adviserViewStore.reportsPeopleInvolved = report.data.peopleInvolved;
+        adviserViewStore.reportsWitness = report.data.witnesses;
+        adviserViewStore.reportsDateOfIncident = report.data.dateOfIncident;
+        adviserViewStore.reportsPlaceOfIncident = report.data.placeOfIncident;
+        adviserViewStore.reportsThingsInvolved = report.data.thingsInvolved;
+        adviserViewStore.reportsNarrativeReport = report.data.narrativeReport;
+    }
+    adviserViewStore.reportsShowCreateReport = true;
+}
+
+const viewDetails = (report: any) => {
+    adviserViewStore.reportsReportChosen = report;
+    adviserViewStore.reportsShowCreateReport = true;
+}
+
+const getReports = () => {
+    if (adviserViewStore.reportsSelectedSort === 'incident') {
+      return adviserViewStore.reportsIncidentalReports;
+
+    } else if (adviserViewStore.reportsSelectedSort === 'anecdotal') {
+      return adviserViewStore.reportsAnecdotalReports;
+    }
+    return [];
+}
+
+const creationClose = () => {
+    adviserViewStore.reportsShowCreateReport = false;
+    adviserViewStore.reportsReportChosen = {isDraft:true};
+}
+</script>
+
 <style scoped>
     .reports-page{
-        background: #fffef1;
+        background: #fffef1 url('~/assets/images/vsu-main-the-search-for-truth-statue.png') no-repeat;
+        background-position: 90% 20px;
+        background-size: 50% auto;
         height: 850px;
         position: relative;
         overflow: hidden; 
-        }
+    }
 
     .backPic{
         position: absolute;
@@ -221,23 +220,23 @@ const creationClose = () => {
     .contain{
         position:absolute;
         height: 70%;
-        background: rgba(255, 255, 255, 0.89);
+        background: rgba(255, 255, 255, 0.9);
         border-radius: 15px;
         left: 80px;
         top: 170px;
-        z-index: 1;
+        z-index: 2;
         box-shadow: 2px 7px 26.6px 0px rgba(0, 0, 0, 0.25);
         
     }
 
     .title{
-        position: absolute;
-        height: 6.1%;
-        background: #265630;
+        height: 8.8%;
+        width: 98%;
+        background: rgba(38, 86, 48, 1); /* Using rgba for consistency */
         border-radius: 15px;
-        left: 95px;
-        top: 135px;
+        justify-self: center;
         z-index: 2;
+        margin-top: -35px;
     }
 
     .text{

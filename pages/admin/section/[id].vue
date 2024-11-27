@@ -210,7 +210,7 @@ import { student } from '~/data/student.js';
 import { adviser } from '~/data/adviser.js';
 import { users } from '~/data/user.js';
 import { incidentReport } from '~/data/incident.js';
-import SendEmail  from '~/components/Modals/SendEmailModal.vue';
+import SendEmail  from '~/components/Modals/AdminEmailing/SendEmailModal.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 

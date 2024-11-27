@@ -114,7 +114,7 @@ import AdviserCSVUploadModal from '../../components/Modals/AdviserCSVUploadModal
 import { getAdvisers } from '~/data/adviser';
 import { section } from '~/data/section';
 import {users} from '~/data/user';
-import ApprovedAccountModal from '~/components/Modals/ApprovedAccountModal.vue';
+import ApprovedAccountModal from '~/components/Modals/AdminEmailing/ApprovedAccountModal.vue';
  
 
 

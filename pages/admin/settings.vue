@@ -6,11 +6,11 @@
       <verification v-if="verify" @close="handleClose" @update="update"/>
       <div class="flex-grow dashboard-page">
         <AdminHeader />
-        <div class="bg-transparent mr-32 ml-16 mt-0">
+        <div class="bg-transparent mr-32 ml-16 mt-0 overflow-y-auto h-[calc(100vh-64px)] ">
           <h1 class="text-3xl font-bold text-green-900 my-5 ">Account Settings</h1>
           <div class=" grid grid-cols-2 shadow-md">
-            <div class="grid col-span-1 p-5 border rounded-md shadow-sm">
-              <div class="m-3">Username: <input type="text" class="ml-9 border-2 border-gray-200 rounded-md p-2 w-3/5" 
+            <div class="grid col-span-1 p-5 border rounded-md shadow-sm text-sm">
+              <div class="m-3 ">Username: <input type="text" class="ml-9 border-2 border-gray-200 rounded-md p-2 w-3/5" 
                 :readonly="!isEditing" 
                 v-model="username"/> 
               </div> 
@@ -32,17 +32,17 @@
               </div>
                 <div v-if="isEditing" class="flex justify-end">
                   <button @click="cancelChanges"
-                    class="flex justify-center m-3 w-1/5 px-4 py-3 rounded-lg bg-white border-2 border-[#B52B2B] text-[#B52B2B] hover:bg-[#b15c5cf1] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
+                    class="flex justify-center m-3 w-1/5 px-4 py-2 rounded-lg bg-white border-2 border-[#B52B2B] text-[#B52B2B] hover:bg-[#b15c5cf1] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
                     <span>Cancel</span>
                   </button>
                   <button @click="saveChanges"
-                    class="flex justify-center m-3 w-1/5 px-4 py-3 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
+                    class="flex justify-center m-3 w-1/5 px-4 py-2 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
                     <span>Save</span>
                   </button>
                 </div>
                 <div v-else class="flex justify-center">
                   <button @click="edit"
-                    class="flex justify-self-end justify-center w-1/5 px-4 py-3 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
+                    class="flex justify-self-end justify-center  px-7 py-1 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
                     <span>Edit</span>
                   </button>
                 </div>
@@ -53,7 +53,7 @@
               </div>
               <div class="flex justify-center items-center m-5">
                 <button @click="triggerFileInput"
-                  class="w-2/5 px-4 py-3 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 flex items-center justify-center ">
+                  class=" px-4 py-1 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 flex items-center justify-center ">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -64,13 +64,13 @@
               </div>
             </div>
           </div>
-            <div class="border-gray-200 my-7 ">
+            <div class="border-gray-200 mt-7 mb-2">
               <h1 class="text-3xl font-bold text-green-900 ">System Settings</h1>
             </div>
-            <div class="border w-1/2 rounded-md shadow-sm ">
-              <div class="py-5 mx-5">Reset Academic Year <input type="text" class="mx-8 border-2 border-gray-200 rounded-md p-2 w-1/3" v-model="academicYear"/>
+            <div class="border w-1/2 rounded-md shadow-sm text-sm">
+              <div class="py-5 ">Reset Academic Year <input type="text" class="mx-5 border-2 border-gray-200 rounded-md p-2 py-1 w-1/3" v-model="academicYear"/>
                 <button @click="resetAcademicYear"
-                  class="w-1/5 px-4 py-3 rounded-lg bg-white border-2 border-[#B52B2B] text-[#B52B2B] hover:bg-[#b15c5cf1] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
+                  class=" px-4 py-1 rounded-lg bg-white border-2 border-[#B52B2B] text-[#B52B2B] hover:bg-[#b15c5cf1] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
                   <span>Reset</span>
                 </button>
               </div>
@@ -90,8 +90,13 @@ import Verification from '~/components/Modals/AdminSettings/Verification.vue';
 export default {
     name: 'SettingsPage',
     components: { AdminSidebar, AdminHeader, ConfirmReset, Verification },
-
-    setup() {
+    props:{
+        academicYear: {
+            type: String,
+            default: '2024-2025',
+        },
+    },
+    setup(props) {
 
         const isEditing = ref(false);
         const username = ref('admin');
@@ -183,8 +188,18 @@ export default {
         // };
 
         const resetAcademicYear = () => {
-            verify.value = !verify.value;
-            verifyReset.value = !verifyReset.value;
+          try{
+            if (academicYear.value !== props.academicYear) {
+                verify.value = !verify.value;
+                verifyReset.value = !verifyReset.value;
+              }
+              else{
+                alert('Academic Year is already set to ' + academicYear.value);
+              }
+          }catch(error){
+            console.error('Error resetting academic year:', error);
+          }
+            
         };
 
         const handleReset = () => {
@@ -225,7 +240,7 @@ export default {
 
 <style scoped>
 .profile-container {
-  width: 300px;
+  width: 200px;
   height: auto;
   border-radius: 50%;
   overflow: hidden;
@@ -233,6 +248,7 @@ export default {
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+  margin-top: 20px;
 }
 
 .profile-picture {

@@ -1,35 +1,3 @@
-<script setup lang='ts'>
-import { Result } from '~/library/results/result';
-import { useAdviserViewStore } from '../../stores/views/adviserViewStore'
-
-const adviserViewStore = useAdviserViewStore();
-const { handleFileInput, files } = useFileStorage();
-
-const handleClose = () => {
-  adviserViewStore.studentCSVUpdateModalFile = null;
-  adviserViewStore.studentCSVUpdateModalSuccessMessage = '';
-  adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = false;
-  adviserViewStore.advisoryAddStudentForm = false;
-}
-
-const uploadFile = async () => {
-  const result: any = await adviserViewStore.createManyStudentsViaCSV(files.value);
-  console.log(result);
-  if (result.isNotSuccessful) {
-    adviserViewStore.studentCSVUpdateModalFile = null;
-    adviserViewStore.studentCSVUpdateModalSuccessMessage = result.message;
-    return;
-  }
-
-  await adviserViewStore.updateAdvisoryView();
-  adviserViewStore.studentCSVUpdateModalFile = null;
-  adviserViewStore.studentCSVUpdateModalSuccessMessage = '';
-  adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = false;
-  adviserViewStore.advisoryAddStudentForm = false;
-}
-
-</script>
-
 <template>
   <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
     <div class="bg-gray-100 rounded-lg shadow-lg w-full max-w-md p-6 relative">
@@ -81,6 +49,37 @@ const uploadFile = async () => {
     </div>
   </div>
 </template>
+
+<script setup lang='ts'>
+import { Result } from '~/library/results/result';
+import { useAdviserViewStore } from '../../../stores/views/adviserViewStore'
+
+const adviserViewStore = useAdviserViewStore();
+const { handleFileInput, files } = useFileStorage();
+
+const handleClose = () => {
+  adviserViewStore.studentCSVUpdateModalFile = null;
+  adviserViewStore.studentCSVUpdateModalSuccessMessage = '';
+  adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = false;
+  adviserViewStore.advisoryAddStudentForm = false;
+}
+
+const uploadFile = async () => {
+  const result: any = await adviserViewStore.createManyStudentsViaCSV(files.value);
+  console.log(result);
+  if (result.isNotSuccessful) {
+    adviserViewStore.studentCSVUpdateModalFile = null;
+    adviserViewStore.studentCSVUpdateModalSuccessMessage = result.message;
+    return;
+  }
+
+  await adviserViewStore.updateAdvisoryView();
+  adviserViewStore.studentCSVUpdateModalFile = null;
+  adviserViewStore.studentCSVUpdateModalSuccessMessage = '';
+  adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = false;
+  adviserViewStore.advisoryAddStudentForm = false;
+}
+</script>
 
 <style scoped>
 .bg-opacity-50 {

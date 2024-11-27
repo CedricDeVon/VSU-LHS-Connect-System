@@ -112,7 +112,6 @@
 <script>
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-
 export default {
   props: {
     report: {

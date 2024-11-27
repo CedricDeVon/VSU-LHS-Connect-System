@@ -1,94 +1,3 @@
-<script setup lang='ts'>
-definePageMeta({
-  middleware: ['authenticate-and-authorize-admin']
-});
-
-import { defineComponent } from 'vue';
-import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
-import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-import { useAdminViewStore } from '~/stores/views/adminViewStore';
-
-const adminViewStore = useAdminViewStore();
-await adminViewStore.updateIncidental();
-
-onBeforeMount(async () => {
-    await adminViewStore.updateIncidental();
-})
-
-function handleSearch() {
-    let results = adminViewStore.incidentalIncidentalReports;
-
-    // Filter by search query
-    if (adminViewStore.incidentalSearchQuery) {
-        const query = adminViewStore.incidentalSearchQuery.toLowerCase();
-        results = results.filter((report: any) => {
-            const studentNames = getStudentNamesFromReport(report.data.peopleInvolved).toLowerCase();
-            return report.id.toLowerCase().includes(query) ||
-                    studentNames.includes(query) ||
-                    report.data.dateOfIncident.toLowerCase().includes(query);
-        });
-    }
-
-    // Filter by status
-    if (adminViewStore.incidentalStatusFilter !== 'all') {
-        results = results.filter((report: any) => report.data.status === adminViewStore.incidentalStatusFilter);
-    }
-
-    // Sort results
-    switch (adminViewStore.incidentalSelectedSort) {
-        case 'ascDate':
-            results.sort((a: any, b: any) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
-            break;
-        case 'descDate':
-            results.sort((a: any, b: any) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
-            break;
-        case 'reportID':
-            results.sort((a: any, b: any) => a.id.localeCompare(b.id));
-            break;
-        case 'studentName':
-            results.sort((a: any, b: any) => {
-                const nameA = getStudentNamesFromReport(a.data.peopleInvolved);
-                const nameB = getStudentNamesFromReport(b.data.peopleInvolved);
-                return nameA.localeCompare(nameB);
-            });
-            break;
-        default:
-            break;
-    }
-
-    adminViewStore.incidentalSearchResults = results;
-    return results;
-}
-
-function getStudentNamesFromReport(involvedStudents: any) {
-    if (!involvedStudents) return '';
-    const studentFullNames = involvedStudents.map((firstName: any) => {
-        const student = findStudentByFirstName(firstName);
-        if (student) {
-            return `${student.data.lastName}, ${student.data.firstName}`;
-        }
-        return firstName;
-    });
-    return studentFullNames.join('; ');
-}
-
-function findStudentByFirstName(firstName: any) {
-    return adminViewStore.incidentalStudents.find((s: any) => s.data.firstName  === firstName);
-}
-
-function viewReport(reportId: any) {
-    return navigateTo(`/admin/incident/${reportId}`);
-}
-
-function getStatusClass(status: any): any {
-    return {
-        'Resolved': 'text-green-600 font-medium',
-        'Unresolved': 'text-yellow-600 font-medium'
-    }[status] || 'text-gray-600 font-medium';
-}
-
-</script>
-
 <template>
     <div class="flex h-screen">
         <AdminSidebar />
@@ -184,6 +93,98 @@ function getStatusClass(status: any): any {
         </div>
     </div>
 </template>
+
+<script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
+import { defineComponent } from 'vue';
+import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
+import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+const adminViewStore = useAdminViewStore();
+await adminViewStore.updateIncidental();
+
+onBeforeMount(async () => {
+    await adminViewStore.updateIncidental();
+})
+
+function handleSearch() {
+    let results = adminViewStore.incidentalIncidentalReports;
+
+    // Filter by search query
+    if (adminViewStore.incidentalSearchQuery) {
+        const query = adminViewStore.incidentalSearchQuery.toLowerCase();
+        results = results.filter((report: any) => {
+            const studentNames = getStudentNamesFromReport(report.data.peopleInvolved).toLowerCase();
+            return report.id.toLowerCase().includes(query) ||
+                    studentNames.includes(query) ||
+                    report.data.dateOfIncident.toLowerCase().includes(query);
+        });
+    }
+
+    // Filter by status
+    if (adminViewStore.incidentalStatusFilter !== 'all') {
+        results = results.filter((report: any) => report.data.status === adminViewStore.incidentalStatusFilter);
+    }
+
+    // Sort results
+    switch (adminViewStore.incidentalSelectedSort) {
+        case 'ascDate':
+            results.sort((a: any, b: any) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
+            break;
+        case 'descDate':
+            results.sort((a: any, b: any) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
+            break;
+        case 'reportID':
+            results.sort((a: any, b: any) => a.id.localeCompare(b.id));
+            break;
+        case 'studentName':
+            results.sort((a: any, b: any) => {
+                const nameA = getStudentNamesFromReport(a.data.peopleInvolved);
+                const nameB = getStudentNamesFromReport(b.data.peopleInvolved);
+                return nameA.localeCompare(nameB);
+            });
+            break;
+        default:
+            break;
+    }
+
+    adminViewStore.incidentalSearchResults = results;
+    return results;
+}
+
+function getStudentNamesFromReport(involvedStudents: any) {
+    if (!involvedStudents) return '';
+    const studentFullNames = involvedStudents.map((firstName: any) => {
+        const student = findStudentByFirstName(firstName);
+        if (student) {
+            return `${student.data.lastName}, ${student.data.firstName}`;
+        }
+        return firstName;
+    });
+    return studentFullNames.join('; ');
+}
+
+function findStudentByFirstName(firstName: any) {
+    return adminViewStore.incidentalStudents.find((s: any) => s.data.firstName  === firstName);
+}
+
+function viewReport(reportId: any) {
+    return navigateTo(`/admin/incident/${reportId}`);
+}
+
+function getStatusClass(status: any): any {
+    return {
+        'Resolved': 'text-green-600 font-medium',
+        'Unresolved': 'text-yellow-600 font-medium'
+    }[status] || 'text-gray-600 font-medium';
+}
+
+</script>
+
 
 <style scoped>
 /* Scrollbar styles */

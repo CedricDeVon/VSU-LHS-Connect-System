@@ -109,10 +109,9 @@
         </div>
       </div>
     </div>
-  </template>
+</template>
   
-  <script>
-  
+<script>  
   export default {
     name: 'CreateCaseConferenceModal',
     props: {

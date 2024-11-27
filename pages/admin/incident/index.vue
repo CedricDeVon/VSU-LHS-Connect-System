@@ -205,40 +205,40 @@
             Create Case Conference
           </button>
         </div> -->
+        <!-- Modals -->
+      <UpdateIncidentReportModal v-if="showUpdateModal" :incident="incdReport" @close="showUpdateModal = false"
+        @update="handleUpdate" />
+
+      <ScheduleConferenceModal 
+        v-if="showScheduleModal && !isViewingHistory" 
+        @close="showScheduleModal = false"
+        @schedule="handleScheduleConference" />
+
+      <ViewCaseConferencesModal 
+        v-if="showScheduleModal && isViewingHistory"
+        :conferences="caseConferences"
+        :incident-id="incdReport.incidentDocID"
+        @close="closeConferenceHistory" />
+
+      <CreateCaseConferenceModal 
+        v-if="showCreateConfDocModal"
+        :incident-id="incdReport.incidentDocID"
+        :student-info="showCreateConfDocModal ? {
+          name: incdReport.peopleInvolved?.join(', '),
+          gradeSection: incdReport.peopleInvolved ? 'Grade 7 - Javascript' : ''
+        } : null"
+        :saved-draft="savedConferenceDoc"
+        @close="showCreateConfDocModal = false"
+        @create="handleCreateConferenceDoc"
+        @save-draft="handleSaveDraft" />
       </div>
     </div>
-
-    <!-- Modals -->
-    <UpdateIncidentReportModal v-if="showUpdateModal" :incident="incdReport" @close="showUpdateModal = false"
-      @update="handleUpdate" />
-
-    <ScheduleConferenceModal 
-      v-if="showScheduleModal && !isViewingHistory" 
-      @close="showScheduleModal = false"
-      @schedule="handleScheduleConference" />
-
-    <ViewCaseConferencesModal 
-      v-if="showScheduleModal && isViewingHistory"
-      :conferences="caseConferences"
-      :incident-id="incdReport.incidentDocID"
-      @close="closeConferenceHistory" />
-
-    <CreateCaseConferenceModal 
-      v-if="showCreateConfDocModal"
-      :incident-id="incdReport.incidentDocID"
-      :student-info="showCreateConfDocModal ? {
-        name: incdReport.peopleInvolved?.join(', '),
-        gradeSection: incdReport.peopleInvolved ? 'Grade 7 - Javascript' : ''
-      } : null"
-      :saved-draft="savedConferenceDoc"
-      @close="showCreateConfDocModal = false"
-      @create="handleCreateConferenceDoc"
-      @save-draft="handleSaveDraft" />
   </div>
 </template>
+
 <script>
 import pdfMake from 'pdfmake/build/pdfmake';
-// import pdfFonts from 'pdfmake/build/vfs_fonts';
+// import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 // pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
@@ -255,11 +255,8 @@ import CreateCaseConferenceModal from '~/components/Modals/Incident Management/C
 import { caseConference } from '~/data/caseconference';
 import { defineIncidentDoc } from '~/utils/documentDefinitions';
 
-const route = useRoute();
-const router = useRouter();
-
 const navigateToCreateConference = () => {
-  router.push(`/admin/conferences/create?incidentId=${route.params.id}`);
+  useRouter().push(`/admin/conferences/create?incidentId=${useRoute().params.id}`);
 };
 
 export default {
@@ -289,7 +286,7 @@ export default {
   },
 
   async created() {
-    initializeIncidentReports(); // Initialize from localStorage
+    // initializeIncidentReports(); // Initialize from localStorage
     const incidentId = this.$route.params.id;
     await this.initIncidentByID(incidentId);
     await this.getReporter(this.incdReport.reportID);
@@ -367,7 +364,7 @@ export default {
     },
 
     hasConferenceDraft() {
-      const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
+      // const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
       return !!savedDraft;
     },
 
@@ -449,7 +446,7 @@ export default {
 
     openCreateConferenceDoc() {
       // Check for existing draft when opening modal
-      const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
+      // const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
       if (savedDraft) {
         this.savedConferenceDoc = JSON.parse(savedDraft);
       }
@@ -542,7 +539,7 @@ export default {
         alert('Case conference document created successfully');
         
         // Clear the draft after successful creation
-        localStorage.removeItem(`draft_conference_${this.incdReport.incidentDocID}`);
+        // localStorage.removeItem(`draft_conference_${this.incdReport.incidentDocID}`);
         this.savedConferenceDoc = null;
 
         // Refresh the conference list if needed
@@ -557,7 +554,7 @@ export default {
       try {
         // In a real app, save to backend/localStorage
         this.savedConferenceDoc = draftData;
-        localStorage.setItem(`draft_conference_${this.incdReport.incidentDocID}`, JSON.stringify(draftData));
+        // localStorage.setItem(`draft_conference_${this.incdReport.incidentDocID}`, JSON.stringify(draftData));
         
         this.showCreateConfDocModal = false;
         alert('Document saved as draft successfully');

@@ -1,18 +1,3 @@
-<script setup lang='ts'>
-import { useAdminViewStore } from '~/stores/views/adminViewStore';
-
-const adminViewStore = useAdminViewStore();
-
-onBeforeMount(async () => {
-})
-
-
-const viewIncidentDetails = (incidentId: any) => {
-    useRouter().push(`/admin/incident/${incidentId}`);
-}
-
-</script>
-
 <template>
     <div v-if="adminViewStore.studentShowIncidentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic">
         <div class="bg-[#FFFEF1] rounded-2xl w-[800px] max-h-[90vh] flex flex-col relative" @click.stop>
@@ -49,7 +34,6 @@ const viewIncidentDetails = (incidentId: any) => {
                                     </span>
                                 </h3>
                                 <p class="text-gray-600 italic">{{ new Date().toDateString() }}</p>
-                                <!-- <p class="text-gray-600 italic">{{ new Date().toLocaleDateString() }}</p> -->
                             </div>
                         </div>
                         <p class="mt-2 text-gray-700">
@@ -73,6 +57,19 @@ const viewIncidentDetails = (incidentId: any) => {
         </div>
     </div>
 </template>
+
+<script setup lang='ts'>
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+const adminViewStore = useAdminViewStore();
+
+onBeforeMount(async () => {
+})
+
+const viewIncidentDetails = (incidentId: any) => {
+    useRouter().push(`/admin/incident/${incidentId}`);
+}
+</script>
 
 <style scoped>
 @font-face {

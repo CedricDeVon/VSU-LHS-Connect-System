@@ -1,7 +1,3 @@
-<script script lang='ts'>
-
-</script>
-
 <template>
     <div class="relative flex items-center justify-center min-h-screen bg-gray-100 overflow-hidden">
         <!-- Background Image -->
@@ -22,3 +18,7 @@
         </div>
     </div>
 </template>
+
+<script script lang='ts'>
+
+</script>

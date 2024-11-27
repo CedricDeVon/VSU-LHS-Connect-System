@@ -1,3 +1,4 @@
+
 <template>
     <div v-if="adminViewStore.searchShowStudentDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic" @click="handleOverlayClick">
         <div class="bg-[#FFFEF1] rounded-2xl w-[600px] max-h-[90vh] overflow-y-auto relative" @click.stop>
@@ -79,16 +80,9 @@
                             </button>
                         </div>
 
-                            <!-- Warning/Alert Action -->
-                            <button v-if="hasIncidents" 
-                                    @click="viewIncidents"
-                                    class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
-                                View {{ incidentButtonText }}
-                            </button>
                         <!-- Secondary Actions -->
+                        <div class="pt-4 border-t border-gray-200 space-y-2">
                             <!-- Record Actions -->
-                                <!-- View Incidents - Only show if has incidents -->
-                        <!-- <div class="pt-4 border-t border-gray-200 space-y-2">
                             <div :class="[
                                 hasIncidents ? 'grid grid-cols-2 gap-3' : 'w-full'
                             ]">
@@ -103,6 +97,7 @@
                                     <span>Anecdotal Report</span>
                                 </button>
 
+                                <!-- View Incidents - Only show if has incidents -->
                                 <button v-if="hasIncidents" 
                                         @click="showIncidentModal = true"
                                         class="px-4 py-3 rounded-md bg-white border-2 border-[#728B78] text-[#728B78] hover:bg-[#728B78] hover:text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2">
@@ -112,19 +107,22 @@
                                     <span>{{ incidentButtonText }}</span>
                                 </button>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Add Modal -->
-        <IncidentReportsModal 
-            :show="adminViewStore.studentShowIncidentModal"
-            :student-data="adminViewStore.searchSelectedStudent"
-            @close="adminViewStore.studentShowIncidentModal = false"
-        />
+    </div>
+
+    <!-- Add Modal -->
+    <IncidentReportsModal 
+        :show="showIncidentModal"
+        :student-data="studentData"
+        @close="showIncidentModal = false"
+    />
+
     <!-- Add Create Incident Modal -->
-    <!-- <CreateIncidentReportModal 
+    <CreateIncidentReportModal 
         v-if="showCreateIncidentModal"
         :show="showCreateIncidentModal"
         :student-info="{
@@ -133,9 +131,7 @@
         }"
         @close="showCreateIncidentModal = false"
         @create="handleCreateIncident"
-    /> -->
-    </div>
-
+    />
 </template>
 
 <script>

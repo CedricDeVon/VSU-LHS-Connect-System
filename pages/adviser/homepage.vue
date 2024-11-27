@@ -1,33 +1,7 @@
-<script setup lang='ts'>
-definePageMeta({
-  middleware: ['authenticate-and-authorize-adviser']
-});
-
-import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
-import NotificationModal from '~/components/Modals/NotificationModal.vue';
-import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
-
-const adviserViewStore = useAdviserViewStore();
-await adviserViewStore.updateHomePage();
-
-onBeforeMount(async () => {
-    await adviserViewStore.updateHomePage();
-})
-// goToAdvisory(){
-//     this.$router.push('/adviser/advisory')
-// },
-
-// goToReports(){
-//     this.$router.push('/adviser/reports')
-// },
-</script>
-
 <template>
     <div class="adviser-page">
         <AdviserHeader @notif-click="notifClick" />
-        <notification-modal v-if="showNotification" />
+        <NotificationModal v-if="showNotification" />
         <div class="h-screen ">
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.homepageTimeline) }}</h1>
@@ -49,7 +23,7 @@ onBeforeMount(async () => {
                             <div class=" h-full pt-10 pl-10">
                                 <header class=" text-3xl pb-5">{{ adviserViewStore.getGradeAndSection(adviserViewStore.homepageSection) }}</header>
                                 <div>
-                                    <h2 class="p-1">Username: <span class="black-small">{{ adviserViewStore.homepageUser.data.username }}</span></h2>
+                                    <h2 class="p-1">Username: <span class="black-small">{{ adviserViewStore.homepageUser.data.username}}</span></h2>
                                     <h2 class="p-1">Advisory: <span class="black-small">{{ adviserViewStore.homepageAdviser.data.facultyId }}</span></h2>
                                     <h2 class="p-1">Email Address: <span class="black-small">{{ adviserViewStore.homepageUser.data.email }}</span></h2>
                                 </div>
@@ -97,6 +71,34 @@ onBeforeMount(async () => {
         </div>
     </div>
 </template>
+
+<script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import StudentBasicInfo from "~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue";
+import AddStudentForm from "~/components/Modals/Advisory/AddStudentForm.vue";
+import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+
+const containWidth = ref('93%');
+
+const adviserViewStore = useAdviserViewStore();
+await adviserViewStore.updateHomePage();
+
+onBeforeMount(async () => {
+    await adviserViewStore.updateHomePage();
+})
+// goToAdvisory(){
+//     this.$router.push('/adviser/advisory')
+// },
+
+// goToReports(){
+//     this.$router.push('/adviser/reports')
+// },
+</script>
 
 <style scoped>
     .adviser-page{

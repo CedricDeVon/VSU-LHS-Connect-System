@@ -86,13 +86,8 @@ definePageMeta({
 });
 
 import pdfMake from 'pdfmake/build/pdfmake';
-// import pdfFonts from 'pdfmake/build/vfs_fonts';
-// pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
-import { anecdotalReport } from '~/data/anecdotal';
-import { student } from '~/data/student';
-import { report, updateReport, initializeReports } from '~/data/report';
 import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
 import { formatDate } from '@vueuse/core';
 import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';

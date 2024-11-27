@@ -139,6 +139,7 @@
                     </button>
                   </div>
                 </div>
+                </form>
               </div>
               <div v-if="showSingleContStudentForm" class="w-full">
                 <div class="smallText flex justify-center m-4">
@@ -267,138 +268,136 @@ import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 </script>
 
 <style scoped>
+.wordbutton{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #414E44;
+    border: none;
+    cursor: pointer;
+}
+.wordbutton:hover{
+  color:#265630;
+  font-weight: 700;
+}
 
-    .wordbutton{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 15px;
-        font-weight: 500;
-        color: #414E44;
-        border: none;
-        cursor: pointer;
-    }
-    .wordbutton:hover{
-      color:#265630;
-      font-weight: 700;
-    }
+.header{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    text-align: center;
+    color: white;
+    background-color: #728B78;
+    width: 100%;
+    height: 10%;
+}
 
-    .header{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 32px;
-        font-weight: 700;
-        text-align: center;
-        color: white;
-        background-color: #728B78;
-        width: 100%;
-        height: 10%;
-    }
+.body{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    color:#414E44;
+    background-color: white;
+    width: 90%;
+    height: 80%;
+}
+.body2{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color:#414E44;
 
-    .body{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 25px;
-        font-weight: 700;
-        color:#414E44;
-        background-color: white;
-        width: 90%;
-        height: 80%;
-    }
-    .body2{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 20px;
-        font-weight: 700;
-        color:#414E44;
- 
-    }
+}
 
-    .selection-box{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 15px;
-        font-weight: 600;
-        color:#414E44;
-        background-color: white;
-        width: 90%;
-        height: 100%;
-        border: 1px solid #728B78;
-        display: flex;
-        justify-content: center;
-        align-items: center;  
-        cursor:pointer;
-        transition: background-color 0.3s;
-    }
+.selection-box{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color:#414E44;
+    background-color: white;
+    width: 90%;
+    height: 100%;
+    border: 1px solid #728B78;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+    cursor:pointer;
+    transition: background-color 0.3s;
+}
 
-    .selection-box:hover{
-        background-color: #728B78;
-        color: white;
-    }
+.selection-box:hover{
+    background-color: #728B78;
+    color: white;
+}
+
+.selection-box.selected{
+    background-color: #728B78;
+    color: white;
+}
+
+.button1{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    background-color: #728B78;
+    border: none;
+    cursor: pointer;
+}
+.button1:hover{
+    background-color: #677c6c;
+}
+
+.button2{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    background-color: #728B78;
+    border: none;
+    cursor: pointer;
+}
+.button2:hover{
+    background-color: #265630;
+}
+
+.button3{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    background-color: #969696;
+    border: none;
+    cursor: pointer;
+}
+.button3:hover{
+    background-color:#7a7979;
+}
+
+.input{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color:black;
+    background-color: white;
+    border: 1px solid gray;
+    border-radius: 5px;
+
     
-    .selection-box.selected{
-        background-color: #728B78;
-        color: white;
-    }
-
-    .button1{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 20px;
-        font-weight: 700;
-        color: white;
-        background-color: #728B78;
-        border: none;
-        cursor: pointer;
-    }
-    .button1:hover{
-        background-color: #677c6c;
-    }
-
-    .button2{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 20px;
-        font-weight: 700;
-        color: white;
-        background-color: #728B78;
-        border: none;
-        cursor: pointer;
-    }
-    .button2:hover{
-        background-color: #265630;
-    }
-
-    .button3{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 20px;
-        font-weight: 700;
-        color: white;
-        background-color: #969696;
-        border: none;
-        cursor: pointer;
-    }
-    .button3:hover{
-        background-color:#7a7979;
-    }
-
-    .input{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 15px;
-        font-weight: 300;
-        color:black;
-        background-color: white;
-        border: 1px solid gray;
-        border-radius: 5px;
-    
-        
-    }
-    .inputName{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 15px;
-        font-weight: 300;
-        color:black;
-        background-color: white;
-        width: 35%;
-        border: 1px solid gray;
-    }
-    .smallText{
-        font-family: "Century Gothic", sans-serif;
-        font-size: 17px;
-        font-weight: 300;
-        color:#414E44;
-    }
-
+}
+.inputName{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 15px;
+    font-weight: 300;
+    color:black;
+    background-color: white;
+    width: 35%;
+    border: 1px solid gray;
+}
+.smallText{
+    font-family: "Century Gothic", sans-serif;
+    font-size: 17px;
+    font-weight: 300;
+    color:#414E44;
+}
 </style>

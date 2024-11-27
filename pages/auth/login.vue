@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { signInWithEmailAndPassword } from "firebase/auth";
 
 import type { Result } from '~/library/results/result';
 import { FailedResult } from '~/library/results/failedResult';
@@ -7,6 +6,8 @@ import { SuccessfulResult } from '~/library/results/successfulResult';
 import { useAdminViewStore } from '~/stores/views/adminViewStore'
 import { useUserLogInStore } from '~/stores/auth/userLogInStore'
 import { UserSecurity } from "~/library/security/userSecurity";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import statueImage from '~/assets/images/vsu-main-the-search-for-truth-statue.png'
 
 const auth = useFirebaseAuth()!;
 const adminViewStore = useAdminViewStore();
@@ -35,38 +36,96 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
-      <h1 class="text-2xl font-semibold text-center text-gray-800 mb-6">Log In</h1>
+  <div class="flex justify-center items-center min-h-screen bg-[#FFFEF1] relative font-century-gothic 
+              animate-fade-in">
+    
+    <div 
+      class="fixed right-[5%] top-[13%] h-screen w-1/2 bg-cover bg-left z-10 opacity-50 scale-[1.03]
+             animate-statue-entrance"
+      :style="{ backgroundImage: `url(${statueImage})` }"
+    ></div>
+    
+    <div 
+      class="relative z-20 bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-md 
+             w-full max-w-[380px] mx-auto mr-[20%] ml-[15%] 
+             animate-slide-in"
+    >
+      <div class="bg-[#F5F5F5]/80 rounded-lg p-4 -mt-2 -mx-4 mb-8 animate-fade-in-delayed">
+        <img 
+          src="@/assets/images/sample-logo.png" 
+          alt="Connect System Logo" 
+          class="w-full max-w-[250px] h-auto mx-auto"
+        >
+      </div>
+      
+      <h2 class="text-[#6b8e76] text-lg mb-6">Login</h2>
+      
       <form @submit.prevent="handleFormSubmit">
-        <div class="mb-4">
-            <label for="email" class="block text-gray-700 mb-1">Email</label>
-            <input v-model="userLogInStore.email" type="email" id="email" placeholder="Email" required
-              class="w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-          <div class="mb-6">
-            <label for="password" class="block text-gray-700 mb-1">Password</label>
-            <input v-model="userLogInStore.password" type="password" id="password" placeholder="Password" required
-              class="w-full rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
-          </div>
-          <div class="mb-6">
-            <label for="role" class="block text-gray-700 mb-1">Role</label>
+        <div class="relative mb-5 transform transition-all duration-300 hover:scale-[1.02]">
+          <input 
+            type="text" 
+            v-model="userLogInStore.email" 
+            placeholder="Username" 
+            class="w-full py-3 px-3 border border-gray-200 rounded-lg text-sm bg-gray-50 
+                   transition-all duration-300
+                   focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20 focus:scale-[1.02]"
+            required
+          >
+          <i class="fas fa-user absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+        
+        <div class="relative mb-5 transform transition-all duration-300 hover:scale-[1.02]">
+          <input 
+            type="password" 
+            v-model="userLogInStore.password" 
+            placeholder="Password" 
+            class="w-full py-3 px-3 border border-gray-200 rounded-lg text-sm bg-gray-50 
+                   transition-all duration-300
+                   focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20 focus:scale-[1.02]"
+            required
+          >
+          <i class="fas fa-lock absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        </div>
+        
+        <div class="text-right -mt-2 mb-6">
+          <a href="#" class="text-gray-400 text-sm hover:text-gray-600">
+            Forgot Password?
+          </a>
+        </div>
+
+        <div class="relative mb-5 transform transition-all duration-300 hover:scale-[1.02]">
             <select v-model="userLogInStore.role"
-              class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500" required>
-              <option value="" disabled></option>
+              class="w-full py-3 px-3 border border-gray-200 rounded-lg text-sm bg-gray-50 
+                   transition-all duration-300
+                   focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20 focus:scale-[1.02]" required>
+              <option value="Role" disabled></option>
               <option value="adviser">Adviser</option>
               <option value="admin">Admin</option>
             </select>
           </div>
-          <div v-if="userLogInStore.errorMessage" class="text-red-500 mb-4">{{ userLogInStore.errorMessage }}</div>
-          <button type="handleFormSubmit"
-            class="w-full bg-blue-500 p-2 text-white rounded-md hover:bg-blue-600 transition duration-300">
-            Log In
-          </button>
-          <div class="text-center mt-4">
-            <p class="text-gray-500">OR</p>
-            <NuxtLink to="/auth/signup/step1" class="text-blue-500 hover:underline">Register Here</NuxtLink>
-          </div>
+        
+        <button 
+          type="handleFormSubmit" 
+          class="w-full py-3 bg-[#6b8e76] text-white rounded-lg text-sm uppercase tracking-wider
+                 transform transition-all duration-300
+                 hover:bg-[#597363] hover:scale-[1.02] hover:shadow-lg
+                 active:scale-95"
+        >
+          LOGIN
+        </button>
+        
+        <div class="flex items-center my-6">
+          <div class="flex-1 border-t border-gray-200"></div>
+          <span class="px-4 text-gray-400 text-sm">OR</span>
+          <div class="flex-1 border-t border-gray-200"></div>
+        </div>
+        
+        <NuxtLink 
+          to="/auth/signup/step1" 
+          class="block text-center text-[#6b8e76] text-sm hover:underline transition-all duration-300 hover:scale-[1.02]"
+        >
+          Register Here
+        </NuxtLink>
       </form>
     </div>
   </div>

@@ -8,6 +8,10 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const dashBoardReportsCount = ref('0');
   const dashBoardStudentsCount = ref('0');
   const dashBoardAccountApprovalsCount = ref('0');
+  const dashBoardIncidentReports = useState('dashBoardIncidentReports');
+  const dashBoardInitialReports = useState('dashBoardInitialReports');
+  const dashBoardCaseConferences = useState('dashBoardCaseConferences');
+  const dashBoardTimeline = useState('dashBoardTimeline');
 
   const accountsSelectedAccount = ref('all');
   const accountsShowUploadModal = ref(false);
@@ -78,7 +82,11 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const caseConferenceIncidentReport = useState('caseConferenceIncidentReport');
   const caseConferenceStudent = useState('caseConferenceStudent');
   const caseConferenceSection = useState('caseConferenceSection');
-  
+
+  const getAcademicYearAndSemester = (timeline: any) => {
+        return `Academic Year ${timeline.data.schoolYear} / ${(timeline.data.semester === 1) ? 'First' : 'Second'} Semester`;
+  }
+
   const updateCaseConference = async (caseConferenceId: any) => {
     // console.log('D', caseConferenceId);
     const result: any = await $fetch('/api/admin/view/caseConference', {
@@ -232,6 +240,10 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     searchAdvisers.value = data.advisers;
   };
 
+  const updateSidebar = async () => {
+
+  }
+
   const updateSearch = async () => {
     const { data }: any = await $fetch('/api/admin/view/search', {
       method: 'POST'
@@ -246,12 +258,14 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     const { data }: any = await $fetch('/api/admin/view/dashboard', {
         method: 'POST', body: { email: currentUser?.email, id: currentUser?.uid }
     });
+    console.log('A: ', data);
 
     adminName.value = data.user.data.username;
     adminEmail.value = data.user.data.email;
-    dashBoardReportsCount.value = data.reportsCount;
-    dashBoardStudentsCount.value = data.studentsCount;
-    dashBoardAccountApprovalsCount.value = data.approvalsCount;
+    dashBoardIncidentReports.value = data.incidentReports;
+    dashBoardInitialReports.value = data.initialReports;
+    dashBoardCaseConferences.value = data.caseConferences;
+    dashBoardTimeline.value = data.timeline;
   };
 
   const updateAccountsAdvisers = async () => {
@@ -264,10 +278,6 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const resetAllData = () => {
     adminName.value = '';
     adminEmail.value = '';
-
-    dashBoardReportsCount.value = '0';
-    dashBoardStudentsCount.value = '0';
-    dashBoardAccountApprovalsCount.value = '0';
 
     accountsSelectedAccount.value = 'all';
     accountsShowUploadModal.value = false;
@@ -303,6 +313,12 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
 
   return {
+    updateSidebar,
+    getAcademicYearAndSemester,
+    dashBoardIncidentReports,
+    dashBoardInitialReports,
+    dashBoardCaseConferences,
+    dashBoardTimeline,
     updateIncidentAnecdote,
     sectionGetGradeAndSection,
     caseConferenceStudent,

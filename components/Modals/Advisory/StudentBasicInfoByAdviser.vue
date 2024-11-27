@@ -1,36 +1,3 @@
-<script setup lang='ts'>
-import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
-import InitialReportModal from './InitialReportModal.vue';
-import AdviserAnecdotal from '../../pages/adviser/anecdotal/[id].vue';
-// import RemoveStudent from './removeStudent.vue';
-
-const adviserViewStore = useAdviserViewStore();
-// showReport() {
-//     this.report = true;
-// },
-
-// creationClose(){
-//     this.report = false;
-// },
-
-// viewReport(anecdotalDocID) {
-//         // Find the student with this anecdotal report
-//         if (anecdotalDocID && anecdotalDocID !== '') {
-//             this.$router.push(`/adviser/anecdotal/${this.student.studentId}`);
-            
-//         } else {
-//             alert('No student found with this anecdotal report'); //Create new anecdotal report
-//         }
-//     },
-// removeStudent(){
-//     this.remove = true; 
-// },
-// handleRemoveStudent(){
-//     this.remove = false;
-//     this.$emit('close');
-// }
-</script>
-
 <template>
     <div class=" z-50 flex items-center justify-center ">
         <div class=" p-20 pt-8 w-full ml-10 mr-10">
@@ -80,8 +47,40 @@ const adviserViewStore = useAdviserViewStore();
         <initial-report-modal v-if="report" @close="report = false"/>
         <RemoveStudent v-if="remove" @close="handleRemoveStudent" :student ="student" :section="this.section" />
     </div>
-
 </template>
+
+<script setup lang='ts'>
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+import InitialReportModal from './InitialReportModal.vue';
+import AdviserAnecdotal from '../../pages/adviser/anecdotal/[id].vue';
+import RemoveStudent from './removeStudent.vue';
+
+const adviserViewStore = useAdviserViewStore();
+// showReport() {
+//     this.report = true;
+// },
+
+// creationClose(){
+//     this.report = false;
+// },
+
+// viewReport(anecdotalDocID) {
+//         // Find the student with this anecdotal report
+//         if (anecdotalDocID && anecdotalDocID !== '') {
+//             this.$router.push(`/adviser/anecdotal/${this.student.studentId}`);
+            
+//         } else {
+//             alert('No student found with this anecdotal report'); //Create new anecdotal report
+//         }
+//     },
+// removeStudent(){
+//     this.remove = true; 
+// },
+// handleRemoveStudent(){
+//     this.remove = false;
+//     this.$emit('close');
+// }
+</script>
 
 <style scoped>
 .header{
@@ -126,5 +125,4 @@ const adviserViewStore = useAdviserViewStore();
 .shadow{
     box-shadow: 0px 3px 2px 0px rgba(0, 0, 0, 0.25);
 }
-
 </style>

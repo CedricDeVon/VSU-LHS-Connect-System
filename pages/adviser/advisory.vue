@@ -6,7 +6,7 @@
             @close="adviserViewStore.advisoryAddStudentForm = false"
             />
 
-            <notification-modal v-if="adviserViewStore.advisoryShowNotification" />
+            <NotificationModal v-if="adviserViewStore.advisoryShowNotification" />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
             </div>
@@ -41,7 +41,7 @@
                             </button>
                         </div>
                         <!--Table of Students-->
-                        <div class=" overflow-x-auto overflow-y-auto max-h-96">
+                        <div class="overflow-x-auto overflow-y-auto max-h-96">
                             <table class="min-w-full ">
                                 <thead class="sticky top-0" >
                                     <tr class=" gray  text-white">
@@ -56,9 +56,9 @@
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    <tr class ="hover:bg-gray-200 " v-for="student in getStudents()" :key="student.id" @click="adviserViewStore.studentClick(student)" >
-                                        <td class="py-2 px-4 text-center align-middle ">{{ student.id || '' }}</td>
-                                        <td class="py-2 px-4 text-center align-middle ">{{ adviserViewStore.getFullName(student) }}</td>
+                                    <tr class ="hover:bg-gray-200 table-text" v-for="student in getStudents()" :key="student.id" @click="adviserViewStore.studentClick(student)" >
+                                        <td class="py-5 px-4 text-center align-middle ">{{ student.id || '' }}</td>
+                                        <td class="py-5 px-4 text-center align-middle ">{{ adviserViewStore.getFullName(student) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -89,14 +89,16 @@ definePageMeta({
 });
 
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+import StudentBasicInfo from "~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue";
+import AddStudentForm from "~/components/Modals/Advisory/AddStudentForm.vue";
 import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
 import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
 
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateAdvisoryView();
+
+const containWidth = ref('89%');
 
 onBeforeMount(async () => {
     await adviserViewStore.updateAdvisoryView();
@@ -105,20 +107,6 @@ onBeforeMount(async () => {
 function showAddStudentForm() {
     adviserViewStore.advisoryAddStudentForm = !adviserViewStore.advisoryAddStudentForm;
 }
-        // setup() {
-        //     const section = sectionStore();
-        //     return { sectionStore };
-        // },
-
-        // methods: {
-        //     addStudent() {
-        //         this.showAddStudentForm = true;
-        //     },
-
-        //     getSection(){
-        //         this.sectionStore = section.find((sec)=> sec.adviserId === this.AdviserID);
-        //         this.section =  this.sectionStore;
-        //     },
 
 function getStudents() {
     const results = adviserViewStore.advisoryStudents;
@@ -131,30 +119,6 @@ function getStudents() {
     return results;
 }
 
-//             fetchStudents(id,ay) {
-//                 this.getSection();
-//                 const studentIDs = (section.find((sec)=> sec.adviserId === id && sec.sectionSchoolYear === ay)).sectionStudents;
-        
-//                 this.students = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
-//             },
-
-//             removeStudent(){
-//                  this.fetchStudents(this.AdviserID, this.AcademicYear);
-//                 this.showStudentInfo = false;
-//             },
-
-//             handleAddedStudent(student){
-//                 this.fetchStudents(this.AdviserID, this.AcademicYear);
-//                 this.showAddStudentForm = false;
-//             }
-
-//         },
-
-//         mounted() {
-//             this.fetchStudents(this.AdviserID, this.AcademicYear);
-//         }
-
-//   };
 </script>
 
 <style scoped>

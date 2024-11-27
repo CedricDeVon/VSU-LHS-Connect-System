@@ -1,53 +1,19 @@
-<script setup lang='ts'>
-definePageMeta({
-  middleware: ['authenticate-and-authorize-adviser']
-});
-
-import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
-import { Result } from "~/library/results/result";
-import { UserSecurity } from "~/library/security/userSecurity";
-
-const auth = useFirebaseAuth();
-const adviserViewStore = useAdviserViewStore();
-await adviserViewStore.updateSettings();
-
-onBeforeMount(async () => {
-    await adviserViewStore.updateSettings();
-})
-
-const handleRowClick = (item: any) => {
-
-}
-
-const notifyClick = () => {
-    adviserViewStore.settingsContainWidth = (adviserViewStore.settingsContainWidth === '89%') ? '70%': '89%';
-    adviserViewStore.settingsTitleWidth = (adviserViewStore.settingsTitleWidth === '87%') ? '68%': '87%';
-    adviserViewStore.settingsShowNotification = !adviserViewStore.settingsShowNotification;
-}
-
-const logoutClick = async () => {
-    const result: Result = await UserSecurity.signOutUser(auth);
-    return navigateTo('/auth/login');
-}
-
-</script>
-
 <template>
     <div class="adviser-page">
-        <AdviserHeader @notif-click="notifyClick"/>
+        <AdviserHeader @notif-click="notifClick"/>
+        <NotificationModal v-if="adviserViewStore.settingsShowNotification" />  
         <div >
             <div class="m-5 flex justify-start ml-20">
                 <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.settingsTimeline) }}</h1>
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: adviserViewStore.settingsTitleWidth}">
+            <div class="title flex justify-center items-center" :style="{ width: adviserViewStore.settingsContainWidth }">
                 <div><h1 class="text-white text-2xl font-bold">Account Settings</h1></div>
             </div>   
 
             <!--Content of the Page-->
-            <div class="contain " :style="{ width: adviserViewStore.settingsContainWidth}">
+            <div class="contain " :style="{ width: adviserViewStore.settingsContainWidth }">
                 <div class="grid grid-cols-10 h-full">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <div class="grid-cols-2 pb-5 ml-6 flex justify-center" >
@@ -82,8 +48,9 @@ const logoutClick = async () => {
 
                             <div class=" grid grid-cols-12 w-full h-fit border-b-2 border-lime-950 pt-5 ">
                                 <div class="col-span-3 flex justify-start items-center ">
-                                    <label class="text m-0">Password  </label>
+                                    <label class="text m-0">Password:  </label>
                                 </div>
+                                <div class=" col-span-7 text2 flex items-center">{{ adviserViewStore.settingsUser.data.password }}</div>
                                 <div class="col-span-2 flex justify-end py-2">
                                     <button class="gray-button text-white  py-2 px-4 rounded-md shadow-lg">
                                         Change 
@@ -109,6 +76,42 @@ const logoutClick = async () => {
         </div>
     </div>
 </template>
+
+<script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+import { Result } from "~/library/results/result";
+import { UserSecurity } from "~/library/security/userSecurity";
+import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
+
+const auth = useFirebaseAuth();
+const adviserViewStore = useAdviserViewStore();
+await adviserViewStore.updateSettings();
+
+onBeforeMount(async () => {
+    await adviserViewStore.updateSettings();
+})
+
+const handleRowClick = (item: any) => {
+
+}
+
+const notifyClick = () => {
+    adviserViewStore.settingsContainWidth = (adviserViewStore.settingsContainWidth === '89%') ? '70%': '89%';
+    adviserViewStore.settingsTitleWidth = (adviserViewStore.settingsTitleWidth === '87%') ? '68%': '87%';
+    adviserViewStore.settingsShowNotification = !adviserViewStore.settingsShowNotification;
+}
+
+const logoutClick = async () => {
+    const result: Result = await UserSecurity.signOutUser(auth);
+    return navigateTo('/auth/login');
+}
+
+</script>
 
 <style scoped>
     .adviser-page{
@@ -197,6 +200,4 @@ const logoutClick = async () => {
     .logout:hover{
         background-color: #FF6161;
     }
-
-
 </style>

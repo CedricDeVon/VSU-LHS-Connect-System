@@ -4,7 +4,7 @@ definePageMeta({
 });
 
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
+import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
 import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
 
 const adviserViewStore = useAdviserViewStore();

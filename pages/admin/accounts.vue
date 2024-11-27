@@ -1,7 +1,126 @@
+<template>
+  <div class="flex h-screen bg-[#FFFEF1]">
+    <AdminSidebar />
+         
+    <div class="flex-grow flex flex-col h-screen overflow-hidden">
+      <AdminHeader ref="adminHeader" />
+     
+      <div class="p-8 flex-1 overflow-hidden">
+        <div class="mb-6">
+          <h1 class="text-2xl font-bold text-gray-800">Account Management</h1>
+          <p class="text-gray-600">Manage adviser accounts and registration requests</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col h-[calc(100%-6rem)]">
+          <!-- Controls Section -->
+          <div class="p-6 border-b border-gray-100 flex-shrink-0">
+            <div class="flex flex-col sm:flex-row gap-4">
+              <select
+                class="flex-shrink-0 w-full sm:w-64 rounded-lg border border-gray-300 px-4 py-2.5 bg-white text-gray-700 hover:border-gray-400 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-colors"
+                  v-model="adminViewStore.accountsSelectedAccount">
+                  <option value="all">All Accounts</option>
+                  <option value="active">Active Accounts</option>
+                  <option value="inactive">Inactive Accounts</option>
+                  <option value="pending">Approval Requests</option>
+                </select>
+              
+                <button @click="adminViewStore.accountsShowUploadModal = true"
+                class="inline-flex items-center justify-center px-4 py-2.5 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                <Icon name="heroicons:cloud-arrow-up" class="w-5 h-5 mr-2" />
+                Upload CSV
+                </button>
+              </div>
+            </div>
+
+
+          <!-- Table Section - Make this scrollable -->
+          <div class="flex-1 overflow-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Adviser Name
+                  </th>
+                  <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    Faculty ID
+                  </th>
+                  <th scope="col" class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                    {{ adminViewStore.accountsSelectedAccount === 'pending' ? 'Actions' : 'Status' }}
+                  </th>
+                  <th v-if="add && adminViewStore.accountsSelectedAccount === 'inactive'" scope="col"
+                  class="px-6 py-3 text-center text-xs font-medium text-white uppercase tracking-wider w-1/3">
+                  Action
+                  </th>   
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="adviser in filteredAdvisers()" :key="adviser.id"
+                    class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4">
+                    <div class="text-sm font-medium text-gray-900">{{ adminViewStore.getFullName(adviser) }}</div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="text-sm text-gray-500">{{ adviser.data?.facultyId || 'N/A' }}</div>
+                  </td>
+                  <td class="px-6 py-4">
+                    <div v-if="adminViewStore.accountsSelectedAccount  === 'pending'" class="flex gap-2">
+                      <button @click="acceptRequest(adviser)"
+                        class="px-4 py-1.5 text-xs font-medium rounded-md bg-green-500 text-white hover:bg-green-600 focus:ring-2 focus:ring-green-400 focus:ring-offset-2 transition-colors">
+                        Accept
+                      </button>
+                      <button @click="rejectRequest(adviser)"
+                        class="px-4 py-1.5 text-xs font-medium rounded-md bg-red-500 text-white hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition-colors">
+                        Reject
+                      </button>
+                    </div>
+                    <div v-else>
+                      <span :class="[
+                        'px-3 py-1 text-xs font-medium rounded-full inline-flex items-center',
+                        adviser.data.status === 'active' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      ]">
+                        <span class="w-1.5 h-1.5 rounded-full mr-1.5"
+                              :class="adviser.data.status === 'active' ? 'bg-green-600' : 'bg-red-600'">
+                        </span>
+                        {{ adviser.data.status }}
+                      </span>
+                    </div>
+                  </td>
+                  <td v-if="add && selectedAccount === 'inactive'" class="px-6 py-4 break-words">
+                    <button 
+                      class="px-5 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
+                      Add to Section
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <!-- Modal for CSV Upload -->
+      <AdviserCSVUploadModal
+        v-if="adminViewStore.accountsShowUploadModal"
+        @close="adminViewStore.accountsShowUploadModal = false"
+      /> 
+      <!-- Modal for Approved Account -->
+      <ApprovedAccountModal
+      v-if="showApprovalModal"
+      @close="showApprovalModal = false"
+      :approvedEmail="propAdviser.email"
+      :adviserName="propAdviser.name"
+      :adviserID="propAdviser.facultyId"
+        :adviserSection="propAdviser.section"/>
+      </div>
+  </div>
+</template>
+
 <script setup lang="ts">
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import AdviserCSVUploadModal from '@/components/Modals/AdviserCSVUploadModal.vue';
+import ApprovedAccountModal from '~/components/Modals/ApprovedAccountModal.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore'
 import { componentNames } from '#build/components';
 import { Databases } from '~/library/databases/databases';
@@ -46,177 +165,35 @@ const filteredAdvisers = () => {
     return adminViewStore.accountsAdvisers.filter((adviser: any) => adviser.data.status === 'pending');
   }
 }
-
 </script>
 
-<template>
-  <div class="flex h-screen">
-    <AdminSidebar />
-         
-    <div class="flex-grow accounts-page">
-      <!--Header-->
-     
-      <div class="flex justify-center p-8">
-        <div class="bg-white custom-shadow rounded-lg w-full max-w-4xl">
-          <!-- Dropdown Button -->
-          <div class="flex justify-start p-4">
-            <div class="flex flex-row relative inline-block text-left w-full">
-              <div class="w-[30%] mr-4">
-                <select
-                  class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
-                  v-model="adminViewStore.accountsSelectedAccount">
-                  <option value="all">All Accounts</option>
-                  <option value="active">Active Accounts</option>
-                  <option value="inactive">Inactive Accounts</option>
-                  <option value="pending">Approval Requests</option>
-                </select>
-              </div>
-              <div>
-                <button @click="adminViewStore.accountsShowUploadModal = true"
-                class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none">
-                  Upload CSV for Bulk Registration
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Table -->
-          <div class="overflow-x-auto overflow-y-auto max-h-96">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-green-700 sticky top-0 z-10">
-                <tr>
-                  <th scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
-                    Adviser Name
-                  </th>
-                  <th scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
-                    Faculty ID
-                  </th>
-                  <th v-if="adminViewStore.accountsSelectedAccount === 'pending'" scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
-                    Actions
-                  </th>
-                  <th v-else scope="col"
-                    class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider w-1/3">
-                    Status
-                  </th>
-                </tr>
-              </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="adviser in filteredAdvisers()" :key="adviser.data.facultyId">
-                  <td class="px-6 py-4 text-sm font-medium text-gray-900 break-words">
-                    {{adviser.data.firstName + ' ' + adviser.data.lastName}}
-                  </td>
-                  <td class="px-6 py-4 text-sm text-gray-500 break-words">
-                    {{ adviser.data.facultyId }}
-                  </td>
-                  <td v-if="adminViewStore.accountsSelectedAccount === 'pending'" class="px-6 py-4 break-words">
-                    <button @click="acceptRequest(adviser)"
-                      class="px-8 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
-                      Accept
-                    </button>
-                   
-                    <button @click="rejectRequest(adviser)"
-                      class="px-8 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-500 text-white hover:bg-red-700">
-                      Reject
-                    </button>
-                  </td>
-                  <td v-else class="px-6 py-4 break-words">
-                    <span :class="[ 'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
-                      adviser.data.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    ]">
-                      {{ adviser.data.status }}
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Modal for CSV Upload -->
-      <AdviserCSVUploadModal
-        v-if="adminViewStore.accountsShowUploadModal"
-        @close="adminViewStore.accountsShowUploadModal = false"
-      /> 
-       <!-- Modal for Approved Account -->
-       <ApprovedAccountModal
-        v-if="showApprovalModal"
-        @close="showApprovalModal = false"
-        :approvedEmail="propAdviser.email"
-        :adviserName="propAdviser.name"
-        :adviserID="propAdviser.facultyId"
-        :adviserSection="propAdviser.section"/>
-
-    </div>
-  
-  </div>
-</template>
-
-<style>
-</style>
-
 <style scoped>
-.outer-container {
-  background-color: lightgreen;
-  margin: 3rem 5rem;
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease;
 }
 
-.custom-shadow {
-  box-shadow: 0 7px 10px -2px rgba(0, 0, 0, 0.1), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 
-/* Sticky table header styling */
-thead th {
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+thead {
   position: sticky;
   top: 0;
-  background-color: #1f7a1f;
-  /* Dark green background */
-  color: white;
   z-index: 1;
-  /* Ensure header stays above body rows */
-  padding: 0.75rem;
-  /* Adjust padding as needed */
-  white-space: nowrap;
-  /* Prevent header from wrapping */
+  background-color: rgb(249 250 251); /* bg-gray-50 */
 }
 
-th:first-child {
-  width: 35%;
-  /* Allocate more space for the first column */
+th {
+  font-weight: 600;
+  letter-spacing: 0.05em;
 }
 
-th:nth-child(3) {
-  width: 25%;
-}
-
-th:nth-child(2),
-th:nth-child(4) {
-  width: 20%;
-  /* Adjust remaining columns evenly */
-}
-
-/* Wrap content inside table cells */
-td {
-  word-wrap: break-word;
-  white-space: normal;
-  /* Allows content to wrap */
-  padding: 0.75rem;
-  /* Adjust padding as needed */
-  font-size: 0.875rem;
-  /* Optional: make text smaller */
-  color: #4a4a4a;
-  /* Text color */
-}
-
-.overflow-x-auto {
-  max-height: 600px;
-  /* Adjust the height as needed */
-  overflow-y: auto;
+tbody tr:last-child td {
+  border-bottom: none;
 }
 </style>
-
-        // @upload="uploadFile"
-        // @file-uploaded="handleFileUpload"

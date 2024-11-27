@@ -52,7 +52,7 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     const reportsStatus = ref('Unread');
     const reportsAcademicYear = ref('');
 
-    const settingsShowNotificaton = ref(false);
+    const settingsShowNotification = ref(false);
     const settingsContainWidth = ref('89%');
     const settingsTitleWidth = ref('87%');
     const settingsUser = useState('settingsUser');
@@ -273,7 +273,7 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
         reportsAcademicYear,
         reportsAnecdotalReports,
 
-        settingsShowNotificaton,
+        settingsShowNotification,
         settingsContainWidth,
         settingsTitleWidth,
         settingsUser,

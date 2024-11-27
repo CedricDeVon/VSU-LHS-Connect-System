@@ -262,6 +262,16 @@ export class Databases {
         }
     }
 
+    public static async getAllInitialReports(): Promise<Result> {
+        try {
+            const result: Result = await Databases._initialReportFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async getAllInitialReportsViaAdviserId(adviserId: string): Promise<Result> {
         try {
             const result: Result = await Databases._initialReportFirebaseDatabase.queryDuplicates(

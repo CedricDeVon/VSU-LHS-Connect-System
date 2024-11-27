@@ -8,15 +8,18 @@ export default defineEventHandler(async (event) => {
 
         const adminUser = (await Databases.getOneAdminViaUserId(id)).data;
         const user = (await Databases.getOneUserViaEmail(email)).data;
-        const reportsCount = (await Databases.getAllAdminReportsCount(adminUser.id)).data;
-        const studentsCount = (await Databases.getAllStudentsCount()).data;
-        const approvalsCount = (await Databases.getAllPendingAdvisersCount()).data;
+        const incidentReports = (await Databases.getAllIncidentReports()).data;
+        const initialReports = (await Databases.getAllInitialReports()).data;
+        const caseConferences = (await Databases.getAllCaseConferenceReports()).data;
+        const timeline = (await Databases.getMostRecentTimeline()).data[0];
 
         return new SuccessfulResult({
+            adminUser,
             user,
-            reportsCount,
-            studentsCount,
-            approvalsCount,
+            incidentReports,
+            initialReports,
+            caseConferences,
+            timeline,
           }).cloneToObject();
 
     } catch (error: any) {

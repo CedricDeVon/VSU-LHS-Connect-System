@@ -18,11 +18,9 @@
             </div>
         </div>
     </div>
-    </div>
 </template>
 
 <script>
-
 export default {
     emits: ['close', 'remove-student'],
     props: {

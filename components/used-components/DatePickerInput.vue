@@ -6,15 +6,15 @@
         </template>
       </UiDatepicker>
     </div>
-  </template>
+</template>
   
-  <script lang="ts" setup>
-  import { ref, watch, defineEmits } from 'vue';
-  
-  const date = ref();
-  const emit = defineEmits(['update:modelValue']);
-  
-  watch(date, (value) => {
-    emit('update:modelValue', value);
-  });
-  </script>
+<script lang="ts" setup>
+import { ref, watch, defineEmits } from 'vue';
+
+const date = ref();
+const emit = defineEmits(['update:modelValue']);
+
+watch(date, (value: any) => {
+  emit('update:modelValue', value);
+});
+</script>

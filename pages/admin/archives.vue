@@ -201,7 +201,7 @@
               </DialogPanel>
             </div>
           </Dialog>
-        </TransitionRoot>
+        </TransitionRoot> 
       </main>
     </div>
   </div>
@@ -226,7 +226,7 @@ import { anecdotalReport } from '~/data/anecdotal';
 
 // Add these imports
 import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
 import { initialReport } from '~/data/initialReport';

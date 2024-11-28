@@ -126,6 +126,12 @@ export default {
   components: {
     AdminSidebar, AdminHeader, AddSectionForm, StudentDetailsModal
   },
+  props: {
+    academicYear: {
+      type: String,
+      default: '2024-2025'
+    }
+  },
   watch: {
     searchQuery: debounce(function (newQuery) {
       this.debouncedQuery = newQuery;
@@ -179,7 +185,7 @@ export default {
   computed: {
     filteredSections() {
       let filtered = this.sections.filter((section) => {
-        if (!this.debouncedQuery) return true; // Show all if query is empty
+        if (!this.debouncedQuery) return section.sectionSchoolYear === this.academicYear; // Show all if query is empty
         return (
           section.sectionName.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||
           String(section.sectionLevel).includes(this.debouncedQuery) ||
@@ -200,7 +206,7 @@ export default {
     },
     filteredStudents() {
       let filtered = this.students.filter((student) => {
-        if (!this.debouncedQuery) return true;
+        if (!this.debouncedQuery) return student.isEnrolled === true; // Show all if query is empty
         return (
           student.studentId.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||
           student.lastName.toLowerCase().includes(this.debouncedQuery.toLowerCase()) ||

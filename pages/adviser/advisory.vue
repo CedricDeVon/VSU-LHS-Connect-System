@@ -7,7 +7,6 @@
             :AdviserID="AdviserID" 
             />
 
-            <notification-modal v-if="showNotification" />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">Academic Year  {{AcademicYear}}</h1>
             </div>
@@ -89,12 +88,11 @@
     import { sectionStore } from "~/stores/section";
     import { student } from "~/data/student";
     import { section } from "~/data/section";
-    import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
     import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
 
     export default {
         name: "Advisory",
-        components: {AdviserHeader, StudentBasicInfo, AddStudentForm, NotificationModal, InitialReportModal,},
+        components: {AdviserHeader, StudentBasicInfo, AddStudentForm, InitialReportModal,},
         props: {
             AdviserID: {
                 type: String,
@@ -116,7 +114,6 @@
             showAddStudentForm: false,
             studentInfo: {},
             section: {},
-            showNotification:false,
             containWidth:'89%',
         };},
 
@@ -143,7 +140,6 @@
             notifClick(){
                 this.containWidth = this.containWidth === '89%' ? '70%': '89%';
                 this.titleWidth = this.titleWidth === '87%' ? '68%': '87%';
-                this.showNotification = !this.showNotification;
             },
 
             fetchStudents(id,ay) {

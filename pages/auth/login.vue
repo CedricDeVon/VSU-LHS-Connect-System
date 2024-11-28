@@ -65,7 +65,7 @@ onMounted(() => {
           <input 
             type="text" 
             v-model="userLogInStore.email" 
-            placeholder="Username" 
+            placeholder="Email Address" 
             class="w-full py-3 px-3 border border-gray-200 rounded-lg text-sm bg-gray-50 
                    transition-all duration-300
                    focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20 focus:scale-[1.02]"

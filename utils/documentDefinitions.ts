@@ -283,7 +283,7 @@ export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedRepor
               [
                 {
                   stack: [
-                    { text: 'Report Noted By:', style: 'label', margin: [0, 20, 0, 5] },
+                    { text: 'Report Received By:', style: 'label', margin: [0, 20, 0, 5] },
                     { text: 'NOEMI ELISA L. OQUIAS', style: 'signature' },
                     { text: 'Guidance Facilitator', style: 'position' },
                   ],

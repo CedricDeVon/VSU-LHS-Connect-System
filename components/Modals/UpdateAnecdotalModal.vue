@@ -67,11 +67,14 @@
                 class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
             </div>
 
-            <!-- Change the label here -->
+            <!-- Remarks section -->
             <div>
-              <label class="block text-sm font-medium text-gray-700">Remarks from the Guidance Office</label>
+              <label class="block text-sm font-medium text-gray-700">
+                {{ isFromAdviserRoute ? 'Adviser\'s Remarks' : 'Remarks from the Guidance Office' }}
+              </label>
               <textarea v-model="formData.remarks" rows="3" required
-                class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                class="mt-1 px-4 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+              </textarea>
             </div>
           </div>
 
@@ -128,9 +131,15 @@ export default {
         thingsInvolved: '',
         details: '',
         remarks: '',
-        isReportedByGuidance: true
+        isReportedByGuidance: false // Default to adviser view
       },
       error: null
+    }
+  },
+
+  computed: {
+    isFromAdviserRoute() {
+      return this.$route.path.includes('/adviser/')
     }
   },
 
@@ -142,6 +151,7 @@ export default {
     } else if (this.report) {
       // Initialize with report data if no draft exists
       this.formData = {
+        ...this.formData,
         date: this.report.date,
         purpose: this.report.purpose,
         witnesses: Array.isArray(this.report.witnesses) ? this.report.witnesses.join(', ') : this.report.witnesses,
@@ -149,7 +159,7 @@ export default {
         thingsInvolved: this.report.thingsInvolved,
         details: this.report.details,
         remarks: this.report.remarks,
-        isReportedByGuidance: this.report.isReportedByGuidance
+        isReportedByGuidance: !this.isFromAdviserRoute // Set based on route
       }
     }
   },
@@ -160,7 +170,8 @@ export default {
         const updatedData = {
           ...this.formData,
           witnesses: this.formData.witnesses.split(',').map(w => w.trim()),
-          lastModified: new Date().toISOString()
+          lastModified: new Date().toISOString(),
+          isReportedByGuidance: !this.isFromAdviserRoute // Set based on route when submitting
         }
 
         this.$emit('update', updatedData)

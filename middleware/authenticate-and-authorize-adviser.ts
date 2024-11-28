@@ -11,8 +11,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       let result: any = await $fetch('/api/auth/jsonWebToken/verify', {
         method: 'POST', body: { jsonWebToken: jsonWebToken.value }
       })
+      if (result.isNotSuccessful) {
+        console.error(result.message);
+        return navigateTo('/auth/login');
+      }
       
-      // console.log(result)
       const { role, status, email, password } = result.data.data;
       if (result.isNotSuccessful) {
         console.error('User is not an Adviser. Returning to Log-in Page');

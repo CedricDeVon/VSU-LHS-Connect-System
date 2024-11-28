@@ -1,8 +1,7 @@
 <template>
     <div class="adviser-page">
-        <AdviserHeader @notif-click="notifClick" class="relative z-10" />
+        <AdviserHeader class="relative z-10" />
             <img class="backPic" src="~/assets/images/vsu-main-the-search-for-truth-statue.png" alt="img">
-       
         <div class="min-h-screen">
             <div class="w-full h-full z-0">
                 <div class="flex flex-row ">
@@ -41,7 +40,7 @@
                                 <!-- Left Column: Profile Picture -->
                                 <div class="flex-shrink-0">
                                     <div class="relative">
-                                        <img src="assets/icons/default-user.png" :alt="profilePic"
+                                        <img :src="adviserViewStore.homepageAdviser.data.profilePicture" :alt="adviserViewStore.homepageAdviser.data.profilePicture"
                                             class="w-48 h-48 rounded-full object-cover shadow-lg border-4 border-[#728B78]/20" />
                                         <div class="absolute -bottom-2 left-0 right-0 text-center">
                                             <span class="bg-[#728B78] text-white px-4 py-1 rounded-full text-sm">
@@ -102,7 +101,7 @@
                                                 </div>
                                                 <div class="flex items-center">
                                                     <span class="text-gray-600 w-24 text-sm">Population</span>
-                                                    <span class="font-medium">{{ adviserViewStore.homepageSection.data.sectionPopulation || 'N/A' }}
+                                                    <span class="font-medium">{{ adviserViewStore.homepageSection.data.population }}
                                                         students</span>
                                                 </div>
                                             </div>
@@ -203,28 +202,28 @@
                                 </h1>
                             </div>
                             <div class="overflow-y-auto max-h-[500px] pr-2 mt-4">
-                                <!-- <div v-for="(notification, index) in activeNotifications" :key="index"
+                                <div v-for="notification of getActiveNotifications()" :key="notification.id"
                                     class="bg-white rounded-xl p-4 mb-4 shadow-md transition-all duration-200 hover:shadow-lg"
                                     :class="{
-                                        'border-r-4 border-[#265630] bg-gradient-to-r from-[#e1fde7] to-white': notification.isNew,
+                                        'border-r-4 border-[#265630] bg-gradient-to-r from-[#e1fde7] to-white': notification.data.isActive,
                                         'hover:-translate-y-1': true
                                     }">
                                     <div class="flex items-center justify-between mb-2">
                                         <h2 class="text-[#265630] font-semibold text-lg">
-                                            {{ notification.announcementTitle }}
+                                            {{ notification.data.title }}
                                         </h2>
-                                        <span v-if="notification.isNew"
+                                        <span v-if="notification.data.isActive"
                                             class="bg-[#265630] text-white text-xs px-2 py-1 rounded-full">
                                             New
                                         </span>
                                     </div>
-                                    <p class="text-sm text-gray-600 mb-2">{{ notification.announcementContent }}</p>
+                                    <p class="text-sm text-gray-600 mb-2">{{ notification.data.content }}</p>
                                     <div
                                         class="flex items-center justify-between text-xs text-gray-500 mt-2 pt-2 border-t border-gray-100">
-                                        <span>{{ notification.announcementBy }}</span>
-                                        <span>{{ formatDate(notification.announcementDate) }}</span>
+                                        <span>{{ adviserViewStore.getFullName(notification.data.by) }}</span>
+                                        <span>{{ notification.data.date }}</span>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -243,27 +242,35 @@ import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
 import StudentBasicInfo from "~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue";
 import AddStudentForm from "~/components/Modals/Advisory/AddStudentForm.vue";
 import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
-import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+import { UserSecurity } from "~/library/security/userSecurity";
 
-const containWidth = ref('93%');
+const containWidth = ref('89%');
+const showNotification = ref(false);
 
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateHomePage();
 
-onBeforeMount(async () => {
-    await adviserViewStore.updateHomePage();
-})
+// onBeforeMount(async () => {
+//     await adviserViewStore.updateHomePage();
+// })
 
-const goToAdvisory = () => {
-    this.$router.push('/adviser/advisory')
+const notifyClick = () => {
+    showNotification.value = !showNotification.value;
 }
 
-const goToReports = () => {
-    this.$router.push('/adviser/reports')
-}
-
-
-
+const getActiveNotifications = () => {
+  return adviserViewStore.notificationAdviserModalAnnouncements
+  .sort((a: any, b: any) => {
+      if (a.data.isActive && !b.data.isActive) {
+          return -1;
+      } else if (!a.data.isActive && b.data.isActive) {
+          return 1;
+      } else {
+          return new Date(b.data.date) - new Date(a.data.date);
+      }
+  });
+};
 </script>
 
 <style scoped>

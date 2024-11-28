@@ -4,14 +4,10 @@ import { SuccessfulResult } from '~/library/results/successfulResult';
 
 export default defineEventHandler(async (event) => {
   try {
-    const { userId, studentId } = await readBody(event);
-    const adviser = (await Databases.getOneAdviserViaUserId(userId)).data;
-    await Databases.studentFirebaseDatabase.updateOneDocument(studentId, {
-      isEnrolled: false,
-      adviserId: '',
-      sectionId: ''
-    });
+    const { userId, data } = await readBody(event);
 
+    const adviser = (await Databases.getOneAdviserViaUserId(userId)).data;
+    
     return new SuccessfulResult().cloneToObject();
 
   } catch (error: any) {

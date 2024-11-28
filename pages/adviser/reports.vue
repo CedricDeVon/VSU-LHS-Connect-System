@@ -6,22 +6,21 @@
         :adviserId="AdviserID"
         @close ="creationClose"
         /> 
-        <notification-modal v-if="adviserViewStore.reportsShowNotification"/>
+        <NotificationModal v-if="adviserViewStore.notificationShowAdviserModalAnnouncements" />  
         <AdviserHeader @notif-click="notifClick" class="relative z-10"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
-                <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.reportsTimeline) }}</h1>
+                <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYear(adviserViewStore.reportsTimeline) }}</h1>
             </div>
  
-
-                <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: adviserViewStore.reportsTitleWidth}">
-                <div><h1 class="text-white text-2xl font-bold">
-                    Incident Reports</h1></div>
-            </div>   
-
             <!--Content of the Page-->
             <div class="contain " :style="{ width: adviserViewStore.reportsContainWidth}">
+                 <!--Title of the Content?-->
+                <div class="title flex justify-center items-center" :style="{width: adviserViewStore.reportsTitleWidth}">
+                    <div><h1 class="text-white text-2xl font-bold">
+                        Incident Reports</h1></div>
+                </div>   
+
                 <div class=" m-10  py-5 px-20 mx-20  ">
                         <!--Sort/Add student-->
                         <div class="grid-cols-2 pb-5 ml-6" >
@@ -33,7 +32,6 @@
                                <option value="anecdotal">Anecdotal Report</option>
                            </select>
 
-                       
                             <button v-if="adviserViewStore.reportsSelectedSort !== 'anecdotal'" @click="createReport" 
                                     class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="ReportIncident">
@@ -66,7 +64,7 @@
                                 <tbody >
                                     <tr class =" hover:bg-gray-200 text " v-for="report in getReports()" :key="report.id"  >
                                         <td class=" py-5 text-center align-middle ">{{ report.id || 'N/A' }}</td>
-                                        <td class=" py-5 text-center align-middle ">{{ report.data.peopleInvolved.join(', ') || 'N/A' }}</td>
+                                        <td class=" py-5 text-center align-middle ">{{ report.data.studentId || 'N/A' }}</td>
                                         <td class=" py-5 text-center align-middle ">{{ report.data.dateOfIncident || 'N/A' }}</td>
                                         <td class=" py-5 text-center align-middle ">
                                             <button v-if="report.data.isDraft"  @click="editReport(report)" 
@@ -98,18 +96,15 @@ definePageMeta({
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
 import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
 import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
-import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+import { UserSecurity } from "~/library/security/userSecurity";
 
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateReports();
 
-onBeforeMount(async () => {
-    await adviserViewStore.updateReports();
-})
-
-const handleRowClick = (item: any) => {
-
-}
+// onBeforeMount(async () => {
+//     await adviserViewStore.updateReports();
+// })
 
 const notifClick = () => {
     adviserViewStore.reportsContainWidth = adviserViewStore.reportsContainWidth === '89%' ? '70%': '89%';

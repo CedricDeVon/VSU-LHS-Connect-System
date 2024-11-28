@@ -8,6 +8,7 @@ import { SuccessfulResult } from "../results/successfulResult";
 export class VSUIssuedIdValidator extends Validator {
     public async validate(value: any): Promise<Result> {
         try {
+            // console.log(value);
             if (typeof value !== 'string') {
                 throw new Error(`VSU IDs must be of type string`);
             }

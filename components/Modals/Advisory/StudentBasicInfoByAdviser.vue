@@ -21,18 +21,13 @@
                 </div>
 
                 <!--Buttons-->
-                <div v-if="adviserViewStore.advisoryStudentData.data.anecdotalReport" class="flex justify-center items-center m-3">
+                <div v-if="Object.keys(adviserViewStore.advisoryStudentData.data.anecdotalReport).length !== 0" @click="updateAnecdotalReport(adviserViewStore.advisoryStudentData)" class="flex justify-center items-center m-3">
                     <button class=" updateAnecdotal shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Update Anecdotal">
-                        Update Anecdotal Report
-                    </button>
-                </div>
-                <div v-else class="flex justify-center items-center m-3">
-                    <button class=" updateAnecdotal shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Create Anecdotal">
-                        Create Anecdotal Report
+                        Anecdotal Report
                     </button>
                 </div>
                 <div class="flex justify-center m-3">
-                    <button @click="showReport" class=" submitComplaint shadow w-9/12 px-10 py-2 rounded-lg gray text-green-900 hover:bg-gray-600 focus:outline-none" aria-label="Submit Complaint">
+                    <button @click="createReport" class=" submitComplaint shadow w-9/12 px-10 py-2 rounded-lg gray text-green-900 hover:bg-gray-600 focus:outline-none" aria-label="Submit Complaint">
                         Submit and Report a Complaint
                     </button>
                 </div>
@@ -44,42 +39,41 @@
             </div>
         </div>
         <!-- <adviser-anecdotal v-if="showAnecdotal" :Student="student" @close="showAnecdotal = false"/> -->
-        <initial-report-modal v-if="report" @close="report = false"/>
-        <RemoveStudent v-if="remove" @close="handleRemoveStudent" :student ="student" :section="this.section" />
+        <initial-report-modal v-if="report" @close="report=false" :show="report"/>
+        <RemoveStudent v-if="remove" @close="handleRemoveStudent" :student ="adviserViewStore.advisoryStudentData" />
     </div>
 </template>
 
 <script setup lang='ts'>
 import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
-import InitialReportModal from './InitialReportModal.vue';
-import AdviserAnecdotal from '../../pages/adviser/anecdotal/[id].vue';
-import RemoveStudent from './removeStudent.vue';
+import InitialReportModal from '../AdviserReport/InitialReportModal.vue';
+import RemoveStudent from './RemoveStudent.vue';
+
+const report = ref(false);
+const remove = ref(false);
 
 const adviserViewStore = useAdviserViewStore();
-// showReport() {
-//     this.report = true;
-// },
 
-// creationClose(){
-//     this.report = false;
-// },
+const updateAnecdotalReport = (student: any) => {
+    return navigateTo(`/adviser/anecdotal/${student.id}`);
+}
 
-// viewReport(anecdotalDocID) {
-//         // Find the student with this anecdotal report
-//         if (anecdotalDocID && anecdotalDocID !== '') {
-//             this.$router.push(`/adviser/anecdotal/${this.student.studentId}`);
-            
-//         } else {
-//             alert('No student found with this anecdotal report'); //Create new anecdotal report
-//         }
-//     },
-// removeStudent(){
-//     this.remove = true; 
-// },
-// handleRemoveStudent(){
-//     this.remove = false;
-//     this.$emit('close');
-// }
+const createReport = () => {
+    report.value = true;
+}
+
+const creationClose = () => {
+    remove.value = false;
+}
+
+const removeStudent = () => {
+    remove.value = true; 
+}
+
+const handleRemoveStudent = () => {
+    remove.value = false;
+}
+
 </script>
 
 <style scoped>

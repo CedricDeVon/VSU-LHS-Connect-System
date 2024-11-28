@@ -117,27 +117,6 @@
                       </button>
                     </div>
                   </div>
-                  <div class="p-1 px-2 pb-0 ">
-                     Address:
-                    <label>
-                      <input v-model="store.address" type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3 focus outline-green-400 " placeholder="Enter Student Address">
-                    </label>
-                  </div>
-                  <div class=" mt-2 p-1 px-2 pb-0 ">
-                     Contact Number:
-                    <label>
-                      <input v-model="store.contactNum" type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/5 focus outline-green-400" placeholder="Enter Contact Number">
-                      <!-- <button class="pl-5 wordbutton ">Add +</button> -->
-                    </label>
-                  </div>
-                  <div class="flex justify-end mt-7 mb-7 ">
-                    <button @click ="handleBack" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Back">
-                      Back
-                    </button>
-                    <button @click ="addStudentClick" class=" button2 px-11 py-2 m-2 rounded-lg focus:outline-none" aria-label="Add Student">
-                      Add Student
-                    </button>
-                  </div>
                 </div>
                 </form>
               </div>
@@ -164,7 +143,7 @@ import UnEnrolledStudents from './UnEnrolledStudents.vue';
 import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
 import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 
-  export default{
+export default{
       name: 'AddStudentForm',
       components: { UnEnrolledStudents, StudentCSVUploadModal},
       props: {
@@ -236,8 +215,9 @@ import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
     };
 
     const addStudentClick = async () => {
-      await adviserViewStore.addNewStudent(store.getAllData());
-      await adviserViewStore.updateAdvisoryView();
+      const user = await getCurrentUser();
+      await adviserViewStore.addNewStudent(user, store.getAllData());
+      await adviserViewStore.updateAdvisoryView(user);
 
       handleBack();
       store.resetAllData();

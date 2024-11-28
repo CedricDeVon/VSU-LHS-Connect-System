@@ -21,8 +21,17 @@ import { UserExistenceValidator } from './userExistenceValidator';
 import { UserPasswordHashValidator } from './userPasswordHashValidator';
 import { VSUIssuedIdValidator } from './vsuIssuedIdValidator';
 import { BirthDateValidator } from './birthDateValidator';
+import { SuffixValidator } from './suffixValidator';
+import { GenderValidator } from './genderValidator';
+import { SectionIdValidator } from './sectionIdValidator';
 
 export class Validators {
+    private static readonly _sectionIdValidator: SectionIdValidator = new SectionIdValidator();
+
+    private static readonly _suffixValidator: SuffixValidator = new SuffixValidator();
+
+    private static readonly _genderValidator: GenderValidator = new GenderValidator();
+
     private static readonly _emptyValidator: EmptyValidator = new EmptyValidator();
 
     private static readonly _floatValidator: FloatValidator = new FloatValidator();
@@ -68,6 +77,18 @@ export class Validators {
     private static readonly _vsuIssuedIdValidator: VSUIssuedIdValidator = new VSUIssuedIdValidator();
 
     private static readonly _birthDateValidator: BirthDateValidator = new BirthDateValidator();
+
+    public static get sectionIdValidator(): SectionIdValidator {
+        return Validators._sectionIdValidator;
+    }
+
+    public static get suffixValidator(): SuffixValidator {
+        return Validators._suffixValidator;
+    }
+
+    public static get genderValidator(): GenderValidator {
+        return Validators._genderValidator;
+    }
 
     public static get birthDateValidator(): BirthDateValidator {
         return Validators._birthDateValidator;

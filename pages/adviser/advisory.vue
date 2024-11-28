@@ -1,23 +1,20 @@
 <template>
     <div class="adviser-page">
-        <AdviserHeader @notif-click="notifClick" class="relative z-10" />
+            <AdviserHeader @notif-click="notifClick" class="relative z-10" />
             <div >
             <AddStudentForm v-if="adviserViewStore.advisoryAddStudentForm"
             @close="adviserViewStore.advisoryAddStudentForm = false"
             />
 
-            <NotificationModal v-if="adviserViewStore.advisoryShowNotification" />
+            <NotificationModal v-if="adviserViewStore.notificationShowAdviserModalAnnouncements" />  
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
             </div>
 
-                <!--Title of the Content?-->
-           
-
             <!--Content of the Page-->
             <div class="contain " :style="{width: containWidth}">
 
-                <div class="title  flex justify-center items-center" >
+                <div class="title  flex justify-center items-center" :style="{width: titleWidth}">
                     <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
                 </div>   
 
@@ -72,7 +69,6 @@
                     </div>
                         <StudentBasicInfo v-if="adviserViewStore.advisoryShowStudentInfo"/>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -87,18 +83,20 @@ definePageMeta({
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
 import StudentBasicInfo from "~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue";
 import AddStudentForm from "~/components/Modals/Advisory/AddStudentForm.vue";
-import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
 import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+import { UserSecurity } from "~/library/security/userSecurity";
+
+const containWidth = ref('89%');
+const titleWidth = ref('87%');
 
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateAdvisoryView();
 
-const containWidth = ref('89%');
-
-onBeforeMount(async () => {
-    await adviserViewStore.updateAdvisoryView();
-})
+// onBeforeMount(async () => {
+//     await adviserViewStore.updateAdvisoryView();
+// })
 
 function showAddStudentForm() {
     adviserViewStore.advisoryAddStudentForm = !adviserViewStore.advisoryAddStudentForm;

@@ -20,7 +20,9 @@
     </div>
 </template>
 
-<script>
+<script lang='ts'>
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+
 export default {
     emits: ['close', 'remove-student'],
     props: {
@@ -34,12 +36,21 @@ export default {
         }
     },
 
+    data() {
+        return {
+            adviserViewStore: useAdviserViewStore()
+        }
+    },
+
     methods: {
         closeModal() {
             this.$emit('close');
         },
+
        async removeStudent() {
-        this.section.sectionStudents = this.section.sectionStudents.filter(studentId => studentId !== this.student.studentId);   
+            await this.adviserViewStore.removeStudent(this.student);
+            await this.adviserViewStore.updateAdvisoryView();
+
             this.closeModal();
         }
     }

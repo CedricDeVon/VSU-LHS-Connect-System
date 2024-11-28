@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
       student.data['gradeAndSection'] = (section) ? `Grade ${section.data.level}, ${section.data.name}` : 'N/A';
       student.data['age'] = (new Date().getFullYear() - new Date(student.data.birthDate).getFullYear())
       student.data['anecdotalReport'] = (await Databases.getOneAnecdotalReportViaId(student.data.anecdotalReportId)).data;
+      
       student.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(student.data.profilePicture)).data;
     }
     // console.log('DEBUG', adviser)

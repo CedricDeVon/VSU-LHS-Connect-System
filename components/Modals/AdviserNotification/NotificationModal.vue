@@ -9,14 +9,14 @@
         </div>
         <div class=" overflow-x-auto overflow-y-auto max-h ">
           <div 
-          v-for = "(notification, index) in activeNotifications"
-          :key="index"   
+          v-for="notification of getActiveNotifications()"
+          :key="notification.id"   
           class="bg-white rounded-lg p-4 m-5  shadow-2xl "
-          :class="{' new-announcement ': notification.isNew }"
+          :class="{' new-announcement ': notification.data.isActive }"
           >
-          <h1 class="subHeader">{{ notification.announcementTitle }}</h1>
-          <p class="text-xs font-bold ">{{ notification.announcementDate }}<span class="text-xs">  : {{ notification.announcementBy }}</span></p> 
-          <p class="p-2 px-0">{{ notification.announcementContent }}</p>
+          <h1 class="subHeader">{{ notification.data.title }}</h1>
+          <p class="text-xs font-bold ">{{ notification.data.date }}<span class="text-xs">  : {{ adviserViewStore.getFullName(notification.data.by) }}</span></p> 
+          <p class="p-2 px-0">{{ notification.data.content }}</p>
           <p class="text-xs"></p>
           </div> 
         </div>
@@ -25,36 +25,24 @@
   </div>
 </template>
 
-<script lang='ts'>
-import { announcement } from '~/data/announcement';
+<script setup lang='ts'>
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 
-export default {
-  name: 'NotificationModal',
+const user = await getCurrentUser();
+const adviserViewStore = useAdviserViewStore();
 
-  setup() {
-      const activeNotifications = ref([]);
-
-      const getActiveNotifications = () => {
-      activeNotifications.value = announcement
-          .filter((notification: any) => notification.isActive)
-          .sort((a: any, b: any) => {
-              if (a.isNew && !b.isNew) {
-                  return -1;
-              } else if (!a.isNew && b.isNew) {
-                  return 1;
-              } else {
-                  return new Date(b.announcementDate) - new Date(a.announcementDate);
-              }
-          });
-    };
-
-    onMounted(() => {
-        getActiveNotifications();
-    });
-    
-  
-    return { getActiveNotifications, activeNotifications };
-  },
+const getActiveNotifications = () => {
+  return adviserViewStore.notificationAdviserModalAnnouncements
+  .filter((notification: any) => notification.data.isActive)
+  .sort((a: any, b: any) => {
+      if (a.data.isActive && !b.data.isActive) {
+          return -1;
+      } else if (!a.data.isActive && b.data.isActive) {
+          return 1;
+      } else {
+          return new Date(b.data.date) - new Date(a.data.date);
+      }
+  });
 };
 </script>
   

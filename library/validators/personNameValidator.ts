@@ -8,11 +8,12 @@ import { SuccessfulResult } from "../results/successfulResult";
 export class PersonNameValidator extends Validator {
   public async validate(value: any): Promise<Result> {
     try {
+      // console.log(value);
       if (value.length < 1) {
-        throw new Error(`Names must contain at least '1' character`);
+        throw new Error(`First and last names must contain at least '1' character`);
       }
       if (value.length > 128) {
-        throw new Error(`Names must contain at most '128' characters`);
+        throw new Error(`First and last names must contain at most '128' characters`);
       }
       return new SuccessfulResult(value);
 

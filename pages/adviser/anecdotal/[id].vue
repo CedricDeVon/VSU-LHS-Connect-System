@@ -119,7 +119,6 @@ export default {
 
   async mounted() {
     await this.adviserViewStore.updateAnecdote(useRoute().params.id);
-    initializeReports(); // Initialize from localStorage
     await this.initData();
     this.displayPDF();
   },

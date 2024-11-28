@@ -81,6 +81,34 @@ export class FirebaseStorage extends Database {
     }
   }
 
+  public writeFileWithName(
+    name: string,
+    parsedFile: ParsedFile,
+    snapshotCallback = (snapshot: firebaseStorage.UploadTaskSnapshot) => {},
+    completeCallback = () => {},
+    errorCallback = (error: firebaseStorage.StorageError) => {}
+  ): Result {
+    try {
+      if (parsedFile === undefined || parsedFile === null) {
+        throw new Error("Pleas supply a parsedFile");
+      }
+      const storage: firebaseStorage.FirebaseStorage = firebaseStorage.getStorage(
+        firebaseApp.getApp(),
+        ConfigurationReaders.nuxtConfigurationReader.FIREBASE_STORAGE_URL
+      );
+      const { base64BinaryString, contentType } = parsedFile;
+      const uploadTask: firebaseStorage.UploadTask = firebaseStorage.uploadBytesResumable(
+        firebaseStorage.ref(storage, this._generateCompleteFilePath(name)),
+        base64BinaryString,
+        { contentType }
+      );
+      uploadTask.on("state_changed", snapshotCallback, errorCallback, completeCallback);
+      return new SuccessfulResult(uploadTask);
+    } catch (error: any) {
+      return new FailedResult(error.message);
+    }
+  }
+
   public writeFiles(
     parsedFiles: ParsedFile[],
     snapshotCallback = (snapshot: firebaseStorage.UploadTaskSnapshot) => {},

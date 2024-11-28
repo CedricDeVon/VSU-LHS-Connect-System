@@ -8,9 +8,9 @@ export default defineEventHandler(async (event) => {
     // const { userId } = await readBody(event);
     // const adviser = (await Databases.getOneAdviserViaUserId(userId)).data;
     const students = (await Databases.getAllUnEnrolledStudents()).data;
-    for (const student of students) {
-      student.data['section'] = (student.data.sectionId) ? (await Databases.getOneSectionViaId(student.data.sectionId)).data : undefined;
-    }
+    // for (const student of students) {
+    //   student.data.section = (student.data.sectionId) ? (await Databases.getOneSectionViaId(student.data.sectionId)).data : undefined;
+    // }
     const timeline = (await Databases.getMostRecentTimeline()).data[0].data;
 
     return new SuccessfulResult({

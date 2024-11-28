@@ -22,7 +22,7 @@ const handleFormSubmit = async () => {
   }
   
   if (body.role === 'adviser') {
-    return navigateTo("/adviser/advisory", { replace: true });
+    return navigateTo("/adviser/homepage", { replace: true });
 
   } else if (body.role === 'admin') {
     return navigateTo("/admin/dashboard", { replace: true });

@@ -15,7 +15,7 @@ export const initialReport = [
         narrativeReport: 'A student was caught drinking liqour inside the campus.',
         dateReported: 'July 8, 2024', 
         status: 'Read',
-        isDraft:false,
+        isDraft: false,
         academicYear: '2024-2025'
     },
     {

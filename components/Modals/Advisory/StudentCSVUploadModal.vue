@@ -16,11 +16,7 @@
           <li><strong>Column 5:</strong> Suffix</li>
           <li><strong>Column 6:</strong> Gender</li>
           <li><strong>Column 7:</strong> Birth Date</li>
-          <li><strong>Column 8:</strong> Home Address</li>
-          <li><strong>Column 9:</strong> Contact Number</li>
-          <li><strong>Column 10:</strong> Adviser ID</li>
-          <li><strong>Column 11:</strong> Section ID</li>
-
+          <li><strong>Column 8:</strong> Contact Number</li>
         </ul>
         <p class="text-sm mt-2">Only .csv files are accepted.</p>
       </div>
@@ -51,11 +47,23 @@
 </template>
 
 <script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
 import { Result } from '~/library/results/result';
+import { UserSecurity } from '~/library/security/userSecurity';
 import { useAdviserViewStore } from '../../../stores/views/adviserViewStore'
 
-const adviserViewStore = useAdviserViewStore();
 const { handleFileInput, files } = useFileStorage();
+const adviserViewStore = useAdviserViewStore();
+await UserSecurity.logInViaToken();
+let user = await getCurrentUser();
+
+onBeforeMount(async () => {
+  await UserSecurity.logInViaToken();
+  user = await getCurrentUser();
+})
 
 const handleClose = () => {
   adviserViewStore.studentCSVUpdateModalFile = null;
@@ -65,7 +73,7 @@ const handleClose = () => {
 }
 
 const uploadFile = async () => {
-  const result: any = await adviserViewStore.createManyStudentsViaCSV(files.value);
+  const result: any = await adviserViewStore.createManyStudentsViaCSV(user, files.value);
   console.log(result);
   if (result.isNotSuccessful) {
     adviserViewStore.studentCSVUpdateModalFile = null;
@@ -73,7 +81,7 @@ const uploadFile = async () => {
     return;
   }
 
-  await adviserViewStore.updateAdvisoryView();
+  await adviserViewStore.updateAdvisoryView(user);
   adviserViewStore.studentCSVUpdateModalFile = null;
   adviserViewStore.studentCSVUpdateModalSuccessMessage = '';
   adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = false;

@@ -19,6 +19,27 @@ export class UserSecurity {
         }
     }
 
+    public static async logInViaToken(): Promise<Result> {
+        try {
+            let result: any = await $fetch('/api/auth/jsonWebToken/verify', {
+                method: 'POST',
+                body: {
+                    jsonWebToken: useCookie('VSUConnectionSystemUserAuthToken').value
+                }
+            })
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
+            const { email, password } = result.data.data;
+            await signInWithEmailAndPassword(getAuth(), email, password);
+
+            return new SuccessfulResult();
+
+        } catch (error: any) {
+            return UserSecurity._handleFailedResult(error);
+        }
+    }
+
     public static async logInUser(data: any): Promise<Result> {
         try {
             UserSecurity._handleUndefinedOrNullArguments(data);

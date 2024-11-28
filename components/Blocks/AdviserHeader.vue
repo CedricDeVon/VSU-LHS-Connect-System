@@ -69,7 +69,7 @@ const goToSettings = () => {
 }
 
 const notifClick = () => {
-    adviserViewStore.settingsShowNotification = !adviserViewStore.settingsShowNotification;
+    adviserViewStore.notificationShowAdviserModalAnnouncements = !adviserViewStore.notificationShowAdviserModalAnnouncements;
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-      <select
+      <!-- <select
               class="  lg:mr-5 lg:pr-2 py-2 input border-b-1 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-none"
               v-model="selectedLevel">
               <option value="" disabled selected hidden>Prev Level</option>
@@ -8,7 +8,7 @@
               <option value="8">Grade 8</option>
               <option value="9">Grade 9</option>
               <option value="10">Grade 10</option>
-      </select>
+      </select> -->
       <input type="text" placeholder="Search Student"
             class=" w-2/5 px-4 py-2 m-4 mt-2  border border-gray-300 rounded-md focus:outline-none mr-3"
             v-model="searchQuery" />
@@ -80,8 +80,12 @@ export default {
       const debouncedQuery = ref<string>('');
       const selectedLevel = ref<string>('');
       const adviserViewStore = useAdviserViewStore();
-      
+
       await adviserViewStore.updateUnEnrolledStudents();
+
+      onBeforeMount(async () => {
+        await adviserViewStore.updateUnEnrolledStudents();
+      })
 
       const filteredStudents = () => {
           const results = adviserViewStore.unEnrolledStudents.filter((student: any) => {
@@ -93,17 +97,20 @@ export default {
             );
           });
 
-          if (selectedLevel.value === '') {
-            return results;
-          
-          } else {
-            return results.filter((student: any) => {
-              return student.data.section.data.level === parseInt(selectedLevel.value);
-            });
-          }
+          return results;
+
+          // if (selectedLevel.value === '') {
+          //   return results;
+          // }
+          // } else {
+          //   return results.filter((student: any) => {
+          //     return student.data.section.data.level === parseInt(selectedLevel.value);
+          //   });
+          // }
       };
 
       const enrollStudent = async (student: any) => {
+        console.log(student)
         await adviserViewStore.enrollStudent(student);
 
         searchQuery.value = '';
@@ -111,6 +118,7 @@ export default {
         selectedLevel.value = '';
 
         await adviserViewStore.updateUnEnrolledStudents();
+        await adviserViewStore.updateAdvisoryView();
       }
 
       return { adviserViewStore, searchQuery , debouncedQuery, filteredStudents, selectedLevel, enrollStudent };

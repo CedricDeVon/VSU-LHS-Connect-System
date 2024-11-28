@@ -9,11 +9,16 @@ import { DatasetTransformer } from "./datasetTransformer";
 export class StudentCSVDatasetTransformer extends DatasetTransformer {
     public constructor() {
         super(
-            [String, String, String],
+            [String, String, String, String, String, String, String, String],
             [
                 Validators.vsuIssuedIdValidator,
                 Validators.personNameValidator,
                 Validators.personNameValidator,
+                Validators.emptyValidator,
+                Validators.suffixValidator,
+                Validators.genderValidator,
+                Validators.birthDateValidator,
+                Validators.phoneNumberValidator,
             ]);
     }
 
@@ -48,14 +53,14 @@ export class StudentCSVDatasetTransformer extends DatasetTransformer {
               );
             }
     
-            columns.shift();
-            for (let columnIndex: number = 1; columnIndex < columns.length; ++columnIndex) {
+            for (let columnIndex: number = 0; columnIndex < columns.length; ++columnIndex) {
               cellData = this._columnTypes[columnIndex](columns[columnIndex]);
               validationResult = await this._columnValidators[columnIndex].validate(cellData);
               if (validationResult.isNotSuccessful) {
                 throw new Error(validationResult.message);
               }
             }
+            columns.shift();
             values[key] = columns;
           }
           return new SuccessfulResult({ keys, values });

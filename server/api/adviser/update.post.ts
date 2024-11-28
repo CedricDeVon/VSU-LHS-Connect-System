@@ -4,11 +4,10 @@ import { SuccessfulResult } from '~/library/results/successfulResult';
 
 export default defineEventHandler(async (event) => {
   try {
-    const { id, username } = await readBody(event);
+    const { userId, data } = await readBody(event);
 
-    await Databases.updateOneUserViaId(id, {
-        username
-    });
+    const adviser = (await Databases.getOneAdviserViaUserId(userId)).data;
+    await Databases.updateOneAdviserViaId(adviser.id, data);
 
     return new SuccessfulResult().cloneToObject();
 

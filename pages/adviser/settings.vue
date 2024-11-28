@@ -1,10 +1,10 @@
 <template>
     <div class="adviser-page">
-        <AdviserHeader @notif-click="notifClick"/>
-        <NotificationModal v-if="adviserViewStore.settingsShowNotification" />  
+        <AdviserHeader />
+        <NotificationModal v-if="adviserViewStore.notificationShowAdviserModalAnnouncements" />  
         <div >
             <div class="m-5 flex justify-start ml-20">
-                <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.settingsTimeline) }}</h1>
+                <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYear(adviserViewStore.settingsTimeline) }}</h1>
             </div>
 
                 <!--Title of the Content?-->
@@ -21,9 +21,15 @@
                          :alt="adviserViewStore.settingsUser.data.username"
                          class="w-auto h-80 rounded-full object-cover mb-4 "/>
                         </div>  
-                        <div class="pb-5 ml-6 flex justify-center " >
-                            <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full shadow-lg">
-                                Change Profile Picture
+                        <div class="pb-5 ml-6 flex justify-center" >
+                            <input
+                                type="file"
+                                accept=".png"
+                                @input="handleFileInput"
+                                class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full shadow-lg"
+                            />
+                            <button @click="updateProfilePicture" class="gray-button text-white  py-2 px-4 rounded-md shadow-lg">
+                                Save 
                             </button>
                         </div>
                    </div>
@@ -38,11 +44,11 @@
                                 <div class="col-span-3 flex justify-start items-center ">
                                     <label class="m-0 text">Username:  </label>
                                 </div>
-                                <div class=" col-span-7 text2 flex items-center">{{ adviserViewStore.settingsUser.data.username }}</div>
+                                <input v-model="adviserViewStore.settingsUser.data.username" type="text" class="bg-transparent col-span-7 text2 flex items-center" />
                                 <div class="col-span-2 flex justify-end py-2">
-                                    <button class="gray-button text-white  py-2 px-4 rounded-md shadow-lg">
-                                    Change 
-                                </button>
+                                    <button @click="updateUsername" class="gray-button text-white  py-2 px-4 rounded-md shadow-lg">
+                                        Change 
+                                    </button>
                                 </div>
                             </div>
 
@@ -50,9 +56,9 @@
                                 <div class="col-span-3 flex justify-start items-center ">
                                     <label class="text m-0">Password:  </label>
                                 </div>
-                                <div class=" col-span-7 text2 flex items-center">{{ adviserViewStore.settingsUser.data.password }}</div>
+                                <input type="text" class="bg-transparent col-span-7 text2 flex items-center" />
                                 <div class="col-span-2 flex justify-end py-2">
-                                    <button class="gray-button text-white  py-2 px-4 rounded-md shadow-lg">
+                                    <button @click="updatePassword" class="gray-button text-white  py-2 px-4 rounded-md shadow-lg">
                                         Change 
                                     </button>
                                 </div>
@@ -83,27 +89,53 @@ definePageMeta({
 });
 
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
-import { Result } from "~/library/results/result";
-import { UserSecurity } from "~/library/security/userSecurity";
 import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
+import { Result } from "~/library/results/result";
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+import { UserSecurity } from "~/library/security/userSecurity";
+import { ParsedFile } from "~/library/files/parsedFile";
 
-const auth = useFirebaseAuth();
+const { handleFileInput, files } = useFileStorage();
+
+let auth = useFirebaseAuth();
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateSettings();
 
-onBeforeMount(async () => {
-    await adviserViewStore.updateSettings();
-})
+// onBeforeMount(async () => {
+//     await adviserViewStore.updateSettings();
+// })
 
-const handleRowClick = (item: any) => {
-
+const updateProfilePicture = async () => {
+    await UserSecurity.logInViaToken();
+    let user = await getCurrentUser();
+    const result: any = await $fetch('/api/adviser/updateProfilePhoto', {
+        method: 'POST',
+        body: {
+            userId: user?.uid,
+            file: files.value
+        }
+    })
+    adviserViewStore.settingsAdviser.data.profilePicture = result.data;
+    alert('Profile Picture Updated')
 }
 
-const notifyClick = () => {
-    adviserViewStore.settingsContainWidth = (adviserViewStore.settingsContainWidth === '89%') ? '70%': '89%';
-    adviserViewStore.settingsTitleWidth = (adviserViewStore.settingsTitleWidth === '87%') ? '68%': '87%';
-    adviserViewStore.settingsShowNotification = !adviserViewStore.settingsShowNotification;
+const updateUsername = async () => {
+    await UserSecurity.logInViaToken();
+    let user = await getCurrentUser();
+    await $fetch('/api/user/update', {
+        method: 'POST',
+        body: {
+            userId: user?.uid,
+            data: {
+                username: adviserViewStore.settingsUser.data.username
+            }
+        }
+    })
+    alert('Username Updated')
+}
+
+const updatePassword = async () => {
+    alert('Password Updated')
 }
 
 const logoutClick = async () => {
@@ -199,5 +231,17 @@ const logoutClick = async () => {
 
     .logout:hover{
         background-color: #FF6161;
+    }
+
+    input[type="file"]::file-selector-button {
+        color: white;
+        background-color: transparent;
+        padding: 8px 12px;
+        border-radius: 0px;
+        margin-right: 10px;
+        border: none;
+    }
+    button:hover {
+        cursor: pointer;
     }
 </style>

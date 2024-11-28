@@ -84,7 +84,6 @@
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import ConfirmReset from '~/components/Modals/AdminSettings/ConfirmReset.vue';
-import { academicYear } from '~/data/academicYear';
 import Verification from '~/components/Modals/AdminSettings/Verification.vue';
 
 export default {

@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
+import { TimeConverters } from '~/library/timeConverters/timeConverters';
 
 export const adviserReportStore  = defineStore('adviserReportStore', () => {
     const initialDocID = ref('');
     const reportIDRef = ref('');
+    const studentId = ref('');
     const reportedBY = ref('');
     const peopleInvolved = ref([]);
     const witness = ref([]);
@@ -15,18 +17,18 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
     const isDraft = ref(true);
     const academicYear = ref('');
 
-    const getAllData = ()=> {
-        return{
-            initialDocID : initialDocID.value,
+    const getAllData = () => {
+        return {
             reportIDRef : reportIDRef.value,
             reportedBY : reportedBY.value,
-            peopleInvolved : peopleInvolved.value,
+            studentId : studentId.value,
+            peopleInvolved : `${peopleInvolved.value}`.split(','),
             witness : witness.value,
-            dateOfIncident : dateOfIncident.value,
+            dateOfIncident : TimeConverters.dateConverter.convert(dateOfIncident.value).data,
             placeOfIncident : placeOfIncident.value,
             thingsInvolved : thingsInvolved.value,
             narrativeReport :narrativeReport.value,
-            dateReported : dateReported.value,
+            dateReported : TimeConverters.dateConverter.convert(dateReported.value).data,
             status : status.value,
             isDraft :isDraft.value,
             academicYear : academicYear.value
@@ -38,6 +40,7 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
          reportedBY.value = '',
          peopleInvolved.value = [],
          witness.value = [],
+         studentId.value = '';
          dateOfIncident.value = '',
          placeOfIncident.value = '',
          thingsInvolved.value = '',
@@ -53,6 +56,7 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
         initialDocID,
         reportIDRef,
         reportedBY,
+        studentId,
         peopleInvolved,
         witness,
         dateOfIncident,
@@ -66,5 +70,5 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
         getAllData,
         resetAllData
     }
-
 })
+

@@ -24,7 +24,7 @@ async function logInAsAdviser() {
         password: ConfigurationReaders.nuxtConfigurationReader.DEBUG_ADVISER_PASSWORD,
         role: 'adviser'
     });
-    return navigateTo("/adviser/advisory", { replace: true });
+    return navigateTo("/adviser/homepage", { replace: true });
 }
 
 </script>

@@ -265,6 +265,10 @@ export default {
       if (!this.formData.dateOfIncident) {
         this.errors.dateOfIncident = 'Date is required'
       }
+
+      if (new Date(this.formData.dateOfIncident) > new Date()) {
+        this.errors.dateOfIncident = 'Date cannot be in the future';
+      }
       
       if (!this.formData.placeOfIncident?.trim()) {
         this.errors.placeOfIncident = 'Place of incident is required'

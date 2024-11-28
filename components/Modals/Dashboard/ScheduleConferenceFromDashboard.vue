@@ -357,6 +357,11 @@ const advisersNotified = ref<string[]>([]);
 const handleSubmit = () => {
   if (!isFormValid.value) return;
 
+  if(formData.value.date < new Date().toISOString().split('T')[0]) {
+    formData.value.date = '';
+    alert('Please select a future date');
+    return;
+  }
   // Get unique advisers from the selected students' sections
   const uniqueAdvisers = Array.from(new Set(
     selectedStudents.value.map(student => {

@@ -8,95 +8,92 @@
         /> 
         <AdviserHeader @notif-click="notifClick" class="relative z-10"/>
         <div >
-            <div class="m-5 flex justify-start ml-20">
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year {{ AcademicYear }}</h1>
+            <div class="m-5 flex justify-between items-center mx-20">
+                <h1 class="text-2xl font-bold text-green-900">Academic Year {{ AcademicYear }}</h1>
             </div>
- 
 
-            <div class="contain " :style="{ width: containWidth}">
-                    <!--Title of the Content?-->
-                <div class="title flex justify-center items-center" >
-                    <div><h1 class="text-white text-2xl font-bold">Incident Reports</h1></div>
+            <div class="contain" :style="{ width: containWidth}">
+                <div class="title flex justify-center items-center">
+                    <h1 class="text-white text-2xl font-bold">
+                        {{ selectedSort === 'anecdotal' ? 'Anecdotal Reports' : 'Incident Reports' }}
+                    </h1>
                 </div>  
 
-                    <!--Content of the Page-->
-                <div class=" m-5  py-5 px-20 mx-20  ">
-                        <!--Sort/Add student-->
-                        <div class="grid-cols-2 pb-5 ml-6" >
-                           <select
-                               class="mr-8 xl:pr-24 lg:mr-5 lg:pr-2 py-4  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
-                               v-model="selectedSort">
-                               <option value="" disabled selected hidden>Select View</option>
-                               <option value="incident" >Incident Report</option>
-                               <option value="anecdotal">Anecdotal Report</option>
-                           </select>
-
-                       
-                            <button v-if="selectedSort !== 'anecdotal'" @click="report" 
-                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
-                                    aria-label="ReportIncident">
-                                    Report an Incident
-                            </button>
+                <div class="flex flex-col h-full p-6">
+                    <!-- Controls Section -->
+                    <div class="flex justify-between items-center mb-6 px-4">
+                        <div class="relative">
+                            <select v-model="selectedSort"
+                                class="appearance-none bg-white border-b-2 border-green-700 px-4 py-2 pr-8 rounded-lg focus:outline-none focus:border-green-800 text-green-900 font-medium">
+                                <option value="" disabled selected>Select View</option>
+                                <option value="incident">Incident Report</option>
+                                <option value="anecdotal">Anecdotal Report</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-green-700">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path d="M19 9l-7 7-7-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
                         </div>
-                        <!--Table of Reports-->
-                        <div class=" overflow-x-auto overflow-y-auto max-h-96">
-                            <table class=" min-w-full ">
-                                <thead class="sticky top-0" >
-                                    <tr class=" gray text-white ">
-                                        <th 
-                                            class="px-3 py-3 rounded-l-xl w-1/5 ">
-                                            Report ID
-                                        </th>
-                                        <th 
-                                            class="px-3 py-3 w-2/5">
-                                            Student Name
-                                        </th>
-                                        <th 
-                                            class="px-3 py-3 w-1/5">
-                                             Date
-                                        </th>
-                                        <th 
-                                            class="px-3 py-3 rounded-r-xl w-1/5">
-                                            Action
-                                        </th>
+
+                        <button v-if="selectedSort !== 'anecdotal'" @click="report" 
+                            class="bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Report an Incident
+                        </button>
+                    </div>
+
+                    <!-- Reports Table with Fixed Height -->
+                    <div class="flex-1 overflow-hidden rounded-lg border border-gray-200">
+                        <div class="h-[calc(95vh-300px)] overflow-y-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-green-700 text-white sticky top-0 z-5">
+                                    <tr class="bg-green-700 text-white">
+                                        <th class="px-6 py-4 text-left text-sm font-semibold w-1/5">Report ID</th>
+                                        <th class="px-6 py-4 text-left text-sm font-semibold w-2/5">Student Name</th>
+                                        <th class="px-6 py-4 text-left text-sm font-semibold w-1/5">{{selectedSort === 'anecdotal'? 'Last Modified' : 'Date'}}</th>
+                                        <th class="px-6 py-4 text-center text-sm font-semibold w-1/5">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="selectedSort === 'anecdotal'">
-                                    <tr class="hover:bg-gray-200 text" v-for="report in anecdotalReports" :key="report.anecdotalDocID">
-                                        <td class="py-5 text-center align-middle">{{ report.anecdotalDocID }}</td>
-                                        <td class="py-5 text-center align-middle">{{ getStudentName(report.studentId) }}</td>
-                                        <td class="py-5 text-center align-middle">{{ report.AY }}</td>
-                                        <td class="py-5 text-center align-middle">
-                                            <button @click="viewAnecdotal(report)" 
-                                                    class="py-2 px-2 rounded-lg yellow-button text-white focus:outline-none"
-                                                    aria-label="AnecdotalDetails">
-                                                    View Report Details
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tbody v-else>
-                                    <tr class =" hover:bg-gray-200 text " v-for="report in reports" :key="report.reportIDRef"  >
-                                        <td class=" py-5 text-center align-middle ">{{ report.reportIDRef }}</td>
-                                        <td class=" py-5 text-center align-middle ">{{ `${report.peopleInvolved.join(', ')}` }}</td>
-                                        <td class=" py-5 text-center align-middle ">{{ report.dateOfIncident }}</td>
-                                        <td class=" py-5 text-center align-middle ">
-                                            <button v-if="report.isDraft"  @click="editReport(report)" 
-                                                    class=" py-2 px-16 rounded-lg yellow-button text-white focus:outline-none"
-                                                    aria-label="EditReport">
-                                                    Edit
-                                            </button>
-                                            <button v-else @click="viewDetails(report)" 
-                                                    class=" py-2 px-2 rounded-lg yellow-button text-white focus:outline-none"
-                                                    aria-label="IncidentDetails">
-                                                    View Report Details
-                                            </button>
-                                        </td>
-                                    </tr>
+                                <tbody class="divide-y divide-gray-100">
+                                    <template v-if="selectedSort === 'anecdotal'">
+                                        <tr v-for="report in anecdotalReports" 
+                                            :key="report.anecdotalDocID"
+                                            class="hover:bg-green-50 transition-colors">
+                                            <td class="px-6 py-4 text-sm text-green-900">{{ report.anecdotalDocID }}</td>
+                                            <td class="px-6 py-4 text-sm font-medium text-green-900">{{ getStudentName(report.studentId) }}</td>
+                                            <td class="px-6 py-4 text-sm text-green-900">{{ getLatestReportDate(report.reportIDs) }}</td>
+                                            <td class="px-6 py-4 text-center">
+                                                <button @click="viewAnecdotal(report.studentId)" 
+                                                    class="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium bg-yellow-100 text-green-800 hover:bg-yellow-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-300 transition-colors">
+                                                    View Details
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template v-else>
+                                        <tr v-for="report in reports" 
+                                            :key="report.reportIDRef"
+                                            class="hover:bg-green-50 transition-colors">
+                                            <td class="px-6 py-4 text-sm text-green-900">{{ report.reportIDRef }}</td>
+                                            <td class="px-6 py-4 text-sm font-medium text-green-900">{{ report.peopleInvolved.join(', ') }}</td>
+                                            <td class="px-6 py-4 text-sm text-green-900">{{ report.dateOfIncident }}</td>
+                                            <td class="px-6 py-4 text-center">
+                                                <button @click="report.isDraft ? editReport(report) : viewDetails(report)" 
+                                                    class="inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium"
+                                                    :class="report.isDraft ? 'bg-green-100 text-green-800 hover:bg-green-200' : 'bg-yellow-100 text-green-800 hover:bg-yellow-200'">
+                                                    {{ report.isDraft ? 'Edit' : 'View Details' }}
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </template>
                                 </tbody>
                             </table>
-                        </div>  
-                   </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -110,6 +107,7 @@
     import { anecdotalReport } from "~/data/anecdotal";
     import { student } from "~/data/student";
     import { section } from "~/data/section";
+    import { report } from '~/data/report';  // Add this import
    
     export default {
         name: "reports",
@@ -138,7 +136,7 @@
             isDraft:true,
             containWidth:'89%',
             titleWidth:'87%',
-            selectedSort:'',
+            selectedSort:'incident', // Changed default to 'incident' for proper initial state
             store: adviserReportStore(),
             anecdotalReports: [],
             students: student,
@@ -213,9 +211,13 @@
                 return 'Unknown Student';
             },
 
-            viewAnecdotal(report) {
-                // Implementation for viewing anecdotal report details
-                console.log('Viewing anecdotal report:', report);
+            viewAnecdotal(studentId) {
+                if (studentId) {
+                    // Navigate to anecdotal page with student ID
+                    this.$router.push(`/adviser/anecdotal/${studentId}`);
+                } else {
+                    console.error('No student ID provided for anecdotal report');
+                }
             },
 
             creationClose(){
@@ -223,6 +225,24 @@
                 this.reportChosen = {isDraft:true};
                 fetchReports(this.AdviserID, this.AcademicYear);
             },
+
+            getLatestReportDate(reportIDs) {
+                if (!reportIDs || reportIDs.length === 0) return 'No reports';
+                
+                const dates = reportIDs
+                    .map(id => report.find(r => r.reportID === id))
+                    .filter(r => r) // Remove any undefined reports
+                    .map(r => new Date(r.datePrepared));
+                
+                if (dates.length === 0) return 'No valid dates';
+                
+                const latestDate = new Date(Math.max(...dates));
+                return latestDate.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
 
             /*handleRowClick(item) {
             // Handle row click event
@@ -245,12 +265,11 @@
 </script>
 <style scoped>
     .reports-page{
-        background: #fffef1 url('~/assets/images/vsu-main-the-search-for-truth-statue.png') no-repeat;
+        @apply bg-[#fffef1] min-h-screen;
+        background-image: url('~/assets/images/vsu-main-the-search-for-truth-statue.png');
         background-position: 90% 20px;
         background-size: 50% auto;
-        height: 850px;
-        position: relative;
-        overflow: hidden; 
+        background-repeat: no-repeat;
     }
 
     .backPic{
@@ -304,25 +323,12 @@
 
 
     .contain{
-        position:absolute;
-        height: 70%;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        left: 80px;
-        top: 170px;
-        z-index: 2;
-        box-shadow: 2px 7px 26.6px 0px rgba(0, 0, 0, 0.25);
-        
+        @apply absolute left-20 top-40 bg-white/90 rounded-xl shadow-lg;
+        height: 75vh;
     }
 
     .title{
-        height: 8.8%;
-        width: 98%;
-        background: rgba(38, 86, 48, 1); /* Using rgba for consistency */
-        border-radius: 15px;
-        justify-self: center;
-        z-index: 2;
-        margin-top: -35px;
+        @apply -mt-8 mx-auto w-[98%] py-3 bg-green-800 rounded-xl;
     }
 
     .text{

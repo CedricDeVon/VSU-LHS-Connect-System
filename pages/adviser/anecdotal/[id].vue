@@ -165,7 +165,12 @@ import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
       initializeReports(); // Initialize from localStorage
       const studentId = this.$route.params.id;
       await this.initData(studentId);
-      this.displayPDF();
+      if (this.studentData && this.anecReport) {
+        this.displayPDF();
+      } else {
+        console.error('No anecdotal report found for student:', studentId);
+        // Optionally handle the error case, e.g., redirect or show message
+      }
     },
   
     computed: {
@@ -181,10 +186,13 @@ import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
     methods: {
       async initData(studentId) {
         this.studentData = student.find(s => s.studentId === studentId);
-        if (!this.studentData) return;
+        if (!this.studentData) {
+          console.error('Student not found:', studentId);
+          return;
+        }
   
         this.anecReport = anecdotalReport.find(
-          report => report.anecdotalDocID === this.studentData.anecdotalDocID
+          report => report.studentId === studentId
         );
       },
   

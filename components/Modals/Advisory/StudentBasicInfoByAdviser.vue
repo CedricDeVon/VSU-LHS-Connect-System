@@ -1,49 +1,81 @@
 <template>
-    <div class=" z-50 flex items-center justify-center ">
-        <div class=" p-20 pt-8 w-full ml-10 mr-10">
-            <label class="header text-green-900 ">Basic Information</label>
-            <!--Student Info Scrollable-->
-            <div class=" overflow-x-auto overflow-y-auto max-h-96 pt-5">
-               <!--(should be) profile pic-->
-                <div class="flex justify-center pb-2">
-                    <img src="~/assets/images/vsu.png" alt="profile" class=" h-40 w-auto">
+    <div class="z-50 w-full h-[50%] overflow-y-auto">
+        <div class="max-w-3xl mx-auto p-6">           
+            <div class="rounded-lg backdrop-blur-sm p-6 space-y-6">
+                <!-- Profile Image -->
+                <h2 class="text-3xl font-bold text-green-900 top-0 py-4 z-10">Basic Information</h2>
+                <div class="flex justify-center">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJrZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlLXVzZXItcm91bmQiPjxwYXRoIGQ9Ik0xOCAyMGE2IDYgMCAwIDAtMTIgMCIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTAiIHI9IjQiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjwvc3ZnPg==" alt="profile" class="h-40 w-40 object-cover rounded-full border-4 border-green-100">
                 </div>
 
-                <label class=" name text-green-900 flex justify-center">{{ `${student.firstName} ${(student.middleName).charAt(0).toUpperCase()+'.'} ${student.lastName}` }}</label>
-                <label class="studentID text-green-900 flex justify-center">ID NO: {{ student.studentId }}</label>
-                <div class="mt-3">
-                        <div class="text-green-900 text-lg pb-2 px-3"><span class="label pr-5">Grade Level & Section:</span><span>{{ `${section.sectionLevel + ''} ${section.sectionName}` }}</span></div>
-                        <div class="text-green-900 text-lg pb-2 px-3"><span class="label pr-16">Age:</span><span>{{ student.age }}</span></div>
-                        <div class="text-green-900 text-lg pb-2 px-3"><span class="label pr-5">Birthday:</span><span>{{ student.birthDate }}</span></div>
-                        <div class="text-green-900 text-lg pb-2 px-3"><span class="label pr-5">Gender:</span><span>{{ student.gender }}</span></div>
-                        <div class="text-green-900 text-lg pb-2 px-3"><span class="label pr-5">Address:</span><span>{{student.address}}</span></div>
-                        <div class="text-green-900 text-lg pb-2 px-3"><span class="label pr-5">Contact Number/s:   </span>   <span>{{ student.contactNum}}</span></div>
+                <!-- Student Name and ID -->
+                <div class="text-center space-y-2">
+                    <h3 class="text-2xl font-bold text-green-900">
+                        {{ `${student.firstName} ${(student.middleName).charAt(0).toUpperCase()+'.'} ${student.lastName}` }}
+                    </h3>
+                    <p class="text-lg text-green-800">ID NO: {{ student.studentId }}</p>
                 </div>
 
-                <!--Buttons-->
-                <div class="flex justify-center items-center m-3">
+                <!-- Student Details -->
+                <div class="grid gap-4 text-green-900">
+                    <div class="info-row">
+                        <span class="font-semibold">Grade Level & Section:</span>
+                        <span>{{ `${section.sectionLevel + ''} ${section.sectionName}` }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="font-semibold">Age:</span>
+                        <span>{{ student.age }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="font-semibold">Birthday:</span>
+                        <span>{{ student.birthDate }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="font-semibold">Gender:</span>
+                        <span>{{ student.gender }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="font-semibold">Address:</span>
+                        <span>{{ student.address }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="font-semibold">Contact Number/s:</span>
+                        <span>{{ student.contactNum }}</span>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="space-y-3 pt-4">
                     <button @click="viewReport(student.anecdotalDocID)"
-                     class=" updateAnecdotal shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Create Anecdotal">
-                         Anecdotal Report
+                        class="btn btn-primary w-full flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"/>
+                        </svg>
+                        Anecdotal Report
                     </button>
-                </div>
-                <div class="flex justify-center m-3">
-                    <button @click="showReport" class=" submitComplaint shadow w-9/12 px-10 py-2 rounded-lg gray text-green-900 hover:bg-gray-600 focus:outline-none" aria-label="Submit Complaint">
-                        Submit and Report a Complaint
+                    <button @click="showReport" 
+                        class="btn btn-outline w-full flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"/>
+                        </svg>
+                        Report an Incident
                     </button>
-                </div>
-                <div @click ="removeStudent" class="flex justify-center m-3 ">
-                    <button class=" removeStudent shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Remove Student">
+                    <button @click="removeStudent" 
+                        class="btn btn-text w-full flex items-center justify-center gap-2 text-red-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"/>
+                        </svg>
                         Remove Student
                     </button>
                 </div>
             </div>
         </div>
-        <!-- <adviser-anecdotal v-if="showAnecdotal" :Student="student" @close="showAnecdotal = false"/> -->
-        <initial-report-modal v-if="report" @close="report = false"/>
-        <RemoveStudent v-if="remove" @close="handleRemoveStudent" :student ="student" :section="this.section" />
-    </div>
 
+        <!-- Modals -->
+        <initial-report-modal v-if="report" @close="report = false"/>
+        <RemoveStudent v-if="remove" @close="handleRemoveStudent" :student="student" :section="section" />
+    </div>
 </template>
 
 <script>
@@ -109,47 +141,27 @@ methods: {
 </script>
 
 <style scoped>
-.header{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 32px;
-    font-weight: 700;
+.info-row {
+    @apply grid grid-cols-2 gap-4 px-4 py-2 rounded-lg hover:bg-green-50 transition-colors;
 }
 
-.name{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 25px;
-    font-weight: 700;
+.btn {
+    @apply px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-200 
+    focus:outline-none focus:ring-2 focus:ring-offset-2;
 }
 
-.label{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 19px;
-    font-weight: 700;
+.btn-primary {
+    @apply bg-green-700 text-white hover:bg-green-800 focus:ring-green-500
+    shadow-md hover:shadow-lg;
 }
 
-.updateAnecdotal{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 19px;
-    font-weight: 700;
-    background-color: #728B78;
+.btn-outline {
+    @apply border-2 border-green-700 text-green-700 hover:bg-green-50 
+    focus:ring-green-500;
 }
 
-.submitComplaint{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 19px;
-    font-weight: 700;
-    background-color: #FEFFB1;
+.btn-text {
+    @apply hover:bg-red-50 border border-transparent hover:border-red-200
+    focus:ring-red-400;
 }
-
-.removeStudent{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 19px;
-    font-weight: 700;
-    background-color: #FF6161;
-}
-
-.shadow{
-    box-shadow: 0px 3px 2px 0px rgba(0, 0, 0, 0.25);
-}
-
 </style>

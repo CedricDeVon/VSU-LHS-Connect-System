@@ -7,74 +7,66 @@
             :AdviserID="AdviserID" 
             />
 
-            <div>
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year  {{AcademicYear}}</h1>
-            </div>
-
-                <!--Title of the Content?-->
-           
+            <div class="m-5 flex justify-between items-center mx-20">
+                <h1 class="text-2xl font-bold text-green-900">Academic Year {{ AcademicYear }}</h1>
+            </div>         
 
             <!--Content of the Page-->
-            <div class="contain " :style="{width: containWidth}">
+            <div class="contain" :style="{width: containWidth}">
 
-                <div class="title  flex justify-center items-center" >
-                    <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
+                <div class="title flex justify-center items-center">
+                    <h1 class="text-white text-2xl font-bold">Current Advisory</h1>
                 </div>   
 
-                <div class="grid grid-cols-12">
-                   <div class=" m-10 col-span-6 pt-5 ">
-                        <!--Sort/Add student-->
-                        <div class="grid-cols-2 pb-5 ml-6" >
-                           <select
-                               class="mr-8 xl:pr-24 lg:mr-5 lg:pr-2 py-2  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
-                               v-model="selectedSort">
-                               <option value="" disabled selected hidden>Sort by</option>
-                               <option value="surname">Surname</option>
-                               <option value="student_ID">Student ID</option>
-                           </select>
+                <div class="grid grid-cols-12 h-full">
+                    <!-- Left Side - Student List -->
+                    <div class="col-span-6 flex flex-col p-6">
+                        <!-- Controls -->
+                        <div class="flex items-center justify-between mb-4 px-2">
+                            <select v-model="selectedSort"
+                                class="border-b-2 border-gray-400 py-2 bg-transparent text-black font-medium focus:outline-none focus:border-green-700">
+                                <option value="" disabled selected>Sort by</option>
+                                <option value="surname">Surname</option>
+                                <option value="student_ID">Student ID</option>
+                            </select>
 
-                       
                             <button @click="addStudent" 
-                                    class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
-                                    aria-label="Add Student">
-                                    Add Student
+                                class="px-4 py-2 rounded-lg bg-green-700 text-white hover:bg-green-800 transition-colors">
+                                Add Student
                             </button>
                         </div>
-                        <!--Table of Students-->
-                        <div class=" overflow-x-auto overflow-y-auto max-h-96 ">
-                            <table class="min-w-full ">
-                                <thead class="sticky top-0" >
-                                    <tr class=" gray  text-white">
-                                        <th 
-                                            class="px-6 py-3 rounded-l-md ">
-                                            Student ID
-                                        </th>
-                                        <th 
-                                            class="px-6 py-3 rounded-r-md ">
-                                            Student Name
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody >
-                                    <tr class ="hover:bg-gray-200 table-text " v-for="(student, index) in students" :key="index" @click="handleRowClick(student)" >
-                                        <td class="py-5 px-4 text-center align-middle ">{{ student.studentId }}</td>
-                                        <td class="py-5 px-4 text-center align-middle ">{{ `${student.firstName} ${student.lastName}`}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>  
-                   </div>
 
-                     <!--Student Information-->
-                   <div class="col-span-6 pt-10 ">
-                    <div v-if="!showStudentInfo" class="flex justify-center items-center mt-32">
-                        <h1 class="text-2xl">Select a student to display their details</h1>
+                        <!-- Scrollable Table Container -->
+                        <div class="h-[calc(100vh-320px)] overflow-hidden rounded-lg border border-gray-200 bg-white">
+                            <div class="h-full overflow-y-auto">
+                                <table class="min-w-full relative">
+                                    <thead class="bg-gray-50 sticky top-0 z-10">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-sm font-semibold text-green-900 bg-gray-50">Student ID</th>
+                                            <th class="px-6 py-3 text-left text-sm font-semibold text-green-900 bg-gray-50">Student Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr v-for="(student, index) in students" 
+                                            :key="index" 
+                                            @click="handleRowClick(student)"
+                                            class="hover:bg-green-50 cursor-pointer transition-colors">
+                                            <td class="px-6 py-4 text-sm text-green-900">{{ student.studentId }}</td>
+                                            <td class="px-6 py-4 text-sm text-green-900">{{ `${student.firstName} ${student.lastName}` }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
-                    
+
+                    <!-- Right Side - Student Info -->
+                    <div class="col-span-6 p-6">
+                        <div v-if="!showStudentInfo" class="flex justify-center items-center h-full">
+                            <h2 class="text-xl text-gray-500">Select a student to display their details</h2>
+                        </div>
                         <StudentBasicInfo v-if="showStudentInfo" :student="studentInfo" :section="section" @close="removeStudent" />
-    
                     </div>
-                  
                 </div>
             </div>
         </div>
@@ -168,26 +160,21 @@
   };
 </script>
 <style scoped>
-    .adviser-page{
-        background: #fffef1 url('~/assets/images/vsu-main-the-search-for-truth-statue.png') no-repeat;
+    .adviser-page {
+        @apply min-h-screen bg-[#fffef1] relative;
+        background-image: url('~/assets/images/vsu-main-the-search-for-truth-statue.png');
         background-position: 90% 20px;
         background-size: 50% auto;
-        height: 850px;
-        position: relative;
-        overflow: hidden; 
-        
-        }
+        background-repeat: no-repeat;
+    }
 
-    .contain{
-        position:absolute;
-        height: 70%;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        left: 80px;
-        top: 170px;
-        z-index: 2;
-        box-shadow: 2px 7px 26.6px 0px rgba(0, 0, 0, 0.25);
-        
+    .contain {
+        @apply absolute left-20 top-40 bg-white/90 rounded-xl shadow-lg;
+        height: 75vh;
+    }
+
+    .title {
+        @apply -mt-8 mx-auto w-[98%] py-3 bg-green-800 rounded-xl;
     }
 
     .AY_Sem {
@@ -210,18 +197,6 @@
 .gray-button:hover {
     background-color: #4a5e4e;
 }
-
-
-    .title{
-        height: 8.8%;
-        width: 98%;
-        justify-self: center;
-        background: #265630;
-        border-radius: 15px;
-        margin-top: -35px;
-        left: 95px;
-        top: 135px;
-    }
 
 
     .table-text{

@@ -1,99 +1,134 @@
 <template>
-    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div class="bg-gray-100 rounded-lg shadow-lg w-full max-w-md p-6 relative">
-        <h2 class="text-xl font-semibold mb-4 text-gray-800">Upload CSV File</h2>
-  
-        <div class="bg-gray-200 text-gray-800 p-4 rounded-lg mb-4">
-          <h3 class="font-semibold mb-2">CSV Format Instructions</h3>
-          <p class="text-sm">
-            Please ensure your CSV file follows this format:
-          </p>
-          <ul class="list-disc list-inside text-sm ml-4 mt-2">
-            <li><strong>Column 1:</strong> Student ID</li>
-            <li><strong>Column 2:</strong> Last Name</li>
-            <li><strong>Column 3:</strong> First Name</li>
-            <li><strong>Column 4:</strong> Middle Name</li>
-            <li><strong>Column 5:</strong> Suffix</li>
-            <li><strong>Column 6:</strong> Gender</li>
-            <li><strong>Column 7:</strong> Birth Date</li>
-            <li><strong>Column 8:</strong> Home Address</li>
-            <li><strong>Column 9:</strong> Contact Number</li>
+  <div class="absolute inset-0">
+    <!-- Dark overlay -->
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    
+    <!-- Modal content -->
+    <div class="relative flex items-center justify-center min-h-full p-4">
+      <div class="w-full max-w-2xl bg-white rounded-lg shadow-xl">
+        <!-- Header -->
+        <div class="bg-green-700 px-6 py-4">
+          <h2 class="text-2xl font-bold text-white">Upload Student List</h2>
+        </div>
 
-          </ul>
-          <p class="text-sm mt-2">Only .csv files are accepted.</p>
+        <div class="p-6 space-y-6">
+          <!-- Instructions Card -->
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <h3 class="font-semibold text-green-800 mb-3">CSV Format Requirements</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-green-700">
+              <div>
+                <p class="font-medium mb-2">Required Columns:</p>
+                <ul class="space-y-1 list-disc list-inside">
+                  <li>Student ID</li>
+                  <li>Last Name</li>
+                  <li>First Name</li>
+                  <li>Middle Name</li>
+                  <li>Suffix</li>
+                </ul>
+              </div>
+              <div>
+                <p class="font-medium mb-2">Additional Columns:</p>
+                <ul class="space-y-1 list-disc list-inside">
+                  <li>Gender</li>
+                  <li>Birth Date</li>
+                  <li>Home Address</li>
+                  <li>Contact Number</li>
+                </ul>
+              </div>
+            </div>
+            <div class="mt-4 text-sm text-green-600 bg-green-100 p-2 rounded">
+              Note: Only .csv files are accepted. Please ensure all required fields are filled.
+            </div>
+          </div>
+
+          <!-- File Upload Area -->
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <input
+              type="file"
+              accept=".csv"
+              @change="handleFileChange"
+              class="hidden"
+              id="csvFile"
+            />
+            <label 
+              for="csvFile"
+              class="cursor-pointer inline-flex flex-col items-center space-y-2"
+            >
+              <div class="p-3 rounded-full bg-green-100">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>  
+              </div>
+              <span class="text-sm font-medium text-gray-600">
+                {{ file ? file.name : 'Click to upload CSV file' }}
+              </span>
+            </label>
+          </div>
+
+          <!-- Success Message -->
+          <div v-if="successMessage" class="bg-green-100 text-green-700 px-4 py-2 rounded-lg text-sm">
+            {{ successMessage }}
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex justify-end space-x-3">
+            <button
+              @click="$emit('close')"
+              class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              :disabled="!file"
+              @click="uploadFile"
+              class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Upload
+            </button>
+          </div>
         </div>
-  
-        <input
-          type="file"
-          accept=".csv"
-          @change="handleFileChange"
-          class="mb-4 w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-        />
-  
-        <div class="flex justify-end space-x-4">
-          <button
-            @click="$emit('close')"
-            class="px-4 py-2 rounded-md text-gray-800 bg-gray-200 border border-gray-300 hover:bg-gray-300 hover:text-gray-900 focus:outline-none">
-            Cancel
-          </button>
-          <button
-            :disabled="!file"
-            @click="uploadFile"
-            class="px-4 py-2 rounded-md text-white bg-gray-500 hover:bg-gray-600 focus:outline-none disabled:opacity-50">
-            Upload
-          </button>
-        </div>
-  
-        <p v-if="successMessage" class="text-gray-500 mt-4">{{ successMessage }}</p>
       </div>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    name: 'StudentCSVUploadModal',
-    data() {
-      return {
+  </div>
+</template>
 
-        
-        file: null,
-        successMessage: '',
-      };
+<script>
+export default {
+  name: 'StudentCSVUploadModal',
+  data() {
+    return {
+      file: null,
+      successMessage: '',
+    };
+  },
+  methods: {
+    handleFileChange(event) {
+      this.file = event.target.files[0];
+      this.successMessage = '';
     },
-    methods: {
-      handleFileChange(event) {
-        this.file = event.target.files[0];
-        this.successMessage = '';
-      },
-      uploadFile() {
-        if (this.file) {
-          this.$emit('file-uploaded', this.file);
-          this.successMessage = 'File uploaded successfully!';
-          this.file = null;
-          setTimeout(() => {
-            this.$emit('close');
-          }, 1000);
-        }
-      },
+    uploadFile() {
+      if (this.file) {
+        this.$emit('file-uploaded', this.file);
+        this.successMessage = 'File uploaded successfully!';
+        this.file = null;
+        setTimeout(() => {
+          this.$emit('close');
+        }, 1000);
+      }
     },
-  };
-  </script>
-  
-  <style scoped>
-  .bg-opacity-50 {
-    background: rgba(0, 0, 0, 0.5);
-  }
-  .shadow-lg {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  }
-  input[type="file"]::file-selector-button {
-    color: white;
-    background-color: rgb(163, 163, 163);
-    padding: 8px 12px;
-    border-radius: 0px;
-    margin-right: 10px;
-  }
-  button:hover {
-    cursor: pointer;
-  }
-  </style>
+  },
+};
+</script>
+
+<style scoped>
+/* Remove the fixed positioning styles */
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+input[type="file"]::file-selector-button {
+  display: none;
+}
+button:hover {
+  cursor: pointer;
+}
+</style>

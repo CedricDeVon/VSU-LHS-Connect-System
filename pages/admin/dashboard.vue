@@ -312,6 +312,7 @@ const closeCreateReportModal = () => {
 const handleReportSubmit = (data: any) => {
   console.log('New report:', data);
   // Handle the report submission here
+  // create new document in incident collections later
   closeCreateReportModal();
 };
 

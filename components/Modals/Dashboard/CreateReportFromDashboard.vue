@@ -15,7 +15,7 @@
       <header class="p-4 border-b border-gray-200 flex justify-between items-center bg-[#265630] text-white">
         <div>
           <h3 class="text-xl font-semibold">Create Initial Report</h3>
-          <p class="text-sm opacity-90">Report ID: {{ generateReportId() }}</p>
+          <p class="text-sm opacity-90">Report ID: {{ generatedID }}</p>
         </div>
         <button @click="$emit('close')" class="text-white hover:text-gray-200">
           <Icon name="lucide:x" class="h-6 w-6" />
@@ -144,6 +144,7 @@
 <script setup lang="ts">
 import { student } from '~/data/student';
 
+const generatedID = ref('');
 const studentSearch = ref('');
 const selectedStudents = ref<any[]>([]);
 const showSuccessAlert = ref(false);
@@ -194,9 +195,13 @@ const generateReportId = () => {
   return `${prefix}-${timestamp}-${random}`;
 };
 
+onMounted(() => {
+  generatedID.value = generateReportId();
+});
+
 const isFormValid = computed(() => {
   return selectedStudents.value.length > 0 && 
-         formData.value.dateOfIncident && 
+         +new Date(formData.value.dateOfIncident) <= Date.now() && 
          formData.value.placeOfIncident && 
          formData.value.narrativeReport;
 });
@@ -207,9 +212,16 @@ const handleSubmit = () => {
   const reportData = {
     ...formData.value,
     students: selectedStudents.value,
-    reportId: generateReportId(),
+    reportId: generatedID.value,
     reportedAt: new Date().toISOString(),
   };
+
+  selectedStudents.value.forEach(stud => {
+      //query through API the student collection Here I am querying in the mock
+      const object = student.find((studObj) => (studObj.studentId === stud.id));
+      object?.incidentDocIDs.push(generatedID.value);
+      console.log('check object student: ', object);
+  });
 
   showSuccessAlert.value = true;
   setTimeout(() => {

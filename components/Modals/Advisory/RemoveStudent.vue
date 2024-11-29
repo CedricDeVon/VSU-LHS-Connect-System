@@ -21,6 +21,8 @@
   </template>
 <script>
 
+import { student } from "~/data/student";
+
 export default {
     emits: ['close', 'remove-student'],
     props: {
@@ -39,6 +41,9 @@ export default {
             this.$emit('close');
         },
        async removeStudent() {
+        const index = student.findIndex(student => student.studentId === this.student.studentId);
+        student.student[index].isEnrolled = false;
+        // await this.$axios.delete(`/api/students/${this.student.studentId}`); //I think we need to remove the studentID from the array of students in this section
         this.section.sectionStudents = this.section.sectionStudents.filter(studentId => studentId !== this.student.studentId);   
             this.closeModal();
         }

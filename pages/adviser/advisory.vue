@@ -1,34 +1,26 @@
-<script setup lang="ts">
-import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
-import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
-import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
-
-const adviserViewStore = useAdviserViewStore();
-await adviserViewStore.updateAdvisoryView();
-
-</script>
-
 <template>
     <div class="adviser-page">
         <AdviserHeader @notif-click="notifClick"  />
             <div >
-            <AddStudentForm v-if="showAddStudentForm"
-            @close="showAddStudentForm = false"
+            <AddStudentForm v-if="adviserViewStore.advisoryAddStudentForm"
+            @close="adviserViewStore.advisoryAddStudentForm = false"
             />
 
-            <notification-modal v-if="showNotification" />
+            <notification-modal v-if="adviserViewStore.advisoryShowNotification" />
             <div>
                 <h1 class="AY_Sem text-2xl font-bold">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
-                <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
-            </div>   
+           
 
             <!--Content of the Page-->
             <div class="contain " :style="{width: containWidth}">
+
+                <div class="title  flex justify-center items-center" >
+                    <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
+                </div>   
+
                 <div class="grid grid-cols-10">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <!--Sort/Add student-->
@@ -42,7 +34,7 @@ await adviserViewStore.updateAdvisoryView();
                            </select>
 
                        
-                            <button @click="adviserViewStore.addNewStudent"
+                            <button @click="showAddStudentForm"
                                     class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="Add Student">
                                     Add Student
@@ -64,9 +56,9 @@ await adviserViewStore.updateAdvisoryView();
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    <tr class ="hover:bg-gray-200 " v-for="student in adviserViewStore.advisoryStudents" :key="student.id" @click="adviserViewStore.studentClick(student)" >
-                                        <td class="py-2 px-4 text-center align-middle ">{{ student.id }}</td>
-                                        <td class="py-2 px-4 text-center align-middle ">{{ `${student.data.lastName}, ${student.data.firstName} ${student.data.suffix}` }}</td>
+                                    <tr class ="hover:bg-gray-200 " v-for="student in getStudents()" :key="student.id" @click="adviserViewStore.studentClick(student)" >
+                                        <td class="py-2 px-4 text-center align-middle ">{{ student.id || '' }}</td>
+                                        <td class="py-2 px-4 text-center align-middle ">{{ adviserViewStore.getFullName(student) }}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -91,12 +83,47 @@ await adviserViewStore.updateAdvisoryView();
     </div>
 </template>
 
+<script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
+import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+
+const adviserViewStore = useAdviserViewStore();
+await adviserViewStore.updateAdvisoryView();
+
+onBeforeMount(async () => {
+    await adviserViewStore.updateAdvisoryView();
+})
+
+function showAddStudentForm() {
+    adviserViewStore.advisoryAddStudentForm = !adviserViewStore.advisoryAddStudentForm;
+}
+
+function getStudents() {
+    const results = adviserViewStore.advisoryStudents;
+    if (adviserViewStore.adviserSelectedSort === 'surname') {
+      results.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
+    } else if (adviserViewStore.adviserSelectedSort === 'student_ID') {
+      results.sort((a: any, b: any) => a.id.localeCompare(b.id));
+    }
+
+    return results;
+}
+
+</script>
+
 <style scoped>
     .adviser-page{
         background: #fffef1;
         height: 850px;
         position: relative;
         overflow: hidden; 
+        
         }
 
     .backPic{
@@ -145,14 +172,16 @@ await adviserViewStore.updateAdvisoryView();
     }
 
     .title{
-        position: absolute;
-        height: 6.1%;
+        height: 8.8%;
+        width: 98%;
+        justify-self: center;
         background: #265630;
         border-radius: 15px;
+        margin-top: -35px;
         left: 95px;
         top: 135px;
-        z-index: 2;
     }
+
 
     .table-text{
         font-size: 16px;

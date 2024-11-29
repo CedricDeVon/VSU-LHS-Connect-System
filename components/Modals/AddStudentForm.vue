@@ -1,119 +1,3 @@
-<script >
-
-// import { emit } from 'process';
-// import ShortDatepicker from '../used-components/ShortDatepicker.vue';
-// import DatePickerInput from '../used-components/DatePickerInput.vue';
-import { ref, watch, defineEmits } from 'vue';
-import { studentAddedStore } from '~/stores/studentAdded';
-import UnEnrolledStudents from './UnEnrolledStudents.vue';
-import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
-
-  export default{
-      name: 'AddStudentForm',
-      components: { UnEnrolledStudents, StudentCSVUploadModal},
-      props: {
-        AdviserID: {
-          type: String,
-          required: true,
-        },
-      },
-
-      setup() {
-        const emit = defineEmits(['update:modelValue', 'close']);
-        const store = studentAddedStore();
-        const initPreparation = ref(true);
-        const showSingleNewStudentForm = ref(false);
-        const showSingleContStudentForm = ref(false);
-        const showBulkNewStudentForm = ref(false);
-        const showBulkContStudentForm = ref(false);
-        const selectedStudentType = ref('');
-        const hoveredStudentType = ref('');
-        const selectedAddingType = ref('');
-        const hoveredAddingType = ref('');
-
-        watch(() => store.birthDate, (newValue) => {
-          emit('update:modelValue', newValue);
-          console.log('Birthdate changed:', newValue);
-        });
-
-
-        const nextClick = () => {
-        if (selectedStudentType.value === '' ) {
-          alert('Please select a student type and adding type');
-          return;
-        } 
-        if (selectedAddingType.value === 'singleAdding' && selectedStudentType.value === 'newStudent') {
-          showSingleNewStudentForm.value = true;
-          initPreparation.value = false;
-          return;
-        }
-        if (selectedStudentType.value === 'continuingStudent') {
-          showSingleContStudentForm.value = true;
-          initPreparation.value = false;
-          return;
-        }
-        if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'newStudent') {
-          showBulkNewStudentForm.value = true;
-          initPreparation.value = false;
-          return;
-        }
-        // if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'continuingStudent') {
-        //   showBulkContStudentForm.value = true;
-        //   initPreparation.value = false;
-        // }
-        else {
-          alert('Please select a student adding type');
-      }
-    };
-
-    const handleBack = () => {
-      showSingleNewStudentForm.value = false;
-      showSingleContStudentForm.value = false;
-      showBulkNewStudentForm.value = false;
-      showBulkContStudentForm.value = false;
-      initPreparation.value = true;
-    };
-
-    const selectStudentType = (box) => {
-      selectedStudentType.value = box;
-    };
-
-    const hoverStudentType = (box) => {
-      hoveredStudentType.value = box;
-    };
-
-    const selectAddingType = (box) => {
-      selectedAddingType.value = box;
-    };
-
-    const hoverAddingType = (box) => {
-      hoveredAddingType.value = box;
-    };
-
-    return {
-     // date,
-      emit,
-      store,
-      initPreparation,
-      showSingleNewStudentForm,
-      showSingleContStudentForm,
-      showBulkNewStudentForm,
-      showBulkContStudentForm,
-      selectedStudentType,
-      hoveredStudentType,
-      selectedAddingType,
-      hoveredAddingType,
-      nextClick,
-      handleBack,
-      selectStudentType,
-      hoverStudentType,
-      selectAddingType,
-      hoverAddingType,
-    };
-  },
-};
-</script>
-
 <template>
     <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-70">
         <div class=" z-50 w-2/5 mt-14 h-fit" >
@@ -149,7 +33,7 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
                     <div class="selection-box rounded-lg m-1 p-2" :class="{selected: selectedAddingType === 'singleAdding'}"
                       @click ="selectAddingType('singleAdding')"
                       @mousehover = "hoverAddingType('singleAdding')"
-                      @mouseleave="hoverAdding('')">
+                      @mouseleave="hoverAddingType('')">
                       Individual Adding
                     </div>
                     <div class="selection-box rounded-lg m-1 p-2" :class="{selected: selectedAddingType === 'bulkAdding'}"
@@ -172,68 +56,70 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
               </div>
               
               <!--Body if singleAdding of new student-->
-              <div v-if ="showSingleNewStudentForm" class=" body2 flex justify-center h-fit w-full">
-                <div class=" w-11/12 h-fit">
+              <div v-if="showSingleNewStudentForm" class=" body2 flex justify-center h-fit w-full">
+                <form @submit.prevent="addStudentClick">
+                  <div class=" w-11/12 h-fit">
 
-                  <div class="flex justify-center pt-5">
-                    <img src="~/assets/icons/default-user.png" alt="user profile" class=" h-52">
-                  </div>
-
-                  <div>
-                    <div class="p-2 pb-0 ">
-                      <div class="pb-1">Student ID:</div>
-                      <label>
-                        <input type="text" class="input px-2 py-2 rounded-sm w-1/2 focus outline-green-400 " placeholder="Enter Student ID">
-                      </label>
+                    <div class="flex justify-center pt-5">
+                      <img src="~/assets/icons/default-user.png" alt="user profile" class=" h-52">
                     </div>
-                    <div class="p-2 ">
-                      <div class="pb-1">Student's Full Name: </div>
-                      <label>
-                        <input type="text" class=" inputName px-2 py-2 rounded-sm focus outline-green-400 " placeholder="Enter First Name">
-                        <input type="text" class=" inputName px-2 py-2 rounded-sm  ml-2 focus outline-green-400" placeholder="Enter Last Name">
-                        <input type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2 focus outline-green-400" placeholder="Suffix">
-                      </label>
+
+                    <div>
+                      <div class="p-2 pb-0 ">
+                        <div class="pb-1">Student ID:</div>
+                        <label>
+                          <input v-model="store.studentId" type="text" class="input px-2 py-2 rounded-sm w-1/2 focus outline-green-400 " placeholder="Enter Student ID">
+                        </label>
+                      </div>
+                      <div class="p-2 ">
+                        <div class="pb-1">Student's Full Name: </div>
+                        <label>
+                          <input v-model="store.firstName" type="text" class=" inputName px-2 py-2 rounded-sm focus outline-green-400 " placeholder="Enter First Name">
+                          <input v-model="store.lastName" type="text" class=" inputName px-2 py-2 rounded-sm  ml-2 focus outline-green-400" placeholder="Enter Last Name">
+                          <input v-model="store.suffix" type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2 focus outline-green-400" placeholder="Suffix">
+                        </label>
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="grid grid-flow-col p-2">
-                      <label>Birtdate: </label>
-                      <UiVeeDatepicker placeholder="MM/DD/YYYY"/>     
+                    <div class="grid grid-flow-col p-2">
+                        <label>Birtdate: </label>
+                        <UiVeeDatepicker v-model="store.birthDate" placeholder="MM/DD/YYYY"/>     
 
-                      <label class="mx-5">Sex Assigned at Birth:
-                      <select
-                               class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-green-400"
-                               v-model="selectedGender">
-                               <option value="" disabled selected hidden>Gender</option>
-                               <option value="Male">Male</option>
-                               <option value="Female">Female</option>
-                      </select>
-                    </label> 
+                        <label class="mx-5">Sex Assigned at Birth:
+                        <select
+                                class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-green-400"
+                                v-model="store.gender">
+                                <option value="" disabled selected hidden>Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                        </select>
+                      </label> 
+                      
                     
-                   
+                    </div>
+                    <div class="p-1 px-2 pb-0 ">
+                      Address:
+                      <label>
+                        <input v-model="store.address" type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3 focus outline-green-400 " placeholder="Enter Student Address">
+                      </label>
+                    </div>
+                    <div class=" mt-2 p-1 px-2 pb-0 ">
+                      Contact Number/s:
+                      <label>
+                        <input v-model="store.contactNumber" type="text" class="input px-2 py-2 ml-3 rounded-sm w-1/3 focus outline-green-400" placeholder="Enter Contact Number">
+                        <button class="pl-5 wordbutton ">Add +</button>
+                      </label>
+                    </div>
+                    <div class="flex justify-end mt-7 mb-7 ">
+                      <button @click ="handleBack" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Back">
+                        Back
+                      </button>
+                      <button type="addStudentClick" class=" button2 px-11 py-2 m-2 rounded-lg focus:outline-none" aria-label="Add Student">
+                        Add Student
+                      </button>
+                    </div>
                   </div>
-                  <div class="p-1 px-2 pb-0 ">
-                     Address:
-                    <label>
-                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3 focus outline-green-400 " placeholder="Enter Student Address">
-                    </label>
-                  </div>
-                  <div class=" mt-2 p-1 px-2 pb-0 ">
-                     Contact Number/s:
-                    <label>
-                      <input type="text" class="input px-2 py-2 ml-3 rounded-sm w-1/3 focus outline-green-400" placeholder="Enter Contact Number">
-                      <button class="pl-5 wordbutton ">Add +</button>
-                    </label>
-                  </div>
-                  <div class="flex justify-end mt-7 mb-7 ">
-                    <button @click ="handleBack" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Back">
-                      Back
-                    </button>
-                    <button @click ="addStudentClick" class=" button2 px-11 py-2 m-2 rounded-lg focus:outline-none" aria-label="Add Student">
-                      Add Student
-                    </button>
-                  </div>
-                </div>
+                </form>
               </div>
               <div v-if="showSingleContStudentForm" class="w-full">
                 <div class="smallText flex justify-center m-4">
@@ -241,7 +127,7 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
                 </div>
                
               </div>
-              <div v-if="showBulkNewStudentForm">
+              <div v-if="adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm">
                 <div class="smallText flex justify-center m-4">
                   <StudentCSVUploadModal @close = "$emit('close')"/>
                 </div>
@@ -252,6 +138,115 @@ import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
         </div>
     </div>
 </template>
+
+<script>
+import { ref, watch, defineEmits } from 'vue';
+import { studentAddedStore } from '~/stores/studentAdded';
+import UnEnrolledStudents from './UnEnrolledStudents.vue';
+import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
+import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+
+  export default{
+      name: 'AddStudentForm',
+      components: { UnEnrolledStudents, StudentCSVUploadModal},
+      props: {
+        AdviserId: {
+          type: String,
+          required: true,
+        },
+      },
+
+      setup() {
+        const emit = defineEmits(['update:modelValue', 'close']);
+        const store = studentAddedStore();
+        const initPreparation = ref(true);
+        const showSingleNewStudentForm = ref(false);
+        const showSingleContStudentForm = ref(false);
+        const showBulkContStudentForm = ref(false);
+        const selectedStudentType = ref('');
+        const hoveredStudentType = ref('');
+        const selectedAddingType = ref('');
+        const hoveredAddingType = ref('');
+        const adviserViewStore = useAdviserViewStore();
+
+        const nextClick = () => {
+        if (selectedStudentType.value === '' ) {
+          alert('Please select a student type and adding type');
+          return;
+        } 
+        else if (selectedAddingType.value === 'singleAdding' && selectedStudentType.value === 'newStudent') {
+          showSingleNewStudentForm.value = true;
+          initPreparation.value = false;
+        }
+        else if (selectedStudentType.value === 'continuingStudent') {
+          showSingleContStudentForm.value = true;
+          initPreparation.value = false;
+
+        }
+        else if (selectedAddingType.value === 'bulkAdding' && selectedStudentType.value === 'newStudent') {
+          adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = true;
+          initPreparation.value = false;
+        }
+        else {
+          alert('Please select a student adding type');
+        }
+    };
+
+    const handleBack = () => {
+      showSingleNewStudentForm.value = false;
+      showSingleContStudentForm.value = false;
+      adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = false;
+      showBulkContStudentForm.value = false;
+      initPreparation.value = true;
+    };
+
+    const selectStudentType = (box) => {
+      selectedStudentType.value = box;
+    };
+
+    const hoverStudentType = (box) => {
+      hoveredStudentType.value = box;
+    };
+
+    const selectAddingType = (box) => {
+      selectedAddingType.value = box;
+    };
+
+    const hoverAddingType = (box) => {
+      hoveredAddingType.value = box;
+    };
+
+    const addStudentClick = async () => {
+      await adviserViewStore.addNewStudent(store.getAllData());
+      await adviserViewStore.updateAdvisoryView();
+
+      handleBack();
+      store.resetAllData();
+    };
+
+    return {
+      emit,
+      store,
+      initPreparation,
+      showSingleNewStudentForm,
+      showSingleContStudentForm,
+      showBulkContStudentForm,
+      selectedStudentType,
+      hoveredStudentType,
+      selectedAddingType,
+      hoveredAddingType,
+      nextClick,
+      handleBack,
+      selectStudentType,
+      hoverStudentType,
+      selectAddingType,
+      hoverAddingType,
+      addStudentClick,
+      adviserViewStore
+    };
+  },
+};
+</script>
 
 <style scoped>
 

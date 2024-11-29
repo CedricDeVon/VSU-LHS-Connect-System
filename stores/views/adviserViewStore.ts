@@ -6,12 +6,17 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     const advisoryShowAddStudentForm = ref(false);
     const advisoryAcademicYearAndSemesterMessage = ref('');
     const advisoryStudentData = useState('advisoryStudentData');
+    const advisoryAddStudentForm = ref(false);
+    const advisoryShowNotification = ref(false);
 
     const homepageSelectedSort = ref('');
     const homepageItems = useState('homepageItems');
     const homepageShowStudentInfo = ref(false);
     const homepageShowAddStudentForm = ref (false);
     const homepageTimeline = useState('homepageTimeline');
+    const homepageAdviser = useState('homepageAdviser');
+    const homepageUser = useState('homepageUser');
+    const homepageSection = useState('homepageSection');
     
     const addStudentFormInitPreparation = ref(true);
     const addStudentFormShowSingleNewStudentForm = ref(false);
@@ -23,7 +28,8 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     const addStudentFormSelectedAddingType = ref('');
     const addStudentFormHoveredAddingType = ref('');
 
-    const reportsInitialReports = useState('reportsInitialReports');
+    const reportsIncidentalReports = useState('reportsIncidentalReports');
+    const reportsAnecdotalReports = useState('reportsAnecdotalReports');
     const reportsTimeline = useState('reportsTimeline');
     const reportsReport = useState('reportsReport');
     const reportsReportIsDraft = ref(true);
@@ -53,12 +59,73 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     const settingsTimeline = useState('settingsTimeline');
     const settingsAdviser = useState('settingsAdviser');
 
+    const unEnrolledStudents = useState('unEnrolledStudents');
+    const unEnrolledTimeline = useState('unEnrolledTimeline');
+
+    const studentCSVUpdateModalFile = useState('studentCSVUpdateModalFile');
+    const studentCSVUpdateModalSuccessMessage = ref('');
+    const studentCSVUpdateModalSuccessBulkContStudentForm = ref(false);
+
+    const anecdoteAnecdotalReport = useState('anecdoteAnecdotalReport');
+    const anecdoteReports = useState('anecdoteReports');
+    const anecdoteStudent = useState('anecdoteStudent');
+    
+    const updateAnecdote = async (studentId: string) => {
+        const result: any = await $fetch('/api/adviser/view/anecdote', {
+          method: 'POST', body: {
+            studentId
+          }
+        });
+        // console.log(result)
+    
+        anecdoteStudent.value = result.data.student;
+        anecdoteAnecdotalReport.value = result.data.anecdotalReport;
+        anecdoteReports.value = result.data.reports;
+    }
+      
+    const createManyStudentsViaCSV = async (file: any) => {
+        const result: any = await $fetch('/api/adviser/view/studentCSVUploadModal/createMany', {
+            method: 'POST', body: {
+                file
+            }
+        });
+        
+        return result;
+    }
+
     const updateHomePage = async () => {
+        const user = await getCurrentUser();
         const result: any = await $fetch('/api/adviser/view/homepage', {
-            method: 'POST', body: {}
+            method: 'POST', body: {
+                userId: user.uid
+            }
         });
 
         homepageTimeline.value = result.data.timeline;
+        homepageAdviser.value = result.data.adviser;
+        homepageUser.value = result.data.user;
+        homepageSection.value = result.data.section;
+    }
+
+    const updateUnEnrolledStudents = async () => {
+        const user = await getCurrentUser();
+        const result: any = await $fetch('/api/adviser/view/unEnrolledStudents', {
+            method: 'POST', body: {
+                userId: user.uid
+            }
+        });
+
+        unEnrolledStudents.value = result.data.students;
+        unEnrolledTimeline.value = result.data.timeline;
+    }
+
+    const enrollStudent = async (student: any) => {
+        const result: any = await $fetch('/api/adviser/view/studentEnrollment/enroll', {
+            method: 'POST', body: {
+                studentId: student.id
+            }
+        });
+        console.log(result)
     }
 
     const updateReports = async () => {
@@ -69,7 +136,8 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
             }
         });
 
-        reportsInitialReports.value = result.data.initialReports;
+        reportsIncidentalReports.value = result.data.incidentalReports;
+        reportsAnecdotalReports.value = result.data.anecdotalReports;
         reportsTimeline.value = result.data.timeline;
     }
 
@@ -86,21 +154,33 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
         settingsAdviser.value = result.data.adviser;
     }
 
-    const updateAddStudentForm = async () => {
-    }
-
     const resetReports = async () => {
         // const result: any = await $fetch('/api/adviser/view/homepage', {
         //     method: 'POST', body: {}
         // });
     }
 
-    const getAcademicYearAndSemester = async (timeline: any) => {
+    const getGradeAndSection = (section: any) => {
+        if (!section) {
+          return 'N/A';
+        }
+  
+        const { data }: any = section;
+        return `Grade ${data.level} - ${data.name}`;
+    }
+
+    const getAcademicYearAndSemester = (timeline: any) => {
         return `Academic Year ${timeline.data.schoolYear} / ${(timeline.data.semester === 1) ? 'First' : 'Second'} Semester`;
     }
 
-    const addNewStudent = async () => {
-        advisoryShowAddStudentForm.value = true;
+    const addNewStudent = async (studentData: any) => {
+        const user = await getCurrentUser();
+        const result: any = await $fetch('/api/adviser/view/addStudentForm/createStudent', {
+            method: 'POST', body: {
+                userId: user.uid,
+                studentData
+            }
+        });
     }
 
     const studentClick = async (student: any) => {
@@ -109,9 +189,9 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
             advisoryStudentData.value = student;
         }
     }
-
-    const getStudentFullName = (student: any) => {
-        return `${student.data.lastName}, ${student.data.firstName} ${student.data.middleName} ${student.data.suffix}`.trim();
+    
+    const getFullName = (person: any) => {
+        return `${person.data.lastName}, ${person.data.firstName || ''} ${person.data.middleName || ''} ${person.data.suffix || ''}`.trim();
       }
     
     const updateAdvisoryView = async () => {
@@ -135,6 +215,20 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     }
 
     return {
+        updateAnecdote,
+        anecdoteStudent,
+        anecdoteReports,
+        anecdoteAnecdotalReport,
+        studentCSVUpdateModalSuccessBulkContStudentForm,
+        createManyStudentsViaCSV,
+        studentCSVUpdateModalFile,
+        studentCSVUpdateModalSuccessMessage,
+        enrollStudent,
+        unEnrolledStudents,
+        unEnrolledTimeline,
+        updateUnEnrolledStudents,
+        advisoryAddStudentForm,
+        advisoryShowNotification,    
         advisorySelectedSort,
         advisoryStudents,
         advisoryShowStudentInfo,
@@ -154,7 +248,8 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
         addStudentFormHoveredStudentType,
         addStudentFormSelectedAddingType,
         addStudentFormHoveredAddingType,
-        reportsInitialReports,
+
+        reportsIncidentalReports,
         reportsReport,
         reportsReportIsDraft,
         reportsShowCreateReport,
@@ -170,11 +265,14 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
         reportsWitness,
         reportsDateOfIncident,
         reportsPlaceOfIncident,
+        reportsTimeline,
         reportsThingsInvolved,
         reportsNarrativeReport,
         reportsDateReported,
         reportsStatus,
         reportsAcademicYear,
+        reportsAnecdotalReports,
+
         settingsShowNotificaton,
         settingsContainWidth,
         settingsTitleWidth,
@@ -184,14 +282,17 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
         resetAllData,
         addNewStudent,
         studentClick,
-        getStudentFullName,
+        getFullName,
         updateAdvisoryView,
         updateHomePage,
-        updateAddStudentForm,
         updateReports,
         resetReports,
         updateSettings,
         getAcademicYearAndSemester,
-        homepageTimeline
+        homepageTimeline,
+        homepageAdviser,
+        homepageUser,
+        homepageSection,
+        getGradeAndSection
     };
 })

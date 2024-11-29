@@ -52,7 +52,6 @@
 import { ref } from 'vue';
 import emailjs from '@emailjs/browser';
 
-
 const props = defineProps({
   show: {
     type: Boolean,

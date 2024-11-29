@@ -7,14 +7,10 @@ import { useAdminViewStore } from '../../stores/views/adminViewStore'
 const adminViewStore = useAdminViewStore();
 const { handleFileInput, files } = useFileStorage();
 
-// const handleFileChange = async (event: any) => {
-//   // adminViewStore.accountsfile = event.target.files[0];
-//   // adminViewStore.accountsMessage = '';
-// }
-
 const uploadFile = async () => {
   const result: Result = await UserSecurity.signUpManyUsersViaCSVFile(files.value);
   console.log(result)
+  $emit('close');
   // if (result.isNotSuccessful) {
   //     await adminViewStore.resetAdviserAccountsCSVFileInputData(result.message);
   //     return;
@@ -23,7 +19,6 @@ const uploadFile = async () => {
   // if (adminViewStore.accountsfile) {
   //   await adminViewStore.resetAdviserAccountsCSVFileInputData('File uploaded successfully!');
   // }
-  // $emit('close');
 }
 
 </script>

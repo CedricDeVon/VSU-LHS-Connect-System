@@ -4,13 +4,15 @@ import { SuccessfulResult } from '~/library/results/successfulResult';
 
 export default defineEventHandler(async (event) => {
   try {
-    const { incidentId } = await readBody(event);
-    const incidentDivider = (await Databases.getOneIncidentDividerViaIncidentId(incidentId)).data;
-    const studentData = (await Databases.getOneStudentViaId(incidentDivider.data.studentId)).data;
-    const incidentalReport = (await Databases.getOneIncidentalReportViaId(incidentDivider.data.incidentId)).data;
+    const { incidentId, userId } = await readBody(event);
 
+    const user = (await Databases.getOneUserViaId(userId)).data;
+    const admin = (await Databases.getOneAdminViaUserId(userId)).data;
+    const incidentReport = (await Databases.getOneIncidentalReportViaId(incidentId)).data;
+    const student = (await Databases.getOneStudentViaId(incidentReport.data.studentId)).data;
+    
     return new SuccessfulResult({
-      studentData, incidentalReport
+      user, admin, incidentReport, student
     }).cloneToObject();
 
   } catch (error: any) {

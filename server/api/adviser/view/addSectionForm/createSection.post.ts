@@ -4,8 +4,13 @@ import { SuccessfulResult } from '~/library/results/successfulResult';
 
 export default defineEventHandler(async (event) => {
   try {
-    const { id, data } = await readBody(event);
-    await Databases.sectionFirebaseDatabase.createOneDocumentWithId(id, data);
+    const { id, name, level } = await readBody(event);
+    const timeline = (await Databases.getMostRecentTimeline()).data;
+    await Databases.sectionFirebaseDatabase.createOneDocumentWithId(id, { 
+      name,
+      level,
+      schoolYear: timeline.schoolYear
+    });
 
     return new SuccessfulResult().cloneToObject();
 

@@ -27,6 +27,8 @@ export class Databases {
     
     private static readonly _incidentReportFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('incidentReport');
     
+    private static readonly _reportFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('report');
+    
     private static readonly _sectionFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('section');
     
     private static readonly _studentFirebaseDatabase: FirebaseDatabase = new FirebaseDatabase('student');
@@ -42,6 +44,10 @@ export class Databases {
     private static readonly _incidentalReportsFirebaseStorage: FirebaseStorage = new FirebaseStorage('reports/incidents');
 
     private static readonly _caseConferenceFirebaseStorage: FirebaseStorage = new FirebaseStorage('reports/caseConferences');
+
+    public static get reportFirebaseDatabase(): FirebaseDatabase {
+        return Databases.reportFirebaseDatabase;
+    }
 
     public static get initialReportFirebaseDatabase(): FirebaseDatabase {
         return Databases._initialReportFirebaseDatabase;
@@ -115,6 +121,79 @@ export class Databases {
         return Databases._caseConferenceFirebaseStorage;
     }
 
+    public static async updateOneAnecdoteViaId(id: string, data: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._anecdotalReportFirebaseDatabase.updateOneDocument(id, data);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateOneIncidentViaId(id: string, data: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._incidentReportFirebaseDatabase.updateOneDocument(id, data);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateOneCaseConferenceViaId(id: string, data: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._caseConferenceFirebaseDatabase.updateOneDocument(id, data);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async createOneReport(id: string, data: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._reportFirebaseDatabase.createOneDocumentWithId(id, data);
+            // console.log(result);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneCaseConferenceReportViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._caseConferenceFirebaseDatabase.readOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getOneCaseConferenceReportViaIncidentalReportId(incidentId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._caseConferenceFirebaseDatabase.queryOne(
+                where("incidentId", "==", incidentId)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllCaseConferenceReports(): Promise<Result> {
+        try {
+            const result: Result = await Databases._caseConferenceFirebaseDatabase.queryDuplicates();
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async getOneIncidentDividerViaIncidentId(incidentId: string): Promise<Result> {
         try {
             const result: Result = await Databases._incidentDividerFirebaseDatabase.queryOne(
@@ -160,7 +239,19 @@ export class Databases {
             return new FailedResult(error.message);
         }
     }
+    
+    public static async getOneAnecdotalReportViaStudentId(studentId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._anecdotalReportFirebaseDatabase.queryOne(
+                where('studentId', '==', studentId)
+            );
+            return result;
 
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+    
     public static async getOneAnecdotalReportViaId(id: string): Promise<Result> {
         try {
             const result: Result = await Databases._anecdotalReportFirebaseDatabase.readOneDocument(id);
@@ -170,7 +261,7 @@ export class Databases {
             return new FailedResult(error.message);
         }
     }
-    
+
     public static async getAllInitialReportsViaAdviserId(adviserId: string): Promise<Result> {
         try {
             const result: Result = await Databases._initialReportFirebaseDatabase.queryDuplicates(
@@ -183,10 +274,44 @@ export class Databases {
         }
     }
 
+    public static async getOneReportViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._reportFirebaseDatabase.readOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async getAllIncidentDividersViaStudentId(studentId: string): Promise<Result> {
         try {
             const result: Result = await Databases._incidentDividerFirebaseDatabase.queryDuplicates(
                 where("studentId", "==", studentId)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllIncidentalReportsViaAdviserId(adviserId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._incidentReportFirebaseDatabase.queryDuplicates(
+                where("adviserId", "==", adviserId)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllAnecdotalReportsViaAdviserId(adviserId: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._anecdotalReportFirebaseDatabase.queryDuplicates(
+                where("adviserId", "==", adviserId)
             );
             return result;
 
@@ -244,13 +369,14 @@ export class Databases {
             let result: Result = await Databases._sectionFirebaseDatabase.createOneDocumentWithId(id, {
                 name, level, schoolYear
             });
-            console.log(result);
+            // console.log(result);
             return result;
 
         } catch (error: any) {
             return new FailedResult(error.message);
         }
     }
+
     public static async getAllIncidentalReports(): Promise<Result> {
         try {
             const result: Result = await Databases._incidentReportFirebaseDatabase.queryDuplicates();
@@ -285,6 +411,18 @@ export class Databases {
         try {
             const result: Result = await Databases._studentFirebaseDatabase.queryDuplicates(
                 where('sectionId', '==', id)
+            );
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async getAllUnEnrolledStudents(): Promise<Result> {
+        try {
+            const result: Result = await Databases._studentFirebaseDatabase.queryDuplicates(
+                where('isEnrolled', '==', false)
             );
             return result;
 
@@ -360,8 +498,8 @@ export class Databases {
         try {
             let result: Result;
             for (const studentId of studentIds) {
-                result = await Databases.getOneStudentViaId(studentId);
-                if (result.data !== undefined) {
+                result = (await Databases.getOneStudentViaId(studentId)).data;
+                if (result?.data !== undefined) {
                     throw new Error(`Student '${studentId}' already exists`);
                 }
             }

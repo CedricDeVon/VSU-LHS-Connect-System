@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
-import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-import { useAdminViewStore } from '~/stores/views/adminViewStore'
-
 definePageMeta({
   middleware: ['authenticate-and-authorize-admin']
 });
 
+import { useAdminViewStore } from '~/stores/views/adminViewStore'
+
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateDashboard();
+
+onBeforeMount(async () => {
+  await adminViewStore.updateDashboard();
+})
+
+
+import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
+import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 
 </script>
 

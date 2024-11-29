@@ -1,17 +1,28 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
 import debounce from 'lodash/debounce';
-import { useAdminViewStore } from '~/stores/views/adminViewStore';
+import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateSearch();
+
+onBeforeMount(async () => {
+  await adminViewStore.updateSearch();
+})
+
 
 const addNewSection = async (newSection: any) => {
   const result = await $fetch('/api/section/create', {
     method: 'POST',
     body: {
+      id: newSection.secitionId,
       name: newSection.sectionName,
       level: newSection.sectionLevel
     }
@@ -88,6 +99,20 @@ const filteredStudents = () => {
       level: section ? section.data.level : '---'
     };
   });
+}
+
+const viewStudentProfile = (studentId: any) => {
+  let student = adminViewStore.searchStudents.find((student: any) => {
+    return student.id === studentId;
+  });
+
+  adminViewStore.searchSelectedStudent = student;
+  adminViewStore.searchShowStudentDetailsModal = true;
+  console.log(adminViewStore.searchSelectedStudent)
+}
+
+const viewSection = (sectionId: any) => {
+  return navigateTo(`/admin/section/${sectionId}`);
 }
 
 </script>
@@ -169,6 +194,7 @@ const filteredStudents = () => {
                       </td>
                       <td class="px-6 py-4">
                         <button
+                          @click="viewSection(section.id)"
                           :class="section.data.adviser ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'"
                           class="px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
                           {{ section.data.adviser ? 'View Details' : 'Add Adviser' }}
@@ -198,12 +224,10 @@ const filteredStudents = () => {
       </div>
     </div>
     <AddSectionForm v-if="adminViewStore.searchShowAddSectionForm" @close="adminViewStore.searchShowAddSectionForm = false" @add-section="addNewSection" />
-    <AddSectionForm v-if="showAddSectionForm" @close="showAddSectionForm = false" @add-section="addNewSection" />
     <StudentDetailsModal 
-        v-if="selectedStudent"
-        :show="!!selectedStudent"
-        :studentData="selectedStudent"
-        @close="selectedStudent = null"
+        v-if="adminViewStore.searchShowStudentDetailsModal"
+        :studentData="adminViewStore.searchSelectedStudent"
+        @close="adminViewStore.searchSelectedStudent = null"
     />
   </div>
 </template>

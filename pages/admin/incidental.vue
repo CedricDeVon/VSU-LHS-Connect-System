@@ -1,103 +1,92 @@
-<script>
+<script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
 import { defineComponent } from 'vue';
-import { incidentReport } from '~/data/incident';
-import { student } from '~/data/student';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-export default defineComponent({
-    name: 'IncidentSearch',
-    components: {
-        AdminSidebar,
-        AdminHeader
-    },
-    data() {
-        return {
-            searchQuery: '',
-            selectedSort: '',
-            statusFilter: 'all',
-            searchResults: []
-        };
-    },
-    methods: {
-        handleSearch() {
-            let results = incidentReport;
+const adminViewStore = useAdminViewStore();
+await adminViewStore.updateIncidental();
 
-            // Filter by search query
-            if (this.searchQuery) {
-                const query = this.searchQuery.toLowerCase();81001
-                results = results.filter(report => {
-                    const studentNames = this.getStudentNamesFromReport(report.peopleInvolved).toLowerCase();
-                    return report.reportID.toLowerCase().includes(query) ||
-                           studentNames.includes(query) ||
-                           report.dateOfIncident.toLowerCase().includes(query);
-                });
-            }
+onBeforeMount(async () => {
+    await adminViewStore.updateIncidental();
+})
 
-            // Filter by status
-            if (this.statusFilter !== 'all') {
-                results = results.filter(report => report.status === this.statusFilter);
-            }
+function handleSearch() {
+    let results = adminViewStore.incidentalIncidentalReports;
 
-            // Sort results
-            switch (this.selectedSort) {
-                case 'ascDate':
-                    results.sort((a, b) => new Date(a.dateOfIncident) - new Date(b.dateOfIncident));
-                    break;
-                case 'descDate':
-                    results.sort((a, b) => new Date(b.dateOfIncident) - new Date(a.dateOfIncident));
-                    break;
-                case 'reportID':
-                    results.sort((a, b) => a.reportID.localeCompare(b.reportID));
-                    break;
-                case 'studentName':
-                    results.sort((a, b) => {
-                        const nameA = this.getStudentNamesFromReport(a.peopleInvolved);
-                        const nameB = this.getStudentNamesFromReport(b.peopleInvolved);
-                        return nameA.localeCompare(nameB);
-                    });
-                    break;
-            }
-
-            this.searchResults = results;
-        },
-
-        getStudentNamesFromReport(involvedStudents) {
-            if (!involvedStudents) return '';
-            const studentFullNames = involvedStudents.map(firstName => {
-                const student = this.findStudentByFirstName(firstName);
-                if (student) {
-                    return `${student.lastName}, ${student.firstName}`;
-                }
-                return firstName;
-            });
-            return studentFullNames.join('; ');
-        },
-
-        findStudentByFirstName(firstName) {
-            return student.find(s => s.firstName === firstName);
-        },
-
-        viewReport(reportId) {
-            this.$router.push(`/admin/incident/${reportId}`);
-        },
-
-        getStatusClass(status) {
-            return {
-                'Resolved': 'text-green-600 font-medium',
-                'NotResolved': 'text-yellow-600 font-medium'
-            }[status] || 'text-gray-600 font-medium';
-        }
-    },
-    watch: {
-        selectedSort() {
-            this.handleSearch();
-        },
-        statusFilter() {
-            this.handleSearch();
-        }
+    // Filter by search query
+    if (adminViewStore.incidentalSearchQuery) {
+        const query = adminViewStore.incidentalSearchQuery.toLowerCase();
+        results = results.filter((report: any) => {
+            const studentNames = getStudentNamesFromReport(report.data.peopleInvolved).toLowerCase();
+            return report.id.toLowerCase().includes(query) ||
+                    studentNames.includes(query) ||
+                    report.data.dateOfIncident.toLowerCase().includes(query);
+        });
     }
-});
+
+    // Filter by status
+    if (adminViewStore.incidentalStatusFilter !== 'all') {
+        results = results.filter((report: any) => report.data.status === adminViewStore.incidentalStatusFilter);
+    }
+
+    // Sort results
+    switch (adminViewStore.incidentalSelectedSort) {
+        case 'ascDate':
+            results.sort((a: any, b: any) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
+            break;
+        case 'descDate':
+            results.sort((a: any, b: any) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
+            break;
+        case 'reportID':
+            results.sort((a: any, b: any) => a.id.localeCompare(b.id));
+            break;
+        case 'studentName':
+            results.sort((a: any, b: any) => {
+                const nameA = getStudentNamesFromReport(a.data.peopleInvolved);
+                const nameB = getStudentNamesFromReport(b.data.peopleInvolved);
+                return nameA.localeCompare(nameB);
+            });
+            break;
+        default:
+            break;
+    }
+
+    adminViewStore.incidentalSearchResults = results;
+    return results;
+}
+
+function getStudentNamesFromReport(involvedStudents: any) {
+    if (!involvedStudents) return '';
+    const studentFullNames = involvedStudents.map((firstName: any) => {
+        const student = findStudentByFirstName(firstName);
+        if (student) {
+            return `${student.data.lastName}, ${student.data.firstName}`;
+        }
+        return firstName;
+    });
+    return studentFullNames.join('; ');
+}
+
+function findStudentByFirstName(firstName: any) {
+    return adminViewStore.incidentalStudents.find((s: any) => s.data.firstName  === firstName);
+}
+
+function viewReport(reportId: any) {
+    return navigateTo(`/admin/incident/${reportId}`);
+}
+
+function getStatusClass(status: any): any {
+    return {
+        'Resolved': 'text-green-600 font-medium',
+        'Unresolved': 'text-yellow-600 font-medium'
+    }[status] || 'text-gray-600 font-medium';
+}
+
 </script>
 
 <template>
@@ -113,14 +102,14 @@ export default defineComponent({
                         <div class="flex gap-4 mb-6">
                             <input 
                                 type="text" 
-                                v-model="searchQuery"
+                                v-model="adminViewStore.incidentalSearchQuery"
                                 @input="handleSearch"
                                 placeholder="Search by Report ID, Student Name, or Date..."
                                 class="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
                             />
                             <!-- Sort Dropdown -->
                             <select 
-                                v-model="selectedSort"
+                                v-model="adminViewStore.incidentalSelectedSort"
                                 class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
                             >
                                 <option value="">Sort By</option>
@@ -131,7 +120,7 @@ export default defineComponent({
                             </select>
                             <!-- Status Filter -->
                             <select 
-                                v-model="statusFilter"
+                                v-model="adminViewStore.incidentalStatusFilter"
                                 class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#265630]"
                             >
                                 <option value="all">All Status</option>
@@ -141,7 +130,7 @@ export default defineComponent({
                         </div>
 
                         <!-- Results Section -->
-                        <div v-if="searchResults.length > 0" class="border rounded-lg" style="height: calc(100vh - 280px);">
+                        <div v-if="adminViewStore.incidentalSearchResults?.length > 0" class="border rounded-lg" style="height: calc(100vh - 280px);">
                             <div class="relative h-full">
                                 <!-- Fixed Header -->
                                 <table class="w-full">
@@ -159,18 +148,18 @@ export default defineComponent({
                                 <div class="overflow-y-auto h-full" style="max-height: calc(100vh - 330px);">
                                     <table class="w-full">
                                         <tbody>
-                                            <tr v-for="report in searchResults" 
-                                                :key="report.incidentDocID"
-                                                @click="viewReport(report.incidentDocID)"
+                                            <tr v-for="report in handleSearch()" 
+                                                :key="report.id"
+                                                @click="viewReport(report.id)"
                                                 class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
-                                                <td class="p-4 text-center w-[20%]">{{ report.reportID }}</td>
+                                                <td class="p-4 text-center w-[20%]">{{ report.id }}</td>
                                                 <td class="p-4 text-center w-[35%]">
-                                                    {{ getStudentNamesFromReport(report.peopleInvolved) }}
+                                                    {{ getStudentNamesFromReport(report.data.peopleInvolved) }}
                                                 </td>
-                                                <td class="p-4 text-center w-[25%]">{{ report.dateOfIncident }}</td>
+                                                <td class="p-4 text-center w-[25%]">{{ report.data.dateOfIncident }}</td>
                                                 <td class="p-4 text-center w-[20%]">
-                                                    <span :class="getStatusClass(report.status)">
-                                                        {{ report.status }}
+                                                    <span :class="getStatusClass(report.data.status)">
+                                                        {{ report.data.status }}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -181,7 +170,7 @@ export default defineComponent({
                         </div>
 
                         <!-- No Results Message -->
-                        <div v-else-if="searchQuery" class="text-gray-500 text-center text-xl font-regular">
+                        <div v-else-if="adminViewStore.incidentalSearchQuery" class="text-gray-500 text-center text-xl font-regular">
                             <p class="text-gray-500">No incident reports found matching your search.</p>
                         </div>
 

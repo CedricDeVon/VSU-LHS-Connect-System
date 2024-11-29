@@ -1,5 +1,6 @@
 import { Result } from "~/library/results/result";
 import { FailedResult } from "~/library/results/failedResult";
+import { SuccessfulResult } from "~/library/results/successfulResult";
 import { Databases } from "~/library/databases/databases";
 
 export default defineEventHandler(async (event) => {
@@ -9,7 +10,7 @@ export default defineEventHandler(async (event) => {
     if (result.isNotSuccessful) {
       throw new Error(result.message);
     }
-    return result.cloneToObject();
+    return new SuccessfulResult(result.data).cloneToObject();
   
   } catch (error: any) {
     return new FailedResult(error.message).cloneToObject();

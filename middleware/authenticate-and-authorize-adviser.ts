@@ -2,16 +2,18 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
-      const jsonWebToken: any = window.localStorage!.getItem('userAuthToken');
-      if (jsonWebToken === undefined || jsonWebToken === null) {
+      // const jsonWebToken: any = window.localStorage!.getItem('VSUConnectionSystemUserAuthToken');
+      const jsonWebToken: any = useCookie('VSUConnectionSystemUserAuthToken');
+      if (jsonWebToken.value === undefined || jsonWebToken.value === null) {
         console.log('JWT Not Found');
         return navigateTo('/auth/login');
       }
 
       let result: any = await $fetch('/api/auth/jsonWebToken/verify', {
-        method: 'POST', body: { jsonWebToken }
+        method: 'POST', body: { jsonWebToken: jsonWebToken.value }
       })
       
+      // console.log(result)
       const { role, status, email, password } = result.data.data;
       if (result.isNotSuccessful) {
         console.log('JWT Not Verified');
@@ -24,7 +26,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       }
 
       if (status !== 'active') {
-        console.log('User is not an adviser');
+        console.log('Adviser is not active');
         return navigateTo('/auth/login');
       }
 

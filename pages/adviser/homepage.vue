@@ -1,12 +1,27 @@
 <script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
 import StudentBasicInfo from "~/components/Modals/StudentBasicInfoByAdviser.vue";
 import AddStudentForm from "~/components/Modals/AddStudentForm.vue";
+import NotificationModal from '~/components/Modals/NotificationModal.vue';
 import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
 
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateHomePage();
 
+onBeforeMount(async () => {
+    await adviserViewStore.updateHomePage();
+})
+// goToAdvisory(){
+//     this.$router.push('/adviser/advisory')
+// },
+
+// goToReports(){
+//     this.$router.push('/adviser/reports')
+// },
 </script>
 
 <template>
@@ -22,27 +37,27 @@ await adviserViewStore.updateHomePage();
                 <div class="contain m-16 " :style="{width: containWidth}">
                      <!--Title of the Content?-->
                     <div class="title flex justify-center items-center justify-self-center m-3">
-                        <div><h1 class="text-white text-5xl font-bold">Welcome, Pawwy!</h1></div>
+                        <div><h1 class="text-white text-5xl font-bold">Welcome, {{ adviserViewStore.homepageAdviser.data.lastName }}!</h1></div>
                     </div>   
-                    <div class="mini-contain h-full flex justify-self-center m-3 ">
+                    <div class="mini-contain h-full flex justify-self-center m-3  pr-6">
                         <div class="black-text w-full grid grid-flow-col auto-rows-fr">
                             <div class="flex flex-col justify-center items-center">
-                                <img src="assets/icons/default-user.png"
+                                <img :src=adviserViewStore.homepageAdviser.data.profilePicture
                                 :alt="profilePic"
                                 class="w-auto h-3/4 rounded-full object-scale-down "/>
                             </div>
                             <div class=" h-full pt-10 pl-10">
-                                <header class=" text-3xl pb-5">Juan Dela Cruz Jr.</header>
+                                <header class=" text-3xl pb-5">{{ adviserViewStore.getGradeAndSection(adviserViewStore.homepageSection) }}</header>
                                 <div>
-                                    <h2 class="p-1">Username: <span class="black-small">usernameSample</span></h2>
-                                    <h2 class="p-1">Advisory: <span class="black-small">Grade 7 - Pogi </span></h2>
-                                    <h2 class="p-1">Email Address: <span class="black-small">sampleEmailAdd@vsu.edu.ph</span></h2>
+                                    <h2 class="p-1">Username: <span class="black-small">{{ adviserViewStore.homepageUser.data.username }}</span></h2>
+                                    <h2 class="p-1">Advisory: <span class="black-small">{{ adviserViewStore.homepageAdviser.data.facultyId }}</span></h2>
+                                    <h2 class="p-1">Email Address: <span class="black-small">{{ adviserViewStore.homepageUser.data.email }}</span></h2>
                                 </div>
                             </div>
                             <div class=" pt-24">
                                 <div>
-                                    <h2 class="p-1">Faculty Identification Number: <span class="black-small">F-5083</span></h2>
-                                    <h2 class="p-1">Birth Date: <span class="black-small">12/13/1990</span></h2>
+                                    <h2 class="p-1 text-md">Faculty Identification Number: <span class="black-small">{{ adviserViewStore.homepageAdviser.data.facultyId }}</span></h2>
+                                    <h2 class="p-1">Birth Date: <span class="black-small">{{ adviserViewStore.homepageAdviser.data.birthdate }}</span></h2>
                                 </div>
                             </div>
                         </div>

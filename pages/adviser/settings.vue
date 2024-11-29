@@ -1,11 +1,20 @@
 <script setup lang='ts'>
-import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import { student } from "~/data/student";
-import { section } from "~/data/section";
-import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
 
+import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
+import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
+import { Result } from "~/library/results/result";
+import { UserSecurity } from "~/library/security/userSecurity";
+
+const auth = useFirebaseAuth();
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateSettings();
+
+onBeforeMount(async () => {
+    await adviserViewStore.updateSettings();
+})
 
 const handleRowClick = (item: any) => {
 
@@ -17,7 +26,8 @@ const notifyClick = () => {
     adviserViewStore.settingsShowNotification = !adviserViewStore.settingsShowNotification;
 }
 
-const logoutClick = () => {
+const logoutClick = async () => {
+    const result: Result = await UserSecurity.signOutUser(auth);
     return navigateTo('/auth/login');
 }
 
@@ -41,7 +51,7 @@ const logoutClick = () => {
                 <div class="grid grid-cols-10 h-full">
                    <div class=" m-10 col-span-4 pt-5 ">
                         <div class="grid-cols-2 pb-5 ml-6 flex justify-center" >
-                            <img :src="adviserViewStore.settingsUser.data.profilePicture"
+                            <img :src=adviserViewStore.settingsAdviser.data.profilePicture
                          :alt="adviserViewStore.settingsUser.data.username"
                          class="w-auto h-80 rounded-full object-cover mb-4 "/>
                         </div>  

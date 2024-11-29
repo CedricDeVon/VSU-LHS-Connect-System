@@ -1,12 +1,18 @@
 <script setup lang='ts'>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-adviser']
+});
+
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import { initialReport } from "~/data/initialReport";
 import InitialReportModal from '~/components/Modals/InitialReportModal.vue';
-import { adviserReportStore } from "../../stores/adviserReport";
 import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
 
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateReports();
+
+onBeforeMount(async () => {
+    await adviserViewStore.updateReports();
+})
 
 const handleRowClick = (item: any) => {
 
@@ -18,7 +24,7 @@ const notifClick = () => {
     adviserViewStore.reportsShowNotification = !adviserViewStore.reportsShowNotification;
 }
 
-const report = () => {
+const createReport = () => {
     adviserViewStore.resetReports();
     adviserViewStore.reportsShowCreateReport = true;
 }
@@ -27,12 +33,12 @@ const editReport = (report: any) => {
     adviserViewStore.reportsReportChosen = report;
     adviserViewStore.resetReports();
     if (report) {
-        adviserViewStore.reportsPeopleInvolved = report.peopleInvolved;
-        adviserViewStore.reportsWitness = report.witness;
-        adviserViewStore.reportsDateOfIncident = report.dateOfIncident;
-        adviserViewStore.reportsPlaceOfIncident = report.placeOfIncident;
-        adviserViewStore.reportsThingsInvolved = report.thingsInvolved;
-        adviserViewStore.reportsNarrativeReport = report.narrativeReport;
+        adviserViewStore.reportsPeopleInvolved = report.data.peopleInvolved;
+        adviserViewStore.reportsWitness = report.data.witnesses;
+        adviserViewStore.reportsDateOfIncident = report.data.dateOfIncident;
+        adviserViewStore.reportsPlaceOfIncident = report.data.placeOfIncident;
+        adviserViewStore.reportsThingsInvolved = report.data.thingsInvolved;
+        adviserViewStore.reportsNarrativeReport = report.data.narrativeReport;
     }
     adviserViewStore.reportsShowCreateReport = true;
 }
@@ -42,9 +48,14 @@ const viewDetails = (report: any) => {
     adviserViewStore.reportsShowCreateReport = true;
 }
 
-const fetchReports = (id: any, ay: any) => {
-    adviserViewStore.reportsReports  = initialReport.filter((report)=> report.reportedBY === id && report.academicYear === ay);
-    console.log(adviserViewStore.reportsReports);
+const getReports = () => {
+    if (adviserViewStore.reportsSelectedSort === 'incident') {
+      return adviserViewStore.reportsIncidentalReports;
+
+    } else if (adviserViewStore.reportsSelectedSort === 'anecdotal') {
+      return adviserViewStore.reportsAnecdotalReports;
+    }
+    return [];
 }
 
 const creationClose = () => {
@@ -57,37 +68,38 @@ const creationClose = () => {
 <template>
     <div class="reports-page">
         <InitialReportModal
-        v-if="showCreateReport"
+        v-if="adviserViewStore.reportsShowCreateReport"
         :report="reportChosen"
         @close ="creationClose"
         /> 
-        <notification-modal v-if="showNotification"/>
+        <notification-modal v-if="adviserViewStore.reportsShowNotification"/>
         <AdviserHeader @notif-click="notifClick"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
-                <h1 class="AY_Sem text-2xl font-bold">Academic Year 2024-2025 / First Semester</h1>
+                <h1 class="AY_Sem text-2xl font-bold">{{ adviserViewStore.getAcademicYearAndSemester(adviserViewStore.reportsTimeline) }}</h1>
             </div>
 
                 <!--Title of the Content?-->
-            <div class="title flex justify-center items-center" :style="{width: titleWidth}">
-                <div><h1 class="text-white text-2xl font-bold">Incident Reports</h1></div>
+            <div class="title flex justify-center items-center" :style="{width: adviserViewStore.reportsTitleWidth}">
+                <div><h1 class="text-white text-2xl font-bold">
+                    Incident Reports</h1></div>
             </div>   
 
             <!--Content of the Page-->
-            <div class="contain " :style="{ width: containWidth}">
+            <div class="contain " :style="{ width: adviserViewStore.reportsContainWidth}">
                 <div class=" m-10  py-5 px-20 mx-20  ">
                         <!--Sort/Add student-->
                         <div class="grid-cols-2 pb-5 ml-6" >
                            <select
                                class="mr-8 xl:pr-24 lg:mr-5 lg:pr-2 py-4  border border-b-2 border-t-0 border-r-0 border-l-0 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap font-medium hover:bg-gray-15 focus:outline-none"
-                               v-model="selectedSort">
+                               v-model="adviserViewStore.reportsSelectedSort">
                                <option value="" disabled selected hidden>Select View</option>
                                <option value="incident" >Incident Report</option>
                                <option value="anecdotal">Anecdotal Report</option>
                            </select>
 
                        
-                            <button @click="report" 
+                            <button v-if="adviserViewStore.reportsSelectedSort !== 'anecdotal'" @click="createReport" 
                                     class="xl:px-7 py-2 lg:px-2 rounded-lg gray-button text-white focus:outline-none"
                                     aria-label="ReportIncident">
                                     Report an Incident
@@ -104,7 +116,7 @@ const creationClose = () => {
                                         </th>
                                         <th 
                                             class="px-3 py-3 w-2/5">
-                                            Student Name
+                                            Student ID
                                         </th>
                                         <th 
                                             class="px-3 py-3 w-1/5">
@@ -117,12 +129,12 @@ const creationClose = () => {
                                     </tr>
                                 </thead>
                                 <tbody >
-                                    <tr class =" hover:bg-gray-200 text " v-for="report in reports" :key="report.id"  >
-                                        <td class=" py-5 text-center align-middle ">{{ report.id }}</td>
-                                        <td class=" py-5 text-center align-middle ">{{ report.data.peopleInvolved }}</td>
-                                        <td class=" py-5 text-center align-middle ">{{ report.data.dateOfIncident }}</td>
+                                    <tr class =" hover:bg-gray-200 text " v-for="report in getReports()" :key="report.id"  >
+                                        <td class=" py-5 text-center align-middle ">{{ report.id || 'N/A' }}</td>
+                                        <td class=" py-5 text-center align-middle ">{{ report.data.peopleInvolved.join(', ') || 'N/A' }}</td>
+                                        <td class=" py-5 text-center align-middle ">{{ report.data.dateOfIncident || 'N/A' }}</td>
                                         <td class=" py-5 text-center align-middle ">
-                                            <button v-if="report.isDraft"  @click="editReport(report)" 
+                                            <button v-if="report.data.isDraft"  @click="editReport(report)" 
                                                     class=" py-2 px-16 rounded-lg yellow-button text-white focus:outline-none"
                                                     aria-label="EditReport">
                                                     Edit
@@ -241,91 +253,3 @@ const creationClose = () => {
         color: #265630;
     }
 </style>
-
-
-//     export default {
-//         name: "reports",
-//         components: {AdviserHeader, InitialReportModal, },
-//         props: {
-//             AdviserID: {
-//                 type: String,
-//                 required: true,
-//                 default: "adviserid1" // this should be the adviserID of the logged in user
-//             },
-//             AcademicYear: {
-//                 type: String,
-//                 required: true,
-//                 default: "2024-2025" // this should be the current academic year
-//             },
-
-//         },
-//         data() {
-//             return {
-//             reports: [],
-//             reportChosen: {isDraft : true},
-//             showCreateReport:false,
-//             isDraft:true,
-//             showNotification:false,
-//             containWidth:'89%',
-//             titleWidth:'87%',
-//             selectedSort:'',
-//             store: adviserReportStore()
-
-//         };},
-
-//         methods: {
-
-//             handleRowClick(item) {
-  
-//             },
-
-//             notifClick(){
-//                 adviserViewStore.reportsContainWidth = adviserViewStore.reportsContainWidth === '89%' ? '70%': '89%';
-//                 adviserViewStore.reportsTitleWidth = adviserViewStore.reportsTitleWidth === '87%' ? '68%': '87%';
-//                 adviserViewStore.reportsShowNotification = !adviserViewStore.reportsShowNotification;
-//             },
-
-//             report(){
-// //                 adviserViewStore.reportsresetAllData();
-//                 adviserViewStore.reportsShowCreateReport =true;
-//             },
-
-//             editReport(report){
-//                 adviserViewStore.reportsReportChosen = report;
-// //                 adviserViewStore.reportsresetAllData();
-//                     if (report) {
-//                     adviserViewStore.reportsPeopleInvolved = report.peopleInvolved;
-//                     adviserViewStore.reportsWitness = report.witness;
-//                     adviserViewStore.reportsDateOfIncident = report.dateOfIncident;
-//                     adviserViewStore.reportsPlaceOfIncident = report.placeOfIncident;
-//                     adviserViewStore.reportsThingsInvolved = report.thingsInvolved;
-//                     adviserViewStore.reportsNarrativeReport = report.narrativeReport;
-//                 }
-//                 adviserViewStore.reportsShowCreateReport=true;
-//             },
-//             viewDetails(report){
-//                 adviserViewStore.reportsReportChosen = report;
-//                 adviserViewStore.reportsShowCreateReport=true;
-//             },
-
-//             fetchReports(id, ay) {
-//                 adviserViewStore.reportsReports  = initialReport.filter((report)=> report.reportedBY === id && report.academicYear === ay);
-//                 console.log(adviserViewStore.reportsReports);
-//             },
-
-//             creationClose(){
-//                 adviserViewStore.reportsShowCreateReport = false;
-//                 adviserViewStore.reportsReportChosen = {isDraft:true};
-//             },
-
-//             /*handleRowClick(item) {
-//             // Handle row click event
-//             console.log('Row clicked:', item);
-//             }*/
-
-//         },
-
-//         mounted() {
-//             adviserViewStore.fetchReports(adviserViewStore.reportsAdviserID, adviserViewStore.reportsAcademicYear);
-//         }
-//   };

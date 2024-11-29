@@ -1,14 +1,22 @@
 <script setup lang="ts">
-import { section } from '~/data/section.js';
-import { student } from '~/data/student.js';
-import { adviser } from '~/data/adviser.js';
-import { incidentReport } from '~/data/incident.js';
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin']
+});
+
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
 await adminViewStore.updateSectionPageData(useRoute().params.id);
+
+onBeforeMount(async () => {
+    await adminViewStore.updateSectionPageData(useRoute().params.id);
+})
+
+// console.log(useRoute().params.id);
+// console.log(adminViewStore.sectionSection);
+// console.log(adminViewStore.sectionAdviser);
 
 const viewStudentProfile = (studentId: any) => {
     return navigateTo(`/admin/student/${studentId}`, { replace: true });
@@ -146,7 +154,7 @@ const getSectionStudents = () => {
                                     <!-- Student Sort -->
                                     <select v-if="adminViewStore.sectionSelectedView === 'studentView'"
                                         class="mb-0 ml-4 inline-flex justify-center w-[30%] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
-                                        v-model="selectedStudentSort">
+                                        v-model="adminViewStore.sectionSelectedStudentSort">
                                         <option value="" disabled>Sort By</option>
                                         <option value="surnameSort">Surname</option>
                                         <option value="studentIDSort">Student ID</option>
@@ -155,7 +163,7 @@ const getSectionStudents = () => {
                                     <!-- Report Sort -->
                                     <select v-if="adminViewStore.sectionSelectedView === 'reportsView'"
                                         class="mb-0 ml-4 inline-flex justify-center w-[30%] rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-300 focus:outline-none"
-                                        v-model="selectedReportSort">
+                                        v-model="adminViewStore.sectionSelectedReportSort">
                                         <option value="" disabled>Sort By</option>
                                         <option value="ascDateSort">Date (Ascending)</option>
                                         <option value="descDateSort">Date (Descending)</option>
@@ -248,7 +256,7 @@ const getSectionStudents = () => {
                                                             class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
                                                             <td class="p-4 text-center break-words whitespace-normal">{{ report.id }}</td>
                                                             <td class="p-4 text-center break-words whitespace-normal">
-                                                                {{ report.data.peopleInvolved }}
+                                                                {{ report.data.peopleInvolved.join(', ') }}
                                                             </td>
                                                             <td class="p-4 text-center break-words whitespace-normal">{{ report.data.dateOfIncident }}</td>
                                                             <td class="p-4 text-center">

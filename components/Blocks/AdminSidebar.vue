@@ -7,24 +7,28 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 const auth = useFirebaseAuth()
 const adminViewStore = useAdminViewStore();
 
+onBeforeMount(async () => {
+  await adminViewStore.updateDashboard();
+})
+
 const signOutUser = async () => {
   const result: Result = await UserSecurity.signOutUser(auth);
   return navigateTo('/auth/login');
 }
 
 const topNav = [
-  { title: "Dashboard", icon: "lucide:home", link: "dashboard" },
-  { title: "Search", icon: "lucide:search", link: "search" },
+  { title: "Dashboard", icon: "lucide:home", link: "/admin/dashboard" },
+  { title: "Search", icon: "lucide:search", link: "/admin/search" },
   {
     title: "Reports",
     icon: "lucide:bar-chart-3",
     items: [
-      { title: "Incident Reports", link: "incidental" },
-      { title: "Anecdotal Reports", link: "anecdotal" },
+      { title: "Incident Reports", link: "/admin/incidental" },
+      { title: "Anecdotal Reports", link: "/admin/anecdotal" },
     ],
   },
-  { title: "Accounts", icon: "lucide:user-cog", link: "accounts" },
-  { title: "Archives", icon: "lucide:folder-dot", link: "archives" },
+  { title: "Accounts", icon: "lucide:user-cog", link: "/admin/accounts" },
+  { title: "Archives", icon: "lucide:folder-dot", link: "/admin/archives" },
 ];
 const bottomNav = [
   {
@@ -102,8 +106,8 @@ const bottomNav = [
             <div class="flex items-center gap-3 pb-8">
               <div class="flex items-center gap-3">
                 <div>
-                  <p class="text-sm font-semibold" v-html="adminViewStore.adminName" />
-                  <p class="text-sm text-white" v-html="adminViewStore.adminEmail" />
+                  <p class="text-sm font-semibold">{{ adminViewStore.adminName }}</p>
+                  <p class="text-sm text-white">{{ adminViewStore.adminEmail }}</p>
                 </div>
               </div>
               <UiTooltip>

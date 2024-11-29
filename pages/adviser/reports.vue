@@ -6,7 +6,6 @@
         :adviserId="AdviserID"
         @close ="creationClose"
         /> 
-        <notification-modal v-if="showNotification"/>
         <AdviserHeader @notif-click="notifClick" class="relative z-10"/>
         <div >
             <div class="m-5 flex justify-start ml-20">
@@ -62,7 +61,20 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="selectedSort === 'anecdotal'" class=" absolute  text-5xl p-9" >Coming Soon...</tbody>
+                                <tbody v-if="selectedSort === 'anecdotal'">
+                                    <tr class="hover:bg-gray-200 text" v-for="report in anecdotalReports" :key="report.anecdotalDocID">
+                                        <td class="py-5 text-center align-middle">{{ report.anecdotalDocID }}</td>
+                                        <td class="py-5 text-center align-middle">{{ getStudentName(report.studentId) }}</td>
+                                        <td class="py-5 text-center align-middle">{{ report.AY }}</td>
+                                        <td class="py-5 text-center align-middle">
+                                            <button @click="viewAnecdotal(report)" 
+                                                    class="py-2 px-2 rounded-lg yellow-button text-white focus:outline-none"
+                                                    aria-label="AnecdotalDetails">
+                                                    View Report Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
                                 <tbody v-else>
                                     <tr class =" hover:bg-gray-200 text " v-for="report in reports" :key="report.reportIDRef"  >
                                         <td class=" py-5 text-center align-middle ">{{ report.reportIDRef }}</td>
@@ -95,11 +107,16 @@
     import { initialReport } from "~/data/initialReport";
     import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
     import { adviserReportStore } from "../../stores/adviserReport";
-    import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
+    import { anecdotalReport } from "~/data/anecdotal";
+    import { student } from "~/data/student";
+    import { section } from "~/data/section";
    
     export default {
         name: "reports",
-        components: {AdviserHeader, InitialReportModal, NotificationModal, },
+        components: {
+            AdviserHeader, 
+            InitialReportModal
+        },
         props: {
             AdviserID: {
                 type: String,
@@ -119,11 +136,13 @@
             reportChosen: {isDraft : true},
             showCreateReport:false,
             isDraft:true,
-            showNotification:false,
             containWidth:'89%',
             titleWidth:'87%',
             selectedSort:'',
-            store: adviserReportStore()
+            store: adviserReportStore(),
+            anecdotalReports: [],
+            students: student,
+            sections: section
 
         };},
 
@@ -136,7 +155,6 @@
             notifClick(){
                 this.containWidth = this.containWidth === '89%' ? '70%': '89%';
                 this.titleWidth = this.titleWidth === '87%' ? '68%': '87%';
-                this.showNotification = !this.showNotification;
             },
 
             report(){
@@ -164,8 +182,40 @@
             },
 
             fetchReports(id, ay) {
-                this.reports  = initialReport.filter((rep)=> rep.reportedBY === id && rep.academicYear === ay);
-                console.log(this.reports);
+                if (this.selectedSort === 'anecdotal') {
+                    // Get adviser's section first
+                    const adviserSection = this.sections.find(sec => 
+                        sec.adviserId === id && 
+                        sec.sectionSchoolYear === ay &&
+                        sec.sectionName === 'Javascript'
+                    );
+                    
+                    if (adviserSection) {
+                        // Filter anecdotal reports for students in adviser's section
+                        this.anecdotalReports = anecdotalReport.filter(rep => 
+                            rep.AY === ay && 
+                            adviserSection.sectionStudents.includes(rep.studentId)
+                        );
+                    } else {
+                        this.anecdotalReports = [];
+                    }
+                } else {
+                    this.reports = initialReport.filter(rep => 
+                        rep.reportedBY === id && rep.academicYear === ay);
+                }
+            },
+
+            getStudentName(studentId) {
+                const student = this.students.find(s => s.studentId === studentId);
+                if (student) {
+                    return `${student.firstName} ${student.middleName} ${student.lastName}`;
+                }
+                return 'Unknown Student';
+            },
+
+            viewAnecdotal(report) {
+                // Implementation for viewing anecdotal report details
+                console.log('Viewing anecdotal report:', report);
             },
 
             creationClose(){
@@ -179,6 +229,12 @@
             console.log('Row clicked:', item);
             }*/
 
+        },
+
+        watch: {
+            selectedSort(newValue) {
+                this.fetchReports(this.AdviserID, this.AcademicYear);
+            }
         },
 
         mounted() {

@@ -1,3 +1,6 @@
+<!--TAKE NOTE that case conference documents cannot be edited once created from its incident page that is why wala ko nag add edit buttons because this page is solely for viewing resolved conferences. 
+
+AND an incident cannot have more than one on-going conference that is why sa incident/[id] page na laman ko mag put ug edit/save case conference details once created na ang case conference document-->
 <template>
     <div class="flex h-screen bg-[#FFFEF1]">
         <AdminSidebar />
@@ -87,6 +90,8 @@ import { useRoute } from 'vue-router'
 import pdfMake from 'pdfmake/build/pdfmake'
 import * as pdfFonts from 'pdfmake/build/vfs_fonts'
 import { caseConference } from '~/data/caseconference'
+import { defineCaseConferenceDoc } from '~/utils/documentDefinitions'
+
 pdfMake.vfs = pdfFonts.pdfMake.vfs
 import AdminHeader from '~/components/Blocks/AdminHeader.vue'
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue'
@@ -107,140 +112,10 @@ const formatDate = (date) => {
         day: 'numeric'
     })
 }
-
-const defineConferenceDoc = (data) => ({
-    pageSize: 'A4',
-    pageMargins: [72, 110, 72, 72],
-    header: {
-          image: headerImage,
-          width: 600,
-          height: 100,
-          alignment: 'center',
-          margin: [0, 10, 0, 0],
-        },
-    content: [
-        { text: 'CASE CONFERENCE FORM', style: 'header' },
-
-        // Student Info
-        {
-            columns: [
-                {
-                    text: 'Student\'s Name: ',
-                    style: 'label',
-                    width: 100
-                },
-                {
-                    text: data.studentName,
-                    style: 'content'
-                },
-                {
-                    text: [
-                        { text: 'Grade & Section: ', style: 'label' },
-                        { text: data.gradeAndSection, style: 'content' }
-                    ],
-                    alignment: 'right'
-                }
-            ]
-        },
-
-        // Main Content
-        { text: '\nCircumstance:', style: 'label' },
-        { text: data.circumstance, style: 'content', margin: [10, 0, 0, 20] },
-
-        { text: 'Discussions:', style: 'label' },
-        { text: data.discussions, style: 'content', margin: [10, 0, 0, 20] },
-
-        { text: 'Agreement:', style: 'label' },
-        { text: data.agreement, style: 'content', margin: [10, 0, 0, 20] },
-
-        { text: 'Remarks:', style: 'label' },
-        { text: data.remarks, style: 'content', margin: [10, 0, 0, 20] },
-
-        // Signatures
-        {
-            components: {
-                AdminHeader,
-                AdminSidebar
-            },
-            columns: [
-                {
-                    stack: [
-                        { text: '\n\n_______________________', style: 'signature' },
-                        { text: 'Student\'s Signature', style: 'signatureLabel' }
-                    ],
-                    width: '*'
-                },
-                {
-                    stack: [
-                        { text: '\n\n_______________________', style: 'signature' },
-                        { text: 'Parent\'s Signature', style: 'signatureLabel' }
-                    ],
-                    width: '*'
-                }
-            ],
-            columnGap: 20
-        }
-    ],
-    styles: {
-        header1: {
-            fontSize: 14,
-            bold: true,
-            alignment: 'center',
-            margin: [0, 0, 0, 5]
-        },
-        header2: {
-            fontSize: 12,
-            bold: true,
-            alignment: 'center',
-            margin: [0, 0, 0, 5]
-        },
-        header3: {
-            fontSize: 11,
-            alignment: 'center',
-            margin: [0, 0, 0, 20]
-        },
-        header: {
-            fontSize: 14,
-            bold: true,
-            alignment: 'center',
-            margin: [0, 0, 0, 30]
-        },
-        label: {
-            fontSize: 11,
-            bold: true
-        },
-        content: {
-            fontSize: 11
-        },
-        signature: {
-            alignment: 'center'
-        },
-        signatureLabel: {
-            fontSize: 10,
-            alignment: 'center'
-        }
-    }, 
-    footer: (currentPage, pageCount) => {
-          return [
-            {
-              image: footer,
-              width: 480,
-              alignment: 'center',
-              margin: [0, 10, 0, 0]
-            },
-            {
-              text: `FM-OOP-05                                    Rev.: 01                                    ${new Date().toLocaleDateString()}                                       Page ${currentPage} of ${pageCount}                                  Control Number:______`,
-              alignment: 'justify',
-              margin: [70, 0],
-              fontSize: 7,
-            },
-          ];
-        },
-})
-
+ 
 const displayPDF = () => {
     if (!conferenceData.value) return
-    const docDefinition = defineConferenceDoc(conferenceData.value)
+    const docDefinition = defineCaseConferenceDoc(conferenceData.value)
     pdfMake.createPdf(docDefinition).getBlob((blob) => {
         const url = URL.createObjectURL(blob)
         const viewer = document.getElementById('pdf-viewer')
@@ -252,13 +127,13 @@ const displayPDF = () => {
 
 const downloadPDF = () => {
     if (!conferenceData.value) return
-    const docDefinition = defineConferenceDoc(conferenceData.value)
+    const docDefinition = defineCaseConferenceDoc(conferenceData.value)
     pdfMake.createPdf(docDefinition).download(`conference_${conferenceData.value.caseConDocID}.pdf`)
 }
 
 const printDocument = () => {
     if (!conferenceData.value) return
-    const docDefinition = defineConferenceDoc(conferenceData.value)
+    const docDefinition = defineCaseConferenceDoc(conferenceData.value)
     pdfMake.createPdf(docDefinition).print()
 }
 
@@ -282,7 +157,3 @@ onMounted(async () => {
     }
 })
 </script>
-
-<style scoped>
-/* Add your styles here */
-</style>

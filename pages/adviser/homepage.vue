@@ -2,10 +2,13 @@
     <div class="adviser-page">
         <AdviserHeader @notif-click="notifClick" class="relative z-10" />
             <img class="backPic" src="~/assets/images/vsu-main-the-search-for-truth-statue.png" alt="img">
-       
-        <div class="min-h-screen">
+            <div v-if="loading" class="bg-transparent h-screen w-screen flex justify-center items-center text-3xl">
+                    <h1 class=" text-black opacity-100">Loading...</h1>
+            </div>
+        <div v-else class="min-h-screen">
             <div class="w-full h-full z-0">
                 <div class="flex flex-row ">
+                    
                     <div class="container ml-5 mx-auto px-4 py-8" :style="{ width: containWidth }">
 
                         <!-- Hero Section -->
@@ -14,8 +17,8 @@
                                 <div class="flex justify-between items-center">
                                     <div class="space-y-2">
                                         <p class="text-white/80 text-lg">Welcome back,</p>
-                                        <h1 class="text-white text-4xl font-bold tracking-wide">
-                                            {{ adviser.firstName }} {{ adviser.lastName }}!
+                                        <h1 class="text-white text-4xl font-bold tracking-wide" >
+                                            {{ adviserData.firstName }} {{ adviserData.lastName }}!
                                         </h1>
                                     </div>
                                     <div class="text-right">
@@ -56,11 +59,11 @@
                                     <!-- Header -->
                                     <div class="mb-6">
                                         <h2 class="text-2xl font-bold text-[#265630] mb-1">
-                                            {{ `${adviser.firstName} ${adviser.middleName} ${adviser.lastName}
-                                            ${adviser.suffix}` }}
+                                            {{ `${adviserData.firstName} ${adviserData.middleName} ${adviserData.lastName}
+                                            ${adviserData.suffix}` }}
                                         </h2>
                                         <p class="text-gray-500 text-sm">
-                                            Faculty ID: {{ adviser.facultyId }}
+                                            Faculty ID: {{ adviserData.facultyId }}
                                         </p>
                                     </div>
 
@@ -82,7 +85,7 @@
                                                 </div>
                                                 <div class="flex items-center">
                                                     <span class="text-gray-600 w-24 text-sm">Birth Date</span>
-                                                    <span class="font-medium">{{ adviser.bdate }}</span>
+                                                    <span class="font-medium">{{ adviserData.bdate }}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -95,15 +98,15 @@
                                             <div class="space-y-2">
                                                 <div class="flex items-center">
                                                     <span class="text-gray-600 w-24 text-sm">Section</span>
-                                                    <span class="font-medium">Grade {{ section.sectionLevel }}</span>
+                                                    <span class="font-medium">Grade {{ sectionData.sectionLevel }}</span>
                                                 </div>
                                                 <div class="flex items-center">
                                                     <span class="text-gray-600 w-24 text-sm">Class</span>
-                                                    <span class="font-medium">{{ section.sectionName }}</span>
+                                                    <span class="font-medium">{{ sectionData.sectionName }}</span>
                                                 </div>
                                                 <div class="flex items-center">
                                                     <span class="text-gray-600 w-24 text-sm">Population</span>
-                                                    <span class="font-medium">{{ section.sectionPopulation }}
+                                                    <span class="font-medium">{{ sectionData.sectionPopulation }}
                                                         students</span>
                                                 </div>
                                             </div>
@@ -235,139 +238,118 @@
     </div>
 </template>
 
-<script>
-import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-import StudentBasicInfo from "~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue";
-import AddStudentForm from "~/components/Modals/Advisory/AddStudentForm.vue";
-import { adviser } from "~/data/adviser";
-import { users } from "~/data/user";
-import { section } from "~/data/section";
-import { announcement } from "~/data/announcement";
-import { useRouter } from 'vue-router';
-
-export default {
-    name: "Advisory",
-    components: { AdviserHeader, StudentBasicInfo, AddStudentForm },
-    props: {
-        AdviserID: {
-            type: String,
-            required: true,
-            default: "adviserid1" // this should be the adviserID of the logged in user
-        },
-        AcademicYear: {
-            type: String,
-            required: true,
-            default: "2024-2025" // this should be the current academic year
-        },
-        section: {
-            type: Object,
-            required: true,
-            default: {
-                id: 'sectionid1',
-                adviserId: 'adviserid1',
-                sectionPopulation: '20',
-                sectionName: 'Javascript',
-                sectionLevel: '7',
-                sectionSchoolYear: '2024-2025',
-                sectionStudents: [
-                    'sample22-1-10076',
-                    'sample22-1-10077',
-                    'sample22-1-10078',
-                    'sample22-1-10079',
-                    'sample22-1-10080',
-                    'sample22-1-10081',
-                    'sample22-1-10082',
-                    'sample22-1-10083',
-                    'sample22-1-10084',
-                    'sample22-1-10085',
-                    'sample22-1-10086'
-                ]
-            } // I think it would be better if these are global variables
-        },
+  
+  <script setup>
+  import { ref, onMounted } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { useSectionStore } from '~/stores/section';
+  import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
+  import StudentBasicInfo from '~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue';
+  import AddStudentForm from '~/components/Modals/Advisory/AddStudentForm.vue';
+  import { adviser } from '~/data/adviser';
+  import { users } from '~/data/user';
+  import { section } from '~/data/section';
+  import { announcement } from '~/data/announcement';
+  
+  // Define props
+  const props = defineProps({
+    AdviserID: {
+      type: String,
+      required: true,
+      default: 'adviserid1', // this should be the adviserID of the logged in user
     },
-    setup() {
-        const router = useRouter()
-        const activeNotifications = ref([]);
-
-        const getActiveNotifications = () => {
-            activeNotifications.value = announcement
-                .filter((notification) => notification.isActive)
-                .sort((a, b) => {
-                    if (a.isNew && !b.isNew) {
-                        return -1;
-                    } else if (!a.isNew && b.isNew) {
-                        return 1;
-                    } else {
-                        return new Date(b.announcementDate) - new Date(a.announcementDate);
-                    }
-                });
-        };
-        onMounted(() => {
-            getActiveNotifications();
+    AcademicYear: {
+      type: String,
+      required: true,
+      default: '2024-2025', // this should be the current academic year
+    },
+  });
+  
+  // Define reactive state
+  const selectedSort = ref('');
+  const items = ref([]);
+  const showStudentInfo = ref(false);
+  const showAddStudentForm = ref(false);
+  const adviserData = ref({});
+  const user = ref({});
+  const sectionData = ref({});
+  const containWidth = ref('93%');
+  const activeNotifications = ref([]);
+  
+  // Access the section store
+  const sectionStore = useSectionStore();
+  const router = useRouter();
+  
+  // Function to get section data from the store
+  async function getSectionViaAdviser() {
+    const sectionObj = section.find((s) => s.id === adviser.find((adv) => adv.id === props.AdviserID)?.sectionId);
+    sectionStore.setSectionData(sectionObj);
+    sectionData.value = sectionObj;
+    console.log('original obj: ', sectionObj);
+    console.log('mao ni: ', sectionStore.section);
+    console.log('check', sectionStore.section.sectionSchoolYear);
+  };
+  
+  // Function to get active notifications
+  async function getActiveNotifications() {
+    activeNotifications.value = announcement
+        .filter((notification) => notification.isActive)
+        .sort((a, b) => {
+            if (a.isNew && !b.isNew) {
+                return -1;
+            } else if (!a.isNew && b.isNew) {
+                return 1;
+            } else {
+                return new Date(b.announcementDate) - new Date(a.announcementDate);
+            }
         });
-        return {
-            router,  // Add router to returned objects
-            getActiveNotifications,
-            activeNotifications
-        };
-    },
-
-    data() {
-        return {
-            selectedSort: "",
-            items: [],
-            showStudentInfo: false,
-            showAddStudentForm: false,
-            adviser: {},
-            user: {},
-            section: {},
-            containWidth: '93%'
-        };
-    },
-
-    methods: {
-
-        getAdviser() {
-            this.adviser = adviser.find((adv) => adv.id === this.AdviserID);
-        },
-
-        getUser() {
-            this.user = users.find((usr) => usr.userId === this.adviser.userId);
-        },
-
-        getSection() {
-            this.section = section.find((sec) => sec.adviserId === this.AdviserID);
-        },
-
-        notifClick() {
-            this.containWidth = this.containWidth === '93%' ? '70%' : '93%';
-        },
-
-        goToAdvisory(){
-            console.log('go to advisory');
-            this.$router.push('/adviser/advisory')
-        },
-
-        goToReports(){
-            console.log('go to reports');
-            this.$router.push('/adviser/reports')
-        },
-
-        formatDate(dateString) {
-            const options = { year: 'numeric', month: 'short', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
-        },
-
-    },
-    created() {
-        this.getAdviser();
-        this.getUser();
-        this.getSection();
-        console.log(this.user);
-    }
-
 }
-</script>
+  
+  // Function to get adviser data
+  async function getAdviser () {
+    adviserData.value = adviser.find((adv) => adv.id === props.AdviserID);
+  };
+  
+  // Function to get user data
+  async function getUser () {
+    user.value = users.find((usr) => usr.userId === adviserData.value.userId);
+  };
+  
+  // Function to handle notification click
+  const notifClick = () => {
+    containWidth.value = containWidth.value === '93%' ? '70%' : '93%';
+  };
+  
+  // Function to navigate to advisory
+  const goToAdvisory = () => {
+    console.log('go to advisory');
+    router.push('/adviser/advisory');
+  };
+  
+  // Function to navigate to reports
+  const goToReports = () => {
+    console.log('go to reports');
+    router.push('/adviser/reports');
+  };
+  
+  // Function to format date
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
+
+  const loading = ref(true);
+  
+  // Lifecycle hooks
+onBeforeMount(async () => {
+    await getActiveNotifications();
+    await getSectionViaAdviser();
+    await getAdviser();
+    await getUser();
+    loading.value = false;
+});
+  </script>
+  
 
 <style scoped>
 .adviser-page {

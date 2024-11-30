@@ -44,7 +44,7 @@
                 {{ student.studentId }}
               </td>
               <td class="px-6 py-4 break-words">
-                <button 
+                <button @clicked="addToSection(student)"
                   class="px-8 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
                     Add
                 </button>
@@ -148,7 +148,9 @@ import type { academicYear } from '~/data/academicYear';
     
     });
 
-    
+  function addtoSection(student){
+      
+  }
 
     return {getPreviousAcademicYear, unenrolledStudents, searchQuery , debouncedQuery, filteredStudents, getStudentIDPerLevel, selectedLevel};
     

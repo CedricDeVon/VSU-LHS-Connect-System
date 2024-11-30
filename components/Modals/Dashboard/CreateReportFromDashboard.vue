@@ -35,7 +35,7 @@
               @change="handleReportSelection"
               class="w-full rounded-lg border-gray-300 focus:border-[#265630] focus:ring focus:ring-[#265630] focus:ring-opacity-50"
             >
-              <option value="">Create New Report</option>
+              <option value="">Select Report for Review</option>
               <option
                 v-for="report in unprocessedReports"
                 :key="report.initialDocID"
@@ -190,6 +190,14 @@ const formData = ref({
   narrativeReport: '',
 });
 
+// Add new prop for initial report data
+const props = defineProps({
+  initialReportData: {
+    type: Object,
+    default: null
+  }
+});
+
 // Get enrolled students
 const availableStudents = computed(() => {
   return student
@@ -210,9 +218,8 @@ const filteredStudents = computed(() => {
 });
 
 const unprocessedReports = computed(() => {
-  return initialReport.filter(report => 
-    report.isDraft && report.status === 'Unread'
-  ).sort((a, b) => new Date(b.dateReported).getTime() - new Date(a.dateReported).getTime());
+  return initialReport
+    .sort((a, b) => new Date(b.dateReported).getTime() - new Date(a.dateReported).getTime());
 });
 
 const formatReportOption = (report) => {
@@ -245,8 +252,32 @@ const generateReportId = () => {
   return `${prefix}-${timestamp}-${random}`;
 };
 
+// Update onMounted to pre-fill form when initialReportData is provided
 onMounted(() => {
   generatedID.value = generateReportId();
+  
+  if (props.initialReportData) {
+    // Pre-fill form with initial report data
+    formData.value = {
+      dateOfIncident: props.initialReportData.dateOfIncident,
+      placeOfIncident: props.initialReportData.placeOfIncident,
+      thingsInvolved: props.initialReportData.thingsInvolved,
+      narrativeReport: props.initialReportData.narrativeReport
+    };
+
+    // Auto-select involved students
+    selectedStudents.value = props.initialReportData.peopleInvolved.map(name => {
+      const studentData = student.find(s => 
+        `${s.firstName} ${s.lastName}` === name ||
+        s.firstName === name
+      );
+      return studentData ? {
+        id: studentData.studentId,
+        name: `${studentData.firstName} ${studentData.lastName}`,
+        section: studentData.sectionID
+      } : null;
+    }).filter(Boolean);
+  }
 });
 
 const isFormValid = computed(() => {
@@ -318,7 +349,7 @@ const handleSubmit = () => {
     showSuccessAlert.value = false;
     emit('submit', reportData);
     emit('close');
-  }, 5000);
+  }, 3000);
 };
 
 const clearForm = () => {

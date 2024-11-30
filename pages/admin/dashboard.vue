@@ -8,7 +8,7 @@ import { initialReport, IncidentReport } from '~/data/initialReport';
 import { caseConference, CaseConference } from '~/data/caseconference';
 import ScheduledCaseConferences from '~/components/Modals/Dashboard/ScheduledCaseConferences.vue'; // Import the modal component
 import PendingCases from '~/components/Modals/Dashboard/PendingCases.vue';
-import UnreadReportSubmissions from '~/components/Modals/Dashboard/UnreadReportSubmissions.vue';
+import PendingInitialReports from '~/components/Modals/Dashboard/PendingInitialReports.vue';  // Changed from UnreadReportSubmissions
 import MakeAnnouncements from '~/components/Modals/Dashboard/MakeAnnouncements.vue'; // Add import
 import ScheduleConferenceFromDashboard from '~/components/Modals/Dashboard/ScheduleConferenceFromDashboard.vue'; // Add import
 import CreateReportFromDashboard from '~/components/Modals/Dashboard/CreateReportFromDashboard.vue'; // Add import
@@ -68,8 +68,8 @@ const loadDashboardData = () => {
     }));
   console.log('Recent Submissions:', recentSubmissions.value);
 
-  unreadReports.value = initialReport.filter(report => report.status == 'Unread').length;
-  console.log('Unread Reports:', unreadReports.value);
+  unreadReports.value = initialReport.filter(report => !report.isDraft).length;
+  console.log('Pending Initial Reports:', unreadReports.value);
 
   // Ensure the chart is updated when data changes
   if (trendsChart) {
@@ -111,12 +111,54 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+// Add these computed properties
+const currentAcademicYear = computed(() => {
+  // Current AY is in format "2024-2025"
+  return "2024-2025"; // This should come from your system settings/state
+});
+
+const academicYearMonths = computed(() => {
+  const [startYear, endYear] = currentAcademicYear.value.split('-');
+  return [
+    'Jun ' + startYear,
+    'Jul ' + startYear,
+    'Aug ' + startYear,
+    'Sep ' + startYear,
+    'Oct ' + startYear,
+    'Nov ' + startYear,
+    'Dec ' + startYear,
+    'Jan ' + endYear,
+    'Feb ' + endYear,
+    'Mar ' + endYear,
+    'Apr ' + endYear,
+    'May ' + endYear
+  ];
+});
+
+// Update monthlyIncidentCounts computed
 const monthlyIncidentCounts = computed(() => {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return months.map(month => {
+  const [startYear, endYear] = currentAcademicYear.value.split('-');
+  const months = [
+    { month: 6, year: parseInt(startYear) },  // June
+    { month: 7, year: parseInt(startYear) },  // July
+    { month: 8, year: parseInt(startYear) },  // August
+    { month: 9, year: parseInt(startYear) },  // September
+    { month: 10, year: parseInt(startYear) }, // October
+    { month: 11, year: parseInt(startYear) }, // November
+    { month: 12, year: parseInt(startYear) }, // December
+    { month: 1, year: parseInt(endYear) },    // January
+    { month: 2, year: parseInt(endYear) },    // February
+    { month: 3, year: parseInt(endYear) },    // March
+    { month: 4, year: parseInt(endYear) },    // April
+    { month: 5, year: parseInt(endYear) }     // May
+  ];
+
+  return months.map(({ month, year }) => {
     return incidentReport.filter(inc => {
-      const incidentMonth = new Date(inc.dateOfIncident).toLocaleString('en-US', { month: 'short' });
-      return incidentMonth === month;
+      const incidentDate = new Date(inc.dateOfIncident);
+      return incidentDate.getMonth() + 1 === month && 
+             incidentDate.getFullYear() === year &&
+             inc.AY === currentAcademicYear.value;
     }).length;
   });
 });
@@ -140,11 +182,11 @@ const dashboardStats = computed<DashboardStat[]>(() => ([
     onClick: openPendingModal // Add onClick handler
   },
   {
-    label: 'Unread Report Submissions',
+    label: 'Review Report Submissions',
     value: unreadReports.value,
     icon: 'lucide:mail',
     color: 'red',
-    onClick: openUnreadModal
+    onClick: openPendingReportsModal // renamed from openUnreadModal
   },
   {
     label: 'Total Incidents',
@@ -154,8 +196,9 @@ const dashboardStats = computed<DashboardStat[]>(() => ([
   }
 ]));
 
+// Update chartConfig
 const chartConfig = computed(() => ({
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  labels: academicYearMonths.value,
   datasets: [{
     label: 'Monthly Incidents',
     data: monthlyIncidentCounts.value,
@@ -227,13 +270,13 @@ const closePendingModal = () => {
   showPendingModal.value = false;
 };
 
-// Add these new refs for unread reports modal
-const showUnreadModal = ref(false);
-const selectedUnreadReports = ref<any[]>([]);
+// Rename modal handling functions
+const showPendingReportsModal = ref(false);
+const selectedPendingReports = ref<any[]>([]);
 
-const openUnreadModal = () => {
-  selectedUnreadReports.value = initialReport
-    .filter(report => report.status === 'Unread' && !report.isDraft)
+const openPendingReportsModal = () => {
+  selectedPendingReports.value = initialReport
+    .filter(report => !report.isDraft)
     .map(report => ({
       ...report,
       dateFormatted: new Date(report.dateReported).toLocaleDateString('en-US', {
@@ -242,11 +285,11 @@ const openUnreadModal = () => {
         day: 'numeric'
       })
     }));
-  showUnreadModal.value = true;
+  showPendingReportsModal.value = true;
 };
 
-const closeUnreadModal = () => {
-  showUnreadModal.value = false;
+const closePendingReportsModal = () => {
+  showPendingReportsModal.value = false;
 };
 
 // Add state for announcements modal
@@ -390,7 +433,7 @@ const handleReportSubmit = (data: any) => {
           <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-100">
             <div class="p-4 border-b border-gray-100">
               <h3 class="text-lg font-semibold text-gray-900">Incident Trends</h3>
-              <p class="text-sm text-gray-500">Monthly incident reports (2024)</p>
+              <p class="text-sm text-gray-500">Academic Year {{ currentAcademicYear }}</p>
             </div>
             <div class="p-4">
               <canvas id="trendsChart" height="200"></canvas>
@@ -485,11 +528,11 @@ const handleReportSubmit = (data: any) => {
     @close="closePendingModal"
   />
 
-  <!-- Add UnreadReportSubmissions Modal -->
-  <UnreadReportSubmissions 
-    v-if="showUnreadModal"
-    :reports="selectedUnreadReports"
-    @close="closeUnreadModal"
+  <!-- Add PendingInitialReports Modal -->
+  <PendingInitialReports 
+    v-if="showPendingReportsModal"
+    :reports="selectedPendingReports"
+    @close="closePendingReportsModal"
   />
 
   <!-- Add MakeAnnouncements Modal -->

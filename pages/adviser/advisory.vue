@@ -73,92 +73,93 @@
     </div>
 </template>
 
-<script>
-    import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import StudentBasicInfo from "~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue";
-    import AddStudentForm from "~/components/Modals/Advisory/AddStudentForm.vue";
-    import { sectionStore } from "~/stores/section";
-    import { student } from "~/data/student";
-    import { section } from "~/data/section";
-    import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
-
-    export default {
-        name: "Advisory",
-        components: {AdviserHeader, StudentBasicInfo, AddStudentForm, InitialReportModal,},
-        props: {
-            AdviserID: {
-                type: String,
-                required: true,
-                default: "adviserid12" // this should be the adviserID of the logged in user
-            },
-            AcademicYear: {
-                type: String,
-                required: true,
-                default: "2024-2025" // this should be the current academic year
-            },
-    
-        },
-
-        data() {return {
-            selectedSort: "",
-            students: [],
-            showStudentInfo: false,
-            showAddStudentForm: false,
-            studentInfo: {},
-            section: {},
-            containWidth:'89%',
-        };},
-
-        setup() {
-            const section = sectionStore();
-            return { sectionStore };
-        },
-
-        methods: {
-            addStudent() {
-                this.showAddStudentForm = true;
-            },
-
-            getSection(){
-                this.sectionStore = section.find((sec)=> sec.adviserId === this.AdviserID);
-                this.section =  this.sectionStore;
-            },
-
-            handleRowClick(student) {
-                this.studentInfo = student;
-                this.showStudentInfo = true;
-            },
-
-            notifClick(){
-                this.containWidth = this.containWidth === '89%' ? '70%': '89%';
-                this.titleWidth = this.titleWidth === '87%' ? '68%': '87%';
-            },
-
-            fetchStudents(id,ay) {
-                this.getSection();
-                const studentIDs = (section.find((sec)=> sec.adviserId === id && sec.sectionSchoolYear === ay)).sectionStudents;
-                
-                this.students = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
-            },
-
-            removeStudent(){
-                 this.fetchStudents(this.AdviserID, this.AcademicYear);
-                this.showStudentInfo = false;
-            },
-
-            handleAddedStudent(student){
-                this.fetchStudents(this.AdviserID, this.AcademicYear);
-                this.showAddStudentForm = false;
-            }
-
-        },
-
-        mounted() {
-            this.fetchStudents(this.AdviserID, this.AcademicYear);
-        }
-        
+  <script setup>
+  import { ref, onMounted } from 'vue';
+  import { useSectionStore } from '~/stores/section';
+  import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
+  import StudentBasicInfo from '~/components/Modals/Advisory/StudentBasicInfoByAdviser.vue';
+  import AddStudentForm from '~/components/Modals/Advisory/AddStudentForm.vue';
+  import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
+  import { student } from '~/data/student';
+  import { section } from '~/data/section';
+  
+  // Define props
+  const props = defineProps({
+    AdviserID: {
+      type: String,
+      required: true,
+      default: 'adviserid12', // this should be the adviserID of the logged in user
+    },
+    AcademicYear: {
+      type: String,
+      required: true,
+      default: '2024-2025', // this should be the current academic year
+    },
+  });
+  
+  // Define reactive state
+  const selectedSort = ref('');
+  const students = ref([]);
+  const showStudentInfo = ref(false);
+  const showAddStudentForm = ref(false);
+  const studentInfo = ref({});
+  const sectionData = ref({});
+  const containWidth = ref('89%');
+  
+  // Access the section store
+  const sectionStore = useSectionStore();
+  
+  // Function to get section data from the store
+  const getSection = () => {
+    sectionData.value = sectionStore.section;
+    console.log('advisory daw bi: ', sectionData.value);
   };
-</script>
+  
+  // Function to fetch students
+  const fetchStudents = () => {
+    getSection();
+    // const sectionObj = section.find((sec) => sec.adviserId === id && sec.sectionSchoolYear === ay);
+    if (sectionStore) {
+      const studentIDs = sectionStore.section.sectionStudents;
+      students.value = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
+    }
+  };
+  
+  // Function to handle row click
+  const handleRowClick = (student) => {
+    studentInfo.value = student;
+    showStudentInfo.value = true;
+  };
+  
+  // Function to handle notification click
+  const notifClick = () => {
+    containWidth.value = containWidth.value === '89%' ? '70%' : '89%';
+  };
+  
+  // Function to add student
+  const addStudent = () => {
+    showAddStudentForm.value = true;
+  };
+  
+  // Function to remove student
+  const removeStudent = () => {
+    fetchStudents(props.AdviserID, props.AcademicYear);
+    showStudentInfo.value = false;
+  };
+  
+  // Function to handle added student
+  const handleAddedStudent = (student) => {
+    fetchStudents(props.AdviserID, props.AcademicYear);
+    showAddStudentForm.value = false;
+  };
+  
+  // Call fetchStudents on component mount
+  onMounted(() => {
+    fetchStudents();
+  });
+  
+  </script>
+
 <style scoped>
     .adviser-page {
         @apply min-h-screen bg-[#fffef1] relative;

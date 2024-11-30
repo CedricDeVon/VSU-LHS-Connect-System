@@ -3,7 +3,7 @@
         <InitialReportModal
         v-if="showCreateReport"
         :report="reportChosen"
-        :adviserId="AdviserID"
+        :adviserId="secStore.section.adviserId"
         @close ="creationClose"
         /> 
         <AdviserHeader @notif-click="notifClick" class="relative z-10"/>
@@ -36,7 +36,7 @@
                             </div>
                         </div>
 
-                        <button v-if="selectedSort !== 'anecdotal'" @click="report" 
+                        <button v-if="selectedSort !== 'anecdotal'" @click="reportEvent" 
                             class="bg-green-700 hover:bg-green-800 text-white px-6 py-2 rounded-lg flex items-center gap-2 transition-colors">
                             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -99,170 +99,165 @@
     </div>
 </template>
 
-<script>
-    import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
-    import { initialReport } from "~/data/initialReport";
-    import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
-    import { adviserReportStore } from "../../stores/adviserReport";
-    import { anecdotalReport } from "~/data/anecdotal";
-    import { student } from "~/data/student";
-    import { section } from "~/data/section";
-    import { report } from '~/data/report';  // Add this import
-   
-    export default {
-        name: "reports",
-        components: {
-            AdviserHeader, 
-            InitialReportModal
-        },
-        props: {
-            AdviserID: {
-                type: String,
-                required: true,
-                default: "adviserid1" // this should be the adviserID of the logged in user
-            },
-            AcademicYear: {
-                type: String,
-                required: true,
-                default: "2024-2025" // this should be the current academic year
-            },
+<script setup>
+import { ref, watch, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
+import InitialReportModal from '~/components/Modals/AdviserReport/InitialReportModal.vue';
+import { initialReport } from '~/data/initialReport';
+import { anecdotalReport } from '~/data/anecdotal';
+import { student } from '~/data/student';
+import { section } from '~/data/section';
+import { report } from '~/data/report';
+import { adviserReportStore } from '~/stores/adviserReport';
+import { useSectionStore } from '#imports';
 
-        },
-        data() {
-            return {
-            reports: [],
-            reportChosen: {isDraft : true},
-            showCreateReport:false,
-            isDraft:true,
-            containWidth:'89%',
-            titleWidth:'87%',
-            selectedSort:'incident', // Changed default to 'incident' for proper initial state
-            store: adviserReportStore(),
-            anecdotalReports: [],
-            students: student,
-            sections: section
+// Define props
+const props = defineProps({
+//   AdviserID: {
+//     type: String,
+//     required: true,
+//     default: 'adviserid1', // this should be the adviserID of the logged in user
+//   },
+  AcademicYear: {
+    type: String,
+    required: true,
+    default: '2024-2025', // this should be the current academic year
+  },
+});
 
-        };},
+// Define reactive state
+const reports = ref([]);
+const reportChosen = ref({ isDraft: true });
+const showCreateReport = ref(false);
+const isDraft = ref(true);
+const containWidth = ref('89%');
+const titleWidth = ref('87%');
+const selectedSort = ref('incident'); // Changed default to 'incident' for proper initial state
+const anecdotalReports = ref([]);
+const students = ref(student);
+const sections = ref(section);
 
-        methods: {
+// Access the store
+const store = adviserReportStore();
+const secStore = useSectionStore();
+const router = useRouter();
 
-            handleRowClick(item) {
-  
-            },
+// Define methods
+const handleRowClick = (item) => {
+  // Handle row click event
+};
 
-            notifClick(){
-                this.containWidth = this.containWidth === '89%' ? '70%': '89%';
-                this.titleWidth = this.titleWidth === '87%' ? '68%': '87%';
-            },
+const notifClick = () => {
+  containWidth.value = containWidth.value === '89%' ? '70%' : '89%';
+  titleWidth.value = titleWidth.value === '87%' ? '68%' : '87%';
+};
 
-            report(){
-                this.store.resetAllData();
-                this.showCreateReport =true;
-            },
+const reportEvent = () => {
+  store.resetAllData();
+  showCreateReport.value = true;
+};
 
-            editReport(rep){
-                this.reportChosen = rep;
-                this.store.resetAllData();
-                    if (rep) {
-                    this.store.peopleInvolved = rep.peopleInvolved;
-                    this.store.witness = rep.witness;
-                    this.store.dateOfIncident = rep.dateOfIncident;
-                    this.store.placeOfIncident = rep.placeOfIncident;
-                    this.store.thingsInvolved = rep.thingsInvolved;
-                    this.store.narrativeReport = rep.narrativeReport;
-                }
-                this.showCreateReport=true;
-            },
-            
-            viewDetails(rep){
-                this.reportChosen = rep;
-                this.showCreateReport=true;
-            },
+const editReport = (rep) => {
+  reportChosen.value = rep;
+  store.resetAllData();
+  if (rep) {
+    store.peopleInvolved = rep.peopleInvolved;
+    store.witness = rep.witness;
+    store.dateOfIncident = rep.dateOfIncident;
+    store.placeOfIncident = rep.placeOfIncident;
+    store.thingsInvolved = rep.thingsInvolved;
+    store.narrativeReport = rep.narrativeReport;
+  }
+  showCreateReport.value = true;
+};
 
-            fetchReports(id, ay) {
-                if (this.selectedSort === 'anecdotal') {
-                    // Get adviser's section first
-                    const adviserSection = this.sections.find(sec => 
-                        sec.adviserId === id && 
-                        sec.sectionSchoolYear === ay &&
-                        sec.sectionName === 'Javascript'
-                    );
-                    
-                    if (adviserSection) {
-                        // Filter anecdotal reports for students in adviser's section
-                        this.anecdotalReports = anecdotalReport.filter(rep => 
-                            rep.AY === ay && 
-                            adviserSection.sectionStudents.includes(rep.studentId)
-                        );
-                    } else {
-                        this.anecdotalReports = [];
-                    }
-                } else {
-                    this.reports = initialReport.filter(rep => 
-                        rep.reportedBY === id && rep.academicYear === ay);
-                }
-            },
+const viewDetails = (rep) => {
+  reportChosen.value = rep;
+  showCreateReport.value = true;
+};
 
-            getStudentName(studentId) {
-                const student = this.students.find(s => s.studentId === studentId);
-                if (student) {
-                    return `${student.firstName} ${student.middleName} ${student.lastName}`;
-                }
-                return 'Unknown Student';
-            },
+const fetchReports = (id, ay) => {
+  if (selectedSort.value === 'anecdotal') {
+    // Get adviser's section first
+    const adviserSection = secStore.section;
+    // const adviserSection = sections.value.find(
+    //   (sec) =>
+    //     sec.adviserId === id &&
+    //     sec.sectionSchoolYear === ay &&
+    //     sec.sectionName === 'Javascript'
+    // );
 
-            viewAnecdotal(studentId) {
-                if (studentId) {
-                    // Navigate to anecdotal page with student ID
-                    this.$router.push(`/adviser/anecdotal/${studentId}`);
-                } else {
-                    console.error('No student ID provided for anecdotal report');
-                }
-            },
+    if (adviserSection) {
+      // Filter anecdotal reports for students in adviser's section
+      anecdotalReports.value = anecdotalReport.filter(
+        (rep) =>
+          rep.AY === ay &&
+          adviserSection.sectionStudents.includes(rep.studentId)
+      );
+    } else {
+      anecdotalReports.value = [];
+    }
+  } else {
+    reports.value = initialReport.filter(
+      (rep) => rep.reportedBY === secStore.section.adviserId && rep.academicYear === ay
+    );
+  }
+};
 
-            creationClose(){
-                this.showCreateReport = false;
-                this.reportChosen = {isDraft:true};
-                fetchReports(this.AdviserID, this.AcademicYear);
-            },
+const getStudentName = (studentId) => {
+  const student = students.value.find((s) => s.studentId === studentId);
+  if (student) {
+    return `${student.firstName} ${student.middleName} ${student.lastName}`;
+  }
+  return 'Unknown Student';
+};
 
-            getLatestReportDate(reportIDs) {
-                if (!reportIDs || reportIDs.length === 0) return 'No reports';
-                
-                const dates = reportIDs
-                    .map(id => report.find(r => r.reportID === id))
-                    .filter(r => r) // Remove any undefined reports
-                    .map(r => new Date(r.datePrepared));
-                
-                if (dates.length === 0) return 'No valid dates';
-                
-                const latestDate = new Date(Math.max(...dates));
-                return latestDate.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-            }
+const viewAnecdotal = (studentId) => {
+  if (studentId) {
+    // Navigate to anecdotal page with student ID
+    router.push(`/adviser/anecdotal/${studentId}`);
+  } else {
+    console.error('No student ID provided for anecdotal report');
+  }
+};
 
-            /*handleRowClick(item) {
-            // Handle row click event
-            console.log('Row clicked:', item);
-            }*/
+const creationClose = () => {
+  showCreateReport.value = false;
+  reportChosen.value = { isDraft: true };
+  fetchReports(props.AdviserID, props.AcademicYear);
+};
 
-        },
+const getLatestReportDate = (reportIDs) => {
+  if (!reportIDs || reportIDs.length === 0) return 'No reports';
 
-        watch: {
-            selectedSort(newValue) {
-                this.fetchReports(this.AdviserID, this.AcademicYear);
-            }
-        },
+  const dates = reportIDs
+    .map((id) => report.find((r) => r.reportID === id))
+    .filter((r) => r) // Remove any undefined reports
+    .map((r) => new Date(r.datePrepared));
 
-        mounted() {
-            this.fetchReports(this.AdviserID, this.AcademicYear);
-        }
-        
-  };
+  if (dates.length === 0) return 'No valid dates';
+
+  const latestDate = new Date(Math.max(...dates));
+  return latestDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+// Watchers
+watch(selectedSort, (newValue) => {
+  fetchReports(secStore.section.adviserId, props.AcademicYear);
+});
+
+// Lifecycle hooks
+onMounted(() => {
+  fetchReports(secStore.section.adviserId, props.AcademicYear);
+});
+
 </script>
+
 <style scoped>
     .reports-page{
         @apply bg-[#fffef1] min-h-screen;

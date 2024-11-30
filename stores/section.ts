@@ -1,19 +1,21 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
 
-export const sectionStore = defineStore('sectionStore', () => {
+export const useSectionStore = defineStore('sectionStore', () => {
     const section = ref({
         id: '',
         sectionName: '',
         adviserId: '',
-        sectionPopulation: '',
         sectionStudents: [],
+        sectionPopulation: '',
         sectionLevel: '',
         sectionSchoolYear: ''
     });
-    
 
-
-
+    const setSectionData = (data) => {
+        section.value = { ...section.value, ...data };
+        section.value.sectionPopulation = data.sectionStudents.length;
+    };
 
     const resetAllData = () => {
         section.value = {
@@ -25,10 +27,13 @@ export const sectionStore = defineStore('sectionStore', () => {
             sectionLevel: '',
             sectionSchoolYear: ''
         };
-    }
+    };
 
     return { 
         section,
+        setSectionData,
         resetAllData
     };
-});
+    
+}
+);

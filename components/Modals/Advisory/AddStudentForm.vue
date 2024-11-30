@@ -163,7 +163,9 @@ import { studentAddedStore } from '~/stores/studentAdded';
 import UnEnrolledStudents from './UnEnrolledStudents.vue';
 import StudentCSVUploadModal from './StudentCSVUploadModal.vue';
 import { section } from '~/data/section';
-import { sectionStore } from '~/stores/section';
+import { useSectionStore } from '~/stores/section';
+import { calculateAge, student } from '~/data/student';
+import { adviser } from '~/data/adviser';
 
 export default {
     name: 'AddStudentForm',
@@ -175,7 +177,7 @@ export default {
         },
     },
     setup(props, { emit }) {
-        const secStore = sectionStore();
+        const secStore = useSectionStore();
         const store = studentAddedStore();
         const initPreparation = ref(true);
         const showSingleNewStudentForm = ref(false);
@@ -235,9 +237,47 @@ export default {
             hoveredAddingType.value = box;
         };
 
+        function validForm(){
+            if (/[\d~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(store.firstName))
+            {
+                alert('invalid first name.')
+                return false;
+            }
+
+            if (/[\d~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(store.lastName))
+            {
+                alert('invalid last name.')
+                return false;
+            }
+
+            if (!/^(\+639|09)\d{10}$/.test(store.contactNum)) {
+                alert('Invalid contact number. Please enter a valid contact number in the format +639xxxxxxxxx or 09xxxxxxxxx.');
+                return false;
+                //I think this is faulty pa
+            }
+            
+            return(
+                store.studentId.trim() !== '' &&
+                store.firstName.trim() !== '' &&
+                store.lastName.trim() !== '' &&
+                store.birthDate &&
+                store.gender.trim() !== '' &&
+                store.address.trim() !== '' &&
+                store.contactNum.trim() !== '' 
+
+            )
+        }
+
         const addStudentClick = () => {
             try {
+                if(!validForm()){ 
+                    alert('Please fill all the necessary fields.');   
+                    return;
+                }
                 store.AdviserId = props.AdviserID;
+                //query in database:
+                const section = (adviser.find((adv)=>adv.id === store.AdviserId)).sectionId;
+
                 const studentData = store.getStudentData();
                 const newStudent = {
                     studentId: studentData.studentId,
@@ -247,17 +287,24 @@ export default {
                     birthDate: studentData.birthDate,
                     gender: studentData.gender,
                     address: studentData.address,
-                    contactNum: studentData.contactNum
+                    contactNum: studentData.contactNum,
+                    isEnrolled: true,
+                    incidentDocIDs:[],
+                    profilePicture:'default.png',
+                    age: calculateAge(studentData.birthDate),
+                    sectionId: section
                 };
-
+                //write in database:
+                student.push(newStudent);  
                 const sec = secStore.section;
                 console.log(sec);
                 console.log(newStudent);
                 store.resetAllData();
                 alert('Student added successfully');
                 emit('close');
+            
             } catch (error) {
-                alert('Something went wrong. Please try refreshing the page.');
+                alert('Something went wrong. Please try again later or report to the development team');
                 return;
             }
         };

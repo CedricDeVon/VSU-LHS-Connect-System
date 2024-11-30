@@ -16,7 +16,7 @@ export function calculateAge(birthDate) {
 export const student = [
     {
         studentId: 'sample22-1-10110',
-        firstName: 'Try unenrolled',
+        firstName: 'Ricky',
         lastName: 'Gomex',
         middleName: 'Perex',
         suffix: '',
@@ -26,32 +26,11 @@ export const student = [
         isEnrolled: false,
         incidentDocIDs: [],
         birthDate: '2004-01-01',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2004-01-01'),
         sectionID: '',
-        anecdotalDocID: ''
+        anecdotalDocID: null
     },
-
-    {
-        studentId: 'sample22-1-10000',
-        firstName: 'Agar',
-        lastName: 'Gomeg',
-        middleName: 'Casses',
-        suffix: '',
-        gender: 'Male',
-        address: 'Albuera, Leyte',
-        contactNum: '09268021698',
-        isEnrolled: false,
-        incidentDocIDs: [],
-        birthDate: '2004-01-01',
-        profilePic: '',
-        age: calculateAge('2004-01-01'),
-        sectionID: '',
-        anecdotalDocID: ''
-    },
-
-
-
     {
         studentId: 'sample22-1-10075',
         firstName: 'Jade',
@@ -64,7 +43,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID1'],
         birthDate: '2003-05-15',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-05-15'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10075'
@@ -81,7 +60,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID1'],
         birthDate: '2002-08-20',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-08-20'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10076'
@@ -98,7 +77,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: [],
         birthDate: '2001-12-05',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2001-12-05'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10077'
@@ -115,7 +94,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID2'],
         birthDate: '2003-03-10',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-03-10'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10078'
@@ -132,7 +111,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID3', 'incidentID4', 'incidentID5'],
         birthDate: '2002-07-25',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-07-25'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10079'
@@ -149,10 +128,10 @@ export const student = [
         isEnrolled: false,
         incidentDocIDs: [],
         birthDate: '2004-07-25',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2004-07-25'),
         sectionID: '',
-        anecdotalDocID: ''
+        anecdotalDocID: null
     },
     {
         studentId: 'sample22-1-10080',
@@ -166,7 +145,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID4', 'incidentID5', 'incidentID6', 'incidentID7', 'incidentID8'],
         birthDate: '2001-11-30',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2001-11-30'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10080'
@@ -183,7 +162,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID4', 'incidentID9'],
         birthDate: '2003-06-18',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-06-18'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10081'
@@ -200,7 +179,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID5', 'incidentID6', 'incidentID7', 'incidentID8', 'incidentID9', 'incidentID10', 'incidentID11'],
         birthDate: '2002-09-14',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-09-14'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10082'
@@ -217,7 +196,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID5', 'incidentID12', 'incidentID13', 'incidentID14'],
         birthDate: '2001-04-22',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2001-04-22'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10083'
@@ -234,7 +213,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID6', 'incidentID7', 'incidentID8', 'incidentID9', 'incidentID10', 'incidentID11', 'incidentID12', 'incidentID13', 'incidentID14'],
         birthDate: '2003-01-30',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-01-30'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10084'
@@ -251,7 +230,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID7', 'incidentID15', 'incidentID16', 'incidentID17', 'incidentID18', 'incidentID19'],
         birthDate: '2002-05-05',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-05-05'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10085'
@@ -268,7 +247,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID7'],
         birthDate: '2001-08-12',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2001-08-12'),
         sectionID: 'sectionid1',
         anecdotalDocID: 'ANEC-2024-10086'
@@ -285,10 +264,10 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID8'],
         birthDate: '2003-11-09',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-11-09'),
         sectionID: 'sectionid12',
-        anecdotalDocID: ''
+        anecdotalDocID: 'ANEC-2024-10087'
     },
     {
         studentId: 'sample22-1-10088',
@@ -302,27 +281,10 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: [],
         birthDate: '2002-08-15',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-08-15'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10088'
-    },
-    {
-        studentId: 'sample22-1-10801',
-        firstName: 'Marcopolo',
-        lastName: 'Santores',
-        middleName: 'Riveral',
-        suffix: '',
-        gender: 'Male',
-        address: 'Tacloban City',
-        contactNum: '09120456789',
-        isEnrolled: true,
-        incidentDocIDs: [],
-        birthDate: '2002-08-15',
-        profilePic: '',
-        age: calculateAge('2002-08-15'),
-        sectionID: 'sectionid26',
-        anecdotalDocID: ''
     },
     {
         studentId: 'sample22-1-10090',
@@ -336,7 +298,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID9'],
         birthDate: '2003-04-10',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-04-10'),
         sectionID: 'sectionid12',
         anecdotalDocID: 'ANEC-2024-10090'
@@ -353,7 +315,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID10'],
         birthDate: '2002-12-01',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-12-01'),
         sectionID: 'sectionid12',
         anecdotalDocID: 'ANEC-2024-10091'
@@ -370,7 +332,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID11'],
         birthDate: '2001-03-15',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2001-03-15'),
         sectionID: 'sectionid12',
         anecdotalDocID: 'ANEC-2024-10092'
@@ -387,7 +349,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID11'],
         birthDate: '2002-07-07',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-07-07'),
         sectionID: 'sectionid14',
         anecdotalDocID: 'ANEC-2024-10093'
@@ -404,7 +366,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID12'],
         birthDate: '2003-10-20',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-10-20'),
         sectionID: 'sectionid14',
         anecdotalDocID: 'ANEC-2024-10094'
@@ -421,10 +383,44 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID13'],
         birthDate: '2001-01-18',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2001-01-18'),
         sectionID: 'sectionid14',
         anecdotalDocID: 'ANEC-2024-10095'
+    },
+    {
+        studentId: 'sample21-1-10015',
+        firstName: 'Brian',
+        lastName: 'Moondoval',
+        middleName: 'Rokies',
+        suffix: '',
+        gender: 'Male',
+        address: 'Hilongos, Leyte',
+        contactNum: '09122367891',
+        isEnrolled: false,
+        incidentDocIDs: [],
+        birthDate: '2001-01-18',
+        profilePic: null,
+        age: calculateAge('2001-01-18'),
+        sectionID: '',
+        anecdotalDocID: ''
+    },
+    {
+        studentId: 'sample21-1-10367',
+        firstName: 'Bricks',
+        lastName: 'Moondo',
+        middleName: 'kafoo',
+        suffix: '',
+        gender: 'Male',
+        address: 'Hilongos, Leyte',
+        contactNum: '09176367891',
+        isEnrolled: false,
+        incidentDocIDs: [],
+        birthDate: '2001-01-18',
+        profilePic: null,
+        age: calculateAge('2001-01-18'),
+        sectionID: '',
+        anecdotalDocID: ''
     },
     {
         studentId: 'sample22-1-10096',
@@ -438,7 +434,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID14'],
         birthDate: '2002-11-05',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-11-05'),
         sectionID: 'sectionid14',
         anecdotalDocID: 'ANEC-2024-10096'
@@ -455,7 +451,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID15'],
         birthDate: '2003-02-25',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-02-25'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10097'
@@ -472,7 +468,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID16'],
         birthDate: '2001-09-30',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2001-09-30'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10098'
@@ -489,7 +485,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID17'],
         birthDate: '2002-04-12',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-04-12'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10099'
@@ -506,7 +502,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID18'],
         birthDate: '2003-07-22',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-07-22'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10100'
@@ -523,7 +519,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID19'],
         birthDate: '2001-11-09',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2001-11-09'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10101'
@@ -540,7 +536,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID20'],
         birthDate: '2003-04-15',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-04-15'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10102'
@@ -557,7 +553,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID21'],
         birthDate: '2002-11-22',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-11-22'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10103'
@@ -574,7 +570,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID13'],
         birthDate: '2003-01-10',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-01-10'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10104'
@@ -591,7 +587,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID14'],
         birthDate: '2002-08-05',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-08-05'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10105'
@@ -608,7 +604,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID15'],
         birthDate: '2003-06-25',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-06-25'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10106'
@@ -625,7 +621,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID16'],
         birthDate: '2002-12-10',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-12-10'),
         sectionID: 'sectionid16',
         anecdotalDocID: 'ANEC-2024-10107'
@@ -642,7 +638,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID17'],
         birthDate: '2003-03-30',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-03-30'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10108'
@@ -659,7 +655,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID18'],
         birthDate: '2002-09-18',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-09-18'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10109'
@@ -676,7 +672,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID19'],
         birthDate: '2003-07-12',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-07-12'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10110'
@@ -693,7 +689,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID20'],
         birthDate: '2002-11-05',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-11-05'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10111'
@@ -710,7 +706,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID21'],
         birthDate: '2003-02-20',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2003-02-20'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10112'
@@ -727,7 +723,7 @@ export const student = [
         isEnrolled: true,
         incidentDocIDs: ['incidentID22'],
         birthDate: '2002-10-15',
-        profilePic: '',
+        profilePic: null,
         age: calculateAge('2002-10-15'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10113'

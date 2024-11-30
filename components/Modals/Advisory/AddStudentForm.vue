@@ -146,10 +146,10 @@
 
             <!-- Other Forms -->
             <div v-if="showSingleContStudentForm || showBulkNewStudentForm" class="relative h-[600px] overflow-visible">
-                <div v-if="showSingleContStudentForm" class="absolute inset-0">
+                <div v-if="showSingleContStudentForm">
                     <UnEnrolledStudents @close="$emit('close')"/>
                 </div>
-                <div v-if="showBulkNewStudentForm" class="absolute inset-0">
+                <div v-if="showBulkNewStudentForm">
                     <StudentCSVUploadModal @close="$emit('close')"/>
                 </div>
             </div>

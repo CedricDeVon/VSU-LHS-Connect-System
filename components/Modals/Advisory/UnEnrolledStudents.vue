@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full">
+    <div class="w-full absolute inset-0">
         <select
                 class="  lg:mr-5 lg:pr-2 py-2 input border-b-1 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-none"
                 v-model="selectedLevel">
@@ -8,13 +8,11 @@
                 <option value="8">Grade 8</option>
                 <option value="9">Grade 9</option>
                 <option value="10">Grade 10</option>
-                <option value="11">Grade 11</option>
-                <option value="12">Grade 12</option>
         </select>
         <input type="text" placeholder="Search Student"
               class=" w-2/5 px-4 py-2 m-4 mt-2  border border-gray-300 rounded-md focus:outline-none mr-3"
               v-model="searchQuery" />
-        <button @click ="search" class=" button2 px-7 p-1 m-2 rounded-lg focus:outline-none" aria-label="search">
+        <button class=" button2 px-7 p-1 m-2 rounded-lg focus:outline-none" aria-label="search">
         Search
         </button>
     
@@ -78,7 +76,7 @@ import type { academicYear } from '~/data/academicYear';
     props: {
       academicYear: {
         type: String,
-        default: '2023-2024'    // Change the default value to the current academic year
+        default: '2024-2025'    // Change the default value to the current academic year or remove this and use Store
       }
     },
 
@@ -110,17 +108,49 @@ import type { academicYear } from '~/data/academicYear';
         return studentIDs;
     };
 
+    const getPreviousAcademicYear = (current: string): string => {
+        const years = current.split('-');
+        const startYear = parseInt(years[0], 10);
+        const endYear = parseInt(years[1], 10);
+        const previousStartYear = startYear - 1;
+        const previousEndYear = endYear - 1;
+        return `${previousStartYear}-${previousEndYear}`;
+    };
+
     const filteredStudents = computed(() => {
-        if (selectedLevel.value === '') { return unenrolledStudents.value;
-        }else{
-          console.log(debouncedQuery.value);
-        const studentIDs = getStudentIDPerLevel(selectedLevel.value, props.academicYear);
-        const levelGroup = student.filter((stdnt) => studentIDs.includes(stdnt.studentId));
-        return levelGroup.filter((stdnt) => stdnt.isEnrolled === false);
-        }
+        let filtered: student[] = unenrolledStudents.value.filter((stdnt: student) => {
+          if (selectedLevel.value === '' && debouncedQuery.value === '') return true;
+          
+          const studentIds = getStudentIDPerLevel(selectedLevel.value, getPreviousAcademicYear(props.academicYear)); 
+          const query = debouncedQuery.value.toLowerCase();
+          
+          if (selectedLevel.value) {
+            const levelIds = studentIds.includes(stdnt.studentId);
+            if (debouncedQuery) {
+              return (
+                (levelIds &&
+                  (stdnt.firstName.toLowerCase().includes(query) ||
+                    stdnt.lastName.toLowerCase().includes(query) ||
+                    stdnt.studentId.includes(query)))
+              );
+            }
+            return levelIds;
+          }
+          return (
+            stdnt.firstName.toLowerCase().includes(query) ||
+            stdnt.lastName.toLowerCase().includes(query) ||
+            stdnt.studentId.includes(query)
+          );
+        });
+
+        
+        return filtered;
+    
     });
 
-    return { unenrolledStudents, searchQuery , debouncedQuery, filteredStudents, getStudentIDPerLevel, selectedLevel};
+    
+
+    return {getPreviousAcademicYear, unenrolledStudents, searchQuery , debouncedQuery, filteredStudents, getStudentIDPerLevel, selectedLevel};
     
   },
     };
@@ -135,11 +165,11 @@ import type { academicYear } from '~/data/academicYear';
         color: white;
         background-color: #64886d;
         border: none;
-        cursor: pointer;
+        /* cursor: pointer; */
     }
-    .button2:hover{
+    /* .button2:hover{
         background-color: #265630;
-    }
+    } */
 
     .button3{
         font-family: "Century Gothic", sans-serif;

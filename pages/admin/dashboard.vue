@@ -416,7 +416,7 @@ const handleReportSubmit = (data: any) => {
                 <NuxtLink v-for="(action, idx) in [
                   { text: 'View Incident Reports', link: '/admin/incidental', icon: 'lucide:clipboard-list' },
                   { text: 'View Anecdotal Reports', link: '/admin/anecdotal', icon: 'lucide:book-open' },
-                  { text: 'Manage Users', link: '/admin/accounts', icon: 'lucide:users' }
+                  { text: 'Manage Adviser Accounts', link: '/admin/accounts', icon: 'lucide:users' }
                 ]" 
                   :key="idx" 
                   :to="action.link"

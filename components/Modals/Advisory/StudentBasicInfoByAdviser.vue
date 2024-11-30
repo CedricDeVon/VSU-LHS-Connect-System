@@ -78,67 +78,70 @@
     </div>
 </template>
 
-<script>
-import InitialReportModal from '../AdviserReport/InitialReportModal.vue';
-import { student } from '~/data/student';
-import AdviserAnecdotal from '../../../pages/adviser/anecdotal/[id].vue';
-import RemoveStudent from './RemoveStudent.vue';
-
-export default {
-  components: { InitialReportModal, AdviserAnecdotal, RemoveStudent },
-  name: 'StudentBasicInfo',
-  emits: ['close'],
-  props: {
+  
+  <script setup>
+  import { ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import InitialReportModal from '../AdviserReport/InitialReportModal.vue';
+  import AdviserAnecdotal from '../../../pages/adviser/anecdotal/[id].vue';
+  import RemoveStudent from './RemoveStudent.vue';
+  import { useSectionStore } from '#imports';
+  
+  // Define props
+  const props = defineProps({
     student: {
       type: Object,
       required: true,
     },
-    section: {
-      type: Object,
-      required: true,
-      default:{}
-    },
-  },
-  data() {
-    return {
-        report: false,
-        showAnecdotal: false,
-        remove: false,
-
-    };
-  },
-methods: {
-    showReport() {
-        this.report = true;
-    },
-
-    creationClose(){
-        this.report = false;
-    },
-
-    viewReport(anecdotalDocID) {
-            // Find the student with this anecdotal report
-            if (anecdotalDocID && anecdotalDocID !== '') {
-                this.$router.push(`/adviser/anecdotal/${this.student.studentId}`);
-               
-            } else {
-                alert('No student found with this anecdotal report'); //Create new anecdotal report
-            }
-        },
-    removeStudent(){
-        this.remove = true; 
-    },
-    handleRemoveStudent(){
-        this.remove = false;
-        this.$emit('close');
+    // section: {
+    //   type: Object,
+    //   required: true,
+    //   default: () => ({}),
+    // },
+  });
+  
+  // Define reactive state
+  const report = ref(false);
+  const showAnecdotal = ref(false);
+  const remove = ref(false);
+  const sectionStore = useSectionStore();
+  const section = sectionStore.section;
+  
+  // Access the router
+  const router = useRouter();
+  
+  // Define methods
+  const showReport = () => {
+    report.value = true;
+  };
+  
+  const creationClose = () => {
+    report.value = false;
+  };
+  
+  const viewReport = (anecdotalDocID) => {
+    // Find the student with this anecdotal report
+    if (anecdotalDocID && anecdotalDocID !== '') {
+      router.push(`/adviser/anecdotal/${props.student.studentId}`);
+    } else {
+      alert('No student found with this anecdotal report'); // Create new anecdotal report
     }
-
-
-},
-   
-
-};
-</script>
+  };
+  
+  const removeStudent = () => {
+    remove.value = true;
+  };
+  
+  const handleRemoveStudent = () => {
+    remove.value = false;
+    emit('close');
+  };
+  
+  // Emit event
+  const emit = defineEmits(['close']);
+  
+  </script>
+  
 
 <style scoped>
 .info-row {

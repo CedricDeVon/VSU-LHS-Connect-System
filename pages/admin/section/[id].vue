@@ -201,6 +201,9 @@
             :initialEmail="toSendEmail" 
             @close="showSendEmailModal = false" 
             />
+
+            <ConfirmRemoveAdviser v-if="showConfirmRemoveAdviser" :adviser="adviser" :section="section" @close="showConfirmRemoveAdviser = false" @remove="confirmRemoveAdviser" />
+
     </div>
 </template>
 
@@ -213,11 +216,12 @@ import { incidentReport } from '~/data/incident.js';
 import SendEmail  from '~/components/Modals/AdminEmailing/SendEmailModal.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import ConfirmRemoveAdviser from '~/components/Modals/ConfirmRemoveAdviser.vue';
 
 export default {
     name: 'admin-section-details',
     components: {
-        AdminSidebar, AdminHeader, SendEmail
+        AdminSidebar, AdminHeader, SendEmail, ConfirmRemoveAdviser
     },
     data() {
         return {
@@ -230,7 +234,9 @@ export default {
             sectionStudents: [],
             sectionReports: [],
             showSendEmailModal: false,
-            toSendEmail: ''
+            toSendEmail: '',
+            showConfirmRemoveAdviser: false,
+
         };
     },
     async created() {
@@ -355,7 +361,28 @@ export default {
         },
         findStudentByFirstName(firstName) {
             return student.find(s => s.firstName === firstName);
-        }
+        },
+
+        removeAdviser() {
+            this.showConfirmRemoveAdviser = true;
+           
+        },
+
+        confirmRemoveAdviser() {
+            try{
+                this.section.adviserId = "";
+                this.adviser.sectionId = "";
+                this.adviser.status = "inActive";
+                const userAdviser = users.find(u => u.userId === this.adviser.userId);
+                userAdviser.canAccess = false;
+                this.$router.push({ path: '/admin/search' });
+                this.showConfirmRemoveAdviser = false;
+            }catch(err){
+                console.error('Error removing adviser:', err);
+            }   
+            
+        },
+
     },
     watch: {
         // Watch for changes in selectedView and fetch appropriate data

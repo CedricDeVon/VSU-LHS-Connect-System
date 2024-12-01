@@ -309,6 +309,10 @@ export default {
         sectionObj.adviserId = this.pendingAdviser.id;
         this.pendingAdviser.sectionId = sectionObj.id;
         this.pendingAdviser.status = 'active';
+        const userAdviser = users.find((u) => u.userId === this.pendingAdviser.userId);
+        if (userAdviser) {
+          userAdviser.canAccess = false; // field name can be changed with status if that's what in the DB
+        }
         this.showConfirmAdd = false;
         this.$router.push({ path: `/admin/section/${sectionObj.id}` });
       } else {

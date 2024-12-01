@@ -102,7 +102,7 @@
 
       <!-- Modals -->
       <AdviserCSVUploadModal v-if="showUploadModal" @close="showUploadModal = false" @upload="uploadFile" @file-uploaded="handleFileUpload" />
-      <ApprovedAccountModal v-if="showApprovalModal" @close="showApprovalModal = false" :approvedEmail="propAdviser.email" :adviserName="propAdviser.name" :adviserID="propAdviser.facultyId" :adviserSection="propAdviser.section"/>
+      <ApproveAccountModal v-if="showApprovalModal" @close="showApprovalModal = false" @approve="confirmAcceptRequest" :adviser="pendingAdviser"/>
       <ConfirmAddAdviser v-if="showConfirmAdd" :adviser="pendingAdviser" @close="cancelAddToSection" @add="confirmAddToSection" :sectionId="this.$route.query.sectionId"/>
     </div>
   </div>
@@ -115,8 +115,9 @@ import AdviserCSVUploadModal from '../../components/Modals/AdviserCSVUploadModal
 import { getAdvisers } from '~/data/adviser';
 import { section } from '~/data/section';
 import {users} from '~/data/user';
-import ApprovedAccountModal from '~/components/Modals/AdminEmailing/ApprovedAccountModal.vue';
-import ConfirmAddAdviser from '~/components/Modals/ConfirmAddAdviser.vue';
+import ApproveAccountModal from '~/components/Modals/AdminConfirmations/ApproveAccountModal.vue';
+import ConfirmAddAdviser from '~/components/Modals/AdminConfirmations/ConfirmAddAdviser.vue';
+import emailjs from '@emailjs/browser';
  
 
 
@@ -126,7 +127,7 @@ export default {
     AdminSidebar,
     AdminHeader,
     AdviserCSVUploadModal,
-    ApprovedAccountModal,
+    ApproveAccountModal,
     ConfirmAddAdviser
   },
   data() {
@@ -200,49 +201,16 @@ export default {
       this.showUploadModal = false;
       this.file = null;
     },
-    
-    // I think this approval, assigning of adviser to section and the likes should be temporarily store first locally before writng in db
-    acceptRequest(adviser) {
-      try {
-        this.propAdviser.facultyId = adviser.facultyId;
-        this.propAdviser.name = adviser.firstName + ' ' + adviser.lastName;
-        
-          try {
-            const id = section.findIndex(s => s.id === adviser.sectionId);
-            if (id === -1) {
-              throw new Error('Section not found');
-              return;
-            }
-            if(section[id].adviserId !== null && section[id].adviserId !== '' && section[id].adviserId !== undefined){
-              alert('Section already has an adviser. You may remove the existing adviser first before assigning a new one.');
-              return;
-            }
-            section[id].adviserId = adviser.id;
-            this.propAdviser.section = section[id].sectionName;
-          } catch (e) {
-            console.log(e);
-            alert('Error in finding section');
-            return;
-          }
-          try {
-            const id = users.findIndex(u => u.userId === adviser.userId);
-            if (id === -1) {
-              throw new Error('Email not found');
-              return;
-            }
-            this.propAdviser.email =  users[id].emailAdd;
-          } catch (e) {
-            console.log(e);
-            alert('Error in finding email');
-            return;
-          }
 
-        }catch (e) {
-        console.log(e);
-        alert('Error in accepting request');
-        return;
-      }
-      
+    acceptRequest(adviser) {
+      this.pendingAdviser = adviser;
+      this.showApprovalModal = true;
+    },
+    
+    confirmAcceptRequest() {
+      this.showApprovalModal = false;
+      alert('Adviser account has been approved');
+      this.$router.push({ name: 'admin-search', query: { searchType: 'section' } });
       // After successful acceptance, update notifications
       const adminHeader = this.$refs.adminHeader;
       if (adminHeader) {
@@ -252,10 +220,7 @@ export default {
         );
         localStorage.setItem('admin-notifications', JSON.stringify(updatedNotifications));
       }
-
-      this.showApprovalModal = true;
-      adviser.status = 'active';
-
+      this.pendingAdviser.value = {};
     },
     rejectRequest(adviser) {
       const adminHeader = this.$refs.adminHeader;
@@ -299,11 +264,41 @@ export default {
       }
     },
 
+    async sendEmail (user, adviser, section){
+        try {
+          const response = await fetch('/api/approval-email'); 
+        
+          if (!response.ok) {
+            throw new Error('Failed to fetch configuration');
+          }
+          const config = await response.json(); 
+          
+          const templateParams = {
+            to_email: user.email,
+            adviserName: `${adviser.firstName} ${adviser.lastName}`,
+            adviserID: adviser.id,
+            adviserSection: `${section.sectionLevel} - ${section.sectionName}`,
+          };
+
+          await emailjs.send(
+            config.emailServiceId,
+            config.emailTemplateId,
+            templateParams,
+            config.emailPublicKey
+          );
+
+          alert('Email sent successfully!');
+        } catch (error) {
+          console.error('Error sending email:', error);
+        }
+    },
+
     addToSection(adviser) {
       this.pendingAdviser = adviser;
       this.showConfirmAdd = true;
     },
-    confirmAddToSection() {
+
+    async confirmAddToSection() {
       const sectionObj = section.find((sec) => sec.id === this.$route.query.sectionId);
       if (sectionObj) {
         sectionObj.adviserId = this.pendingAdviser.id;
@@ -311,9 +306,14 @@ export default {
         this.pendingAdviser.status = 'active';
         const userAdviser = users.find((u) => u.userId === this.pendingAdviser.userId);
         if (userAdviser) {
-          userAdviser.canAccess = false; // field name can be changed with status if that's what in the DB
+          userAdviser.canAccess = true; // field name can be changed with status if that's what in the DB
+          //await this.sendEmail(userAdviser, this.pendingAdviser, sectionObj);
+//Removing this comment will make the function work
+//careful with this as this will send automatically when mounted or specifically when assigning an adviser to section
+//careful because we have a LIMITED EMAIL SENDING W/ 200 PER MONTH I GUESS HAHAHAHAHA
+          this.showConfirmAdd = false; 
+          alert('Adviser has been added to the section and email has been sent');
         }
-        this.showConfirmAdd = false;
         this.$router.push({ path: `/admin/section/${sectionObj.id}` });
       } else {
         alert('Section not found.');
@@ -325,6 +325,7 @@ export default {
       this.showConfirmAdd = false;
       this.pendingAdviser = {};
     },
+
 
   }
 };

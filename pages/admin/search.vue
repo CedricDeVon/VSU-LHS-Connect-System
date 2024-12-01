@@ -149,6 +149,16 @@ export default {
       selectedStudent: null,
     };
   },
+
+
+  created(){
+    //after approving account lang ni siya mu work, di ra guro ni mu affect sa normal
+    const searchType = this.$route.query.searchType;
+    if (searchType) {
+      this.selectedSearch = searchType;
+    }
+  },
+
   methods: {
     addNewSection(newSection) {
       this.sections.push({

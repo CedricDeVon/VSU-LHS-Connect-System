@@ -216,7 +216,7 @@ import { incidentReport } from '~/data/incident.js';
 import SendEmail  from '~/components/Modals/AdminEmailing/SendEmailModal.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
-import ConfirmRemoveAdviser from '~/components/Modals/ConfirmRemoveAdviser.vue';
+import ConfirmRemoveAdviser from '~/components/Modals/AdminConfirmations/ConfirmRemoveAdviser.vue';
 
 export default {
     name: 'admin-section-details',

@@ -172,7 +172,7 @@ export default {
           path: `/admin/section/${section.id}`
         });
       } else {
-        this.$router.push({ name: 'admin-accounts', query: { accountType: 'inactive' } });
+        this.$router.push({ name: 'admin-accounts', query: { accountType: 'inactive', sectionId: section.id } });
       }
     },
     viewStudentProfile(studentId) {

@@ -88,7 +88,7 @@
                     </div>
                   </td>
                   <td v-if="add && selectedAccount === 'inactive'" class="px-6 py-4 break-words">
-                    <button 
+                    <button @click="addToSection(adviser)"
                       class="px-5 py-1 text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
                       Add to Section
                     </button>
@@ -103,6 +103,7 @@
       <!-- Modals -->
       <AdviserCSVUploadModal v-if="showUploadModal" @close="showUploadModal = false" @upload="uploadFile" @file-uploaded="handleFileUpload" />
       <ApprovedAccountModal v-if="showApprovalModal" @close="showApprovalModal = false" :approvedEmail="propAdviser.email" :adviserName="propAdviser.name" :adviserID="propAdviser.facultyId" :adviserSection="propAdviser.section"/>
+      <ConfirmAddAdviser v-if="showConfirmAdd" :adviser="pendingAdviser" @close="cancelAddToSection" @add="confirmAddToSection" :sectionId="this.$route.query.sectionId"/>
     </div>
   </div>
 </template>
@@ -115,6 +116,7 @@ import { getAdvisers } from '~/data/adviser';
 import { section } from '~/data/section';
 import {users} from '~/data/user';
 import ApprovedAccountModal from '~/components/Modals/AdminEmailing/ApprovedAccountModal.vue';
+import ConfirmAddAdviser from '~/components/Modals/ConfirmAddAdviser.vue';
  
 
 
@@ -124,7 +126,8 @@ export default {
     AdminSidebar,
     AdminHeader,
     AdviserCSVUploadModal,
-    ApprovedAccountModal
+    ApprovedAccountModal,
+    ConfirmAddAdviser
   },
   data() {
     return {
@@ -140,7 +143,9 @@ export default {
         name: '',
         section: '',
         email: ''
-      }
+      },
+      showConfirmAdd: false,
+      pendingAdviser: {}
     
     };
   },
@@ -293,6 +298,30 @@ export default {
         }
       }
     },
+
+    addToSection(adviser) {
+      this.pendingAdviser = adviser;
+      this.showConfirmAdd = true;
+    },
+    confirmAddToSection() {
+      const sectionObj = section.find((sec) => sec.id === this.$route.query.sectionId);
+      if (sectionObj) {
+        sectionObj.adviserId = this.pendingAdviser.id;
+        this.pendingAdviser.sectionId = sectionObj.id;
+        this.pendingAdviser.status = 'active';
+        this.showConfirmAdd = false;
+        this.$router.push({ path: `/admin/section/${sectionObj.id}` });
+      } else {
+        alert('Section not found.');
+      }
+      this.add = false;
+      this.pendingAdviser = {};
+    },
+    cancelAddToSection() {
+      this.showConfirmAdd = false;
+      this.pendingAdviser = {};
+    },
+
   }
 };
 </script>

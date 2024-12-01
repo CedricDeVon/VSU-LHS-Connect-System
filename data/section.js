@@ -100,7 +100,7 @@ export const section = [
 
 {
     id: 'sectionid2',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'C#',
     sectionLevel: '7',
@@ -138,7 +138,7 @@ export const section = [
 // Sections for level 8
 {
     id: 'sectionid6',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Python Basics',
     sectionLevel: '8',
@@ -148,7 +148,7 @@ export const section = [
 
 {
     id: 'sectionid6',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 1,
     sectionName: 'Python Basics',
     sectionLevel: '8',
@@ -203,7 +203,7 @@ export const section = [
 },
 {
     id: 'sectionid10',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Mobile Apps',
     sectionLevel: '8',
@@ -238,7 +238,7 @@ export const section = [
 },
 {
     id: 'sectionid13',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Cybersecurity',
     sectionLevel: '9',
@@ -248,7 +248,7 @@ export const section = [
 
 {
     id: 'sectionid13',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 1,
     sectionName: 'Cybersecurity',
     sectionLevel: '9',
@@ -344,7 +344,7 @@ export const section = [
 },
 {
     id: 'sectionid19',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Virtual Reality',
     sectionLevel: '10',
@@ -372,7 +372,7 @@ export const section = [
 },
 {
     id: 'sectionid22',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Red',
     sectionLevel: '11',
@@ -399,7 +399,7 @@ export const section = [
 },
 {
     id: 'sectionid25',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Pink',
     sectionLevel: '11',
@@ -435,7 +435,7 @@ export const section = [
 },
 {
     id: 'sectionid28',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Software Engineering',
     sectionLevel: '12',

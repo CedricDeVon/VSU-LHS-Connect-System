@@ -6,7 +6,7 @@
       <verification v-if="verify" @close="handleClose" @update="update"/>
       <div class="flex-grow dashboard-page">
         <AdminHeader />
-        <div class="bg-transparent mr-32 ml-16 mt-0 overflow-y-auto h-[calc(100vh-64px)] ">
+        <div class="bg-transparent mr-14 ml-16 mt-0 overflow-y-auto h-[calc(100vh-64px)] ">
           <h1 class="text-3xl font-bold text-green-900 my-5 ">Account Settings</h1>
           <div class=" grid grid-cols-2 shadow-md">
             <div class="grid col-span-1 p-5 border rounded-md shadow-sm text-sm">

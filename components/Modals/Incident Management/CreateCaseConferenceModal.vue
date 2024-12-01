@@ -185,6 +185,10 @@
         if (!this.formData.conferenceDate) {
           this.errors.conferenceDate = 'Conference date is required'
         }
+
+        if (this.formData.conferenceDate < new Date().toISOString().split('T')[0]) {
+          this.errors.conferenceDate = 'Conference date should be today or later'
+        }
   
         return Object.keys(this.errors).length === 0
       },

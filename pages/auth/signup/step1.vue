@@ -101,7 +101,7 @@ const goBack = () => {
                     transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
                     animate-fade-in-delayed">
           <img 
-            src="@/assets/images/sample-logo.png" 
+            src="@/assets/images/final-logo-1.png" 
             alt="Connect System Logo" 
             class="w-full max-w-[70%] h-auto mx-auto transform transition-all duration-500 
                    hover:scale-[1.05] animate-float"

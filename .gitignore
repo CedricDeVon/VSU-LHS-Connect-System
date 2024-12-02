@@ -28,8 +28,3 @@ sa.json
 notes.txt
 sandbox
 components/used-components/ShortDatepicker.vue
-
-# TeX/LaTeX files
-**/hyph-el*
-*.tex
-texmf-dist/

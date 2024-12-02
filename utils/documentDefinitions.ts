@@ -1,5 +1,17 @@
 import { footer } from '~/assets/images/footer';
 import { finalHeader } from '~/assets/images/finalHeader';
+import { getAdviserByName } from '~/data/adviser';
+import { initialReport } from '~/data/initialReport';
+import { adviser } from '~/data/adviser';
+
+// Helper function to get adviser info from initialReport's reportedBy
+const getReporterInfo = (reportID) => {
+  const report = initialReport.find(r => r.reportIDRef === reportID);
+  if (!report) return null;
+  
+  const adviserInfo = adviser.find(a => a.id === report.reportedBY);
+  return adviserInfo;
+};
 
 export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receivedBy }) => ({
   pageMargins: [72, 120, 72, 70],
@@ -92,10 +104,6 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
             { text: `${incidentData.dateReported}`, style: 'content', border: [false, false, false, false] }
           ],
           [
-            { text: 'Last Modified:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.lastModified || 'Not modified'}`, style: 'content', border: [false, false, false, false] }
-          ],
-          [
             { text: 'Status:', style: 'label', border: [false, false, false, false] },
             { text: `${incidentData.status}`, style: 'content', border: [false, false, false, false] }
           ],
@@ -125,7 +133,15 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
                 {
                   stack: [
                     { text: 'Reported By:', style: 'label', margin: [0, 0, 0, 5] },
-                    { text: reportedBy, style: 'signature' },
+                    { 
+                      text: (() => {
+                        const reporter = getReporterInfo(incidentData.reportID);
+                        return reporter ? 
+                          `${reporter.firstName} ${reporter.middleName} ${reporter.lastName}` :
+                          'Unknown Reporter';
+                      })(),
+                      style: 'signature' 
+                    },
                     { text: 'Adviser', style: 'position' },
                   ],
                   border: [false, false, false, false]

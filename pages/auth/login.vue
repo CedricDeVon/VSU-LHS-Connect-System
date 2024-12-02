@@ -87,9 +87,9 @@ const handleLogin = async () => {
     >
       <div class="bg-[#F5F5F5]/80 rounded-lg p-4 -mt-2 -mx-4 mb-8 animate-fade-in-delayed">
         <img 
-          src="@/assets/images/sample-logo.png" 
+          src="@/assets/images/final-logo-1.png" 
           alt="Connect System Logo" 
-          class="w-full max-w-[250px] h-auto mx-auto"
+          class="w-full max-w-[310px] h-auto mx-auto"
         >
       </div>
       

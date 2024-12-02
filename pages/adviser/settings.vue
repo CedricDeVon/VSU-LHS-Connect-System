@@ -4,7 +4,7 @@
         <NotificationModal v-if="showNotification" />
 
         <!-- Main Content -->
-        <div class="relative z-10">
+        <div class=" z-10">
             <!-- Academic Year -->
             <div class="m-5 flex justify-between items-center mx-20">
                 <h1 class="text-2xl font-bold text-green-900">Academic Year {{ AcademicYear }}</h1>

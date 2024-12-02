@@ -188,7 +188,7 @@ const handleClickOutside = (event: Event) => {
                 </button>
               </div>
             </div>
-
+            </div>
             <div class="max-h-[480px] overflow-y-auto">
               <div v-if="notifications.length === 0" 
                 class="p-8 text-center text-gray-500 flex flex-col items-center">
@@ -218,8 +218,8 @@ const handleClickOutside = (event: Event) => {
                 </div>
               </div>
             </div>
+            </Transition>
           </div>
-        </Transition>
       </div>
 
       <!-- User Profile and Logout -->

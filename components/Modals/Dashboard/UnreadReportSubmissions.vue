@@ -18,25 +18,25 @@
             <h4 class="text-lg font-semibold text-gray-800">{{ date }}</h4>
           </div>
           <div class="space-y-4">
-            <div v-for="report in reps" :key="report.initialDocID" 
+            <div v-for="report in reps" :key="report.id" 
               class="bg-white p-4 rounded-lg border border-gray-200 hover:border-red-300 transition-colors">
               <div class="flex justify-between items-start gap-4">
                 <div class="space-y-2">
                   <p class="text-base font-medium text-gray-900">
-                    Students: {{ report.peopleInvolved.join(', ') }}
+                    Students: {{ report.data.peopleInvolved.join(', ') }}
                   </p>
                   <p class="text-sm text-gray-600">
-                    Place: {{ report.placeOfIncident }}
+                    Place: {{ report.data.placeOfIncident }}
                   </p>
                   <p class="text-sm text-gray-600">
-                    Items Involved: {{ report.thingsInvolved }}
+                    Items Involved: {{ report.data.thingsInvolved }}
                   </p>
                   <p class="text-sm text-gray-500 line-clamp-2">
-                    {{ report.narrativeReport }}
+                    {{ report.data.narrativeReport }}
                   </p>
                 </div>
                 <button 
-                  @click="viewReportDetails(report.initialDocID)"
+                  @click="viewReportDetails(report.id)"
                   class="px-4 py-2 text-sm bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                   View Details
                 </button>
@@ -57,18 +57,8 @@
 </template>
 
 <script setup lang="ts">
-interface Report {
-  initialDocID: string;
-  dateReported: string;
-  dateFormatted: string;
-  peopleInvolved: string[];
-  placeOfIncident: string;
-  thingsInvolved: string;
-  narrativeReport: string;
-}
-
 const props = defineProps<{
-  reports: Report[];
+  reports: [];
 }>();
 
 const emit = defineEmits(['close']);
@@ -80,13 +70,13 @@ const viewReportDetails = (reportId: string) => {
 };
 
 const groupedReports = computed(() => {
-  return props.reports.reduce((groups, report) => {
+  return props.reports.reduce((groups: any, report: any) => {
     if (!groups[report.dateFormatted]) {
       groups[report.dateFormatted] = [];
     }
     groups[report.dateFormatted].push(report);
     return groups;
-  }, {} as Record<string, Report[]>);
+  }, {} as Record<string, []>);
 });
 </script>
 

@@ -22,7 +22,7 @@
           <div class="grid grid-cols-2 gap-4">
             <div class="form-group">
               <label class="block text-sm font-medium text-gray-700">Report ID</label>
-              <input type="text" :value="incident.reportID" disabled
+              <input type="text" :value="incident.id" disabled
                 class="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm text-gray-600">
             </div>
           </div>
@@ -180,6 +180,7 @@
 </template>
 
 <script>
+import { TimeConverters } from '~/library/timeConverters/timeConverters';
 export default {
   name: 'UpdateIncidentReportModal',
   props: {
@@ -194,19 +195,19 @@ export default {
       peopleInput: '',
       witnessInput: '',
       formData: {
-        peopleInvolved: Array.isArray(this.incident.peopleInvolved) 
-          ? [...this.incident.peopleInvolved] 
-          : [this.incident.peopleInvolved].filter(Boolean),
-        witness: Array.isArray(this.incident.witness)
-          ? [...this.incident.witness]
-          : [this.incident.witness].filter(Boolean),
-        dateOfIncident: this.incident.dateOfIncident || '',
-        placeOfIncident: this.incident.placeOfIncident || '',
-        thingsInvolved: this.incident.thingsInvolved || '',
-        narrativeReport: this.incident.narrativeReport || '',
-        actionTaken: this.incident.actionTaken || '',
-        reasonOfAction: this.incident.reasonOfAction || '',
-        others: this.incident.others || ''
+        peopleInvolved: Array.isArray(this.incident.data.peopleInvolved) 
+          ? [...this.incident.data.peopleInvolved] 
+          : [this.incident.data.peopleInvolved].filter(Boolean),
+        witness: Array.isArray(this.incident.data.witness)
+          ? [...this.incident.data.witness]
+          : [this.incident.data.witness].filter(Boolean),
+        dateOfIncident: this.incident.data.dateOfIncident || '',
+        placeOfIncident: this.incident.data.placeOfIncident || '',
+        thingsInvolved: this.incident.data.thingsInvolved || '',
+        narrativeReport: this.incident.data.narrativeReport || '',
+        actionTaken: this.incident.data.actionTaken || '',
+        reasonOfAction: this.incident.data.reasonOfAction || '',
+        others: this.incident.data.others || ''
       },
       errors: {}
     }
@@ -297,7 +298,7 @@ export default {
       if (this.validate()) {
         const updatedData = {
           ...this.formData,
-          lastModified: new Date().toISOString().split('T')[0]
+          lastModified: TimeConverters.dateConverter.convert(new Date().toISOString().split('T')[0]).data
         }
         this.$emit('update', updatedData)
       }

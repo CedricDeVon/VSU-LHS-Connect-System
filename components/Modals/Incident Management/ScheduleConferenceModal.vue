@@ -95,7 +95,7 @@
                   <h3 class="font-bold text-lg">Agenda & Notes</h3>
                 </div>
                 <textarea
-                  v-model="formData.notes"
+                  v-model="formData.content"
                   rows="4"
                   class="w-full rounded-lg border-gray-300 focus:border-[#265630] focus:ring focus:ring-[#265630] focus:ring-opacity-50 shadow-sm resize-none"
                   placeholder="Enter meeting agenda, required materials, or any special instructions..."
@@ -131,6 +131,7 @@
 </template>
 
 <script>
+import { TimeConverters } from '~/library/timeConverters/timeConverters';
 export default {
   name: 'ScheduleConferenceModal',
   data() {
@@ -138,7 +139,8 @@ export default {
       formData: {
         date: '',
         time: '',
-        notes: ''
+        content: '',
+        
       }
     }
   },
@@ -151,10 +153,15 @@ export default {
     },
     handleSubmit() {
       const conferenceData = {
-        ...this.formData,
-        scheduledAt: new Date().toISOString(),
-        status: 'Pending'
+        date: this.formData.date,
+        content: this.formData.content,
+        title: `Scheduled Conference: ${this.formData.date} - ${this.formData.time}`,
+        adminId: '',
+        adviserId: '',
+        isActive: true,
+        isRead: false,
       }
+      conferenceData.date = TimeConverters.dateConverter.convert(this.formData.date).data
       this.$emit('schedule', conferenceData)
     }
   }

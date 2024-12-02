@@ -1,7 +1,7 @@
 import { footer } from '~/assets/images/footer';
 import { finalHeader } from '~/assets/images/finalHeader';
 
-export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receivedBy }) => ({
+export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receivedBy }: any) => ({
   pageMargins: [72, 120, 72, 70],
   header: {
     image: finalHeader,
@@ -18,23 +18,23 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
         body: [
           [
             { text: 'Name of People Involved:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.peopleInvolved?.join(', ')}`, style: 'content', border: [false, false, false, false] }
+            { text: `${incidentData.data.peopleInvolved?.join(', ')}`, style: 'content', border: [false, false, false, false] }
           ],
           [
             { text: 'Witness:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.witness}`, style: 'content', border: [false, false, false, false] }
+            { text: `${incidentData.data.witness}`, style: 'content', border: [false, false, false, false] }
           ],
           [
             { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.dateOfIncident}`, style: 'content', border: [false, false, false, false] }
+            { text: `${incidentData.data.dateOfIncident}`, style: 'content', border: [false, false, false, false] }
           ],
           [
             { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.placeOfIncident}`, style: 'content', border: [false, false, false, false] }
+            { text: `${incidentData.data.placeOfIncident}`, style: 'content', border: [false, false, false, false] }
           ],
           [
             { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.thingsInvolved}`, style: 'content', border: [false, false, false, false] }
+            { text: `${incidentData.data.thingsInvolved}`, style: 'content', border: [false, false, false, false] }
           ],
         ]
       },
@@ -52,7 +52,7 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
     },
     { text: 'Narrative Report:', style: 'label', margin: [0, 15, 0, 5] },
     {
-      text: `${incidentData.narrativeReport}`,
+      text: `${incidentData.data.narrativeReport}`,
       style: 'content',
       margin: [30, 0, 30, 10],
       alignment: 'justify'
@@ -60,7 +60,7 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
     { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
     { text: 'Action Taken:', style: 'label', margin: [0, 15, 0, 5] },
     {
-      text: `${incidentData.actionTaken || 'Pending'}`,
+      text: `${incidentData.data.actionTaken || 'Pending'}`,
       style: 'content',
       margin: [30, 0, 30, 10],
       alignment: 'justify'
@@ -68,7 +68,7 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
     { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
     { text: 'Reason for Action:', style: 'label', margin: [0, 15, 0, 5] },
     {
-      text: `${incidentData.reasonOfAction || 'Pending'}`,
+      text: `${incidentData.data.reasonOfAction || 'Pending'}`,
       style: 'content',
       margin: [30, 0, 30, 10],
       alignment: 'justify'
@@ -76,7 +76,7 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
     { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 460, y2: 0, lineWidth: 0.5, lineColor: '#cccccc' }] },
     { text: 'Additional Notes:', style: 'label', margin: [0, 15, 0, 5] },
     {
-      text: `${incidentData.others || 'None'}`,
+      text: `${incidentData.data.others || 'None'}`,
       style: 'content',
       margin: [30, 0, 30, 10],
       alignment: 'justify'
@@ -89,15 +89,15 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
         body: [
           [
             { text: 'Date Reported:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.dateReported}`, style: 'content', border: [false, false, false, false] }
+            { text: `${incidentData.data.dateReported}`, style: 'content', border: [false, false, false, false] }
           ],
           [
             { text: 'Last Modified:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.lastModified || 'Not modified'}`, style: 'content', border: [false, false, false, false] }
+            { text: `${incidentData.data.lastModified || 'Not modified'}`, style: 'content', border: [false, false, false, false] }
           ],
           [
             { text: 'Status:', style: 'label', border: [false, false, false, false] },
-            { text: `${incidentData.status}`, style: 'content', border: [false, false, false, false] }
+            { text: `${incidentData.data.status}`, style: 'content', border: [false, false, false, false] }
           ],
         ]
       },
@@ -183,7 +183,7 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
       margin: [0, 0, 0, 10]
     }
   },
-  footer: (currentPage, pageCount) => {
+  footer: (currentPage: any, pageCount: any) => {
     return [
       {
         image: footer,
@@ -201,7 +201,7 @@ export const defineIncidentDoc = ({ reportType, incidentData, reportedBy, receiv
   },
 });
 
-export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedReports }) => ({
+export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedReports }: any) => ({
   pageMargins: [72, 120, 72, 90],
   header: {
     image: finalHeader,
@@ -216,18 +216,18 @@ export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedRepor
         widths: ['30%', '70%'],
         headerRows: 0,
         body: [
-          ['Student Name:', `${studentData.firstName} ${studentData.middleName} ${studentData.lastName}`],
-          ['Student ID:', studentData.studentId],
-          ['Academic Year:', anecdotalData.AY]
+          ['Student Name:', `${studentData.data.firstName} ${studentData.data.middleName} ${studentData.data.lastName}`],
+          ['Student ID:', studentData.id],
+          ['Academic Year:', anecdotalData.data.academicYear]
         ].map(row => [
           { text: row[0], style: 'label', border: [false, false, false, false] },
           { text: row[1], style: 'content', border: [false, false, false, false] }
         ])
       }
     },
-    ...associatedReports.map(rep => [
+    ...associatedReports.map((rep: any) => [
       {
-        text: new Date(rep.datePrepared).toLocaleDateString('en-US', {
+        text: new Date(rep.data.datePrepared).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
           day: 'numeric'
@@ -241,15 +241,15 @@ export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedRepor
           widths: ['30%', '70%'],
           headerRows: 0,
           body: [
-            ['Date of Incident:', new Date(rep.date).toLocaleDateString('en-US', {
+            ['Date of Incident:', new Date(rep.data.date).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric'
             })],
-            ['Purpose:', rep.purpose],
-            ['Witnesses:', rep.witnesses.join(', ')],
-            ['Place of Incident:', rep.placeOfIncident],
-            ['Things Involved:', rep.thingsInvolved],
+            ['Purpose:', rep.data.purpose],
+            ['Witnesses:', rep.data.witnesses.join(', ')],
+            ['Place of Incident:', rep.data.placeOfIncident],
+            ['Things Involved:', rep.data.thingsInvolved],
           ].map(row => [
             { text: row[0], style: 'label', border: [false, false, false, false] },
             { text: row[1], style: 'content', border: [false, false, false, false] }
@@ -257,10 +257,10 @@ export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedRepor
         }
       },
       { text: 'Details:', style: 'label', margin: [0, 15, 0, 5] },
-      { text: rep.details, style: 'content', margin: [30, 0, 30, 15] },
-      { text: rep.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', 
+      { text: rep.data.details, style: 'content', margin: [30, 0, 30, 15] },
+      { text: rep.data.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', 
         style: 'label', margin: [0, 15, 0, 5] },
-      { text: rep.remarks, style: 'content', margin: [30, 0, 30, 15] }
+      { text: rep.data.remarks, style: 'content', margin: [30, 0, 30, 15] }
     ]).flat(),
     // Add signature section at the end of content array
     {
@@ -274,7 +274,7 @@ export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedRepor
                 {
                   stack: [
                     { text: 'Report Prepared By:', style: 'label', margin: [0, 0, 0, 5] },
-                    { text: anecdotalData.preparedBy, style: 'signature' },
+                    { text: anecdotalData.data.preparedBy, style: 'signature' },
                     { text: 'Adviser', style: 'position' },
                   ],
                   border: [false, false, false, false]

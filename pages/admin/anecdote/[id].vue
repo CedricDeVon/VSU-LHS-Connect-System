@@ -81,7 +81,7 @@
 
 <script>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin']
+  middleware: ['authenticate-and-authorize-admin', 'admin-anecdote']
 });
 
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -280,8 +280,8 @@ export default {
         return;
       }
 
-      const associatedReports = report.filter(r => this.anecReport.reportIDs.includes(r.reportID))
-        .sort((a, b) => new Date(a.datePrepared) - new Date(b.datePrepared));
+      const associatedReports = this.adminViewStore.anecdoteReports.filter(r => this.anecReport.data.reportIds.includes(r.id))
+        .sort((a, b) => new Date(a.data.datePrepared) - new Date(b.data.datePrepared));
 
       const docDefinition = defineAnecdotalDoc({
         studentData: this.studentData,

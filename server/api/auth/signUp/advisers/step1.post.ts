@@ -13,6 +13,8 @@ export default defineEventHandler(async (event) => {
             throw new Error(advisersResult.message);
         }
 
+        console.log(advisersResult);
+        console.log(Object.keys(advisersResult.data.values));
         const uniquenessResult: Result = await Databases.areAllAdviserEmailsNotFound(Object.keys(advisersResult.data.values));
         if (uniquenessResult.isNotSuccessful) {
             throw new Error(uniquenessResult.message);

@@ -10,8 +10,9 @@ export default defineEventHandler(async (event) => {
     const adviser = (await Databases.getOneAdviserViaSectionId(sectionId)).data;
     const sectionStudents = (await Databases.getAllStudentsViaSectionId(sectionId)).data;
     let sectionIncidentReports = (await Databases.getAllIncidentReports()).data;
-    console.log(section, adviser, sectionStudents, sectionIncidentReports);
-
+    // console.log('SERVER')
+    // console.log(section, adviser, sectionStudents, sectionIncidentReports);
+    
     for (const student of sectionStudents) {
       student.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(student.data.profilePicture)).data;
     }
@@ -21,6 +22,7 @@ export default defineEventHandler(async (event) => {
     })
     
     adviser.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(adviser.data.profilePicture)).data;
+    // console.log(section, adviser, sectionStudents, sectionIncidentReports);
 
     return new SuccessfulResult({
       section,

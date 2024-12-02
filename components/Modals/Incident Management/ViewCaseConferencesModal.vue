@@ -31,37 +31,37 @@
           <!-- Conference List -->
           <div class="overflow-y-auto p-6">
             <div class="space-y-4">
-              <div v-for="conference in sortedConferences" :key="conference.caseConDocID"
-                   @click="navigateToConference(conference.caseConDocID)"
+              <div v-for="conference in sortedConferences" :key="conference.id"
+                   @click="navigateToConference(conference.id)"
                    class="bg-white rounded-lg p-4 border border-gray-200 hover:border-[#265630] transition-all conference-item cursor-pointer">
                 <div class="flex justify-between items-start">
                   <div>
                     <h3 class="font-semibold text-[#265630]">
-                      {{ formatDate(conference.conferenceDate) }} at {{ conference.time }}
+                      {{ formatDate(conference.data.conferenceDate) }} at {{ conference.data.time }}
                     </h3>
                     <p class="text-sm text-gray-600">{{ conference.studentName }}</p>
                   </div>
                   <span :class="{
                     'px-2 py-1 text-xs font-medium rounded-full': true,
-                    'bg-green-100 text-green-800': conference.status === 'Completed',
-                    'bg-yellow-100 text-yellow-800': conference.status === 'Pending',
-                    'bg-blue-100 text-blue-800': conference.status === 'In Progress'
+                    'bg-green-100 text-green-800': conference.data.status === 'Completed',
+                    'bg-yellow-100 text-yellow-800': conference.data.status === 'Pending',
+                    'bg-blue-100 text-blue-800': conference.data.status === 'In Progress'
                   }">
-                    {{ conference.status }}
+                    {{ conference.data.status }}
                   </span>
                 </div>
                 <div class="mt-4 space-y-2">
-                  <div v-if="conference.discussions" class="text-sm">
+                  <div v-if="conference.data.discussions" class="text-sm">
                     <span class="font-medium text-gray-700">Discussions:</span>
-                    <p class="mt-1 text-gray-600">{{ conference.discussions }}</p>
+                    <p class="mt-1 text-gray-600">{{ conference.data.discussions }}</p>
                   </div>
-                  <div v-if="conference.agreement" class="text-sm">
+                  <div v-if="conference.data.agreement" class="text-sm">
                     <span class="font-medium text-gray-700">Agreement:</span>
-                    <p class="mt-1 text-gray-600">{{ conference.agreement }}</p>
+                    <p class="mt-1 text-gray-600">{{ conference.data.agreement }}</p>
                   </div>
-                  <div v-if="conference.remarks" class="text-sm">
+                  <div v-if="conference.data.remarks" class="text-sm">
                     <span class="font-medium text-gray-700">Remarks:</span>
-                    <p class="mt-1 text-gray-600">{{ conference.remarks }}</p>
+                    <p class="mt-1 text-gray-600">{{ conference.data.remarks }}</p>
                   </div>
                 </div>
               </div>
@@ -97,7 +97,7 @@ export default {
   computed: {
     sortedConferences() {
       return [...this.conferences].sort((a, b) => 
-        new Date(b.conferenceDate) - new Date(a.conferenceDate)
+        new Date(b.data.conferenceDate) - new Date(a.data.conferenceDate)
       );
     }
   },

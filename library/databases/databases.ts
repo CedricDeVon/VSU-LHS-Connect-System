@@ -374,6 +374,16 @@ export class Databases {
         }
     }
 
+    public static async getOneAdviserViaId(id: string): Promise<Result> {
+        try {
+            const result: Result = await Databases._adviserFirebaseDatabase.readOneDocument(id);
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
     public static async createOneSection(id: string, name: string, level: number, schoolYear: string): Promise<Result> {
         try {
             let result: Result = await Databases._sectionFirebaseDatabase.createOneDocumentWithId(id, {
@@ -456,6 +466,9 @@ export class Databases {
     public static async getOneSectionViaId(id: string): Promise<Result> {
         try {
             const result: Result = await Databases._sectionFirebaseDatabase.readOneDocument(id);
+            if (result.isNotSuccessful) {
+                throw new Error(result.message);
+            }
             return result;
 
         } catch (error: any) {
@@ -523,6 +536,16 @@ export class Databases {
     public static async updateAdviserStatusToActiveViaId(id: string): Promise<Result> {
         try {
             let result: Result = await Databases._adviserFirebaseDatabase.updateOneDocument(id, { status: 'active' });
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateUserStatusToInactiveViaId(id: string): Promise<Result> {
+        try {
+            let result: Result = await Databases._userFirebaseDatabase.updateOneDocument(id, { status: false });
             return result;
 
         } catch (error: any) {
@@ -610,6 +633,16 @@ export class Databases {
             if (result.data === undefined) {
                 throw new Error(`User does not have an 'Adviser' account`);
             }
+            return result;
+
+        } catch (error: any) {
+            return new FailedResult(error.message);
+        }
+    }
+
+    public static async updateOneAdminViaId(id: string, values: any): Promise<Result> {
+        try {
+            let result: Result = await Databases._adminFirebaseDatabase.updateOneDocument(id, values);
             return result;
 
         } catch (error: any) {

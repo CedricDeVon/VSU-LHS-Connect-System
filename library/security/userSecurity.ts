@@ -152,8 +152,9 @@ export class UserSecurity {
                     id: currentUser.uid,
                     email: adviserEmail,
                     firstName: result.data[adviserEmail][0],
-                    lastName: result.data[adviserEmail][1],
-                    facultyId: result.data[adviserEmail][2]
+                    middleName: result.data[adviserEmail][1],
+                    lastName: result.data[adviserEmail][2],
+                    facultyId: result.data[adviserEmail][3]
                 })
             }
             

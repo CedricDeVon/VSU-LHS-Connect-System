@@ -140,15 +140,6 @@ import IncidentReportsModal from '~/components/Modals/IncidentReportsModal.vue';
 import CreateIncidentReportModal from '~/components/Modals/Incident Management/CreateIncidentReportModal.vue';
 import { incidentReport } from '~/data/incident.js';
 
-const adminViewStore = useAdminViewStore();
-
-onBeforeMount(async () => {
-})
-
-const handleClose = () => {
-    adminViewStore.searchShowStudentDetailsModal = false;
-}
-
 export default {
     name: 'StudentDetailsModal',
     props: {
@@ -180,7 +171,7 @@ export default {
         viewFullDetails() {
             const studentSectionId = this.adminViewStore.searchSelectedStudent.data.sectionId;
             if (studentSectionId) {
-                adminViewStore.searchShowStudentDetailsModal = false;
+                this.adminViewStore.searchShowStudentDetailsModal = false;
                 return navigateTo(`/admin/section/${studentSectionId}`);
 
             } else {
@@ -191,7 +182,7 @@ export default {
             const studentId = this.adminViewStore.searchSelectedStudent.id;
             const anecdotalId = this.adminViewStore.searchSelectedStudent.data.anecdotalReportId;
             if (anecdotalId) {
-                adminViewStore.searchShowStudentDetailsModal = false;
+                this.adminViewStore.searchShowStudentDetailsModal = false;
                 return navigateTo(`/admin/anecdote/${studentId}`);
 
             } else {
@@ -199,12 +190,15 @@ export default {
             }
         },
         viewIncidents() {
-            adminViewStore.studentShowIncidentModal = true
-            adminViewStore.studentStudentData = this.adminViewStore.searchSelectedStudent;
+            this.adminViewStore.studentShowIncidentModal = true
+            this.adminViewStore.studentStudentData = this.adminViewStore.searchSelectedStudent;
         },
         createIncidentReport() {
             console.log('Opening create incident modal');
             this.showCreateIncidentModal = true;
+        },
+        handleClose() {
+            this.adminViewStore.searchShowStudentDetailsModal = false;
         },
         async handleCreateIncident(newIncident) {
             try {
@@ -237,8 +231,7 @@ export default {
     data() {
         return {
             showIncidentModal: false,
-            adminViewStore,
-            handleClose
+            adminViewStore: useAdminViewStore()
         }
     }
 }

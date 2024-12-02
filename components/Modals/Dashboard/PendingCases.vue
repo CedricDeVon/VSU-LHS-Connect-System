@@ -18,25 +18,25 @@
             <h4 class="text-lg font-semibold text-gray-800">{{ date }}</h4>
           </div>
           <div class="space-y-4">
-            <div v-for="incident in incs" :key="incident.incidentDocID" 
+            <div v-for="incident in incs" :key="incident.id" 
               class="bg-white p-4 rounded-lg border border-gray-200 hover:border-yellow-300 transition-colors">
               <div class="flex justify-between items-start gap-4">
                 <div class="space-y-2">
                   <p class="text-base font-medium text-gray-900">
-                    Students: {{ incident.peopleInvolved.join(', ') }}
+                    Students: {{ incident.data.peopleInvolved.join(', ') }}
                   </p>
                   <p class="text-sm text-gray-600">
-                    Place: {{ incident.placeOfIncident }}
+                    Place: {{ incident.data.placeOfIncident }}
                   </p>
                   <p class="text-sm text-gray-600">
-                    Items Involved: {{ incident.thingsInvolved }}
+                    Items Involved: {{ incident.data.thingsInvolved }}
                   </p>
                   <p class="text-sm text-gray-500 line-clamp-2">
-                    {{ incident.narrativeReport }}
+                    {{ incident.data.narrativeReport }}
                   </p>
                 </div>
                 <button 
-                  @click="viewIncidentDetails(incident.incidentDocID)"
+                  @click="viewIncidentDetails(incident.id)"
                   class="px-4 py-2 text-sm bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors">
                   View Details
                 </button>
@@ -57,18 +57,9 @@
 </template>
 
 <script setup lang="ts">
-interface Incident {
-  incidentDocID: string;
-  dateOfIncident: string;
-  dateFormatted: string;
-  peopleInvolved: string[];
-  placeOfIncident: string;
-  thingsInvolved: string;
-  narrativeReport: string;
-}
 
 const props = defineProps<{
-  incidents: Incident[];
+  incidents: [];
 }>();
 
 const emit = defineEmits(['close']);
@@ -76,7 +67,7 @@ const router = useRouter();
 
 const viewIncidentDetails = (incidentId: string) => {
   emit('close');
-  router.push(`/admin/incident/${incidentId}`);
+  router.push(`/admin/incident/${incidentId}`, { replace: true });
 };
 
 const groupedIncidents = computed(() => {
@@ -86,7 +77,7 @@ const groupedIncidents = computed(() => {
     }
     groups[incident.dateFormatted].push(incident);
     return groups;
-  }, {} as Record<string, Incident[]>);
+  }, {} as Record<string, []>);
 });
 </script>
 

@@ -96,7 +96,7 @@
 
 <script setup lang='ts'>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin']
+  middleware: ['authenticate-and-authorize-admin', 'admin-incidental']
 });
 
 import { defineComponent } from 'vue';
@@ -105,11 +105,11 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
-await adminViewStore.updateIncidental();
+// await adminViewStore.updateIncidental();
 
-onBeforeMount(async () => {
-    await adminViewStore.updateIncidental();
-})
+// onBeforeMount(async () => {
+//     await adminViewStore.updateIncidental();
+// })
 
 function handleSearch() {
     let results = adminViewStore.incidentalIncidentalReports;

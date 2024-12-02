@@ -26,15 +26,23 @@
               <ul class="mt-2 text-sm text-blue-700 space-y-1">
                 <li class="flex items-center">
                   <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
-                  Column 1: Adviser Name
+                  Column 1: Email
                 </li>
                 <li class="flex items-center">
                   <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
-                  Column 2: Email Address
+                  Column 2: First Name
                 </li>
                 <li class="flex items-center">
                   <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
-                  Column 3: Faculty ID
+                  Column 3: Middle Name
+                </li>
+                <li class="flex items-center">
+                  <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
+                  Column 4: Last Name
+                </li>
+                <li class="flex items-center">
+                  <Icon name="heroicons:check-circle" class="w-4 h-4 mr-2 text-blue-600" />
+                  Column 5: Faculty ID 
                 </li>
               </ul>
             </div>
@@ -46,7 +54,8 @@
           <input
             type="file"
             accept=".csv"
-            @change="handleFileInput"
+            @input="handleFileInput"
+            @change="handleFileChange"
             class="hidden"
             id="file-upload"
           />
@@ -76,8 +85,8 @@
           leave-from-class="transform scale-100 opacity-100"
           leave-to-class="transform scale-95 opacity-0"
         >
-          <div v-if="adminViewStore.accountsMessage" class="mt-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm">
-            {{ adminViewStore.accountsMessage }}
+          <div v-if="successMessage" class="mt-4 p-3 bg-green-50 text-green-700 rounded-lg text-sm">
+            {{ successMessage }}
           </div>
         </transition>
       </div>
@@ -110,13 +119,36 @@ import { Result } from '~/library/results/result';
 import { UserSecurity } from '~/library/security/userSecurity';
 import { useAdminViewStore } from '../../stores/views/adminViewStore'
 
-const adminViewStore = useAdminViewStore();
 const { handleFileInput, files } = useFileStorage();
+const adminViewStore = useAdminViewStore();
+
+const file = ref(null);
+const successMessage = ref('');
+
+const handleFileChange = (event: any) => {
+  file.value = event.target.files[0];
+  successMessage.value = '';
+}
 
 const uploadFile = async () => {
-  const result: Result = await UserSecurity.signUpManyUsersViaCSVFile(files.value);
-  $emit('close');
-}
+  console.log(files.value);
+  if (file) {
+    const result: Result = await UserSecurity.signUpManyUsersViaCSVFile(files.value);
+    if (result.isNotSuccessful) {
+      alert(`Application Error: ${result.message}`);
+      return;
+    }
+    
+    successMessage.value = 'File uploaded successfully!';
+    file.value = null;
+    alert('Bulk Adviser CSV Successful')
+    setTimeout(async () => {
+      await adminViewStore.updateAccountsAdvisers();
+      adminViewStore.accountsShowUploadModal = false;
+    }, 1000);
+  }
+};
+
 </script>
 
 <style scoped>

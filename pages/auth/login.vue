@@ -17,7 +17,7 @@ const handleFormSubmit = async () => {
   const body: any = userLogInStore.getAllData();
   const result: Result = await UserSecurity.logInUser({ auth, ...body });
   if (result.isNotSuccessful) {
-    userLogInStore.errorMessage = result.message;
+    alert(result.message);
     return;
   }
   
@@ -65,7 +65,7 @@ onMounted(() => {
           <input 
             type="text" 
             v-model="userLogInStore.email" 
-            placeholder="Username" 
+            placeholder="Email" 
             class="w-full py-3 px-3 border border-gray-200 rounded-lg text-sm bg-gray-50 
                    transition-all duration-300
                    focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20 focus:scale-[1.02]"
@@ -98,7 +98,7 @@ onMounted(() => {
               class="w-full py-3 px-3 border border-gray-200 rounded-lg text-sm bg-gray-50 
                    transition-all duration-300
                    focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20 focus:scale-[1.02]" required>
-              <option value="Role" disabled></option>
+              <option value="" selected disabled>Role</option>
               <option value="adviser">Adviser</option>
               <option value="admin">Admin</option>
             </select>

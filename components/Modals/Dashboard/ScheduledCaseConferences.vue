@@ -12,28 +12,28 @@
         <div v-if="conferences.length === 0" class="text-center text-gray-500 py-8">
           No upcoming case conferences scheduled.
         </div>
-        <div v-else v-for="(confs, date) in groupedConferences" :key="date" class="mb-8">
+        <div v-else v-for="(confs, date) in groupedConferences()" :key="date" class="mb-8">
           <div class="flex items-center gap-2 mb-4">
             <Icon name="lucide:calendar" class="h-5 w-5 text-green-600" />
             <h4 class="text-lg font-semibold text-gray-800">{{ date }}</h4>
           </div>
           <div class="space-y-4">
-            <div v-for="conf in confs" :key="conf.caseConDocID" 
+            <div v-for="conf in confs" :key="conf.id" 
               class="bg-white p-4 rounded-lg border border-gray-200 hover:border-green-300 transition-colors">
               <div class="flex justify-between items-start gap-4">
                 <div class="space-y-2">
                   <p class="text-base font-medium text-gray-900">
-                    Student: {{ conf.studentName }}
+                    Student: {{ conf.data.studentName }}
                   </p>
                   <p class="text-sm text-gray-600">
-                    Section: {{ conf.gradeAndSection }}
+                    Section: {{ conf.data.gradeAndSection }}
                   </p>
                   <p class="text-sm text-gray-600">
-                    Incident: {{ conf.circumstance }}
+                    Incident: {{ conf.data.circumstance }}
                   </p>
                 </div>
                 <button 
-                  @click="viewIncidentDetails(conf.incidentID)"
+                  @click="viewIncidentDetails(conf.data.incidentId)"
                   class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                   View Details
                 </button>
@@ -54,42 +54,34 @@
 </template>
 
 <script setup lang="ts">
-interface Conference {
-  caseConDocID: string;
-  conferenceDate: string;
-  studentName: string;
-  circumstance: string;
-  gradeAndSection: string;
-  incidentID: string;
-}
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+const adminViewStore = useAdminViewStore();
 
 const props = defineProps<{
-  conferences: Conference[];
+  conferences: [];
   unresolvedIncidents: string[]; // Add new prop for unresolved incident IDs
 }>();
 
 const emit = defineEmits(['close']);
 const router = useRouter();
 
-const viewIncidentDetails = (incidentId: string) => {
+const viewIncidentDetails = async (incidentId: string) => {
   emit('close'); // Close modal first
-  router.push(`/admin/incident/${incidentId}`); // Navigate to incident details
+  return navigateTo(`/admin/incident/${incidentId}`, { replace: true }); // Navigate to incident details
 };
 
-const groupedConferences = computed(() => {
-  // Filter conferences to only include those with unresolved incidents
-  const filteredConferences = props.conferences.filter(conf => 
-    props.unresolvedIncidents.includes(conf.incidentID)
-  );
+// console.log(props);
 
-  return filteredConferences.reduce((groups, conference) => {
-    if (!groups[conference.conferenceDate]) {
-      groups[conference.conferenceDate] = [];
+const groupedConferences = () => {
+  return props.conferences.reduce((groups: any, conference: any) => {
+    if (!groups[conference.data.conferenceDate]) {
+      groups[conference.data.conferenceDate] = [];
     }
-    groups[conference.conferenceDate].push(conference);
+    groups[conference.data.conferenceDate].push(conference);
     return groups;
-  }, {} as Record<string, Conference[]>);
-});
+  }, {} as Record<string, []>);
+};
 </script>
 
 <style scoped>

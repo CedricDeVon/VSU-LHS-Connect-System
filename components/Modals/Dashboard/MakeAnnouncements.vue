@@ -75,6 +75,12 @@
 </template>
 
 <script setup lang="ts">
+import { getCurrentUser } from 'vuefire';
+import { UserSecurity } from "~/library/security/userSecurity";
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+const adminViewStore = useAdminViewStore();
+
 const emit = defineEmits(['close', 'submit', 'save-draft']);
 const props = defineProps<{
   existingDraft?: {
@@ -111,8 +117,25 @@ const saveDraft = () => {
 
 const showSuccessAlert = ref(false);
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (!form.value.title || !form.value.content) return;
+  
+  await UserSecurity.logInViaToken();
+  const currentUser = await getCurrentUser();
+  const result = await $fetch('/api/announcement/advisers', {
+    method: 'POST',
+    body: {
+      userId: currentUser.uid,
+      data: {
+        title: form.value.title,
+        content: form.value.content
+      }
+    }
+  })
+  await adminViewStore.updateDashboard();
+
+  form.value.title = '';
+  form.value.content = '';
   
   isDraft.value = false;
   autoSaved.value = false;
@@ -122,7 +145,7 @@ const handleSubmit = () => {
     date: new Date().toISOString(),
     isDraft: false
   });
-  
+
   // Show success alert before closing
   showSuccessAlert.value = true;
   setTimeout(() => {

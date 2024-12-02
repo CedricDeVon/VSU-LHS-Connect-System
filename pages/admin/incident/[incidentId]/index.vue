@@ -20,10 +20,10 @@
                 <span class="text-sm text-gray-600">Status:</span>
                 <span :class="{
                   'px-2 py-1 text-xs font-medium rounded-full': true,
-                  'bg-green-100 text-green-800': incidentData?.status === 'Resolved',
-                  'bg-yellow-100 text-yellow-800': incidentData?.status === 'NotResolved'
+                  'bg-green-100 text-green-800': incidentData?.data.status === 'Resolved',
+                  'bg-yellow-100 text-yellow-800': incidentData?.data.status === 'NotResolved'
                 }">
-                  {{ incidentData?.status === 'NotResolved' ? 'Unresolved' : 'Resolved' }}
+                  {{ incidentData?.data.status === 'NotResolved' ? 'Unresolved' : 'Resolved' }}
                 </span>
               </div>
             </div>
@@ -39,14 +39,14 @@
                 <span class="text-sm font-medium text-gray-500">Current Status</span>
                 <span :class="{
                   'px-3 py-1 text-sm font-medium rounded-full': true,
-                  'bg-green-100 text-green-800': incidentData?.status === 'Resolved',
-                  'bg-yellow-100 text-yellow-800': incidentData?.status === 'NotResolved'
+                  'bg-green-100 text-green-800': incidentData?.data.status === 'Resolved',
+                  'bg-yellow-100 text-yellow-800': incidentData?.data.status === 'NotResolved'
                 }">
-                  {{ incidentData?.status === 'NotResolved' ? 'Under Investigation' : 'Case Resolved' }}
+                  {{ incidentData?.data.status === 'NotResolved' ? 'Under Investigation' : 'Case Resolved' }}
                 </span>
               </div>
               <div class="mt-3 text-xs text-gray-500">
-                Last updated: {{ incidentData?.lastModified || 'Not modified' }}
+                Last updated: {{ incidentData?.data.lastModified || 'Not modified' }}
               </div>
             </div>
 
@@ -209,23 +209,22 @@
       <UpdateIncidentReportModal v-if="showUpdateModal" :incident="incdReport" @close="showUpdateModal = false"
         @update="handleUpdate" />
 
+      <ViewCaseConferencesModal 
+        v-if="showScheduleModal && isViewingHistory"
+        :conferences="caseConferences"
+        :incident-id="incdReport.id"
+        @close="closeConferenceHistory" />
+    
       <ScheduleConferenceModal 
         v-if="showScheduleModal && !isViewingHistory" 
         @close="showScheduleModal = false"
         @schedule="handleScheduleConference" />
 
-      <ViewCaseConferencesModal 
-        v-if="showScheduleModal && isViewingHistory"
-        :conferences="caseConferences"
-        :incident-id="incdReport.incidentDocID"
-        @close="closeConferenceHistory" />
-
       <CreateCaseConferenceModal 
         v-if="showCreateConfDocModal"
-        :incident-id="incdReport.incidentDocID"
+        :incident-id="incdReport.id"
         :student-info="showCreateConfDocModal ? {
-          name: incdReport.peopleInvolved?.join(', '),
-          gradeSection: incdReport.peopleInvolved ? 'Grade 7 - Javascript' : ''
+          name: incdReport.data.peopleInvolved?.join(', '),
         } : null"
         :saved-draft="savedConferenceDoc"
         @close="showCreateConfDocModal = false"
@@ -237,21 +236,22 @@
 </template>
 
 <script>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin', 'admin-incident']
+});
+
 import pdfMake from 'pdfmake/build/pdfmake';
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
-import { incidentReport, updateIncidentReport, initializeIncidentReports } from '~/data/incident';
-import { Admin } from '~/data/admin';
-import { initialReport } from '~/data/initialReport';
-import { adviser } from '~/data/adviser';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import UpdateIncidentReportModal from '~/components/Modals/Incident Management/UpdateIncidentReportModal.vue';
 import ScheduleConferenceModal from '~/components/Modals/Incident Management/ScheduleConferenceModal.vue';
 import ViewCaseConferencesModal from '~/components/Modals/Incident Management/ViewCaseConferencesModal.vue';
 import CreateCaseConferenceModal from '~/components/Modals/Incident Management/CreateCaseConferenceModal.vue';
-import { caseConference } from '~/data/caseconference';
+import { TimeConverters } from '~/library/timeConverters/timeConverters';
 import { defineIncidentDoc } from '~/utils/documentDefinitions';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const navigateToCreateConference = () => {
   useRouter().push(`/admin/conferences/create?incidentId=${useRoute().params.id}`);
@@ -271,7 +271,8 @@ export default {
     return {
       incdReport: {},
       reportType: 'INCIDENT REPORT',
-      receivedBy: `${(Admin.firstName).toUpperCase()} ${(Admin.middleName).charAt(0).toUpperCase() + '.'} ${(Admin.lastName).toUpperCase()}`,
+      adminViewStore: useAdminViewStore(),
+      receivedBy: '',// `${(this.adminViewStore.incidentAdmin.data.firstName).toUpperCase()} ${(this.adminViewStore.incidentAdmin.data.middleName).charAt(0).toUpperCase() + '.'} ${(this.adminViewStore.incidentAdmin.data.lastName).toUpperCase()}`,
       reportedBy: '',
       incidentData: null,
       showUpdateModal: false,
@@ -284,74 +285,85 @@ export default {
   },
 
   async created() {
-    // initializeIncidentReports(); // Initialize from localStorage
-    const incidentId = this.$route.params.id;
+    const incidentId = this.$route.params.incidentId;
     await this.initIncidentByID(incidentId);
-    await this.getReporter(this.incdReport.reportID);
+    // console.log(this.incdReport)
+    // console.log(this.incidentData)
+    await this.getReporter(this.incdReport.id);
     this.displayPDF();
   },
 
   computed: {
-    processedIncidentData() {
-      if (!this.incidentData) return {};
-      return {
-        ...this.incidentData,
-        status: this.incidentData.status === 'Resolved' ? 'NotResolved' : this.incidentData.status
-      }
-    },
+    // processedIncidentData() {
+    //   // if (!this.incidentData) return {};
+    //   // return {
+    //   //   ...this.incidentData,
+    //   //   status: this.incidentData.data.status === 'Resolved' ? 'NotResolved' : this.incidentData.data.status
+    //   // }
+    //   return {};
+    // },
     isResolved() {
-      return this.incidentData?.status === 'Resolved';
+      return this.incidentData.data.status === 'Resolved';
     },
     
     hasCaseConference() {
-      return Array.isArray(this.incidentData?.hasCaseConference) 
-        ? this.incidentData.hasCaseConference.length > 0 
-        : this.incidentData?.hasCaseConference;
+      return Array.isArray(this.incidentData?.data.hasCaseConference) 
+        ? this.incidentData.data.hasCaseConference.length > 0 
+        : this.incidentData?.data.hasCaseConference;
+      // return []
     },
 
     hasValidConferences() {
-      if (!this.incidentData?.hasCaseConference) return false;
-      return Array.isArray(this.incidentData.hasCaseConference) && 
-             this.incidentData.hasCaseConference.length > 0;
+      if (!this.incidentData?.data.hasCaseConference) return false;
+      return Array.isArray(this.incidentData.data.hasCaseConference) && 
+             this.incidentData.data.hasCaseConference.length > 0;
+      // return []
     },
 
     conferenceCount() {
-      if (!this.incidentData?.hasCaseConference) return 0;
-      return Array.isArray(this.incidentData.hasCaseConference) 
-        ? this.incidentData.hasCaseConference.length 
-        : (this.incidentData.hasCaseConference ? 1 : 0);
+      if (!this.incidentData?.data.hasCaseConference) return 0;
+      return Array.isArray(this.incidentData.data.hasCaseConference) 
+        ? this.incidentData.data.hasCaseConference.length 
+        : (this.incidentData.data.hasCaseConference ? 1 : 0);
+      // return [];
     },
 
     hasScheduledConferences() {
       return this.pendingConferences.length > 0;
+      // return false;
     },
 
     hasUndocumentedConference() {
       // Check if there are scheduled conferences without documentation
-      return this.pendingConferences.some(conf => !conf.documented);
+      return this.pendingConferences.some(conf => !conf.id);
+      // return false;
     },
 
     pendingConferences() {
       if (!this.caseConferences) return [];
       return this.caseConferences.filter(conf => 
-        conf.status === 'Pending' && new Date(conf.conferenceDate) >= new Date()
+        conf.data.status === 'Pending' && new Date(conf.data.conferenceDate) >= new Date()
       );
+      // return [];
     },
 
     pendingConferencesCount() {
       return this.pendingConferences.length;
+      // return 0;
     },
 
     nextConferenceDate() {
       if (!this.hasScheduledConferences) return null;
       const nextConf = this.pendingConferences[0];
-      return new Date(nextConf.conferenceDate).toLocaleDateString();
+      return new Date(nextConf.data.conferenceDate).toLocaleDateString();
+      // return '';
     },
 
     conferenceProgress() {
       const total = this.conferenceCount;
       const completed = total - this.pendingConferencesCount;
       return total ? (completed / total) * 100 : 0;
+      // return 0;
     },
 
     showCaseConferenceSection() {
@@ -359,50 +371,55 @@ export default {
       // 1. Not resolved OR
       // 2. Has case conferences (regardless of resolution status)
       return !this.isResolved || this.hasCaseConference;
+      // return false;
     },
 
     hasConferenceDraft() {
-      // const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
-      return !!savedDraft;
+      if (process.client) {
+        const savedDraft = window.localStorage.getItem(`draft_conference_${this.incdReport.id}`);
+        return !!savedDraft;
+      }
+      // return false;
     },
 
     shouldShowConferenceHistory() {
-      const conferences = this.incidentData?.hasCaseConference;
+      const conferences = this.incidentData?.data.hasCaseConference;
       if (!Array.isArray(conferences)) return false;
       if (conferences.length === 0) return false;
       // Only show if at least one conference ID exists and is valid
-      return conferences.some(id => typeof id === 'string' && id.includes('caseConID'));
+      return true;
+      // return false;
     }
   },
 
   methods: {
+    async confirmResolve() {
+      const result = await $fetch('/api/incident/update', {
+        method: 'POST',
+        body: {
+          id: this.incdReport.id,
+          data: {
+            status: 'Resolved'
+          }
+        }
+      })
+      await this.adminViewStore.updateIncident(useRoute().params.incidentId);
+      await this.adminViewStore.updateSidebar();
+    },
+
     async initIncidentByID(id) {
-      const fetchedObject = incidentReport.find(item => item.incidentDocID === id);
+      const fetchedObject = this.adminViewStore.incidentIncidentReport;
       if (fetchedObject) {
         // Ensure hasCaseConference is always an array
-        const hasCaseConference = Array.isArray(fetchedObject.hasCaseConference) 
-          ? fetchedObject.hasCaseConference.filter(id => id?.includes('caseConID'))
-          : [];
 
-        this.incdReport = { 
-          ...fetchedObject,
-          hasCaseConference 
-        };
-        this.incidentData = { ...this.incdReport };
+        this.incdReport = fetchedObject;
+        this.incidentData = this.incdReport;
       }
     },
 
     async getReporter(incidentReportID) {
-      let index = initialReport.findIndex((incd) => incd.reportIDRef === incidentReportID);
-      if (index === -1) return false;
-
-      const id = initialReport[index].reportedBY;
-      if (id) {
-        index = adviser.findIndex((adv) => adv.id === id);
-        this.reportedBy = `${(adviser[index].firstName).toUpperCase()} ${(adviser[index].middleName).charAt(0).toUpperCase() + '.'} ${(adviser[index].lastName).toUpperCase()}`;
-        return true;
-      }
-      return false;
+      this.reportedBy = `${(this.adminViewStore.incidentAdviser.data.firstName).toUpperCase()} ${(this.adminViewStore.incidentAdviser.data.middleName).charAt(0).toUpperCase() + '.'} ${(this.adminViewStore.incidentAdviser.data.lastName).toUpperCase()}`;
+      this.receivedBy = `${(this.adminViewStore.incidentAdmin.data.firstName).toUpperCase()} ${(this.adminViewStore.incidentAdmin.data.middleName).charAt(0).toUpperCase() + '.'} ${(this.adminViewStore.incidentAdmin.data.lastName).toUpperCase()}`;
     },
 
     displayPDF() {
@@ -444,72 +461,70 @@ export default {
 
     openCreateConferenceDoc() {
       // Check for existing draft when opening modal
-      // const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
-      if (savedDraft) {
-        this.savedConferenceDoc = JSON.parse(savedDraft);
-      }
-      this.showCreateConfDocModal = true;
-    },
-
-    handleUpdate(updatedData) {
-      try {
-        // Update in data store and localStorage
-        if (updateIncidentReport(this.incdReport.incidentDocID, updatedData)) {
-          // Update local state
-          this.incdReport = {
-            ...this.incdReport,
-            ...updatedData
-          };
-          this.incidentData = {
-            ...this.incidentData,
-            ...updatedData
-          };
-
-          // Refresh PDF
-          this.displayPDF();
-          
-          // Close modal
-          this.showUpdateModal = false;
-          
-          alert('Incident report updated successfully');
-        } else {
-          throw new Error('Failed to update incident report');
+      if (process.client) {
+        const savedDraft = localStorage.getItem(`draft_conference_${this.incdReport.incidentDocID}`);
+        if (savedDraft) {
+          this.savedConferenceDoc = JSON.parse(savedDraft);
         }
-      } catch (error) {
-        console.error('Error updating incident:', error);
-        alert('Failed to update incident report');
+        this.showCreateConfDocModal = true;
       }
     },
 
-    async handleScheduleConference(conferenceData) {
+    async handleUpdate(updatedData) {
+      // console.log(updatedData)
+      const result = await $fetch('/api/incident/update', {
+        method: 'POST',
+        body: {
+          id: this.incdReport.id,
+          data: updatedData
+        }
+      })
+      const incidentId = this.$route.params.incidentId;
+      await this.adminViewStore.updateIncident(incidentId);
+      await this.adminViewStore.updateSidebar();
+      await this.initIncidentByID(incidentId);
+      await this.getReporter(this.incdReport.id);
+      this.displayPDF();
+      this.showUpdateModal = false;
+    },
+
+    async handleScheduleConference(data) {
       try {
+        data.adminId = this.adminViewStore.incidentAdmin.id;
+        data.adviserId = this.adminViewStore.incidentAdviser.id;
+        const result = await $fetch('/api/announcement/caseConference', {
+          method: 'POST',
+          body: {
+            data
+          }
+        })
         // Create new conference ID
-        const newConferenceId = `caseConID${Date.now()}`;
+        // const newConferenceId = `caseConID${Date.now()}`;
         
         // Prepare conference data
-        const newConference = {
-          caseConDocID: newConferenceId,
-          incidentID: this.incidentData.incidentDocID,
-          studentName: this.incidentData.peopleInvolved.join(', '),
-          conferenceDate: conferenceData.date,
-          time: conferenceData.time,
-          discussions: conferenceData.notes || '',
-          status: 'Pending',
-          scheduledBy: this.receivedBy
-        };
+        // const newConference = {
+        //   caseConDocID: newConferenceId,
+          
+        //   studentName: this.incidentData.data.peopleInvolved.join(', '),
+        //   conferenceDate: conferenceDatda.date,
+        //   time: conferenceData.time,
+        //   discussions: conferenceData.notes || '',
+        //   scheduledBy: this.receivedBy
+        // };
 
         // In a real application, you would save this to your backend
         // For now, we'll just update the local state
         
         // Update incident with new conference reference
-        const updatedData = {
-          hasCaseConference: [...(Array.isArray(this.incidentData.hasCaseConference) 
-            ? this.incidentData.hasCaseConference 
-            : []), newConferenceId]
-        };
+        // const updatedData = {
+        //   hasCaseConference: [...(Array.isArray(this.incidentData.data.hasCaseConference) 
+        //     ? this.incidentData.data.hasCaseConference 
+        //     : []), newConferenceId]
+        // };
 
         await this.handleUpdate(updatedData);
         this.showScheduleModal = false;
+
         alert('Case conference scheduled successfully');
       } catch (error) {
         console.error('Error scheduling conference:', error);
@@ -517,19 +532,26 @@ export default {
       }
     },
 
-    async handleCreateConferenceDoc(docData) {
+    async handleCreateConferenceDoc(data) {
       try {
         // Create new conference document ID
-        const newConfDocId = `caseConDoc${Date.now()}`;
+        const id = this.adminViewStore.generateCaseConferenceId();
+        data.conferenceDate = TimeConverters.dateConverter.convert(data.conferenceDate).data
+        data.createdBy = this.receivedBy
+
+        const result = await $fetch('/api/caseConference/create', {
+          method: 'POST',
+          body: {
+            id, data
+          }
+        })
         
-        // Prepare document data
-        const newConfDoc = {
-          ...docData,
-          caseConDocID: newConfDocId,
-          status: 'Active',
-          createdBy: this.receivedBy,
-          createdAt: new Date().toISOString()
-        };
+        const incidentId = this.$route.params.incidentId;
+        await this.adminViewStore.updateIncident(incidentId);
+        await this.adminViewStore.updateSidebar();
+        await this.initIncidentByID(incidentId);
+        await this.getReporter(this.incdReport.id);
+        this.displayPDF();
 
         // Here you would typically save to your backend
         // For now, just close the modal and show success message
@@ -563,24 +585,24 @@ export default {
     },
 
     async loadCaseConferences() {
-      if (!this.incidentData?.hasCaseConference) {
+      if (!this.incidentData?.data.hasCaseConference) {
         this.caseConferences = [];
         return;
       }
 
       // Handle both array and boolean cases
-      const conferenceIds = Array.isArray(this.incidentData.hasCaseConference) 
-        ? this.incidentData.hasCaseConference 
+      const conferenceIds = Array.isArray(this.incidentData?.data.hasCaseConference) 
+        ? this.incidentData.data.hasCaseConference 
         : [];
 
       this.caseConferences = conferenceIds
-        .map(id => caseConference.find(conf => conf.caseConDocID === id))
+        .map(id => this.adminViewStore.incidentCaseConferences.find(conf => conf.id === id))
         .filter(conf => conf !== undefined)
-        .sort((a, b) => new Date(a.conferenceDate) - new Date(b.conferenceDate));
+        .sort((a, b) => new Date(a.data.conferenceDate) - new Date(b.data.conferenceDate));
     },
 
     downloadPDF() {
-      const fileName = `Incident_Report_${this.incdReport.reportID}_${new Date().toISOString().split('T')[0]}.pdf`;
+      const fileName = `INC_${this.incdReport.id}_${new Date().toISOString().split('T')[0]}.pdf`;
       const docDefinition = defineIncidentDoc({
         reportType: this.reportType,
         incidentData: this.incdReport,

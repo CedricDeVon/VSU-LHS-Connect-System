@@ -66,26 +66,26 @@
                 <tbody class="text-gray-700">
                   <template v-if="adminViewStore.searchSelectedSearch === 'section'">
                     <tr v-for="section in filteredSections()" :key="section.id" class="border-b bg-transparent">
-                      <td class="px-6 py-4">{{ section.id }}</td>
-                      <td class="px-6 py-4">{{ section.data.name }}</td>
-                      <td class="px-6 py-4">Grade {{ section.data.level }}</td>
+                      <td class="px-6 py-4">{{ section.id || 'N/A' }}</td>
+                      <td class="px-6 py-4">{{ section.data.name || 'N/A' }}</td>
+                      <td class="px-6 py-4">{{ adminViewStore.sectionGetGrade(section) }}</td>
                       <td class="px-6 py-4">
-                        <span v-if="section.data.adviser">{{ section.data.adviser.data.facultyId }}</span>
+                        <span v-if="section.data.adviser">{{ (section.data.adviser.data.facultyId) ? section.data.adviser.data.facultyId : 'N/A' }}</span>
                         <span v-else class="text-gray-500">N/A</span>
                       </td>
                       <td class="px-6 py-4">
                         <button
                           @click="viewSection(section.id)"
-                          :class="section.data.adviser ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'"
+                          :class="(section.data.adviser && section.data.adviser.data.facultyId) ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'"
                           class="px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
-                          {{ section.data.adviser ? 'View Details' : 'Add Adviser' }}
+                          {{ (section.data.adviser && section.data.adviser.data.facultyId) ? 'View Details' : 'Add Adviser' }}
                         </button>
                       </td>
                     </tr>
                   </template>
                   <template v-else-if="adminViewStore.searchSelectedSearch === 'student'">
                     <tr v-for="student in filteredStudents()" :key="student.id" class="border-b bg-transparent">
-                      <td class="px-6 py-4">{{ student.id }}</td>
+                      <td class="px-6 py-4">{{ student.id || 'N/A' }}</td>
                       <td class="px-6 py-4">{{ adminViewStore.getFullName(student) }}</td>
                       <td class="px-6 py-4">{{ adminViewStore.studentGetGradeAndSection(student) }}</td>
                       <td class="px-6 py-4">
@@ -115,35 +115,35 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin']
+  middleware: ['authenticate-and-authorize-admin', 'admin-search']
 });
 
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
+const adminViewStore = useAdminViewStore();
+
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
 import debounce from 'lodash/debounce';
 import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 
-const adminViewStore = useAdminViewStore();
-await adminViewStore.updateSearch();
+// await adminViewStore.updateSearch();
 
-onBeforeMount(async () => {
-  await adminViewStore.updateSearch();
-})
+// onBeforeMount(async () => {
+//   await adminViewStore.updateSearch();
+// })
 
-
-const addNewSection = async (newSection: any) => {
-  const result = await $fetch('/api/section/create', {
-    method: 'POST',
-    body: {
-      id: newSection.secitionId,
-      name: newSection.sectionName,
-      level: newSection.sectionLevel
-    }
-  });
-  await adminViewStore.updateSearch();
-}
+// const addNewSection = async (newSection: any) => {
+//   const result = await $fetch('/api/section/create', {
+//     method: 'POST',
+//     body: {
+//       id: newSection.secitionId,
+//       name: newSection.sectionName,
+//       level: newSection.sectionLevel
+//     }
+//   });
+//   await adminViewStore.updateSearch();
+// }
 
 const getSectionByStudentId = (id: any) => {
   for (const section of adminViewStore.searchSections) {
@@ -165,20 +165,22 @@ const getAdviserBySectionId = (id: any) => {
 
 const filteredSections = () => {
   let filtered = adminViewStore.searchSections.filter((section: any) => {
-    if (!adminViewStore.searchDebouncedQuery) return true; // Show all if query is empty
+    if (!adminViewStore.searchQuery) return true; // Show all if query is empty
     return (
-      section.data.name.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase()) ||
-      String(section.data.level).includes(adminViewStore.searchDebouncedQuery) ||
-      (section.data.adviser && section.data.adviser.data.facultyId.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase()))
+      section.data.name.toLowerCase().includes(adminViewStore.searchQuery.toLowerCase()) ||
+      String(section.data.level).includes(adminViewStore.searchQuery) ||
+      (section.data.adviser && section.data.adviser.data.facultyId.toLowerCase().includes(adminViewStore.searchQuery.toLowerCase()))
     );
   });
   if (adminViewStore.searchSelectedSearch === 'section') {
     if (adminViewStore.searchSortBy === 'sNameSort') {
-      filtered.sort((a: any, b: any) => a.data.name.localeCompare(b.data.name));
+      filtered = filtered.sort((a: any, b: any) => (a.data.name) ? a.data.name.localeCompare(b.data.name) : false);
+
     } else if (adminViewStore.searchSortBy === 'sGradeSort') {
-      filtered.sort((a: any, b: any) => a.data.level - b.data.level);
+      filtered = filtered.sort((a: any, b: any) => a.data.level - b.data.level);
+
     } else if (adminViewStore.searchSortBy === 'recentlyAddedSort') {
-      filtered.sort((a: any, b: any) => b.data.id - a.data.id); // TODO: Change to date added if naa na nga attribute
+      filtered = filtered.sort((a: any, b: any) => b.id - a.id); // TODO: Change to date added if naa na nga attribute
     }
   }
 
@@ -187,19 +189,19 @@ const filteredSections = () => {
 
 const filteredStudents = () => {
   let filtered = adminViewStore.searchStudents.filter((student: any) => {
-    if (!adminViewStore.searchDebouncedQuery) return true;
+    if (!adminViewStore.searchQuery) return true;
     return (
-      student.id.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase()) ||
-      student.data.lastName.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase()) ||
-      student.data.firstName.toLowerCase().includes(adminViewStore.searchDebouncedQuery.toLowerCase())
+      student.id.toLowerCase().includes(adminViewStore.searchQuery.toLowerCase()) ||
+      student.data.lastName.toLowerCase().includes(adminViewStore.searchQuery.toLowerCase()) ||
+      student.data.firstName.toLowerCase().includes(adminViewStore.searchQuery.toLowerCase())
     );
   });
 
   if (adminViewStore.searchSelectedSearch === 'student') {
     if (adminViewStore.searchSortBy === 'surnameSort') {
-      filtered.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
+      filtered = filtered.sort((a: any, b: any) => (a.data.lastName) ? a.data.lastName.localeCompare(b.data.lastName) : false);
     } else if (adminViewStore.searchSortBy === 'gradeLvlSort') {
-      filtered.sort((a: any, b: any) => {
+      filtered = filtered.sort((a: any, b: any) => {
         const sectionA: any = getSectionByStudentId(a.id);
         const sectionB: any = getSectionByStudentId(b.id);
         return (sectionA ? sectionA.data.level : 0) - (sectionB ? sectionB.data.level : 0);
@@ -210,8 +212,8 @@ const filteredStudents = () => {
     const section: any = getSectionByStudentId(student.id);
     return {
       ...student,
-      name: section ? section.data.name : '---',
-      level: section ? section.data.level : '---'
+      name: section ? section.data.name : 'N/A',
+      level: section ? section.data.level : 'N/A'
     };
   });
 }

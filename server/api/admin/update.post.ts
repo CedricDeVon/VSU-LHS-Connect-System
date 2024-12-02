@@ -7,7 +7,14 @@ export default defineEventHandler(async (event) => {
     const { userId, data } = await readBody(event);
 
     const admin = (await Databases.getOneAdminViaUserId(userId)).data;
-    await Databases.adminFirebaseDatabase.updateOneDocument(admin.id, data);
+    await Databases.userFirebaseDatabase.updateOneDocument(userId, {
+      username: data.username
+    });
+    await Databases.adminFirebaseDatabase.updateOneDocument(admin.id, {
+      firstName: data.firstName,
+      middleName: data.middleName,
+      lastName: data.lastName
+    });
 
     return new SuccessfulResult().cloneToObject();
 

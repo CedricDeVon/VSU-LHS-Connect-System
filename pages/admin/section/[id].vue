@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin']
+  middleware: ['authenticate-and-authorize-admin', 'admin-section']
 });
 
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
@@ -8,15 +8,15 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
-await adminViewStore.updateSectionPageData(useRoute().params.id);
+// await adminViewStore.updateSectionPageData(useRoute().params.id);
 
-onBeforeMount(async () => {
-    await adminViewStore.updateSectionPageData(useRoute().params.id);
-})
+// onBeforeMount(async () => {
+//     await adminViewStore.updateSectionPageData(useRoute().params.id);
+// })
 
-// console.log(useRoute().params.id);
-// console.log(adminViewStore.sectionSection);
-// console.log(adminViewStore.sectionAdviser);
+// // console.log(useRoute().params.id);
+// // console.log(adminViewStore.sectionSection);
+// // console.log(adminViewStore.sectionAdviser);
 
 const viewStudentProfile = (studentId: any) => {
     return navigateTo(`/admin/student/${studentId}`, { replace: true });
@@ -44,18 +44,19 @@ const getSectionReports = () => {
     // Sort reports based on selection
     switch (adminViewStore.sectionSelectedReportSort) {
         case 'ascDateSort':
-            reports.sort((a: any, b: any) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
+            reports = reports.sort((a: any, b: any) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
             break;
         case 'descDateSort':
-            reports.sort((a: any, b: any) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
+            reports = reports.sort((a: any, b: any) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
             break;
         case 'repIDSort':
-            reports.sort((a: any, b: any) => a.id.localeCompare(b.id));
+            reports = reports.sort((a: any, b: any) => a.id.localeCompare(b.id));
             break;
         case 'surnameSort':
-            reports.sort((a: any, b: any) => a.data.peopleInvolved - b.data.peopleInvolved);
+            // reports = reports.sort((a: any, b: any) => a.data.peopleInvolved - b.data.peopleInvolved);
             break;
     }
+    // console.log(reports)
 
     return reports;
 }
@@ -66,10 +67,10 @@ const getSectionStudents = () => {
     // Sort students based on selection
     switch (adminViewStore.sectionSelectedStudentSort) {
         case 'surnameSort':
-            students.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
+            students = students.sort((a: any, b: any) => a.data.lastName.localeCompare(b.data.lastName));
             break;
         case 'studentIDSort':
-            students.sort((a: any, b: any) => a.id.localeCompare(b.id));
+            students = students.sort((a: any, b: any) => a.id.localeCompare(b.id));
             break;
     }
 

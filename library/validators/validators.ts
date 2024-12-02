@@ -32,6 +32,8 @@ export class Validators {
 
     private static readonly _genderValidator: GenderValidator = new GenderValidator();
 
+    private static readonly _studentGradeValidator: NumberRangeValidator = new NumberRangeValidator(7, 10);
+
     private static readonly _emptyValidator: EmptyValidator = new EmptyValidator();
 
     private static readonly _floatValidator: FloatValidator = new FloatValidator();
@@ -77,6 +79,10 @@ export class Validators {
     private static readonly _vsuIssuedIdValidator: VSUIssuedIdValidator = new VSUIssuedIdValidator();
 
     private static readonly _birthDateValidator: BirthDateValidator = new BirthDateValidator();
+
+    public static get studentGradeValidator(): NumberRangeValidator {
+        return Validators._studentGradeValidator;
+    }
 
     public static get sectionIdValidator(): SectionIdValidator {
         return Validators._sectionIdValidator;

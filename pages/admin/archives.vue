@@ -208,6 +208,10 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin', 'admin-archives']
+});
+
 import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { section } from '~/data/section';
@@ -238,7 +242,6 @@ import { defineIncidentDoc, defineAnecdotalDoc } from '~/utils/documentDefinitio
 // Add missing import
 import { report } from '~/data/report';
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const router = useRouter();
 

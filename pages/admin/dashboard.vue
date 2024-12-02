@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin', 'admin-dashboard']
+});
+
 import { ref, computed, onMounted } from 'vue';
 import { Chart, registerables } from 'chart.js';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
@@ -8,11 +12,11 @@ import ScheduledCaseConferences from '~/components/Modals/Dashboard/ScheduledCas
 import UnreadReportSubmissions from '~/components/Modals/Dashboard/UnreadReportSubmissions.vue';
 import MakeAnnouncements from '~/components/Modals/Dashboard/MakeAnnouncements.vue'; // Add import
 import CreateReportFromDashboard from '~/components/Modals/Dashboard/CreateReportFromDashboard.vue'; // Add import
+import ScheduleConferenceFromDashboard from '~/components/Modals/Dashboard/ScheduleConferenceFromDashboard.vue'; // Add import
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
-await adminViewStore.updateDashboard();
-
+// await adminViewStore.updateDashboard();
 
 Chart.register(...registerables);
 
@@ -40,18 +44,18 @@ let trendsChart: Chart | null = null;
 
 // Modified async data loading function
 const loadDashboardData = async () => {
-  await adminViewStore.updateDashboard();
+  // await adminViewStore.updateDashboard();
 
   // Get pending cases count
   pendingCases.value = adminViewStore.dashBoardIncidentReports.filter((inc: any) => inc.data.status === 'NotResolved').length;
   console.log('Pending Cases:', pendingCases.value);
 
   // Get scheduled conferences count
-  scheduledConferences.value = adminViewStore.dashBoardCaseConferences.filter((conf: any) => new Date(conf.data.conferenceDate) > new Date()).length;
+  scheduledConferences.value = adminViewStore.dashBoardCaseConferences.filter((conf: any) => new Date(conf.data.conferenceDate) > new Date() && conf.data.incident.data.status === 'NotResolved').length;
   console.log('Scheduled Conferences:', scheduledConferences.value);
 
   // Get total incidents for current AY
-  totalIncidents.value = adminViewStore.dashBoardIncidentReports.filter((inc: any) => inc.data.schoolYear === adminViewStore.dashBoardTimeline.schoolYear).length;
+  totalIncidents.value = adminViewStore.dashBoardIncidentReports.length;
   console.log('Total Incidents:', totalIncidents.value);
 
   // Get recent submissions 
@@ -71,7 +75,7 @@ const loadDashboardData = async () => {
     }));
   console.log('Recent Submissions:', recentSubmissions.value);
 
-  unreadReports.value = adminViewStore.dashBoardInitialReports.filter((report: any) => report.data.status === 'Unread').length;
+  unreadReports.value = adminViewStore.dashBoardInitialReports.filter((report: any) => report.data.status === 'Unread' && !report.data.isDraft).length;
   console.log('Unread Reports:', unreadReports.value);
 
   // Ensure the chart is updated when data changes
@@ -93,11 +97,7 @@ const unresolvedIncidentIds = computed(() =>
 const openModal = () => {
   const today = new Date();
   selectedConferences.value = adminViewStore.dashBoardCaseConferences
-    .filter((conf: any) => {
-      const confDate = new Date(conf.data.conferenceDate);
-      // Only include conferences for unresolved incidents
-      return confDate > today && unresolvedIncidentIds.value.includes(conf.id);
-    })
+    .filter((conf: any) => new Date(conf.data.conferenceDate) > new Date() && conf.data.incident.data.status === 'NotResolved')
     .map((conf: any) => ({
       ...conf,
       conferenceDate: new Date(conf.data.conferenceDate).toLocaleDateString('en-US', {
@@ -106,7 +106,6 @@ const openModal = () => {
         day: 'numeric'
       })
     }))
-    .sort((a: any, b: any) => new Date(a.data.conferenceDate).getTime() - new Date(b.data.conferenceDate).getTime());
   showModal.value = true;
 };
 
@@ -127,10 +126,7 @@ const monthlyIncidentCounts = computed(() => {
 const dashboardStats = computed<DashboardStat[]>(() => ([
   {
     label: 'Scheduled Conferences',
-    value: adminViewStore.dashBoardCaseConferences.filter((conf: any) => {
-      const confDate = new Date(conf.data.conferenceDate);
-      return confDate > new Date() && unresolvedIncidentIds.value.includes(conf.id);
-    }).length,
+    value: scheduledConferences.value,
     icon: 'lucide:calendar',
     color: 'blue',
     onClick: openModal  // Add onClick handler just like pendingCases
@@ -214,7 +210,7 @@ const selectedPendingCases = ref<any[]>([]);
 
 const openPendingModal = () => {
   selectedPendingCases.value = adminViewStore.dashBoardIncidentReports
-    .filter((inc: any) => inc.data.status === 'NotResolved' && inc.data.schoolYear === adminViewStore.dashBoardTimeline.data.schoolYear)
+    .filter((inc: any) => inc.data.status === 'NotResolved')
     .map((inc: any) => ({
       ...inc,
       dateFormatted: new Date(inc.data.dateOfIncident).toLocaleDateString('en-US', {
@@ -224,6 +220,8 @@ const openPendingModal = () => {
       })
     }));
   showPendingModal.value = true;
+  console.log(adminViewStore.dashBoardIncidentReports)
+  console.log(selectedPendingCases.value)
 };
 
 const closePendingModal = () => {
@@ -246,6 +244,8 @@ const openUnreadModal = () => {
       })
     }));
   showUnreadModal.value = true;
+  console.log(adminViewStore.dashBoardInitialReports)
+  console.log(selectedUnreadReports.value)
 };
 
 const closeUnreadModal = () => {
@@ -289,10 +289,12 @@ const showScheduleModal = ref(false);
 
 const openScheduleModal = () => {
   showScheduleModal.value = true;
+  console.log(showScheduleModal.value)
 };
 
 const closeScheduleModal = () => {
   showScheduleModal.value = false;
+  console.log(showScheduleModal.value)
 };
 
 const handleScheduleSubmit = (data: any) => {
@@ -329,7 +331,7 @@ const handleReportSubmit = (data: any) => {
       <main class="p-8 overflow-y-auto h-[calc(100vh-64px)] space-y-6">
         <!-- Academic Year Header -->
         <div class="text-start text-xl font-bold text-gray-600">
-          {{ adminViewStore.getAcademicYearAndSemester(adminViewStore.dashBoardTimeline) }}
+          {{ adminViewStore.getAcademicYear(adminViewStore.dashBoardTimeline) }}
         </div>
 
         <!-- Welcome Banner -->

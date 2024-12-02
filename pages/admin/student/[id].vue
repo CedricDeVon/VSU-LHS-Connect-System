@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin', 'admin-student']
+});
+
 import { defineComponent } from 'vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
@@ -7,11 +11,6 @@ import CreateIncidentReportModal from '~/components/Modals/Incident Management/C
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
-await adminViewStore.updateStudentPageData(useRoute().params.id);
-
-onBeforeMount(async () => {
-    await adminViewStore.updateStudentPageData(useRoute().params.id);
-})
 
 const sortedStudents = () => {
     let sorted = adminViewStore.studentAllSectionStudents;

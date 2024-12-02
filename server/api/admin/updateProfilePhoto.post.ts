@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     
     const admin = (await Databases.getOneAdminViaUserId(userId)).data;
     await Databases.userIconsFirebaseStorage.writeFileWithName(admin.id, new ParsedFile(file[0]));
-    await Databases.updateOneUserViaId(admin.id, {
+    await Databases.updateOneAdminViaId(admin.id, {
       profilePicture: admin.id
     });
     const image = (await Databases.userIconsFirebaseStorage.readFileLink(admin.id)).data;

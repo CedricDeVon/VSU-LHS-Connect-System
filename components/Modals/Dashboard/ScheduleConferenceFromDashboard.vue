@@ -224,9 +224,13 @@
 </template>
 
 <script setup lang="ts">
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+const adminViewStore = useAdminViewStore();
+
 import { student } from '~/data/student';
-import { incidentReport } from '~/data/incident';
-import { initialReport } from '~/data/initialReport';
+// import { adminViewStore.dashboardIncidentReports } from '~/data/incident';
+// import { adminViewStore.dashBoardInitialReports } from '~/data/adminViewStore.dashBoardInitialReports';
 
 const studentSearch = ref('');
 const witnessSearch = ref('');
@@ -241,19 +245,19 @@ const formData = ref({
 
 // Replace mock student data with actual student data
 const availableStudents = computed(() => {
-  return student
-    .filter(s => s.isEnrolled) // Only get enrolled students
+  return adminViewStore.dashBoardStudents
+    .filter(s => s.data.isEnrolled) // Only get enrolled students
     .map(s => ({
-      id: s.studentId,
-      name: `${s.firstName} ${s.lastName}`,
-      section: s.sectionID
+      id: s.id,
+      name: `${s.data.firstName} ${s.data.lastName}`,
+      section: s.data.sectionId
     }));
 });
 
 const filteredStudents = computed(() => {
   if (!studentSearch.value) return [];
   const searchTerm = studentSearch.value.toLowerCase();
-  return availableStudents.value.filter(student => 
+  return availableStudents.value.filter((student: any) => 
     student.name.toLowerCase().includes(searchTerm)
   );
 });
@@ -261,14 +265,14 @@ const filteredStudents = computed(() => {
 const filteredWitnessStudents = computed(() => {
   if (!witnessSearch.value) return [];
   const searchTerm = witnessSearch.value.toLowerCase();
-  const selectedIds = selectedStudents.value.map(s => s.id);
+  const selectedIds = selectedStudents.value.map((s: any) => s.id);
   return availableStudents.value
-    .filter(student => !selectedIds.includes(student.id))
-    .filter(student => student.name.toLowerCase().includes(searchTerm));
+    .filter((student: any) => !selectedIds.includes(student.id))
+    .filter((student: any) => student.name.toLowerCase().includes(searchTerm));
 });
 
 const toggleStudent = (student: any) => {
-  const index = selectedStudents.value.findIndex(s => s.id === student.id);
+  const index = selectedStudents.value.findIndex((s: any) => s.id === student.id);
   if (index === -1) {
     selectedStudents.value.push(student);
   } else {
@@ -281,7 +285,7 @@ const addCustomWitness = () => {
   
   // Check if witness matches any student first
   const matchedStudent = availableStudents.value.find(
-    s => s.name.toLowerCase() === witnessSearch.value.toLowerCase()
+    (s: any) => s.name.toLowerCase() === witnessSearch.value.toLowerCase()
   );
 
   if (matchedStudent) {
@@ -301,11 +305,11 @@ const addCustomWitness = () => {
 };
 
 const removeStudent = (student: any) => {
-  selectedStudents.value = selectedStudents.value.filter(s => s.id !== student.id);
+  selectedStudents.value = selectedStudents.value.filter((s: any) => s.id !== student.id);
 };
 
 const removeWitness = (witness: any) => {
-  selectedWitnesses.value = selectedWitnesses.value.filter(w => w.name !== witness.name);
+  selectedWitnesses.value = selectedWitnesses.value.filter((w: any) => w.name !== witness.name);
 };
 
 const generateReferenceId = () => {
@@ -321,11 +325,11 @@ const showIncidentDropdown = ref(false);
 
 // Get unresolved incidents
 const unresolvedIncidents = computed(() => {
-  const incidents = incidentReport
-    .filter(inc => inc.status === 'NotResolved' && inc.AY === '2024-2025')
+  const incidents = adminViewStore.dashboardIncidentReports
+    .filter(inc => inc.data.status === 'NotResolved' && inc.data.academicYear === adminViewStore.dashBoardTimeline.data.schoolYear)
     .map(inc => {
       // Get the initial report data
-      const initialData = initialReport.find(report => report.reportIDRef === inc.reportID);
+      const initialData = adminViewStore.dashBoardInitialReports.find(report => report.reportIDRef === inc.reportID);
       
       return {
         id: inc.incidentDocID,
@@ -362,9 +366,11 @@ const handleSubmit = () => {
     alert('Please select a future date');
     return;
   }
+
+  console.log(formData)
   // Get unique advisers from the selected students' sections
   const uniqueAdvisers = Array.from(new Set(
-    selectedStudents.value.map(student => {
+    selectedStudents.value.map((student: any) => {
       const sectionAdvisor = student.section; // You'll need to get the actual adviser info
       return sectionAdvisor;
     }).filter(Boolean)
@@ -392,16 +398,16 @@ const handleSubmit = () => {
 const emit = defineEmits(['close', 'submit']);
 
 // Update watchers and refs
-watch(() => selectedIncident.value, (newIncidentId) => {
+watch(() => selectedIncident.value, (newIncidentId: any) => {
   if (newIncidentId) {
     console.log('Selected incident ID:', newIncidentId); // For debugging
     
-    const incident = incidentReport.find(inc => inc.incidentDocID === newIncidentId);
+    const incident = adminViewStore.dashboardIncidentReports.find((inc: any) => inc.id === newIncidentId);
     console.log('Found incident:', incident); // For debugging
     
     if (incident) {
       // Get all enrolled students who have this incident ID
-      const involvedStudents = student
+      const involvedStudents = adminViewStore.dashBoardStudents
         .filter(s => s.isEnrolled && s.incidentDocIDs.includes(newIncidentId))
         .map(s => ({
           id: s.studentId,
@@ -413,7 +419,7 @@ watch(() => selectedIncident.value, (newIncidentId) => {
       selectedStudents.value = involvedStudents;
 
       // Get the initial report for witness info
-      const initialReportData = initialReport.find(report => 
+      const initialReportData = adminViewStore.dashBoardInitialReports.find(report => 
         report.reportIDRef === incident.reportID
       );
       console.log('Found initial report:', initialReportData); // For debugging

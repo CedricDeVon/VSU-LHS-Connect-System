@@ -6,10 +6,11 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const auth = useFirebaseAuth()
 const adminViewStore = useAdminViewStore();
+// await adminViewStore.updateDashboard();
 
-onBeforeMount(async () => {
-  await adminViewStore.updateDashboard();
-})
+// onBeforeMount(async () => {
+//   await adminViewStore.updateDashboard();
+// })
 
 const signOutUser = async () => {
   const result: Result = await UserSecurity.signOutUser(auth);
@@ -106,8 +107,8 @@ const bottomNav = [
             <div class="flex items-center gap-3 pb-8">
               <div class="flex items-center gap-3">
                 <div>
-                  <p class="text-sm font-semibold">{{ adminViewStore.adminName }}</p>
-                  <p class="text-sm text-white">{{ adminViewStore.adminEmail }}</p>
+                  <p class="text-sm font-semibold">{{ adminViewStore.sidebarUser.data.username }}</p>
+                  <p class="text-sm text-white">{{ adminViewStore.sidebarUser.data.email }}</p>
                 </div>
               </div>
               <UiTooltip>

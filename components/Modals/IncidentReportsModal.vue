@@ -63,9 +63,6 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
 
-onBeforeMount(async () => {
-})
-
 const viewIncidentDetails = (incidentId: any) => {
     useRouter().push(`/admin/incident/${incidentId}`);
 }
@@ -107,4 +104,5 @@ const viewIncidentDetails = (incidentId: any) => {
     scrollbar-width: thin;
     scrollbar-color: #728B78 #f1f1f1;
 }
+
 </style> 

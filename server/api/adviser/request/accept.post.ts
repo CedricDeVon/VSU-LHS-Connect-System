@@ -5,7 +5,7 @@ import { Databases } from '~/library/databases/databases';
 export default defineEventHandler(async (event) => {
     try {
         const { adviserId } = await readBody(event);
-        const result: Result = await Databases.updateAdviserStatusToActiveViaId(adviserId);;
+        const result: Result = await Databases.updateAdviserStatusToActiveViaId(adviserId);
         return result.cloneToObject();
 
     } catch (error: any) {

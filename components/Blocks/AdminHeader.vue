@@ -152,6 +152,8 @@ const handleClickOutside = (event: Event) => {
 
 <template>
   <header class="flex justify-between items-center p-4 shadow-sm">
+
+    <div></div>
     <div class="flex items-center gap-6"> <!-- Increased gap from gap-4 to gap-6 -->
       <!-- Notification Bell -->
       <div class="relative" ref="notificationRef"> <!-- Added flex and items-center -->
@@ -219,16 +221,14 @@ const handleClickOutside = (event: Event) => {
           </div>
         </Transition>
       </div>
-      <div class="flex items-center gap-5">
-        <img loading="lazy"
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/28ac4a43bf80933a5cd7ae9089be6c5d7b9dae50c8259bbef6892eb66f590acf?placeholderIfAbsent=true&apiKey=a61ecd0d5bec4c4f94bc2ce5eda3f7bc"
-          alt="User profile" class="w-8 object-contain aspect-square hover:scale-110 cursor-pointer" />
-          <button @click="signOutUser"
-        class="logout-button px-7 py-3 rounded-lg bg-728B78 text-white hover:bg-neutral-600"
+
+      <!-- User Profile and Logout -->
+      <button @click="signOutUser" 
+        class="h-10 px-6 text-sm font-medium text-white bg-728B78 hover:bg-[#556859] rounded-lg transition-colors flex items-center justify-center"
         aria-label="Log out">
-        </button>
         Log out
-      </div>
+      </button>
+    </div>
   </header>
 </template>
 

@@ -74,11 +74,18 @@
   
             <div class="grid grid-cols-2 gap-4">
               <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700">Conference Date</label>
+                <label class="block text-sm font-medium text-gray-700">Conference Date Time</label>
                 <input v-model="formData.conferenceDate" type="date"
                   class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                   :class="{ 'border-red-500': errors.conferenceDate }">
                 <p v-if="errors.conferenceDate" class="mt-1 text-sm text-red-600">{{ errors.conferenceDate }}</p>
+              </div>
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700">Time</label>
+                <input v-model="formData.time" type="time"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                  :class="{ 'border-red-500': errors.time }">
+                <p v-if="errors.time" class="mt-1 text-sm text-red-600">{{ errors.time }}</p>
               </div>
             </div>
   
@@ -112,6 +119,7 @@
 </template>
   
 <script>  
+import { TimeConverters } from '~/library/timeConverters/timeConverters';
   export default {
     name: 'CreateCaseConferenceModal',
     props: {
@@ -132,30 +140,33 @@
     data() {
       return {
         formData: this.savedDraft || {
-          studentName: this.studentInfo?.name || '',
-          gradeAndSection: this.studentInfo?.gradeSection || '',
+          studentName: '',
+          gradeAndSection: '',
           circumstance: '',
           discussions: '',
           agreement: '',
           remarks: '',
+          time: '',
+          incidentId: this.incidentId,
           conferenceDate: new Date().toISOString().split('T')[0],
-          status: 'Draft'
+          dateAdded: TimeConverters.dateConverter.convert(Date.now()).data,
+          status: 'Pending'
         },
         errors: {}
       }
     },
   
-    watch: {
-      studentInfo: {
-        handler(newVal) {
-          if (newVal) {
-            this.formData.studentName = newVal.name || '';
-            this.formData.gradeAndSection = newVal.gradeSection || '';
-          }
-        },
-        immediate: true
-      }
-    },
+    // watch: {
+    //   studentInfo: {
+    //     handler(newVal) {
+    //       if (newVal) {
+    //         this.formData.studentName = newVal.name || '';
+    //         this.formData.gradeAndSection = newVal.gradeSection || '';
+    //       }
+    //     },
+    //     immediate: true
+    //   }
+    // },
   
     methods: {
       validate() {
@@ -192,7 +203,6 @@
         if (this.validate()) {
           const conferenceData = {
             ...this.formData,
-            incidentID: this.incidentId
           }
           this.$emit('create', conferenceData)
         }
@@ -201,9 +211,6 @@
       saveAsDraft() {
         const draftData = {
           ...this.formData,
-          incidentID: this.incidentId,
-          status: 'Draft',
-          lastSaved: new Date().toISOString()
         }
         this.$emit('save-draft', draftData)
       },
@@ -217,7 +224,8 @@
           agreement: '',
           remarks: '',
           conferenceDate: new Date().toISOString().split('T')[0],
-          status: 'Draft'
+          time: '',
+          status: 'Pending'
         }
       }
     }

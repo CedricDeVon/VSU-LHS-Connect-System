@@ -2,6 +2,8 @@ import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     try {
+      // console.log('Authenticate Adviser Middleware');
+
       const jsonWebToken: any = useCookie('VSUConnectionSystemUserAuthToken');
       if (jsonWebToken.value === undefined || jsonWebToken.value === null) {
         console.error(`User has not yet Loged-in. Returning to Log-in Page`);

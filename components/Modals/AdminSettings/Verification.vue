@@ -20,19 +20,42 @@
         </div>
     </div>
 </template>
+
 <script>
+import { getCurrentUser } from 'vuefire';
+import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
+
+import { UserSecurity } from "~/library/security/userSecurity";
 
 export default {
+    data() {
+        return {
+            password: ''
+        }
+    },
+
     emits: ['close', 'update'],
 
     methods: {
         cancelRequest() {
+            this.password = '';
             this.$emit('close');
         },
        async proceedRequest() {
+        try {
+            await UserSecurity.logInViaToken();
+            const currentUser = await getCurrentUser();
+            await signInWithEmailAndPassword(getAuth(), currentUser.email, this.password);
+
             this.$emit('update');  
-           
+            this.password = '';
+            alert('Validation Successful')
+
+        } catch (error) {
+            this.password = '';
+            alert('Validation Failed')
         }
+    }
     }
 }
 </script>

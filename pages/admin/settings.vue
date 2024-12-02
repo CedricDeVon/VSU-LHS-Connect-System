@@ -14,10 +14,10 @@
                 :readonly="!isEditing" 
                 v-model="username"/> 
               </div> 
-              <div class="m-3">Password: <input :type="passwordInputType" class="ml-10 border-2 border-gray-200 rounded-md p-2 w-3/5"
+              <!-- <div class="m-3">Password: <input :type="passwordInputType" class="ml-10 border-2 border-gray-200 rounded-md p-2 w-3/5"
                 :readonly="!isEditing"
                 v-model="password"/> 
-              </div>
+              </div> -->
               <div class="m-3">First Name: <input type="text" class="ml-8 border-2 border-gray-200 rounded-md p-2 w-3/5" 
                 :readonly="!isEditing"
                 v-model="firstName"/> 
@@ -49,7 +49,7 @@
             </div>
             <div class=" shadow-inner rounded-md">
               <div class = "profile-container">
-                <img src="../../assets/icons/default-user.png" alt="Profile Picture" class="profile-picture">
+                <img :src="profilePicture" alt="Profile Picture" class="profile-picture">
               </div>
               <div class="flex justify-center items-center m-5">
                 <button @click="triggerFileInput"
@@ -60,7 +60,7 @@
                   </svg>
                   <span>Update Profile Picture</span>
                 </button>
-                <input type="file" ref="fileInput" @change="uploadProfilePicture" class="hidden">
+                <input type="file" ref="fileInput" @input="handleFileInput" @change="uploadProfilePicture" class="hidden">
               </div>
             </div>
           </div>
@@ -80,11 +80,18 @@
       </div>
 
 </template>
+
 <script>
+definePageMeta({
+  middleware: ['authenticate-and-authorize-admin', 'admin-settings']
+});
+
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import ConfirmReset from '~/components/Modals/AdminSettings/ConfirmReset.vue';
 import Verification from '~/components/Modals/AdminSettings/Verification.vue';
+import { UserSecurity } from "~/library/security/userSecurity";
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 export default {
     name: 'SettingsPage',
@@ -95,15 +102,16 @@ export default {
             default: '2024-2025',
         },
     },
-    setup(props) {
+    async setup(props) {
+        const adminViewStore = useAdminViewStore();
 
         const isEditing = ref(false);
-        const username = ref('admin');
-        const password = ref('password');
-        const firstName = ref('Juan');
-        const middleName = ref('Dela');
-        const lastName = ref('Cruz');
-        const academicYear = ref('2024-2025');
+        const username = ref('');
+        const password = ref('');
+        const firstName = ref('');
+        const middleName = ref('');
+        const lastName = ref('');
+        const academicYear = ref('');
         const confirmReset = ref(false);
         const verify = ref(false);
         const verifyEdit = ref(false);
@@ -111,36 +119,31 @@ export default {
         const profilePicture = ref('');
         const fileInput = ref(null);
 
+        const { handleFileInput, files } = useFileStorage();
+
+        username.value = adminViewStore.settingsUserData.data.username;
+        firstName.value = adminViewStore.settingsAdminData.data.firstName;
+        middleName.value = adminViewStore.settingsAdminData.data.middleName;
+        lastName.value = adminViewStore.settingsAdminData.data.lastName;
+        academicYear.value = adminViewStore.settingsTimeline.data.schoolYear;
+        profilePicture.value = adminViewStore.settingsAdminData.data.profilePicture;
+
         const triggerFileInput = () => {
           fileInput.value.click();
         };
 
-        
         const uploadProfilePicture = async (event) => {
-          const file = event.target.files[0];
-          if (file) {
-            // Upload the file to your server or database
-            // Example: using FormData to send the file via an API request
-            const formData = new FormData();
-            formData.append('file', file);
-
-            try {
-          const response = await fetch('/api/upload', {
+          await UserSecurity.logInViaToken();
+          let user = await getCurrentUser();
+          const result = await $fetch('/api/admin/updateProfilePhoto', {
             method: 'POST',
-            body: formData,
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            // Assuming the response contains the URL of the uploaded image
-            profilePicture.value = data.url;
-          } else {
-            console.error('Failed to upload the file');
-          }
-        } catch (error) {
-          console.error('Error uploading the file:', error);
-        }
-      }
+              body: {
+                userId: user?.uid,
+                file: files.value
+              }
+          })
+          profilePicture.value = result.data;
+          alert('Profile Picture Updated')
     };
 
     const handleClose = () => {
@@ -153,10 +156,7 @@ export default {
           }
         };
 
-
         const passwordInputType = computed(() => (isEditing.value ? 'text' : 'password'));
-
-
             const update = () => {
               verify.value = !verify.value;
                 if(verifyEdit.value){
@@ -175,16 +175,32 @@ export default {
         };
 
         const cancelChanges = () => {
+            username.value = adminViewStore.settingsUserData.data.username;
+            firstName.value = adminViewStore.settingsAdminData.data.firstName;
+            middleName.value = adminViewStore.settingsAdminData.data.middleName;
+            lastName.value = adminViewStore.settingsAdminData.data.lastName;
             isEditing.value = !isEditing.value;
         };
 
-        const saveChanges = () => {
+        const saveChanges = async () => {
+            await UserSecurity.logInViaToken();
+            let user = await getCurrentUser();
+            const result = await $fetch('/api/admin/update', {
+              method: 'POST',
+                body: {
+                  userId: user?.uid,
+                  data: {
+                    username: username.value,
+                    firstName: firstName.value,
+                    middleName: middleName.value,
+                    lastName: lastName.value
+                  }
+                }
+            })
+            await adminViewStore.updateSettings();
+            await adminViewStore.updateSidebar();
             isEditing.value = !isEditing.value;
         };
-
-        // const uploadProfilePicture = () => {
-        //     alert('Profile picture uploaded');
-        // };
 
         const resetAcademicYear = () => {
           try{
@@ -228,14 +244,13 @@ export default {
           firstName,
           middleName,
           lastName,
-          academicYear
+          academicYear,
+          handleFileInput,
+          files
         };
     },
-
 }
 </script>
-
-
 
 <style scoped>
 .profile-container {

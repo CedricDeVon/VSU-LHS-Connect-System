@@ -6,7 +6,7 @@
       <input v-model="sectionId" type="text"
         class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-5">
       <label>Grade Level</label>
-      <input v-model="sectionLevel" type="number" min="7" max="12"
+      <input v-model="sectionLevel" type="number" min="7" max="10"
         class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-5">
       <label>Section Name</label>
       <input v-model="sectionName" type="text"
@@ -34,7 +34,7 @@ export default {
     return {
       sectionId: '',
       sectionName: '', 
-      sectionLevel: '',
+      sectionLevel: 7,
       adminViewStore: useAdminViewStore()
     };
   },
@@ -52,9 +52,12 @@ export default {
         window.alert(result.message);
        
       } else {
+        window.alert(`Section '${this.sectionId}' created successfully`);
+        await this.adminViewStore.updateSearch();
+
         this.sectionId = ''; 
         this.sectionName = ''; 
-        this.sectionLevel = '';
+        this.sectionLevel = 7;
         this.$emit('close'); 
       }
     }

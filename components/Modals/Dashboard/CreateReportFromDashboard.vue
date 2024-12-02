@@ -78,6 +78,15 @@
             </h4>
             <div class="grid grid-cols-2 gap-6">
               <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-700">Adviser Faculty ID</label>
+                <input
+                  type="text"
+                  v-model="formData.reportedBY"
+                  class="w-full rounded-lg border-gray-300 focus:border-[#265630] focus:ring focus:ring-[#265630] focus:ring-opacity-50"
+                  required
+                />
+              </div>
+              <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-700">Date of Incident</label>
                 <input
                   type="date"
@@ -103,6 +112,17 @@
               <input
                 type="text"
                 v-model="formData.thingsInvolved"
+                class="w-full rounded-lg border-gray-300 focus:border-[#265630] focus:ring focus:ring-[#265630] focus:ring-opacity-50"
+                placeholder="List items involved"
+                required
+              />
+            </div>
+
+            <div class="mt-4 space-y-2">
+              <label class="block text-sm font-medium text-gray-700">Witness</label>
+              <input
+                type="text"
+                v-model="formData.witness"
                 class="w-full rounded-lg border-gray-300 focus:border-[#265630] focus:ring focus:ring-[#265630] focus:ring-opacity-50"
                 placeholder="List items involved"
                 required
@@ -142,7 +162,12 @@
 </template>
 
 <script setup lang="ts">
-import { student } from '~/data/student';
+import { getCurrentUser } from 'vuefire';
+import { UserSecurity } from "~/library/security/userSecurity";
+import { TimeConverters } from '~/library/timeConverters/timeConverters';
+import { useAdminViewStore } from '~/stores/views/adminViewStore';
+
+const adminViewStore = useAdminViewStore();
 
 const studentSearch = ref('');
 const selectedStudents = ref<any[]>([]);
@@ -153,38 +178,43 @@ const formData = ref({
   placeOfIncident: '',
   thingsInvolved: '',
   narrativeReport: '',
+  reportedBY: '',
+  witness: '',
 });
 
 // Get enrolled students
 const availableStudents = computed(() => {
-  return student
-    .filter(s => s.isEnrolled)
-    .map(s => ({
-      id: s.studentId,
-      name: `${s.firstName} ${s.lastName}`,
-      section: s.sectionID
+  return adminViewStore.dashBoardStudents
+    .filter((s: any) => s.data.isEnrolled)
+    .map((s: any) => ({
+      id: s.id,
+      name: `${s.data.firstName} ${s.data.lastName}`,
+      section: s.data.sectionId
     }));
 });
 
 const filteredStudents = computed(() => {
   if (!studentSearch.value) return [];
   const searchTerm = studentSearch.value.toLowerCase();
-  return availableStudents.value.filter(student => 
+  const result = availableStudents.value.filter((student: any) => 
     student.name.toLowerCase().includes(searchTerm)
   );
+  console.log(result);
+  return result;
 });
 
 const toggleStudent = (student: any) => {
-  const index = selectedStudents.value.findIndex(s => s.id === student.id);
+  const index = selectedStudents.value.findIndex((s: any) => s.id === student.id);
   if (index === -1) {
     selectedStudents.value.push(student);
+
   } else {
     selectedStudents.value.splice(index, 1);
   }
 };
 
 const removeStudent = (student: any) => {
-  selectedStudents.value = selectedStudents.value.filter(s => s.id !== student.id);
+  selectedStudents.value = selectedStudents.value.filter((s: any) => s.id !== student.id);
 };
 
 const generateReportId = () => {
@@ -201,15 +231,31 @@ const isFormValid = computed(() => {
          formData.value.narrativeReport;
 });
 
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (!isFormValid.value) return;
 
   const reportData = {
     ...formData.value,
-    students: selectedStudents.value,
-    reportId: generateReportId(),
-    reportedAt: new Date().toISOString(),
+    peopleInvolved: selectedStudents.value.map((student: any) => {
+      return student.name;
+    }),
+    dateReported: TimeConverters.dateConverter.convert(Date.now()).data,
+    status: 'Unread',
+    reportIDRef: '',
+    isDraft: true,
+    academicYear: adminViewStore.dashBoardTimeline.data.schoolYear
   };
+
+  const result = await $fetch('/api/admin/view/createReportFromDashboard', {
+    method: 'POST',
+    body: {
+      reportId: generateReportId(),
+      data: reportData
+    }
+  })
+  await adminViewStore.updateDashboard();
+
+  console.log(reportData);
 
   showSuccessAlert.value = true;
   setTimeout(() => {

@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     const student = (await Databases.getOneStudentViaId(incidentReport.data.studentId)).data;
     const section = (await Databases.getOneSectionViaId(student.data.sectionId)).data;
 
-    console.log('B ', caseConferenceReport, incidentReport, student, section);
+    // console.log('B ', caseConferenceReport, incidentReport, student, section);
 
     return new SuccessfulResult({
       incidentReport, caseConferenceReport, student, section

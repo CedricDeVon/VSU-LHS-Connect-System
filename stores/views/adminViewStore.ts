@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { getCurrentUser } from 'vuefire';
+import { UserSecurity } from "~/library/security/userSecurity";
 
 export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const adminName = ref('');
@@ -8,6 +9,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const dashBoardReportsCount = ref('0');
   const dashBoardStudentsCount = ref('0');
   const dashBoardAccountApprovalsCount = ref('0');
+  const dashBoardStudents = useState('dashBoardStudents');
   const dashBoardIncidentReports = useState('dashBoardIncidentReports');
   const dashBoardInitialReports = useState('dashBoardInitialReports');
   const dashBoardCaseConferences = useState('dashBoardCaseConferences');
@@ -59,9 +61,13 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
 
   const incidentUser = useState('incidentUser');
   const incidentAdmin = useState('incidentAdmin');
+  const incidentAdviser = useState('incidentAdviser');
   const incidentStudent = useState('incidentStudent');
   const incidentInitialReport = useState('incidentInitialReport');
   const incidentIncidentReport = useState('incidentIncidentReport');
+  const incidentInitialReports = useState('incidentInitialReports');
+  const incidentAdvisers = useState('incidentAdvisers');
+  const incidentCaseConferences = useState('incidentCaseConferences');
   
   const anecdotalAnecdotalReports = useState('anecdotalAnecdotalReports');
   const anecdotalAnecdotalStudents = useState('anecdotalAnecdotalStudents');
@@ -75,6 +81,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const anecdoteStudent = useState('anecdoteStudent');
 
   const settingsUserData = useState('settingsUserData');
+  const settingsTimeline = useState('settingsTimeline');
   const settingsAdminData = useState('settingsAdminData');
   const settingsAdviserData = useState('settingsAdviserData');
 
@@ -83,18 +90,48 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   const caseConferenceStudent = useState('caseConferenceStudent');
   const caseConferenceSection = useState('caseConferenceSection');
 
+  const generateCaseConferenceId = () => {
+    const prefix = 'CONF';
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `${prefix}-${timestamp}-${random}`;
+  };
+
+  const generateIncidentId = () => {
+    const prefix = 'INC';
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `${prefix}-${timestamp}-${random}`;
+  };
+
+  const generateReportId = () => {
+    const prefix = 'REP';
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `${prefix}-${timestamp}-${random}`;
+  };
+
+  const generateAnecdoteId = () => {
+    const prefix = 'ANE';
+    const timestamp = Date.now().toString().slice(-6);
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `${prefix}-${timestamp}-${random}`;
+  };
+
+  const getAcademicYear = (timeline: any) => {
+    return `Academic Year ${timeline.data.schoolYear}`;
+  }
+
   const getAcademicYearAndSemester = (timeline: any) => {
         return `Academic Year ${timeline.data.schoolYear} / ${(timeline.data.semester === 1) ? 'First' : 'Second'} Semester`;
   }
 
   const updateCaseConference = async (caseConferenceId: any) => {
-    // console.log('D', caseConferenceId);
     const result: any = await $fetch('/api/admin/view/caseConference', {
       method: 'POST', body: {
         caseConferenceId
       }
     });
-    // console.log('A ', result);
 
     caseConferenceCaseConferenceReport.value = result.data.caseConferenceReport;
     caseConferenceIncidentReport.value = result.data.incidentReport;
@@ -102,16 +139,38 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     caseConferenceSection.value = result.data.section;
   }
 
+  const sidebarUser = useState('sidebarUser');
+  const sidebarAdmin = useState('sidebarAdmin');
+  const updateSidebar = async () => {
+    await UserSecurity.logInViaToken();
+    const currentUser = await getCurrentUser();
+    const result: any = await $fetch('/api/admin/view/sidebar', {
+      method: 'POST', body: {
+        userId: currentUser?.uid
+      }
+    });
+    // console.log(result);
+
+    sidebarUser.value = result.data.user;
+    sidebarAdmin.value = result.data.admin;
+  }
+
+  const updateArchives = async () => {
+
+  }
+
   const updateSettings = async () => {
+    await UserSecurity.logInViaToken();
     const currentUser = await getCurrentUser();
     const result: any = await $fetch('/api/admin/view/settings', {
       method: 'POST', body: {
         userId: currentUser?.uid
       }
     });
-
-    settingsUserData.value = result.data.userData;
-    settingsAdminData.value = result.data.adminData;
+    
+    settingsUserData.value = result.data.user;
+    settingsAdminData.value = result.data.admin;
+    settingsTimeline.value = result.data.timeline;
   }
 
   const updateIncidentAnecdote = async (id: string, data: any, anecdote: any) => {
@@ -132,7 +191,9 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     anecdoteReports.value = result.data.reports;
   }
   
+
   const updateIncident = async (incidentId: string) => {
+    await UserSecurity.logInViaToken();
     const currentUser = await getCurrentUser();
     const result: any = await $fetch('/api/admin/view/incident', {
       method: 'POST', body: {
@@ -140,11 +201,16 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
         userId: currentUser?.uid
       }
     });
+    // console.log(result)
 
     incidentUser.value = result.data.user;
     incidentAdmin.value = result.data.admin;
+    incidentAdviser.value = result.data.adviser;
     incidentStudent.value = result.data.student;
     incidentIncidentReport.value = result.data.incidentReport;
+    incidentInitialReports.value = result.data.initialReports;
+    incidentAdvisers.value = result.data.advisers;
+    incidentCaseConferences.value = result.data.caseConferences;
   }
   
   const updateAnecdotal = async () => {
@@ -198,7 +264,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
   
   const getFullName = (person: any) => {
-    return `${person.data.lastName || ''}, ${person.data.firstName || ''} ${person.data.middleName || ''} ${person.data.suffix || ''}`.trim();
+    return (person.data) ? `${person.data.lastName || ''}, ${person.data.firstName || ''} ${person.data.middleName || ''} ${person.data.suffix || ''}`.trim() : 'N/A';
   }
 
   const getGradeAndSection = () => {
@@ -214,8 +280,12 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     return (student.data.section) ? `Grade ${student.data.section.data.level}, ${student.data.section.data.name}` : 'N/A';
   }
 
-  const sectionGetGradeAndSection = (section: any) => {
-    return (section.data) ? `Grade ${section.data.level}, ${section.data.name}` : 'N/A';
+  const getGradeSection = (item: any) => {
+    return `Grade ${item.data.level}, ${item.data.name}`;
+  }
+
+  const sectionGetGrade = (section: any) => {
+    return (section.data.level) ? `Grade ${section.data.level}` : 'N/A';
   }
   
   const resetAdviserAccountsCSVFileInputData = async (message: string) => {
@@ -225,10 +295,12 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
 
   const updateAll = async () => {
+    await UserSecurity.logInViaToken();
     const currentUser = await getCurrentUser();
     const { data }: any = await $fetch('/api/admin/view', {
       method: 'POST', body: { id: currentUser?.uid, email: currentUser?.email }
     });
+    
     adminName.value = data.user.username;
     adminEmail.value = data.user.email;
     dashBoardReportsCount.value = data.reportsCount;
@@ -240,31 +312,31 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     searchAdvisers.value = data.advisers;
   };
 
-  const updateSidebar = async () => {
-
-  }
-
   const updateSearch = async () => {
     const { data }: any = await $fetch('/api/admin/view/search', {
       method: 'POST'
     });
+    // console.log(data);
+    
     searchSections.value = data.sections;
     searchStudents.value = data.students;
     searchAdvisers.value = data.advisers;
   };
 
   const updateDashboard = async () => {
+    await UserSecurity.logInViaToken();
     const currentUser = await getCurrentUser();
     const { data }: any = await $fetch('/api/admin/view/dashboard', {
         method: 'POST', body: { email: currentUser?.email, id: currentUser?.uid }
     });
-    console.log('A: ', data);
+    // console.log('updateDashboard: ', data);
 
     adminName.value = data.user.data.username;
     adminEmail.value = data.user.data.email;
     dashBoardIncidentReports.value = data.incidentReports;
     dashBoardInitialReports.value = data.initialReports;
     dashBoardCaseConferences.value = data.caseConferences;
+    dashBoardStudents.value = data.students;
     dashBoardTimeline.value = data.timeline;
   };
 
@@ -313,6 +385,22 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
   }
 
   return {
+    generateCaseConferenceId,
+    generateIncidentId,
+    generateReportId,
+    generateAnecdoteId,
+    incidentAdmin,
+    incidentInitialReports,
+    incidentAdvisers,
+    incidentCaseConferences,
+    dashBoardStudents,
+    getGradeSection,
+    getAcademicYear,
+    updateArchives,
+    sidebarUser,
+    sidebarAdmin,
+    settingsUserData,
+    settingsAdminData,
     updateSidebar,
     getAcademicYearAndSemester,
     dashBoardIncidentReports,
@@ -320,13 +408,14 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     dashBoardCaseConferences,
     dashBoardTimeline,
     updateIncidentAnecdote,
-    sectionGetGradeAndSection,
+    sectionGetGrade,
     caseConferenceStudent,
     caseConferenceSection,
     updateCaseConference,
     caseConferenceIncidentReport,
     caseConferenceCaseConferenceReport,
     settingsAdviserData,
+    settingsTimeline,
     searchShowStudentDetailsModal,
     adminName,
     adminEmail,
@@ -395,7 +484,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     updateIncidental,
     incidentStudent,
     incidentUser,
-    incidentAdmin,
+    incidentAdviser,
     incidentInitialReport,
     anecdotalAnecdotalAdvisers,
     anecdoteAnecdotalReports,

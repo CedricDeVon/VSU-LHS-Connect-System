@@ -2,9 +2,13 @@
     <div class="adviser-page">
         <AdviserHeader class="relative z-10" />
             <img class="backPic" src="~/assets/images/vsu-main-the-search-for-truth-statue.png" alt="img">
-        <div class="min-h-screen">
+            <div v-if="loading" class="bg-transparent h-screen w-screen flex justify-center items-center text-3xl">
+                    <h1 class=" text-black opacity-100">Loading...</h1>
+            </div>
+        <div v-else class="min-h-screen">
             <div class="w-full h-full z-0">
                 <div class="flex flex-row ">
+                    
                     <div class="container ml-5 mx-auto px-4 py-8" :style="{ width: containWidth }">
 
                         <!-- Hero Section -->

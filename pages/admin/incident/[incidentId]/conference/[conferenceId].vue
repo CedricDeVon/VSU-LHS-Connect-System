@@ -1,3 +1,6 @@
+<!--TAKE NOTE that case conference documents cannot be edited once created from its incident page that is why wala ko nag add edit buttons because this page is solely for viewing resolved conferences. 
+
+AND an incident cannot have more than one on-going conference that is why sa incident/[id] page na laman ko mag put ug edit/save case conference details once created na ang case conference document-->
 <template>
     <div class="flex h-screen bg-[#FFFEF1]">
         <AdminSidebar />
@@ -243,7 +246,7 @@ const defineConferenceDoc = (data) => ({
 
 const displayPDF = () => {
     if (!conferenceData.value) return
-    const docDefinition = defineConferenceDoc(conferenceData.value)
+    const docDefinition = defineCaseConferenceDoc(conferenceData.value)
     pdfMake.createPdf(docDefinition).getBlob((blob) => {
         const url = URL.createObjectURL(blob)
         const viewer = document.getElementById('pdf-viewer')
@@ -261,7 +264,7 @@ const downloadPDF = () => {
 
 const printDocument = () => {
     if (!conferenceData.value) return
-    const docDefinition = defineConferenceDoc(conferenceData.value)
+    const docDefinition = defineCaseConferenceDoc(conferenceData.value)
     pdfMake.createPdf(docDefinition).print()
 }
 
@@ -289,7 +292,3 @@ onBeforeMount(async () => {
     }
 })
 </script>
-
-<style scoped>
-/* Add your styles here */
-</style>

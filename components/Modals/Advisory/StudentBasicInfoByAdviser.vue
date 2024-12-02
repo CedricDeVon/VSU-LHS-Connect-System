@@ -30,9 +30,11 @@
                     <button @click="createReport" class=" submitComplaint shadow w-9/12 px-10 py-2 rounded-lg gray text-green-900 hover:bg-gray-600 focus:outline-none" aria-label="Submit Complaint">
                         Submit and Report a Complaint
                     </button>
-                </div>
-                <div @click ="removeStudent" class="flex justify-center m-3 ">
-                    <button class=" removeStudent shadow w-9/12 px-10 py-2 rounded-lg gray text-white hover:bg-gray-600 focus:outline-none" aria-label="Remove Student">
+                    <button @click="removeStudent" 
+                        class="btn btn-text w-full flex items-center justify-center gap-2 text-red-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"/>
+                        </svg>
                         Remove Student
                     </button>
                 </div>
@@ -77,36 +79,28 @@ const handleRemoveStudent = () => {
 </script>
 
 <style scoped>
-.header{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 32px;
-    font-weight: 700;
+.info-row {
+    @apply grid grid-cols-2 gap-4 px-4 py-2 rounded-lg hover:bg-green-50 transition-colors;
 }
 
-.name{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 25px;
-    font-weight: 700;
+.btn {
+    @apply px-6 py-3 rounded-lg font-semibold text-lg transition-all duration-200 
+    focus:outline-none focus:ring-2 focus:ring-offset-2;
 }
 
-.label{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 19px;
-    font-weight: 700;
+.btn-primary {
+    @apply bg-green-700 text-white hover:bg-green-800 focus:ring-green-500
+    shadow-md hover:shadow-lg;
 }
 
-.updateAnecdotal{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 19px;
-    font-weight: 700;
-    background-color: #728B78;
+.btn-outline {
+    @apply border-2 border-green-700 text-green-700 hover:bg-green-50 
+    focus:ring-green-500;
 }
 
-.submitComplaint{
-    font-family: "Inter-Medium", sans-serif;
-    font-size: 19px;
-    font-weight: 700;
-    background-color: #FEFFB1;
+.btn-text {
+    @apply hover:bg-red-50 border border-transparent hover:border-red-200
+    focus:ring-red-400;
 }
 
 .removeStudent{

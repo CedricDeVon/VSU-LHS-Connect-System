@@ -283,7 +283,7 @@ export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedRepor
               [
                 {
                   stack: [
-                    { text: 'Report Noted By:', style: 'label', margin: [0, 20, 0, 5] },
+                    { text: 'Report Received By:', style: 'label', margin: [0, 20, 0, 5] },
                     { text: 'NOEMI ELISA L. OQUIAS', style: 'signature' },
                     { text: 'Guidance Facilitator', style: 'position' },
                   ],
@@ -329,3 +329,180 @@ export const defineAnecdotalDoc = ({ studentData, anecdotalData, associatedRepor
     margin: [0, 10, 0, 0]
   }
 });
+
+export const defineCaseConferenceDoc = (data) => ({
+  pageSize: 'A4',
+  pageMargins: [72, 120, 72, 90],
+  header: {
+    image: finalHeader,
+    width: 590,  
+    height: 115,  
+    alignment: 'center' 
+  },
+  content: [
+    { text: 'CASE CONFERENCE FORM', style: 'header' },
+    { text: '\n' }, // Add spacing
+
+    // Student Info Table
+    {
+      style: 'infoTable',
+      table: {
+        widths: ['50%', '50%'],
+        body: [
+          [
+            { text: 'Name of Student/s:', style: 'label' },
+            { text: 'Grade & Section:', style: 'label' }
+          ],
+          [
+            { text: data.studentName, style: 'content' },
+            { text: data.gradeAndSection, style: 'content' }
+          ],
+          [
+            { text: 'Date of Conference:', style: 'label' },
+            { text: 'Circumstance:', style: 'label' }
+          ],
+          [
+            { text: data.conferenceDate, style: 'content' },
+            { text: data.circumstance, style: 'content' }
+          ]
+        ]
+      },
+      layout: {
+        hLineWidth: function(i) { return 0.5; },
+        vLineWidth: function(i) { return 0.5; },
+        hLineColor: function(i) { return '#aaaaaa'; },
+        vLineColor: function(i) { return '#aaaaaa'; },
+        paddingTop: function(i) { return 8; },
+        paddingBottom: function(i) { return 8; }
+      }
+    },
+    { text: '\n' }, // Add spacing
+
+    // Main Content Sections
+    {
+      stack: [
+        { text: 'DISCUSSION POINTS:', style: 'sectionHeader' },
+        {
+          text: data.discussions,
+          style: 'contentBlock',
+          margin: [20, 5, 20, 15]
+        },
+
+        { text: 'AGREEMENTS/ACTION PLAN:', style: 'sectionHeader' },
+        {
+          text: data.agreement,
+          style: 'contentBlock',
+          margin: [20, 5, 20, 15]
+        },
+
+        { text: 'REMARKS:', style: 'sectionHeader' },
+        {
+          text: data.remarks,
+          style: 'contentBlock',
+          margin: [20, 5, 20, 15]
+        }
+      ]
+    },
+    { text: '\n' }, // Add spacing
+
+    // Signatures Section
+    {
+      columnGap: 10,
+      columns: [
+        {
+          width: '*',
+          stack: [
+            { text: '_______________________', style: 'signature', alignment: 'center' },
+            { text: 'Student\'s Signature over printed name', style: 'signatureSubLabel', alignment: 'center', bold: true },
+          ]
+        },
+        {
+          width: '*',
+          stack: [
+            { text: '_______________________', style: 'signature', alignment: 'center' },
+            { text: 'Parent/Guardian\'s Signature over printed name', style: 'signatureSubLabel', alignment: 'center', bold: true },
+          ]
+        }
+      ]
+    },
+    { text: '\n' },
+    {
+      columnGap: 10,
+      columns: [
+        {
+          width: '*',
+          stack: [
+            { text: '_______________________', style: 'signature', alignment: 'center' },
+            { text: 'DBGF\'s Signature over printed name', style: 'signatureSubLabel', alignment: 'center', bold: true },
+          ]
+        },
+        {
+          width: '*',
+          stack: [
+            { text: 'NOEMI ELISA L. OQUIAS', style: 'signature', alignment: 'center' },
+            { text: 'Guidance Facilitator', style: 'signatureSubLabel', alignment: 'center' },
+          ]
+        }
+      ]
+    }
+  ],
+  styles: {
+    header: {
+      fontSize: 16,
+      bold: true,
+      alignment: 'center',
+      margin: [0, 0, 0, 20]
+    },
+    infoTable: {
+      margin: [0, 5, 0, 15]
+    },
+    sectionHeader: {
+      fontSize: 12,
+      bold: true,
+      margin: [0, 10, 0, 5]
+    },
+    label: {
+      fontSize: 11,
+      bold: true,
+      margin: [5, 0, 0, 0]
+    },
+    content: {
+      fontSize: 11,
+      margin: [5, 0, 0, 0]
+    },
+    contentBlock: {
+      fontSize: 11,
+      alignment: 'justify',
+      lineHeight: 1.4
+    },
+    signature: {
+      margin: [0, 30, 0, 5]
+    },
+    signatureLabel: {
+      fontSize: 11,
+      margin: [0, 0, 0, 2]
+    },
+    signatureSubLabel: {
+      fontSize: 9,
+      italics: true,
+      color: '#666666'
+    }
+  },
+  footer: (currentPage, pageCount) => {
+    return [
+      {
+        image: footer,
+        width: 480,
+        alignment: 'center',
+        margin: [0, 10, 0, 0]
+      },
+      {
+        text: `FM-OOP-05                                    Rev.: 01                                    ${new Date().toLocaleDateString()}                                       Page ${currentPage} of ${pageCount}                                  Control Number:______`,
+        alignment: 'justify',
+        margin: [70, 0],
+        fontSize: 7,
+      },
+    ];
+  },
+});
+

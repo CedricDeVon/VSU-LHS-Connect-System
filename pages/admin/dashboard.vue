@@ -113,12 +113,54 @@ const closeModal = () => {
   showModal.value = false;
 };
 
+// Add these computed properties
+const currentAcademicYear = computed(() => {
+  // Current AY is in format "2024-2025"
+  return "2024-2025"; // This should come from your system settings/state
+});
+
+const academicYearMonths = computed(() => {
+  const [startYear, endYear] = currentAcademicYear.value.split('-');
+  return [
+    'Jun ' + startYear,
+    'Jul ' + startYear,
+    'Aug ' + startYear,
+    'Sep ' + startYear,
+    'Oct ' + startYear,
+    'Nov ' + startYear,
+    'Dec ' + startYear,
+    'Jan ' + endYear,
+    'Feb ' + endYear,
+    'Mar ' + endYear,
+    'Apr ' + endYear,
+    'May ' + endYear
+  ];
+});
+
+// Update monthlyIncidentCounts computed
 const monthlyIncidentCounts = computed(() => {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  return months.map(month => {
-    return adminViewStore.dashBoardIncidentReports.filter((inc: any) => {
-      const incidentMonth = new Date(inc.data.dateOfIncident).toLocaleString('en-US', { month: 'short' });
-      return incidentMonth === month;
+  const [startYear, endYear] = adminViewStore.dashBoardTimeline.split('-');
+  const months = [
+    { month: 6, year: parseInt(startYear) },  // June
+    { month: 7, year: parseInt(startYear) },  // July
+    { month: 8, year: parseInt(startYear) },  // August
+    { month: 9, year: parseInt(startYear) },  // September
+    { month: 10, year: parseInt(startYear) }, // October
+    { month: 11, year: parseInt(startYear) }, // November
+    { month: 12, year: parseInt(startYear) }, // December
+    { month: 1, year: parseInt(endYear) },    // January
+    { month: 2, year: parseInt(endYear) },    // February
+    { month: 3, year: parseInt(endYear) },    // March
+    { month: 4, year: parseInt(endYear) },    // April
+    { month: 5, year: parseInt(endYear) }     // May
+  ];
+
+  return months.map(({ month, year }) => {
+    return adminViewStore.dashBoardIncidentReports.filter(inc => {
+      const incidentDate = new Date(inc.data.dateOfIncident);
+      return incidentDate.getMonth() + 1 === month && 
+             incidentDate.getFullYear() === year &&
+             inc.data.schoolYear === adminViewStore.dashBoardTimeline;
     }).length;
   });
 });
@@ -139,11 +181,11 @@ const dashboardStats = computed<DashboardStat[]>(() => ([
     onClick: openPendingModal // Add onClick handler
   },
   {
-    label: 'Unread Report Submissions',
+    label: 'Review Report Submissions',
     value: unreadReports.value,
     icon: 'lucide:mail',
     color: 'red',
-    onClick: openUnreadModal
+    onClick: openPendingReportsModal // renamed from openUnreadModal
   },
   {
     label: 'Total Incidents',
@@ -153,8 +195,9 @@ const dashboardStats = computed<DashboardStat[]>(() => ([
   }
 ]));
 
+// Update chartConfig
 const chartConfig = computed(() => ({
-  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  labels: academicYearMonths.value,
   datasets: [{
     label: 'Monthly Incidents',
     data: monthlyIncidentCounts.value,
@@ -228,9 +271,9 @@ const closePendingModal = () => {
   showPendingModal.value = false;
 };
 
-// Add these new refs for unread reports modal
-const showUnreadModal = ref(false);
-const selectedUnreadReports = ref<any[]>([]);
+// Rename modal handling functions
+const showPendingReportsModal = ref(false);
+const selectedPendingReports = ref<any[]>([]);
 
 const openUnreadModal = () => {
   selectedUnreadReports.value = adminViewStore.dashBoardInitialReports
@@ -248,8 +291,8 @@ const openUnreadModal = () => {
   console.log(selectedUnreadReports.value)
 };
 
-const closeUnreadModal = () => {
-  showUnreadModal.value = false;
+const closePendingReportsModal = () => {
+  showPendingReportsModal.value = false;
 };
 
 // Add state for announcements modal
@@ -317,6 +360,7 @@ const closeCreateReportModal = () => {
 const handleReportSubmit = (data: any) => {
   console.log('New report:', data);
   // Handle the report submission here
+  // create new document in incident collections later
   closeCreateReportModal();
 };
 
@@ -420,7 +464,7 @@ const handleReportSubmit = (data: any) => {
                 <NuxtLink v-for="(action, idx) in [
                   { text: 'View Incident Reports', link: '/admin/incidental', icon: 'lucide:clipboard-list' },
                   { text: 'View Anecdotal Reports', link: '/admin/anecdotal', icon: 'lucide:book-open' },
-                  { text: 'Manage Users', link: '/admin/accounts', icon: 'lucide:users' }
+                  { text: 'Manage Adviser Accounts', link: '/admin/accounts', icon: 'lucide:users' }
                 ]" 
                   :key="idx" 
                   :to="action.link"
@@ -489,11 +533,11 @@ const handleReportSubmit = (data: any) => {
     @close="closePendingModal"
   />
 
-  <!-- Add UnreadReportSubmissions Modal -->
-  <UnreadReportSubmissions 
-    v-if="showUnreadModal"
-    :reports="selectedUnreadReports"
-    @close="closeUnreadModal"
+  <!-- Add PendingInitialReports Modal -->
+  <PendingInitialReports 
+    v-if="showPendingReportsModal"
+    :reports="selectedPendingReports"
+    @close="closePendingReportsModal"
   />
 
   <!-- Add MakeAnnouncements Modal -->

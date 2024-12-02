@@ -51,10 +51,24 @@
                                     </button>
                                 </div>
                             </div>
+                        </div>
 
-                            <div class=" grid grid-cols-12 w-full h-fit border-b-2 border-lime-950 pt-5 ">
-                                <div class="col-span-3 flex justify-start items-center ">
-                                    <label class="text m-0">Password:  </label>
+                        <!-- Right Column - User Details -->
+                        <div class="col-span-8 space-y-8">
+                            <!-- Account Information Section -->
+                            <div class="space-y-6">
+                                <h3 class="text-xl font-semibold text-green-800">Login Details</h3>
+
+                                <!-- Username Field -->
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                                    <div>
+                                        <label class="text-sm text-gray-500">Username</label>
+                                        <p class="text-lg text-gray-700">{{ User.username }}</p>
+                                    </div>
+                                    <button
+                                        class="px-4 py-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+                                        Change
+                                    </button>
                                 </div>
                                 <input type="text" class="bg-transparent col-span-7 text2 flex items-center" />
                                 <div class="col-span-2 flex justify-end py-2">
@@ -63,22 +77,18 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                        <div class=" flex flex-col mb-5">
-                            <button @click="logoutClick" class="logout  text-white  py-2 px-4 rounded-md shadow-lg ">
-                                Logout
-                            </button>
+
+                            <!-- Logout Button -->
+                            <div class="pt-6 border-t border-gray-200">
+                                <button @click="logoutClick"
+                                    class="w-full px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                    Logout
+                                </button>
+                            </div>
                         </div>
                     </div>
-
-                   </div>
-                  
                 </div>
             </div>
-        </div>
-        <!--Background Image-->
-        <div>
-            <img class="backPic" src="~/assets/images/vsu-main-the-search-for-truth-statue.png" alt="img" >
         </div>
     </div>
 </template>
@@ -146,21 +156,13 @@ const logoutClick = async () => {
 </script>
 
 <style scoped>
-    .adviser-page{
-        background: #fffef1;
-        height: 850px;
-        position: relative;
-        overflow: hidden; 
-        }
 
-    .backPic{
-        position: absolute;
-        width: 50%;
-        height: auto;
-        border-radius: 15px;
-        left: 50%;
-        top: 20px;
-        z-index: 0;
+.settings-page{
+        @apply bg-[#fffef1] min-h-screen;
+        background-image: url('~/assets/images/vsu-main-the-search-for-truth-statue.png');
+        background-position: 90% 20px;
+        background-size: 50% auto;
+        background-repeat: no-repeat;
     }
 
 

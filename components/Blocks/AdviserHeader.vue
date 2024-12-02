@@ -1,5 +1,23 @@
 <template>
-    <div class = "admin-header h-14 w-screen flex items-center ">
+  <div class="admin-header h-14 w-screen flex items-center">
+    <div class="px-5 w-full flex justify-between items-center">
+      <div class="flex space-x-4">
+        <button @click="goToHomepage" 
+          class="button px-7 py-2 rounded-lg focus:outline-none"
+          aria-label="Homepage">
+          Homepage
+        </button>  
+        <button @click="goToAdvisory" 
+          class="button px-7 py-2 rounded-lg focus:outline-none"
+          aria-label="Advisory">
+          Advisory
+        </button> 
+        <button @click="goToReports" 
+          class="button px-7 py-2 rounded-lg focus:outline-none"
+          aria-label="Reports">
+          Reports
+        </button> 
+      </div>
 
         <div class="px-5 w-full flex justify-between items-center">
             <div class="flex space-x-4">
@@ -36,7 +54,9 @@
             </div>
             </header>
         </div>
+      </header>
     </div>
+  </div>
 </template>
 
 <script setup lang='ts'>
@@ -75,23 +95,42 @@ const notifClick = () => {
 
 <style scoped>
 .admin-header{
-    font-family: 'Century Gothic', sans-serif;
-    background: #265630;
-    z-index: 50;
+  font-family: 'Century Gothic', sans-serif;
+  background: #265630;
+  z-index: 1001;
 }
 
 .button{
-    font-family: 'Century Gothic', sans-serif;
-    font-size: 17px;
-    font-weight: 500;
-    background-color: #265630;
-    color: white;
-    border: none;
-    cursor: pointer;
+  font-family: 'Century Gothic', sans-serif;
+  font-size: 17px;
+  font-weight: 500;
+  background-color: #265630;
+  color: white;
+  border: none;
+  cursor: pointer;
 }
 
 .button:hover{
-    background-color: white;
-    color: #265630;
+  background-color: white;
+  color: #265630;
+}
+
+/* Add new styles for notifications */
+.max-h-[480px] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(114, 139, 120, 0.3) transparent;
+}
+
+.max-h-[480px]::-webkit-scrollbar {
+  width: 4px;
+}
+
+.max-h-[480px]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.max-h-[480px]::-webkit-scrollbar-thumb {
+  background-color: rgba(114, 139, 120, 0.3);
+  border-radius: 4px;
 }
 </style>

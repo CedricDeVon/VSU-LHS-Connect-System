@@ -7,12 +7,12 @@
             />
 
             <NotificationModal v-if="adviserViewStore.notificationShowAdviserModalAnnouncements" />  
-            <div>
-                <h1 class="AY_Sem text-2xl font-bold">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
+            <div class="m-5 flex justify-between items-center mx-20">
+                <h1 class="text-2xl font-bold text-green-900">{{adviserViewStore.advisoryAcademicYearAndSemesterMessage}}</h1>
             </div>
 
             <!--Content of the Page-->
-            <div class="contain " :style="{width: containWidth}">
+            <div class="contain" :style="{width: containWidth}">
 
                 <div class="title  flex justify-center items-center" :style="{width: titleWidth}">
                     <div><h1 class="text-white text-2xl font-bold">Current Advisory</h1></div>
@@ -116,26 +116,21 @@ function getStudents() {
 </script>
 
 <style scoped>
-    .adviser-page{
-        background: #fffef1 url('~/assets/images/vsu-main-the-search-for-truth-statue.png') no-repeat;
+    .adviser-page {
+        @apply min-h-screen bg-[#fffef1] relative;
+        background-image: url('~/assets/images/vsu-main-the-search-for-truth-statue.png');
         background-position: 90% 20px;
         background-size: 50% auto;
-        height: 850px;
-        position: relative;
-        overflow: hidden; 
-        
-        }
+        background-repeat: no-repeat;
+    }
 
-    .contain{
-        position:absolute;
-        height: 70%;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        left: 80px;
-        top: 170px;
-        z-index: 2;
-        box-shadow: 2px 7px 26.6px 0px rgba(0, 0, 0, 0.25);
-        
+    .contain {
+        @apply absolute left-20 top-40 bg-white/90 rounded-xl shadow-lg;
+        height: 75vh;
+    }
+
+    .title {
+        @apply -mt-8 mx-auto w-[98%] py-3 bg-green-800 rounded-xl;
     }
 
     .AY_Sem {
@@ -158,18 +153,6 @@ function getStudents() {
 .gray-button:hover {
     background-color: #4a5e4e;
 }
-
-
-    .title{
-        height: 8.8%;
-        width: 98%;
-        justify-self: center;
-        background: #265630;
-        border-radius: 15px;
-        margin-top: -35px;
-        left: 95px;
-        top: 135px;
-    }
 
 
     .table-text{

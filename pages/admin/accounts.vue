@@ -87,7 +87,7 @@
                     </div>
                   </td>
                   <td v-if="add && selectedAccount === 'inactive'" class="px-6 py-4 break-words">
-                    <button 
+                    <button @click="addToSection(adviser)"
                       class="px-5 py-1 text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
                       Add to Section
                     </button>
@@ -111,6 +111,7 @@
       :adviserName="propAdviser.name"
       :adviserID="propAdviser.facultyId"
         :adviserSection="propAdviser.section"/>
+      <!-- <ConfirmAddAdviser v-if="showConfirmAdd" :adviser="pendingAdviser" @close="cancelAddToSection" @add="confirmAddToSection" :sectionId="this.$route.query.sectionId"/> -->
       </div>
   </div>
 </template>
@@ -124,6 +125,7 @@ import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import AdviserCSVUploadModal from '@/components/Modals/AdviserCSVUploadModal.vue';
 import ApprovedAccountModal from '@/components/Modals/AdminEmailing/ApprovedAccountModal.vue';
+import ConfirmAddAdviser from '~/components/Modals/AdminConfirmations/ConfirmAddAdviser.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore'
 import { componentNames } from '#build/components';
 import { Databases } from '~/library/databases/databases';

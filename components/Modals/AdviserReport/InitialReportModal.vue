@@ -96,6 +96,34 @@
           </button>
         </div>
       </div>
+
+      <!-- Action Buttons -->
+      <div v-if="report.isDraft" class="bg-gray-50 px-6 py-4 flex justify-between space-x-3">
+        
+        <div>
+        <button
+          @click="$emit('close')"
+          class="px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+        
+      <div>
+        <button
+          @click="draft"
+          class="mr-3 px-4 py-2 text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition-colors"
+        >
+          Save as Draft
+        </button>
+        <button
+          @click="submit"
+          class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+        >
+          Submit Report
+        </button>
+      </div>
+      </div>
     </div>
   </div>
 </template>
@@ -239,67 +267,15 @@ import { UserSecurity } from '~/library/security/userSecurity';
     },
   });
   </script>
-  
-  <style scoped>
-  .header {
-    color: #265630;
-    font-family: Century Gothic, sans-serif;
-    font-size: 30px;
-    font-weight: 700;
-    text-align: center;
-  }
-  
-  .body {
-    max-height: 50%;
-    color: #265630;
-    font-family: Century Gothic, sans-serif;
-    font-size: 18px;
-    font-weight: 600;
-  }
 
-  .input-text{
-    color: black;
-    font-size: 16px;
-    font-weight:500;
-    font-family: Century Gothic, sans-serif;
-  }
-  
-  .input-style {
-    border: 1px solid #e5e7eb; /* border border-gray-200 */
-    border-radius: 0.5rem; /* rounded-lg */
-    font-size: 16px;
-    font-weight: 300;
-    background-color: #f9fafb; /* bg-gray-50 */
-    transition: all 0.3s; /* transition-all duration-300 */
-    color: black;
-  }
-  .input-style:focus {
-    outline: none; /* focus:outline-none */
-    ring-width: 2px; /* focus:ring-2 */
-    ring-color: rgba(107, 142, 118, 0.2); /* focus:ring-[#6b8e76]/20 */
-    transform: scale(1.02); /* focus:scale-[1.02] */
-  }
-  
-  .gray-button {
-    background-color: #728b78;
-    font: Century Gothic, sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-  }
-  .gray-button:hover {
-    background-color: #275730;
-  }
-  
-  .whitebutton {
-    background-color: #e5e7eb;
-    color: #4a5e4e;
-  }
-  .whitebutton:hover {
-    background-color: #f8f1ba;
-    color: #4a5e4e;
-  }
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
 
-  .overlap{
-    z-index: 3;
-  }
-  </style>
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

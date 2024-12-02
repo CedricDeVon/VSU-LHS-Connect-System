@@ -3,7 +3,7 @@
       <adviser-header/>
     <div class="flex inset-0 h-screen bg-gray-100">
       <div class="flex-1 overflow-hidden">
-        <div class="p-8 pt-0 overflow-y-auto h-[calc(100vh-64px)]">
+        <div class="p-8 pt-8 overflow-y-auto h-[calc(100vh-64px)]">
           <!-- Page Title -->
           <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900">Anecdotal Report Details</h1>
@@ -67,6 +67,48 @@
                 </div>
               </div>
   
+              <!-- Add this after the Document Actions panel -->
+              <div class="bg-white rounded-lg shadow-md overflow-hidden mt-6">
+                <div class="p-4 bg-gray-50 border-b border-gray-200">
+                  <h2 class="text-sm font-semibold text-gray-900">Report Timeline</h2>
+                </div>
+                
+                <div class="p-4 space-y-8">
+                  <div v-for="(report, index) in sortedReports" :key="report.reportID" class="relative">
+                    <!-- Timeline connector -->
+                    <div v-if="index !== sortedReports.length - 1" 
+                      class="absolute left-4 top-8 bottom-0 w-0.5 bg-gray-200"></div>
+                    
+                    <!-- Timeline item -->
+                    <div class="relative flex items-start space-x-4">
+                      <!-- Date circle -->
+                      <div class="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-100 text-indigo-500">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                      
+                      <!-- Content -->
+                      <div class="flex-1">
+                        <div class="flex items-center justify-between">
+                          <h3 class="text-sm font-medium text-gray-900">
+                            {{ report.purpose }}
+                          </h3>
+                          <time class="text-xs text-gray-500">{{ formatDate(report.datePrepared) }}</time>
+                        </div>
+                        <div class="mt-2 text-sm text-gray-700 space-y-2">
+                          <p><span class="font-medium">Incident Date:</span> {{ formatDate(report.date) }}</p>
+                          <p><span class="font-medium">Place:</span> {{ report.placeOfIncident }}</p>
+                          <p><span class="font-medium">Witnesses:</span> {{ report.witnesses.join(', ') }}</p>
+                          <p class="mt-2">{{ report.details }}</p>
+                          <p class="mt-2 text-gray-600 italic">{{ report.remarks }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
   
             </div>
           </div>
@@ -388,5 +430,14 @@ export default {
   
   iframe {
     border-radius: 0.5rem;
+  }
+
+  .timeline-connector {
+    position: absolute;
+    left: 1rem;
+    top: 2rem;
+    bottom: 0;
+    width: 2px;
+    background-color: #e5e7eb;
   }
   </style>

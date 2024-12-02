@@ -282,6 +282,9 @@ const getSectionStudents = () => {
             :initialEmail="toSendEmail" 
             @close="showSendEmailModal = false" 
             />
+
+            <ConfirmRemoveAdviser v-if="showConfirmRemoveAdviser" :adviser="adviser" :section="section" @close="showConfirmRemoveAdviser = false" @remove="confirmRemoveAdviser" />
+
     </div>
 </template>
 

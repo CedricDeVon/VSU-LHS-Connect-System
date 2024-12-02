@@ -1,30 +1,42 @@
 <template>
-    <div class="fixed inset-0 z-50 flex justify-center bg-black bg-opacity-70">
-        <div class=" z-50 w-2/5 mt-14 h-fit" >
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+        <div class="w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden transform transition-all">
             <!-- Header -->
-            <div class=" header p-4 rounded-lg">
-                Add Student to Advisory
+            <div class="bg-green-700 px-6 py-4">
+                <h2 class="text-2xl font-bold text-white">Add Student to Advisory</h2>
             </div>
-            <!--initial Body -->
-            <div class="body flex justify-self-center rounded-b-lg ">
-              <div v-if="initPreparation" class="p-5 pt-10 w-full ">
-               
-                <div>
-                  <label>Type of Student/s:</label>
-                  <div class="flex justify-center pt-4">
-                    <div class="selection-box rounded-lg m-1 p-2" :class="{selected: selectedStudentType === 'newStudent'}"
-                      @click ="selectStudentType('newStudent')"
-                      @mousehover = "hoverStudentType('newStudent')"
-                      @mouseleave="hoverStudentType('')">
-                      New Student
+
+            <!-- Initial Selection -->
+            <div v-if="initPreparation" class="p-6 space-y-6">
+                <!-- Student Type Selection -->
+                <div class="space-y-4">
+                    <label class="text-lg font-semibold text-gray-700">Type of Student/s:</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button 
+                            @click="selectStudentType('newStudent')"
+                            :class="[
+                                'p-4 rounded-lg border-2 transition-all duration-200',
+                                selectedStudentType === 'newStudent'
+                                    ? 'border-green-600 bg-green-50 text-green-700'
+                                    : 'border-gray-200 hover:border-green-400 hover:bg-green-50'
+                            ]"
+                        >
+                            <div class="font-semibold">New Student</div>
+                            <div class="text-sm text-gray-500">Add a first-time student</div>
+                        </button>
+                        <button 
+                            @click="selectStudentType('continuingStudent')"
+                            :class="[
+                                'p-4 rounded-lg border-2 transition-all duration-200',
+                                selectedStudentType === 'continuingStudent'
+                                    ? 'border-green-600 bg-green-50 text-green-700'
+                                    : 'border-gray-200 hover:border-green-400 hover:bg-green-50'
+                            ]"
+                        >
+                            <div class="font-semibold">Continuing Student</div>
+                            <div class="text-sm text-gray-500">Add an existing student</div>
+                        </button>
                     </div>
-                    <div class="selection-box rounded-lg m-1 p-2" :class="{selected: selectedStudentType === 'continuingStudent'}"
-                      @click ="selectStudentType('continuingStudent')"
-                      @mousehover = "hoverStudentType('continuingStudent')"
-                      @mouseleave="hoverStudentType('')">
-                      Continuing Student
-                    </div>
-                  </div> 
                 </div>
 
                  <div v-if="selectedStudentType === 'newStudent'" class="pt-5">
@@ -151,11 +163,9 @@ export default{
           type: String,
           required: true,
         },
-      },
-
-      setup(props, {emit}) {
-        // const emit = defineEmits('close');
-        const secStore = sectionStore();
+    },
+    setup(props, { emit }) {
+        const secStore = useSectionStore();
         const store = studentAddedStore();
         const initPreparation = ref(true);
         const showSingleNewStudentForm = ref(false);
@@ -379,5 +389,22 @@ export default{
     font-size: 17px;
     font-weight: 300;
     color:#414E44;
+.form-input {
+    @apply w-full px-4 py-2 text-gray-700 transition duration-200 ease-in-out;
+}
+
+.form-select {
+    @apply w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-green-500;
+}
+
+/* Remove old styles and keep only transitions if needed */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

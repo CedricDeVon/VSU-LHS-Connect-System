@@ -16,7 +16,7 @@ export function calculateAge(birthDate) {
 export const student = [
     {
         studentId: 'sample22-1-10110',
-        firstName: 'Try unenrolled',
+        firstName: 'Ricky',
         lastName: 'Gomex',
         middleName: 'Perex',
         suffix: '',
@@ -31,27 +31,6 @@ export const student = [
         sectionID: '',
         anecdotalDocID: null
     },
-
-    {
-        studentId: 'sample22-1-10000',
-        firstName: 'Agar',
-        lastName: 'Gomeg',
-        middleName: 'Casses',
-        suffix: '',
-        gender: 'Male',
-        address: 'Albuera, Leyte',
-        contactNum: '09268021698',
-        isEnrolled: false,
-        incidentDocIDs: [],
-        birthDate: '2004-01-01',
-        profilePic: null,
-        age: calculateAge('2004-01-01'),
-        sectionID: '',
-        anecdotalDocID: null
-    },
-
-
-
     {
         studentId: 'sample22-1-10075',
         firstName: 'Jade',
@@ -288,7 +267,7 @@ export const student = [
         profilePic: null,
         age: calculateAge('2003-11-09'),
         sectionID: 'sectionid12',
-        anecdotalDocID: ''
+        anecdotalDocID: 'ANEC-2024-10087'
     },
     {
         studentId: 'sample22-1-10088',
@@ -306,23 +285,6 @@ export const student = [
         age: calculateAge('2002-08-15'),
         sectionID: 'sectionid26',
         anecdotalDocID: 'ANEC-2024-10088'
-    },
-    {
-        studentId: 'sample22-1-10801',
-        firstName: 'Marcopolo',
-        lastName: 'Santores',
-        middleName: 'Riveral',
-        suffix: '',
-        gender: 'Male',
-        address: 'Tacloban City',
-        contactNum: '09120456789',
-        isEnrolled: true,
-        incidentDocIDs: [],
-        birthDate: '2002-08-15',
-        profilePic: null,
-        age: calculateAge('2002-08-15'),
-        sectionID: 'sectionid26',
-        anecdotalDocID: ''
     },
     {
         studentId: 'sample22-1-10090',
@@ -425,6 +387,40 @@ export const student = [
         age: calculateAge('2001-01-18'),
         sectionID: 'sectionid14',
         anecdotalDocID: 'ANEC-2024-10095'
+    },
+    {
+        studentId: 'sample21-1-10015',
+        firstName: 'Brian',
+        lastName: 'Moondoval',
+        middleName: 'Rokies',
+        suffix: '',
+        gender: 'Male',
+        address: 'Hilongos, Leyte',
+        contactNum: '09122367891',
+        isEnrolled: false,
+        incidentDocIDs: [],
+        birthDate: '2001-01-18',
+        profilePic: null,
+        age: calculateAge('2001-01-18'),
+        sectionID: '',
+        anecdotalDocID: ''
+    },
+    {
+        studentId: 'sample21-1-10367',
+        firstName: 'Bricks',
+        lastName: 'Moondo',
+        middleName: 'kafoo',
+        suffix: '',
+        gender: 'Male',
+        address: 'Hilongos, Leyte',
+        contactNum: '09176367891',
+        isEnrolled: false,
+        incidentDocIDs: [],
+        birthDate: '2001-01-18',
+        profilePic: null,
+        age: calculateAge('2001-01-18'),
+        sectionID: '',
+        anecdotalDocID: ''
     },
     {
         studentId: 'sample22-1-10096',

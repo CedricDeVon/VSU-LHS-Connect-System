@@ -100,7 +100,7 @@ export const section = [
 
 {
     id: 'sectionid2',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'C#',
     sectionLevel: '7',
@@ -138,7 +138,7 @@ export const section = [
 // Sections for level 8
 {
     id: 'sectionid6',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Python Basics',
     sectionLevel: '8',
@@ -148,7 +148,7 @@ export const section = [
 
 {
     id: 'sectionid6',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 1,
     sectionName: 'Python Basics',
     sectionLevel: '8',
@@ -203,7 +203,7 @@ export const section = [
 },
 {
     id: 'sectionid10',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Mobile Apps',
     sectionLevel: '8',
@@ -224,14 +224,13 @@ export const section = [
 {
     id: 'sectionid12',
     adviserId: 'adviserid12',
-    sectionPopulation: 6,
+    sectionPopulation: 5,
     sectionName: 'Machine Learning',
     sectionLevel: '9',
     sectionSchoolYear: '2024-2025',
     sectionStudents: [
         'sample22-1-10087',
         'sample22-1-10088',
-        'sample22-1-10389',
         'sample22-1-10090',
         'sample22-1-10091',
         'sample22-1-10092' 
@@ -239,13 +238,24 @@ export const section = [
 },
 {
     id: 'sectionid13',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Cybersecurity',
     sectionLevel: '9',
     sectionSchoolYear: '2024-2025',
     sectionStudents: [],
 },
+
+{
+    id: 'sectionid13',
+    adviserId: '',
+    sectionPopulation: 1,
+    sectionName: 'Cybersecurity',
+    sectionLevel: '9',
+    sectionSchoolYear: '2023-2024',
+    sectionStudents: ['sample21-1-10015'],
+},
+
 {
     id: 'sectionid14',
     adviserId: 'adviserid14',
@@ -313,6 +323,16 @@ export const section = [
     sectionSchoolYear: '2024-2025',
     sectionStudents: [],
 },
+
+{
+    id: 'sectionid17',
+    adviserId: 'adviserid17',
+    sectionPopulation: 1,
+    sectionName: 'Blockchain',
+    sectionLevel: '10',
+    sectionSchoolYear: '2023-2024',
+    sectionStudents: ['sample21-1-10367'],
+},
 {
     id: 'sectionid18',
     adviserId: 'adviserid18',
@@ -324,7 +344,7 @@ export const section = [
 },
 {
     id: 'sectionid19',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Virtual Reality',
     sectionLevel: '10',
@@ -352,7 +372,7 @@ export const section = [
 },
 {
     id: 'sectionid22',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Red',
     sectionLevel: '11',
@@ -379,7 +399,7 @@ export const section = [
 },
 {
     id: 'sectionid25',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Pink',
     sectionLevel: '11',
@@ -415,7 +435,7 @@ export const section = [
 },
 {
     id: 'sectionid28',
-    adviserId: null,
+    adviserId: '',
     sectionPopulation: 0,
     sectionName: 'Software Engineering',
     sectionLevel: '12',

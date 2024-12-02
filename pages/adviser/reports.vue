@@ -3,7 +3,7 @@
         <InitialReportModal
         v-if="adviserViewStore.reportsShowCreateReport"
         :report="reportChosen"
-        :adviserId="AdviserID"
+        :adviserId="secStore.section.adviserId"
         @close ="creationClose"
         /> 
         <NotificationModal v-if="adviserViewStore.notificationShowAdviserModalAnnouncements" />  
@@ -81,8 +81,9 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>  
-                   </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -154,12 +155,11 @@ const creationClose = () => {
 
 <style scoped>
     .reports-page{
-        background: #fffef1 url('~/assets/images/vsu-main-the-search-for-truth-statue.png') no-repeat;
+        @apply bg-[#fffef1] min-h-screen;
+        background-image: url('~/assets/images/vsu-main-the-search-for-truth-statue.png');
         background-position: 90% 20px;
         background-size: 50% auto;
-        height: 850px;
-        position: relative;
-        overflow: hidden; 
+        background-repeat: no-repeat;
     }
 
     .backPic{
@@ -213,25 +213,12 @@ const creationClose = () => {
 
 
     .contain{
-        position:absolute;
-        height: 70%;
-        background: rgba(255, 255, 255, 0.9);
-        border-radius: 15px;
-        left: 80px;
-        top: 170px;
-        z-index: 2;
-        box-shadow: 2px 7px 26.6px 0px rgba(0, 0, 0, 0.25);
-        
+        @apply absolute left-20 top-40 bg-white/90 rounded-xl shadow-lg;
+        height: 75vh;
     }
 
     .title{
-        height: 8.8%;
-        width: 98%;
-        background: rgba(38, 86, 48, 1); /* Using rgba for consistency */
-        border-radius: 15px;
-        justify-self: center;
-        z-index: 2;
-        margin-top: -35px;
+        @apply -mt-8 mx-auto w-[98%] py-3 bg-green-800 rounded-xl;
     }
 
     .text{

@@ -23,6 +23,8 @@
 <script lang='ts'>
 import { useAdviserViewStore } from "~/stores/views/adviserViewStore";
 
+import { student } from "~/data/student";
+
 export default {
     emits: ['close', 'remove-student'],
     props: {

@@ -134,11 +134,11 @@ export default {
         color: white;
         background-color: #64886d;
         border: none;
-        cursor: pointer;
+        /* cursor: pointer; */
     }
-    .button2:hover{
+    /* .button2:hover{
         background-color: #265630;
-    }
+    } */
 
     .button3{
         font-family: "Century Gothic", sans-serif;

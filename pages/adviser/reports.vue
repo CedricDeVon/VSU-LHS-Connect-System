@@ -184,8 +184,7 @@ const fetchReports = (id, ay) => {
     // const adviserSection = sections.value.find(
     //   (sec) =>
     //     sec.adviserId === id &&
-    //     sec.sectionSchoolYear === ay &&
-    //     sec.sectionName === 'Javascript'
+    //     sec.sectionSchoolYear === ay
     // );
 
     if (adviserSection) {

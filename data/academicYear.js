@@ -7,6 +7,7 @@ export const academicYear = [
             {semID: 'semester1', sem: '1st Semester'},
             {semID: 'semester2', sem: '2nd Semester'},
         ],
+        isActive: false,
     },
     {
         ayID: 'academicyear2',
@@ -15,6 +16,7 @@ export const academicYear = [
             {semID: 'semester1', sem: '1st Semester'},
             {semID: 'semester2', sem: '2nd Semester'},
         ],
+        isActive: false,
     },
     {
         ayID: 'academicyear3', 
@@ -23,6 +25,7 @@ export const academicYear = [
             {semID: 'semester1', sem: '1st Semester'},
             {semID: 'semester2', sem: '2nd Semester'},
         ],
+        isActive: false,
     },
     {
         ayID: 'academicyear4', 
@@ -31,6 +34,7 @@ export const academicYear = [
             {semID: 'semester1', sem: '1st Semester'},
             {semID: 'semester2', sem: '2nd Semester'},
         ],
+        isActive: false,
     },
     {
         ayID: 'academicyear5',
@@ -39,5 +43,6 @@ export const academicYear = [
             {semID: 'semester1', sem: '1st Semester'},
             {semID: 'semester2', sem: '2nd Semester'},
         ],
+        isActive: true,
         },
 ];

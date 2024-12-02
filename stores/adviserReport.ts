@@ -5,7 +5,7 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
     const reportIDRef = ref('');
     const reportedBY = ref('');
     const peopleInvolved = ref([]);
-    const witness = ref([]);
+    const witness = ref('');
     const dateOfIncident = ref('');
     const placeOfIncident = ref('');
     const thingsInvolved = ref('');
@@ -37,12 +37,12 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
          reportIDRef.value = '',
          reportedBY.value = '',
          peopleInvolved.value = [],
-         witness.value = [],
+         witness.value = '',
          dateOfIncident.value = '',
          placeOfIncident.value = '',
          thingsInvolved.value = '',
          narrativeReport.value = '',
-         dateReported.value = (new Date()).toISOString(),
+         dateReported.value = (new Date()).toISOString().split('T')[0],
          status.value = 'Unread',
          isDraft.value = true,
          academicYear.value = ''

@@ -18,9 +18,9 @@
           <!-- People Involved Section -->
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">People Involved</label>
-            <div v-if="!report.isDraft && report.peopleInvolved" 
+            <div v-if="report?.isDraft === false && report.peopleInvolved" 
               class="p-3 bg-gray-50 rounded-lg text-gray-700">
-              {{ report.peopleInvolved }}
+              {{ report.peopleInvolved.join(', ') }}
             </div>
             <div v-else class="space-y-2">
               <input
@@ -31,7 +31,9 @@
                 @keydown.comma.prevent="addPerson"
                 placeholder="Press Enter or Tab to add person"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"
-              />
+                :class="{ 'border-red-500': errors.peopleInvolved }"/>
+                <p v-if="errors.peopleInvolved" class="mt-1 text-sm text-red-600">{{ errors.peopleInvolved}}</p>
+                
               <div class="flex flex-wrap gap-2">
                 <span 
                   v-for="(person, index) in store.peopleInvolved" 
@@ -52,7 +54,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="space-y-2">
               <label class="text-sm font-medium text-gray-700">Witness(es)</label>
-              <div v-if="!report.isDraft && report.witness" 
+              <div v-if="report?.isDraft === false && report.witness" 
                 class="p-3 bg-gray-50 rounded-lg text-gray-700">
                 {{ report.witness }}
               </div>
@@ -61,12 +63,14 @@
                 type="text"
                 placeholder="Enter witness names or N/A"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"
-              />
+                :class="{ 'border-red-500': errors.witness }"/>
+                <p v-if="errors.witness" class="mt-1 text-sm text-red-600">{{ errors.witness}}</p>
+              
             </div>
 
             <div class="space-y-2">
               <label class="text-sm font-medium text-gray-700">Date of Incident</label>
-              <div v-if="!report.isDraft && report.dateOfIncident" 
+              <div v-if="report?.isDraft === false && report.dateOfIncident" 
                 class="p-3 bg-gray-50 rounded-lg text-gray-700">
                 {{ report.dateOfIncident }}
               </div>
@@ -75,11 +79,13 @@
                 placeholder="Select date"
                 class="w-full"
               />
+                      <!-- :class="'border-red-500': errors.dateOfIncident" -->
+                <p v-if="errors.dateOfIncident" class="mt-1 text-sm text-red-600">{{ errors.dateOfIncident}}</p>
             </div>
 
             <div class="space-y-2">
               <label class="text-sm font-medium text-gray-700">Place of Incident</label>
-              <div v-if="!report.isDraft && report.placeOfIncident" 
+              <div v-if="report?.isDraft === false && report.placeOfIncident" 
                 class="p-3 bg-gray-50 rounded-lg text-gray-700">
                 {{ report.placeOfIncident }}
               </div>
@@ -88,12 +94,13 @@
                 type="text"
                 placeholder="Enter location"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"
-              />
+                :class="{ 'border-red-500': errors.placeOfIncident }"/>
+                <p v-if="errors.placeOfIncident" class="mt-1 text-sm text-red-600">{{ errors.placeOfIncident}}</p>
             </div>
 
             <div class="space-y-2">
               <label class="text-sm font-medium text-gray-700">Things Involved</label>
-              <div v-if="!report.isDraft && report.thingsInvolved" 
+              <div v-if="report?.isDraft === false && report.thingsInvolved" 
                 class="p-3 bg-gray-50 rounded-lg text-gray-700">
                 {{ report.thingsInvolved }}
               </div>
@@ -102,14 +109,15 @@
                 type="text"
                 placeholder="Enter items involved"
                 class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"
-              />
+                :class="{ 'border-red-500': errors.thingsInvolved }"/>
+                <p v-if="errors.thingsInvolved" class="mt-1 text-sm text-red-600">{{ errors.thingsInvolved}}</p>
             </div>
           </div>
 
           <!-- Narrative Section -->
           <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Narrative Report</label>
-            <div v-if="!report.isDraft && report.narrativeReport" 
+            <div v-if="report?.isDraft === false && report.narrativeReport" 
               class="p-3 bg-gray-50 rounded-lg text-gray-700 whitespace-pre-line">
               {{ report.narrativeReport }}
             </div>
@@ -120,13 +128,16 @@
               class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200 resize-none"
               @input="autoExpand"
               @keydown="handleTab"
-            ></textarea>
+              :class="{ 'border-red-500': errors.narrativeReport }">
+            </textarea>
+            <p v-if="errors.narrativeReport" class="mt-1 text-sm text-red-600">{{ errors.narrativeReport}}</p>
           </div>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div v-if="report.isDraft" class="bg-gray-50 px-6 py-4 flex justify-between space-x-3">
+      <div v-if ="report?.isDraft === false" ></div>
+      <div v-else class="bg-gray-50 px-6 py-4 flex justify-between space-x-3">
         
         <div>
         <button
@@ -161,6 +172,8 @@
   import { adviserReportStore } from '../../../stores/adviserReport'; // Correct import path
   import { initialReport } from '../../../data/initialReport';
 import { adviser } from '~/data/adviser';
+import { init } from '@emailjs/browser';
+import { academicYear } from '~/data/academicYear';
   
   export default defineComponent({
     name: 'InitialReportModal',
@@ -178,35 +191,21 @@ import { adviser } from '~/data/adviser';
 
         report: {
             type: Object,
-            required: true,
-            default:{
-              initialDocID: '',
-              reportIDRef: '',
-              reportedBY: '',
-              peopleInvolved: [],
-              witness: [], // Update the type to string
-              dateOfIncident: '',
-              placeOfIncident: '',
-              thingsInvolved: '',
-              narrativeReport: '',
-              dateReported: '',
-              status: '',
-              isDraft:true,
-              academicYear: ''
-            }
+            required: false,
         }
     },
+   
     setup(props, { emit }) {
       
         const peopleInput = ref('');
-        const errors = ref({
-          peopleInvolved: false,
-          witness: false,
-          dateOfIncident: false,
-          placeOfIncident: false,
-          thingsInvolved: false,
-          narrativeReport: false,
-        });
+       const errors = ref({
+          peopleInvolved: '',
+          witness: '',
+          dateOfIncident: '',
+          placeOfIncident: '',
+          thingsInvolved: '',
+          narrativeReport: ''
+       });
         const store = adviserReportStore();
         const messageTextarea = ref<HTMLTextAreaElement | null>(null);
         const autoExpand = () => {
@@ -255,31 +254,104 @@ import { adviser } from '~/data/adviser';
       console.log(store.reportedBY);
       
     };
-  
-      const draft = () => {
-        // Handle saving as draft
-        // store.dispatch('adviserReportStore/saveDraft', { ...store });
-        store.resetAllData();
-        emit('close'); // Emit close event to parent component
-      };
-      
+
+
+    const validateInputs = () => {
+      let isValid = true;
+
+      // Validate each field
+      if (!store.peopleInvolved.length) {
+        errors.value.peopleInvolved = 'Please add at least one person involved.';
+        isValid = false;
+      } else {
+        errors.value.peopleInvolved = '';
+      }
+
+      if (!store.witness.trim()) {
+        errors.value.witness = 'Witness is required.';
+        isValid = false;
+      } else {
+        errors.value.witness = '';
+      }
+
+      if (!store.dateOfIncident) {
+        errors.value.dateOfIncident = 'Date of incident is required.';
+        isValid = false;
+      } else {
+        errors.value.dateOfIncident = '';
+      }
+      if (new Date(store.dateOfIncident).toISOString().split('T')[0] > new Date().toISOString().split('T')[0]) {
+        errors.value.dateOfIncident = "Date of incident can't be in the future.";
+        isValid = false;
+      } else {
+        errors.value.dateOfIncident = '';
+      }
+
+      if (!store.placeOfIncident.trim()) {
+        errors.value.placeOfIncident = 'Place of incident is required.';
+        isValid = false;
+      } else {
+        errors.value.placeOfIncident = '';
+      }
+
+      if (!store.thingsInvolved.trim()) {
+        errors.value.thingsInvolved = 'Things involved is required.';
+        isValid = false;
+      } else {
+        errors.value.thingsInvolved = '';
+      }
+
+      if (!store.narrativeReport.trim()) {
+        errors.value.narrativeReport = 'Narrative report is required.';
+        isValid = false;
+      } else {
+        errors.value.narrativeReport = '';
+      }
+
+      return isValid;
+    };
+
+
+    const draft = () => {
+      // Handle saving as draft in database
+      if(validateInputs()){
+      const draftData = store.getAllData();
+       draftData.isDraft = true;
+       const currentAY = academicYear.find((ay) => ay.isActive);
+       if(currentAY){
+         draftData.academicYear = currentAY.AY;
+       }
+      initialReport.push(draftData);
+
+       console.log(initialReport);
+       alert('Report saved as draft');
+
+      store.resetAllData();
+      emit('close'); // Emit close event to parent component
+      }
+    };
 
   
       const submit = () => {
         // Handle submitting the report
-        // store.dispatch('adviserReportStore/submitReport', { ...store });
-        initialize();
-        const initRep = store.getAllData();
-        
-        initialReport.push(initRep);
-        store.resetAllData();
-        
-        console.log(initialReport);
-        emit('close'); // Emit close event to parent component
+        if(validateInputs()){
+          initialize();
+          const initRep = store.getAllData();
+          initRep.isDraft = false;
+          const currentAY = academicYear.find((ay) => ay.isActive);
+          if(currentAY){
+            initRep.academicYear = currentAY.AY;
+          }
+          initialReport.push(initRep);
+          store.resetAllData();
+          console.log(initialReport);
+          emit('close'); // Emit close event to parent component
+        }
+       
       };
 
       
-      return {initialize,  messageTextarea, autoExpand, handleTab, store, draft, submit, peopleInput, addPerson, removePerson };
+      return { validateInputs, initialize,  messageTextarea, autoExpand, handleTab, store, draft, submit, peopleInput, addPerson, removePerson, errors };
     },
   });
   </script>

@@ -250,11 +250,17 @@ export default {
                 return false;
             }
 
-            if (!/^(\+639|09)\d{10}$/.test(store.contactNum)) {
+            if (!/^(\+639|09)\d{9}$/.test(store.contactNum)) {
                 alert('Invalid contact number. Please enter a valid contact number in the format +639xxxxxxxxx or 09xxxxxxxxx.');
                 return false;
                 //I think this is faulty pa
             }
+            if (store.birthDate > new Date(new Date().getFullYear() - 10, 0, 1)) {
+                alert('Invalid birthdate. Please enter a valid birthdate.');
+                return false;
+            }
+
+
             
             return(
                 store.studentId.trim() !== '' &&
@@ -284,7 +290,7 @@ export default {
                     firstName: studentData.firstName,
                     lastName: studentData.lastName,
                     suffix: studentData.suffix,
-                    birthDate: studentData.birthDate,
+                    birthDate: new Date(studentData.birthDate).toISOString().split('T')[0],
                     gender: studentData.gender,
                     address: studentData.address,
                     contactNum: studentData.contactNum,
@@ -297,6 +303,7 @@ export default {
                 //write in database:
                 student.push(newStudent);  
                 const sec = secStore.section;
+                sec.sectionStudents.push(newStudent.studentId);
                 console.log(sec);
                 console.log(newStudent);
                 store.resetAllData();

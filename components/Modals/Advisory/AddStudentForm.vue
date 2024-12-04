@@ -183,7 +183,6 @@ export default {
         const showSingleNewStudentForm = ref(false);
         const showSingleContStudentForm = ref(false);
         const showBulkNewStudentForm = ref(false);
-        const showBulkContStudentForm = ref(false);
         const selectedStudentType = ref('');
         const hoveredStudentType = ref('');
         const selectedAddingType = ref('');
@@ -217,7 +216,6 @@ export default {
             showSingleNewStudentForm.value = false;
             showSingleContStudentForm.value = false;
             showBulkNewStudentForm.value = false;
-            showBulkContStudentForm.value = false;
             initPreparation.value = true;
         };
 
@@ -324,7 +322,6 @@ export default {
             showSingleNewStudentForm,
             showSingleContStudentForm,
             showBulkNewStudentForm,
-            showBulkContStudentForm,
             selectedStudentType,
             hoveredStudentType,
             selectedAddingType,

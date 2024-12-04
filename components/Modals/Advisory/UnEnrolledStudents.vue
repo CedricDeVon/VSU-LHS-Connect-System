@@ -1,5 +1,6 @@
 <template>
-    <div class="w-full absolute inset-0">
+  <div>
+    <div class="w-full absolute  inset-0">
         <select
                 class="  lg:mr-5 lg:pr-2 py-2 input border-b-1 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-none"
                 v-model="selectedLevel">
@@ -44,7 +45,11 @@
                 {{ student.studentId }}
               </td>
               <td class="px-6 py-4 break-words">
-                <button @clicked="addToSection(student)"
+                <button v-if="student.isEnrolled"
+                  class="px-8 inline-flex text-xs leading-5 font-semibold rounded-full  bg-[#969696] text-white mr-2">
+                    Added
+                </button>
+                <button v-else @click="addToSection(student)"
                   class="px-8 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-white hover:bg-green-700 mr-2">
                     Add
                 </button>
@@ -57,9 +62,11 @@
             <button @click ="$emit('close')" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Done">
                 Done
             </button>
-
         </div>
+        
     </div>
+    <ConfirmAddToSection v-if="showConfirmAddToSection" :sectionId="sectionId" :studentObj="studentObj" @close="handleClose" @add="confirmAdd" />
+  </div>
   </template>
   
   <script lang="ts">
@@ -68,10 +75,12 @@
     import { student } from '../../../data/student.js'; 
     import debounce from 'lodash/debounce';
     import { section } from '~/data/section.js';
-import type { academicYear } from '~/data/academicYear';
+    import { useSectionStore } from '~/stores/section';
+    import ConfirmAddToSection from '../AdviserConfirmations/ConfirmAddToSection.vue';
 
   
   export default {
+  components: { ConfirmAddToSection },
     name: 'UnEnrolledStudents',
     props: {
       academicYear: {
@@ -81,15 +90,20 @@ import type { academicYear } from '~/data/academicYear';
     },
 
 
-    setup(props) {
+    setup(props , { emit }) {
 
         const searchQuery = ref<string>('');
         const debouncedQuery = ref<string>('');
         const selectedLevel = ref<string>('');
+        const secStore = useSectionStore();
+        const showConfirmAddToSection = ref(false);
+        const studentObj = ref({});
+        const sectionId = ref('');
+        
 
         watch(searchQuery, debounce((newQuery: string) => {
         debouncedQuery.value = newQuery;
-        }, 300) );
+        }, 300));
 
         const unenrolledStudents = computed(() => {
             return student.filter((stdnt) => stdnt.isEnrolled === false );
@@ -148,14 +162,29 @@ import type { academicYear } from '~/data/academicYear';
     
     });
 
-  function addtoSection(student){
-      
-  }
+    const addToSection = (studentParam) =>{
+      studentObj.value = studentParam;
+      sectionId.value = secStore.section.id;
+      showConfirmAddToSection.value = true;
+           
+    };
+    
+    function confirmAdd(){
+      showConfirmAddToSection.value = false;
+      filteredStudents.value;
+    };
 
-    return {getPreviousAcademicYear, unenrolledStudents, searchQuery , debouncedQuery, filteredStudents, getStudentIDPerLevel, selectedLevel};
+    function handleClose ()  {
+      showConfirmAddToSection.value = false;
+    };
+
+    return {studentObj, sectionId, confirmAdd, handleClose, showConfirmAddToSection, addToSection, getPreviousAcademicYear, unenrolledStudents, searchQuery , debouncedQuery, filteredStudents, getStudentIDPerLevel, selectedLevel};
     
   },
-    };
+
+  
+
+  };
   </script>
   
 

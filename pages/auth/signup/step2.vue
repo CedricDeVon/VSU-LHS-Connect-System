@@ -139,8 +139,6 @@ onMounted(() => {
                       <option value="8">Grade 8</option>
                       <option value="9">Grade 9</option>
                       <option value="10">Grade 10</option>
-                      <option value="11">Grade 11</option>
-                      <option value="12">Grade 12</option>
                     </select>
                   </div>
                   <div class="w-1/2">
@@ -169,11 +167,10 @@ onMounted(() => {
                class="text-red-500 text-sm animate-shake bg-red-50 p-3 rounded-lg">
             {{ userSignUpStore.errorMessage }}
           </div>
-        </form>
 
           <!-- Proceed Button -->
           <button
-            type="handleFormSubmit"
+            type="submit"
             class="w-full py-3 bg-[#2B5741] text-white rounded-lg text-sm uppercase tracking-wider
                    transform transition-all duration-300
                    hover:bg-[#1e3d2d] hover:scale-[1.02] hover:shadow-lg
@@ -187,7 +184,6 @@ onMounted(() => {
 
           <!-- Back Button -->
           <button
-            type="button"
             @click="handleGoingBackToPreviousPage"
             class="w-full py-3 bg-[#6B8E76] text-white rounded-lg text-sm uppercase tracking-wider
                    transform transition-all duration-300
@@ -196,6 +192,7 @@ onMounted(() => {
           >
             BACK
           </button>
+        </form>
        
       </div>
     </div>

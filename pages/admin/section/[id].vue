@@ -1,7 +1,10 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-section']
+  middleware: ['authenticate-and-authorize-admin']
 });
+const adminViewStore = useAdminViewStore();
+await adminViewStore.updateSectionPageData(useRoute().params.id);
+await adminViewStore.updateSidebar();
 
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
@@ -11,9 +14,6 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const showSendEmailModal = ref(false);
 const showConfirmRemoveAdviser = ref(false);
-const adminViewStore = useAdminViewStore();
-await adminViewStore.updateSectionPageData(useRoute().params.id);
-
 // onBeforeMount(async () => {
 //     await adminViewStore.updateSectionPageData(useRoute().params.id);
 // })

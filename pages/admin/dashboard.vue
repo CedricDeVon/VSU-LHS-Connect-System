@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-dashboard']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import { ref, computed, onMounted } from 'vue';
@@ -15,9 +15,9 @@ import MakeAnnouncements from '~/components/Modals/Dashboard/MakeAnnouncements.v
 import CreateReportFromDashboard from '~/components/Modals/Dashboard/CreateReportFromDashboard.vue'; // Add import
 import ScheduleConferenceFromDashboard from '~/components/Modals/Dashboard/ScheduleConferenceFromDashboard.vue'; // Add import
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
-
 const adminViewStore = useAdminViewStore();
-// await adminViewStore.updateDashboard();
+await adminViewStore.updateDashboard();
+await adminViewStore.updateSidebar();
 
 Chart.register(...registerables);
 

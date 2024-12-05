@@ -89,11 +89,13 @@ AND an incident cannot have more than one on-going conference that is why sa inc
 
 <script setup>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-incident-conference']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import { useAdminViewStore } from '~/stores/views/adminViewStore'
 const adminViewStore = useAdminViewStore();
+await adminViewStore.updateCaseConference(useRoute().params.conferenceId);
+await adminViewStore.updateSidebar();
 
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
@@ -121,8 +123,6 @@ const makeComplete = async () => {
         }
     })
     alert('Case Conference Made Complete')
-    await adminViewStore.updateCaseConference(adminViewStore.caseConferenceCaseConferenceReport.id);
-    await adminViewStore.updateSidebar();
     const data = adminViewStore.caseConferenceCaseConferenceReport;
     conferenceData.value = data
     loading.value = false

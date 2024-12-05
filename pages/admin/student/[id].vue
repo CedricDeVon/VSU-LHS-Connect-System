@@ -1,6 +1,6 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-student']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import { defineComponent } from 'vue';

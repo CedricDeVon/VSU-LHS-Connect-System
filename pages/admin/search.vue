@@ -124,11 +124,12 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-search']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 const adminViewStore = useAdminViewStore();
+await adminViewStore.updateSearch();
 
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
@@ -137,7 +138,6 @@ import AssignSectionToAdviser from '~/components/Modals/AssignSectionToAdviser.v
 import debounce from 'lodash/debounce';
 import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 
-// await adminViewStore.updateSearch();
 
 // onBeforeMount(async () => {
 //   await adminViewStore.updateSearch();

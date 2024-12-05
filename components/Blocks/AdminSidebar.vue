@@ -4,9 +4,9 @@ import { Result } from '~/library/results/result';
 import { UserSecurity } from '~/library/security/userSecurity';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-const auth = useFirebaseAuth()
+const auth = useFirebaseAuth();
 const adminViewStore = useAdminViewStore();
-await adminViewStore.updateSidebar();
+// await adminViewStore.updateSidebar();
 
 // onBeforeMount(async () => {
 //   await adminViewStore.updateSidebar();
@@ -107,8 +107,8 @@ const bottomNav = [
             <div class="flex items-center gap-3 pb-8">
               <div class="flex items-center gap-3">
                 <div>
-                  <p class="text-sm font-semibold">{{ adminViewStore.sidebarUser.data.username }}</p>
-                  <p class="text-sm text-white">{{ adminViewStore.sidebarUser.data.email }}</p>
+                  <p class="text-sm font-semibold">Admin</p>
+                  <p class="text-sm text-white">admin.cs@vsuihs.com</p>
                 </div>
               </div>
               <UiTooltip>

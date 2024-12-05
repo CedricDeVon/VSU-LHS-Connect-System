@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         if (result.isNotSuccessful) {
           throw new Error(result.message);
         }
-      
+        // console.log(result);
         const { role, email, password } = result.data.data;
   
         if (role !== 'admin') {

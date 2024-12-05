@@ -87,7 +87,7 @@
 
 <script>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-anecdotal']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
@@ -107,7 +107,8 @@ export default {
     },
 
     async mounted() {
-        // await this.adminViewStore.updateAnecdotal();
+        await this.adminViewStore.updateAnecdotal();
+        await adminViewStore.updateSidebar();
         this.searchResults = this.adminViewStore.anecdotalAnecdotalReports
     },
     

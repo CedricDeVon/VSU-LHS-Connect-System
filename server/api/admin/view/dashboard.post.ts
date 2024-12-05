@@ -6,9 +6,12 @@ export default defineEventHandler(async (event) => {
     try {
         const { id, email } = await readBody(event);
 
+        console.log(id)
         const timeline = (await Databases.getMostRecentTimeline()).data[0];
-        const adminUser = (await Databases.getOneAdminViaUserId(id)).data;
-        const user = (await Databases.getOneUserViaEmail(email)).data;
+        const adminUser = (await Databases.adminFirebaseDatabase.queryDuplicates()).data.find((a: any) => { return id === a.data.userId });
+        console.log('B: ', adminUser)
+        const user = (await Databases.userFirebaseDatabase.queryDuplicates()).data.find((a: any) => { return id === a.id });
+        console.log('A: ', user)
         const incidentReports = (await Databases.getAllIncidentReports()).data.filter((report: any) => {
             return report.data.academicYear === timeline.data.schoolYear;
         });
@@ -18,6 +21,8 @@ export default defineEventHandler(async (event) => {
         const caseConferences = (await Databases.getAllCaseConferenceReports()).data.filter((report: any) => {
             return report.data.academicYear === timeline.data.schoolYear;
         });
+        // const studentsSample = (await Databases.studentFirebaseDatabase.queryDuplicates()).data;
+        // const sectionSample = (await Databases.sectionFirebaseDatabase.queryDuplicates()).data;
         const students = (await Databases.getAllStudents()).data;
         for (const caseConference of caseConferences) {
             const incident = (await Databases.getOneIncidentalReportViaId(caseConference.data.incidentId)).data;
@@ -30,7 +35,7 @@ export default defineEventHandler(async (event) => {
         for (const initialReport of initialReports) {
             initialReport.data.reportedAdviser = (await Databases.getOneAdviserViaId(initialReport.data.reportedBY)).data;
         }
-        console.log(initialReports)
+        
 
         return new SuccessfulResult({
             adminUser,

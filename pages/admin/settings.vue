@@ -88,7 +88,7 @@
 
 <script>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-settings']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
@@ -111,6 +111,8 @@ export default {
     },
     async setup(props) {
         const adminViewStore = useAdminViewStore();
+        await adminViewStore.updateSettings();
+        await adminViewStore.updateSidebar();
 
         const isEditing = ref(false);
         const username = ref('');

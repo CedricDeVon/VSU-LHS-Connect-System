@@ -96,16 +96,16 @@
 
 <script setup lang='ts'>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-incidental']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import { defineComponent } from 'vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
-
 const adminViewStore = useAdminViewStore();
-// await adminViewStore.updateIncidental();
+await adminViewStore.updateIncidental();
+await adminViewStore.updateSidebar();
 
 // onBeforeMount(async () => {
 //     await adminViewStore.updateIncidental();

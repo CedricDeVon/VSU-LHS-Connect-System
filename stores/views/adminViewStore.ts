@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { getCurrentUser } from 'vuefire';
 import { UserSecurity } from "~/library/security/userSecurity";
 
 export const useAdminViewStore = defineStore('useAdminViewStore', () => {
@@ -329,7 +328,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     await UserSecurity.logInViaToken();
     const currentUser = await getCurrentUser();
     const { data }: any = await $fetch('/api/admin/view/dashboard', {
-        method: 'POST', body: { email: currentUser?.email, id: currentUser?.uid }
+        method: 'POST', body: { email: currentUser.email, id: currentUser.uid }
     });
     // console.log('updateDashboard: ', data);
 

@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-accounts']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
@@ -134,7 +134,8 @@ import { UserSecurity } from '~/library/security/userSecurity';
 
 const auth = useFirebaseAuth();
 const adminViewStore = useAdminViewStore()
-// await adminViewStore.updateAccountsAdvisers();
+await adminViewStore.updateAccountsAdvisers();
+await adminViewStore.updateSidebar();
 
 // onBeforeMount(async () => {
 //   await adminViewStore.updateAccountsAdvisers();

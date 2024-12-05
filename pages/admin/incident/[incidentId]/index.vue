@@ -211,7 +211,7 @@
 
       <ViewCaseConferencesModal 
         v-if="showScheduleModal && isViewingHistory"
-        :conferences="caseConferences"
+        :conferences="caseConferences.sort((a, b) => { return new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident) })"
         :incident-id="incdReport.id"
         @close="closeConferenceHistory" />
     
@@ -237,7 +237,7 @@
 
 <script>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-incident']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -252,10 +252,6 @@ import CreateCaseConferenceModal from '~/components/Modals/Incident Management/C
 import { TimeConverters } from '~/library/timeConverters/timeConverters';
 import { defineIncidentDoc } from '~/utils/documentDefinitions';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
-
-const navigateToCreateConference = () => {
-  return navigateTo(`/admin/conferences/create?incidentId=${useRoute().params.id}`, { replace: true });
-};
 
 export default {
   components: {
@@ -284,113 +280,113 @@ export default {
     };
   },
 
+  navigateToCreateConference() {
+    return navigateTo(`/admin/conferences/create?incidentId=${useRoute().params.id}`, { replace: true });
+  },
+
   async created() {
     // alert('Please Reload the Page')
+    await this.adminViewStore.updateIncident(useRoute().params.incidentId);
+    await this.adminViewStore.updateSidebar();
 
     const incidentId = this.$route.params.incidentId;
     await this.initIncidentByID(incidentId);
-    // console.log(this.incdReport)
-    // console.log(this.incidentData)
     await this.getReporter(this.incdReport.id);
     this.displayPDF();
   },
 
   computed: {
-    // processedIncidentData() {
-    //   // if (!this.incidentData) return {};
-    //   // return {
-    //   //   ...this.incidentData,
-    //   //   status: this.incidentData.data.status === 'Resolved' ? 'NotResolved' : this.incidentData.data.status
-    //   // }
-    //   return {};
-    // },
     isResolved() {
-      return this.incidentData.data.status === 'Resolved';
+      return false;
     },
     
     hasCaseConference() {
-      return Array.isArray(this.incidentData?.data.hasCaseConference) 
-        ? this.incidentData.data.hasCaseConference.length > 0 
-        : this.incidentData?.data.hasCaseConference;
-      // return []
+      // thsi.incidentData = this.adminViewStore.incidentIncidentReport
+      // return Array.isArray(this.incidentData?.data.hasCaseConference) 
+      //   ? this.incidentData.data.hasCaseConference.length > 0 
+      //   : this.incidentData?.data.hasCaseConference;
+      return []
     },
 
     hasValidConferences() {
-      if (!this.incidentData?.data.hasCaseConference) return false;
-      return Array.isArray(this.incidentData.data.hasCaseConference) && 
-             this.incidentData.data.hasCaseConference.length > 0;
-      // return []
+      // thsi.incidentData = this.adminViewStore.incidentIncidentReport
+      // if (!this.incidentData?.data.hasCaseConference) return false;
+      // return Array.isArray(this.incidentData.data.hasCaseConference) && 
+      //        this.incidentData.data.hasCaseConference.length > 0;
+      return []
     },
 
     conferenceCount() {
-      if (!this.incidentData?.data.hasCaseConference) return 0;
-      return Array.isArray(this.incidentData.data.hasCaseConference) 
-        ? this.incidentData.data.hasCaseConference.length 
-        : (this.incidentData.data.hasCaseConference ? 1 : 0);
-      // return [];
+      // this.incidentData = this.adminViewStore.incidentIncidentReport
+      // if (!this.incidentData?.data.hasCaseConference) return 0;
+      // return Array.isArray(this.incidentData.data.hasCaseConference) 
+      //   ? this.incidentData.data.hasCaseConference.length 
+      //   : (this.incidentData.data.hasCaseConference ? 1 : 0);
+      // console.log()
+      return this.adminViewStore.incidentIncidentReport.data.hasCaseConference.length;
     },
 
     hasScheduledConferences() {
-      return this.pendingConferences.length > 0;
-      // return false;
+      // return this.pendingConferences.length > 0;
+      return false;
     },
 
     hasUndocumentedConference() {
       // Check if there are scheduled conferences without documentation
-      return this.pendingConferences.some(conf => !conf.id);
-      // return false;
+      // return this.pendingConferences.some(conf => !conf.id);
+      return false;
     },
 
     pendingConferences() {
-      if (!this.caseConferences) return [];
-      return this.caseConferences.filter(conf => 
-        conf.data.status === 'Pending' && new Date(conf.data.conferenceDate) >= new Date()
-      );
-      // return [];
+      // if (!this.caseConferences) return [];
+      // return this.caseConferences.filter(conf => 
+      //   conf.data.status === 'Pending' && new Date(conf.data.conferenceDate) >= new Date()
+      // );
+      return [];
     },
 
     pendingConferencesCount() {
-      return this.pendingConferences.length;
-      // return 0;
+      // return this.pendingConferences.length;
+      return 0;
     },
 
     nextConferenceDate() {
-      if (!this.hasScheduledConferences) return null;
-      const nextConf = this.pendingConferences[0];
-      return new Date(nextConf.data.conferenceDate).toLocaleDateString();
-      // return '';
+      // if (!this.hasScheduledConferences) return null;
+      // const nextConf = this.pendingConferences[0];
+      // return new Date(nextConf.data.conferenceDate).toLocaleDateString();
+      return '';
     },
 
     conferenceProgress() {
-      const total = this.conferenceCount;
-      const completed = total - this.pendingConferencesCount;
-      return total ? (completed / total) * 100 : 0;
-      // return 0;
+      // const total = this.conferenceCount;
+      // const completed = total - this.pendingConferencesCount;
+      // return total ? (completed / total) * 100 : 0;
+      return 0;
     },
 
     showCaseConferenceSection() {
       // Show if:
       // 1. Not resolved OR
       // 2. Has case conferences (regardless of resolution status)
-      return !this.isResolved || this.hasCaseConference;
-      // return false;
+      // return !this.isResolved || this.hasCaseConference;
+      return true;
     },
 
     hasConferenceDraft() {
-      if (process.client) {
-        const savedDraft = window.localStorage.getItem(`draft_conference_${this.incdReport.id}`);
-        return !!savedDraft;
-      }
-      // return false;
+      // if (process.client) {
+      //   const savedDraft = window.localStorage.getItem(`draft_conference_${this.incdReport.id}`);
+      //   return !!savedDraft;
+      // }
+      return false;
     },
 
     shouldShowConferenceHistory() {
-      const conferences = this.incidentData?.data.hasCaseConference;
-      if (!Array.isArray(conferences)) return false;
-      if (conferences.length === 0) return false;
+      // const conferences = this.incidentData?.data.hasCaseConference;
+      // if (!Array.isArray(conferences)) return false;
+      // if (conferences.length === 0) return false;
       // Only show if at least one conference ID exists and is valid
+      // return true;
       return true;
-      // return false;
     }
   },
 

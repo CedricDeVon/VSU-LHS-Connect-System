@@ -123,7 +123,7 @@
 
 <script>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-admin', 'admin-anecdote']
+  middleware: ['authenticate-and-authorize-admin']
 });
 
 import pdfMake from 'pdfmake/build/pdfmake';
@@ -157,6 +157,7 @@ export default {
 
   async mounted() {
     await this.adminViewStore.updateAnecdote(useRoute().params.id);
+    await this.adminViewStore.updateSidebar();
     initializeReports(); // Initialize from localStorage
     await this.initData();
     this.displayPDF();

@@ -121,12 +121,10 @@ onMounted(() => {
           <!-- Birthdate -->
           <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
             <label class="block text-[#2B5741] text-sm mb-1">Birthdate</label>
-            <DatePickerInput 
-              v-model="userSignUpStore.birthdate"
-              class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+            <input v-model="userSignUpStore.birthdate" type="date"
+                  class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
                      transition-all duration-300
-                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20"
-            />
+                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20"/>
           </div>
 
            <!-- <div class="flex space-x-4 mt-4 mb-6">

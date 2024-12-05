@@ -184,13 +184,7 @@ const dashboardStats = computed<DashboardStat[]>(() => ([
     color: 'yellow',
     onClick: openPendingModal // Add onClick handler
   },
-  {
-    label: 'Review Report Submissions',
-    value: unreadReports.value,
-    icon: 'lucide:mail',
-    color: 'red',
-    onClick: openPendingReportsModal // renamed from openUnreadModal
-  },
+  
   {
     label: 'Total Incidents',
     value: totalIncidents.value,

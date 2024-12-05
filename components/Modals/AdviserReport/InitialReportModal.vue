@@ -74,10 +74,11 @@
                 class="p-3 bg-gray-50 rounded-lg text-gray-700">
                 {{ report.dateOfIncident }}
               </div>
-              <UiVeeDatepicker v-else
+              <input v-else
+                type="date"
                 v-model="store.dateOfIncident"
                 placeholder="Select date"
-                class="w-full"
+                class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"
               />
                       <!-- :class="'border-red-500': errors.dateOfIncident" -->
                 <p v-if="errors.dateOfIncident" class="mt-1 text-sm text-red-600">{{ errors.dateOfIncident}}</p>

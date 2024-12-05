@@ -212,13 +212,13 @@ export class UserSecurity {
 
     private static _handleFailedResult(error: any): Result {
         if (error.code === 'auth/network-request-failed') {
-            return new FailedResult("Please connect to a stable internet connection")
+            return new FailedResult("Unstable Internet Connection Detected. Please Reload The Page")
         }
         else if (error.code === 'auth/invalid-credential') {
-            return new FailedResult("Both email and password do not match");
+            return new FailedResult("Both Email and Password Do Not Match");
         }
         else if (error.code === 'auth/email-already-in-use') {
-            return new FailedResult('Email already exists');
+            return new FailedResult('Email Already Exists');
         }
 
         return new FailedResult(error.message);

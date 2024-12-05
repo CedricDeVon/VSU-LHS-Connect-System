@@ -42,11 +42,11 @@ export class PasswordValidator extends Validator {
     }
 
     if (!validator.isStrongPassword(value, { minNumbers })) {
-      return new FailedResult(`Passwords must contain at least '${minNumbers}' number(s)`);
+      return new FailedResult(`Passwords must contain at least '${minNumbers}' number(s) and symbol(s)`);
     }
 
     if (!validator.isStrongPassword(value, { minSymbols })) {
-      return new FailedResult(`Passwords must contain at least '${minSymbols}' symbol(s)`);
+      return new FailedResult(`Passwords must contain at least '${minSymbols}' number(s) and symbol(s)`);
     }
 
     if (!validator.isStrongPassword(value, { minLowercase })) {

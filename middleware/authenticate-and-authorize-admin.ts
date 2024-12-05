@@ -6,8 +6,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
         const jsonWebToken: any = useCookie('VSUConnectionSystemUserAuthToken');
         if (jsonWebToken.value === undefined || jsonWebToken.value === null) {
-          console.error(`User has not yet Loged-in. Returning to Log-in Page`);
-          return navigateTo('/auth/login');
+          console.error(`User Isn't Loged-in. Returning To Log-in Page`);
+          return navigateTo('/auth/login', { replace: true });
         }
   
         let result: any = await $fetch('/api/auth/jsonWebToken/verify', {
@@ -22,14 +22,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         const { role, email, password } = result.data.data;
   
         if (role !== 'admin') {
-          console.error('User is not an Admin. Returning to Log-in Page');
-          return navigateTo('/auth/login');
+          console.error('User Isn\'t An Admin. Returning To Log-in Page');
+          return navigateTo('/auth/login', { replace: true });
         }
   
         await signInWithEmailAndPassword(getAuth(), email, password);
         
       } catch (error: any) {
         console.error(`Application Error: ${error.message}`);
-        return navigateTo('/auth/login');
+        return navigateTo('/auth/login', { replace: true });
       }
   });

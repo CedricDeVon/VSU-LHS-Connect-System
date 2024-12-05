@@ -6,8 +6,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
       const jsonWebToken: any = useCookie('VSUConnectionSystemUserAuthToken');
       if (jsonWebToken.value === undefined || jsonWebToken.value === null) {
-        console.error(`User has not yet Loged-in. Returning to Log-in Page`);
-        return navigateTo('/auth/login');
+        console.error(`User Isn't Loged-in. Returning To Log-in Page`);
+        return navigateTo('/auth/login', { replace: true });
       }
 
       let result: any = await $fetch('/api/auth/jsonWebToken/verify', {
@@ -15,29 +15,29 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       })
       if (result.isNotSuccessful) {
         console.error(result.message);
-        return navigateTo('/auth/login');
+        return navigateTo('/auth/login', { replace: true });
       }
       
       const { role, status, email, password } = result.data.data;
       if (result.isNotSuccessful) {
-        console.error('User is not an Adviser. Returning to Log-in Page');
-        return navigateTo('/auth/login');
+        console.error('User Isn\'t An Adviser. Returning To Log-in Page');
+        return navigateTo('/auth/login', { replace: true });
       }
 
       if (role !== 'adviser') {
-        console.error('User is not an Adviser. Returning to Log-in Page');
-        return navigateTo('/auth/login');
+        console.error('User Isn\'t An Adviser. Returning To Log-in Page');
+        return navigateTo('/auth/login', { replace: true });
       }
 
       if (status !== 'active') {
-        console.error('Adviser is currently inactive. Returning to Log-in Page');
-        return navigateTo('/auth/login');
+        console.error('Adviser Is Currently Inactive. Returning To Log-in Page');
+        return navigateTo('/auth/login', { replace: true });
       }
 
       await signInWithEmailAndPassword(getAuth(), email, password);
       
     } catch (error: any) {
       console.error(`Application Error: ${error.message}`);
-      return navigateTo('/auth/login');
+      return navigateTo('/auth/login', { replace: true });
     }
   });

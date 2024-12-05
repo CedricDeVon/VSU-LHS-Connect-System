@@ -1,5 +1,9 @@
 <script setup lang="ts">
 
+const backToLogin = () => {
+    return navigateTo('/auth/login', { replace: true })
+}
+
 </script>
 
 <template>
@@ -21,6 +25,15 @@
                 <br />
                 Please allow up to 24-48 hours for the approval process. Thank you!
             </p>
+            <button
+            @click="backToLogin"
+            class="w-[16rem] py-3 mt-20 bg-[#6B8E76] text-white rounded-lg text-sm uppercase tracking-wider
+                   transform transition-all duration-300
+                   hover:bg-[#5a7862] hover:scale-[1.02] hover:shadow-lg
+                   active:scale-95"
+          >
+            Back To Log-in
+          </button>
         </div>
     </div>
 </template>

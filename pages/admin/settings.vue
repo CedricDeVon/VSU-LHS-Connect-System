@@ -270,8 +270,8 @@ export default {
               }
             })
             // console.log(result);
-            alert('New Academic Year Reset Successfully. Returning Back to Login Page')
-            confirmReset.value = !confirmReset.value;
+            alert('Academic Year Has Been Successfully Reset. Returning To Log-in Page For Validation')
+            confirmReset.value = !confirmReset.value; 
         };
 
         return { 

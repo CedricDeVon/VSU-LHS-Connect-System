@@ -113,7 +113,7 @@
                         <!-- Other Fields -->
                         <div class="space-y-2">
                             <label class="text-sm font-medium text-gray-700">Birthdate</label>
-                            <UiVeeDatepicker v-model="store.birthDate" placeholder="MM/DD/YYYY" class="form-input w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"/>
+                            <input type="date" v-model="store.birthDate" placeholder="MM/DD/YYYY" class="form-input w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"/>
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-medium text-gray-700">Sex at Birth</label>

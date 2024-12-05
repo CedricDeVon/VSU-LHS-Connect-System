@@ -145,12 +145,14 @@ const acceptRequest = async (adviser: any) => {
   const result = await $fetch('/api/adviser/request/accept', {
     method: 'POST', body: { adviserId: adviser.id }
   });
+  alert('Account Successfully Approved');
   await adminViewStore.updateAccountsAdvisers();
 }
 
 const rejectRequest = async (adviser: any) => {
   const result: Result = await UserSecurity.deleteAdviser(auth, {
     userId: adviser.data.userId, adviserId: adviser.id });
+  alert('Account Successfully Rejected');
   await adminViewStore.updateAccountsAdvisers();
 }
 

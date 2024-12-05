@@ -5,10 +5,14 @@ definePageMeta({
 
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
+import SendEmailModal from '~/components/Modals/AdminEmailing/SendEmailModal.vue';
+import ConfirmRemoveAdviser from '~/components/Modals/AdminConfirmations/ConfirmRemoveAdviser.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
+const showSendEmailModal = ref(false);
+const showConfirmRemoveAdviser = ref(false);
 const adminViewStore = useAdminViewStore();
-// await adminViewStore.updateSectionPageData(useRoute().params.id);
+await adminViewStore.updateSectionPageData(useRoute().params.id);
 
 // onBeforeMount(async () => {
 //     await adminViewStore.updateSectionPageData(useRoute().params.id);
@@ -23,7 +27,7 @@ const viewStudentProfile = (studentId: any) => {
 }
 
 const viewReport = (reportId: any) => {
-    return navigateTo(`/admin/reports/${reportId}`, { replace: true });
+    return navigateTo(`/admin/incident/${reportId}`, { replace: true });
 }
 
 const getStatusClass = (status: any) => {
@@ -32,6 +36,26 @@ const getStatusClass = (status: any) => {
         'NotResolved': 'text-yellow-600 font-medium'
     };
     return classes[status] || 'text-gray-600 font-medium';
+}
+
+const showSendEmail = () => {
+    showSendEmailModal.value = true;
+}
+
+const showRemoveAdviser = () => {
+    // console.log(showConfirmRemoveAdviser)
+    showConfirmRemoveAdviser.value = true;
+}
+
+const confirmRemoveAdviser = async () => {
+    await $fetch('/api/admin/removeAdviser', {
+        method: 'POST',
+        body: {
+            adviserId: adminViewStore.sectionAdviser.id
+        }
+    });
+    showConfirmRemoveAdviser.value = false;
+    return navigateTo('/admin/search', { replace: true });
 }
 
 const getSectionReports = () => {
@@ -129,11 +153,11 @@ const getSectionStudents = () => {
                                             <dd>{{ adminViewStore.sectionAdviser.data.birthdate || 'N/A' }}</dd>
                                         </div>
                                     </dl>
-                                    <button @click="sendEmail"
+                                    <button @click="showSendEmail"
                                         class="w-full px-4 py-3 mt-5 text-white bg-green-800 hover:bg-green-900 rounded-md max-md:px-5 max-md:mr-1">
                                         Send an Email
                                     </button>
-                                    <button @click="removeAdviser"
+                                    <button @click="showRemoveAdviser"
                                         class="w-full px-4 py-3 mt-2 text-white bg-red-700 hover:bg-red-800 rounded-md max-md:px-5 max-md:mr-1">
                                         Remove Adviser
                                     </button>
@@ -178,7 +202,7 @@ const getSectionStudents = () => {
                                         v-model="adminViewStore.sectionSelectedReportStatus">
                                         <option value="all">All Status</option>
                                         <option value="Resolved">Resolved</option>
-                                        <option value="Unresolved">Unresolved</option>
+                                        <option value="NotResolved">NotResolved</option>
                                     </select>
                                 </div>
 
@@ -278,12 +302,16 @@ const getSectionStudents = () => {
                 </section>
             </div>
         </div>
-            <SendEmail v-if="showSendEmailModal" 
+            <SendEmailModal v-if="showSendEmailModal" 
             :initialEmail="toSendEmail" 
             @close="showSendEmailModal = false" 
             />
 
-            <ConfirmRemoveAdviser v-if="showConfirmRemoveAdviser" :adviser="adviser" :section="section" @close="showConfirmRemoveAdviser = false" @remove="confirmRemoveAdviser" />
+            <ConfirmRemoveAdviser v-if="showConfirmRemoveAdviser"
+            :adviser="adminViewStore.sectionAdviser"
+            :section="adminViewStore.sectionSection"
+            @close="showConfirmRemoveAdviser = false"
+            @remove="confirmRemoveAdviser" />
 
     </div>
 </template>

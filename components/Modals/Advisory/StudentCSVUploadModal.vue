@@ -74,7 +74,7 @@ const handleClose = () => {
 
 const uploadFile = async () => {
   const result: any = await adviserViewStore.createManyStudentsViaCSV(user, files.value);
-  console.log(result);
+  // console.log(result);
   if (result.isNotSuccessful) {
     adviserViewStore.studentCSVUpdateModalFile = null;
     adviserViewStore.studentCSVUpdateModalSuccessMessage = result.message;

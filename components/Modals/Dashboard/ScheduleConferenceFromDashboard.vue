@@ -341,7 +341,7 @@ const unresolvedIncidents = computed(() => {
       };
     });
   
-  console.log('Unresolved incidents:', incidents); // For debugging
+  // console.log('Unresolved incidents:', incidents); // For debugging
   return incidents;
 });
 
@@ -367,7 +367,7 @@ const handleSubmit = () => {
     return;
   }
 
-  console.log(formData)
+  // console.log(formData)
   // Get unique advisers from the selected students' sections
   const uniqueAdvisers = Array.from(new Set(
     selectedStudents.value.map((student: any) => {
@@ -400,10 +400,10 @@ const emit = defineEmits(['close', 'submit']);
 // Update watchers and refs
 watch(() => selectedIncident.value, (newIncidentId: any) => {
   if (newIncidentId) {
-    console.log('Selected incident ID:', newIncidentId); // For debugging
+    // console.log('Selected incident ID:', newIncidentId); // For debugging
     
     const incident = adminViewStore.dashboardIncidentReports.find((inc: any) => inc.id === newIncidentId);
-    console.log('Found incident:', incident); // For debugging
+    // console.log('Found incident:', incident); // For debugging
     
     if (incident) {
       // Get all enrolled students who have this incident ID
@@ -415,14 +415,14 @@ watch(() => selectedIncident.value, (newIncidentId: any) => {
           section: s.sectionID
         }));
 
-      console.log('Found involved students:', involvedStudents); // For debugging
+      // console.log('Found involved students:', involvedStudents); // For debugging
       selectedStudents.value = involvedStudents;
 
       // Get the initial report for witness info
       const initialReportData = adminViewStore.dashBoardInitialReports.find(report => 
         report.reportIDRef === incident.reportID
       );
-      console.log('Found initial report:', initialReportData); // For debugging
+      // console.log('Found initial report:', initialReportData); // For debugging
 
       if (initialReportData?.witness) {
         const witnessStudent = student.find(s => 
@@ -434,7 +434,7 @@ watch(() => selectedIncident.value, (newIncidentId: any) => {
           name: witnessStudent ? `${witnessStudent.firstName} ${witnessStudent.lastName}` : initialReportData.witness,
           isStudent: !!witnessStudent
         }];
-        console.log('Set witnesses:', selectedWitnesses.value); // For debugging
+        // console.log('Set witnesses:', selectedWitnesses.value); // For debugging
       }
     }
   } else {

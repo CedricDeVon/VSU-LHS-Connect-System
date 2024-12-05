@@ -290,9 +290,9 @@ export default {
     },
     async getReporter(incidentReportID){
       let index = initialReport.findIndex((incd) => incd.reportIDRef === incidentReportID);
-      console.log(index);
+      // console.log(index);
       const id = initialReport[index].reportedBY;
-      console.log(id);
+      // console.log(id);
       if(id){
       index = adviser.findIndex((adv) => adv.id === id);
       this.reportedBy =  `${(adviser[index].firstName).toUpperCase()} ${(adviser[index].middleName).charAt(0).toUpperCase() + '.'} ${(adviser[index].lastName).toUpperCase()}`;

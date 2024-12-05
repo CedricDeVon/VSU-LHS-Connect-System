@@ -12,28 +12,28 @@
         <div v-if="conferences.length === 0" class="text-center text-gray-500 py-8">
           No upcoming case conferences scheduled.
         </div>
-        <div v-else v-for="(confs, date) in groupedConferences()" :key="date" class="mb-8">
+        <div v-else v-for="result in groupedConferences()" :key="result.date" class="mb-8">
           <div class="flex items-center gap-2 mb-4">
             <Icon name="lucide:calendar" class="h-5 w-5 text-green-600" />
-            <h4 class="text-lg font-semibold text-gray-800">{{ date }}</h4>
+            <h4 class="text-lg font-semibold text-gray-800">{{ result.date }}</h4>
           </div>
           <div class="space-y-4">
-            <div v-for="conf in confs" :key="conf.id" 
+            <div v-for="conf in result.conferences" :key="conf.id" 
               class="bg-white p-4 rounded-lg border border-gray-200 hover:border-green-300 transition-colors">
               <div class="flex justify-between items-start gap-4">
                 <div class="space-y-2">
                   <p class="text-base font-medium text-gray-900">
-                    Student: {{ conf.data.studentName }}
+                    Student: {{ conf.data.studentName || 'N/A' }}
                   </p>
                   <p class="text-sm text-gray-600">
-                    Section: {{ conf.data.gradeAndSection }}
+                    Section: {{ conf.data.gradeAndSection || 'N/A' }}
                   </p>
                   <p class="text-sm text-gray-600">
-                    Incident: {{ conf.data.circumstance }}
+                    Incident: {{ conf.data.circumstance || 'N/A' }}
                   </p>
                 </div>
                 <button 
-                  @click="viewIncidentDetails(conf.data.incidentId)"
+                  @click="viewIncidentDetails(conf)"
                   class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
                   View Details
                 </button>
@@ -66,21 +66,29 @@ const props = defineProps<{
 const emit = defineEmits(['close']);
 const router = useRouter();
 
-const viewIncidentDetails = async (incidentId: string) => {
+const viewIncidentDetails = async (caseConf: any) => {
+  navigateTo(`/admin/incident/${caseConf.data.incidentId}/conference/${caseConf.id}`, { replace: true }); // Navigate to incident details
   emit('close'); // Close modal first
-  return navigateTo(`/admin/incident/${incidentId}`, { replace: true }); // Navigate to incident details
 };
 
 // console.log(props);
 
 const groupedConferences = () => {
-  return props.conferences.reduce((groups: any, conference: any) => {
-    if (!groups[conference.data.conferenceDate]) {
-      groups[conference.data.conferenceDate] = [];
-    }
-    groups[conference.data.conferenceDate].push(conference);
-    return groups;
-  }, {} as Record<string, []>);
+  const b = props.conferences.reduce((groups: any, conference: any) => {
+      if (!groups[conference.data.conferenceDate]) {
+        groups[conference.data.conferenceDate] = [];
+      }
+      groups[conference.data.conferenceDate].push(conference);
+      return groups;
+  }, {} as Record<string, []>)
+  const a = [];
+  for (const aa in b) {
+    a.push({
+      date: aa,
+      conferences: b[aa]
+    })
+  }
+  return a.sort((aa: any, ab: any) => { return new Date(ab.date) - new Date(aa.date) })
 };
 </script>
 

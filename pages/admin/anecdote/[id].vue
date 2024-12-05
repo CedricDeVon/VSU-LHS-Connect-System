@@ -74,7 +74,7 @@
               </div>
 
               <div class="p-4 space-y-8">
-                <div v-for="(report, index) in sortedReports" :key="report.reportID" class="relative">
+                <div v-for="(report, index) in sortedReports" :key="report.id" class="relative">
                   <!-- Timeline connector -->
                   <div v-if="index !== sortedReports.length - 1"
                     class="absolute left-4 top-8 bottom-0 w-0.5 bg-gray-200"></div>
@@ -93,16 +93,16 @@
                     <div class="flex-1">
                       <div class="flex items-center justify-between">
                         <h3 class="text-sm font-medium text-gray-900">
-                          {{ report.purpose }}
+                          {{ report.data.purpose }}
                         </h3>
-                        <time class="text-xs text-gray-500">{{ formatDate(report.datePrepared) }}</time>
+                        <time class="text-xs text-gray-500">{{ report.data.datePrepared }}</time>
                       </div>
                       <div class="mt-2 text-sm text-gray-700 space-y-2">
-                        <p><span class="font-medium">Incident Date:</span> {{ formatDate(report.date) }}</p>
-                        <p><span class="font-medium">Place:</span> {{ report.placeOfIncident }}</p>
-                        <p><span class="font-medium">Witnesses:</span> {{ report.witnesses.join(', ') }}</p>
-                        <p class="mt-2">{{ report.details }}</p>
-                        <p class="mt-2 text-gray-600 italic">{{ report.remarks }}</p>
+                        <p><span class="font-medium">Incident Date:</span> {{ report.data.dateOfIncident }}</p>
+                        <p><span class="font-medium">Place:</span> {{ report.data.placeOfIncident }}</p>
+                        <p><span class="font-medium">Witnesses:</span> {{ report.data.witnesses.join(', ') }}</p>
+                        <p class="mt-2">{{ report.data.details }}</p>
+                        <p class="mt-2 text-gray-600 italic">{{ report.data.remarks }}</p>
                       </div>
                     </div>
                   </div>
@@ -135,6 +135,7 @@ import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
 import { formatDate } from '@vueuse/core';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
+import { defineAnecdotalDoc } from '~/utils/documentDefinitions';
 
 export default {
   components: {
@@ -150,6 +151,7 @@ export default {
       showUpdateModal: false,
       selectedReport: null,
       adminViewStore: useAdminViewStore(),
+      sortedReports: []
     };
   },
 
@@ -314,6 +316,8 @@ export default {
       if (!this.studentData) return;
 
       this.anecReport = this.adminViewStore.anecdoteAnecdotalReport;
+      this.sortedReports = this.adminViewStore.anecdoteReports
+        .sort((a, b) => new Date(a.data.datePrepared) - new Date(b.data.datePrepared));
     },
 
     displayPDF() {
@@ -322,13 +326,10 @@ export default {
         return;
       }
 
-      const associatedReports = this.adminViewStore.anecdoteReports.filter(r => this.anecReport.data.reportIds.includes(r.id))
-        .sort((a, b) => new Date(a.data.datePrepared) - new Date(b.data.datePrepared));
-
       const docDefinition = defineAnecdotalDoc({
         studentData: this.studentData,
         anecdotalData: this.anecReport,
-        associatedReports
+        associatedReports: this.adminViewStore.anecdoteReports
       });
 
       pdfMake.createPdf(docDefinition).getBlob((blob) => {
@@ -357,7 +358,7 @@ export default {
         isReportedByGuidance: true
       };
       this.showUpdateModal = true;
-      console.log('Modal should open', this.showUpdateModal); // Debug log
+      // console.log('Modal should open', this.showUpdateModal); // Debug log
     },
 
     closeUpdateModal() {
@@ -403,12 +404,20 @@ export default {
     },
 
     downloadPDF() {
-      const fileName = `Anecdotal_Report_${this.anecReport.id}_${new Date().toISOString().split('T')[0]}.pdf`;
-      pdfMake.createPdf(this.defineAnecdotalDoc).download(fileName);
+      const fileName = `${this.anecReport.id}.pdf`;
+      pdfMake.createPdf(defineAnecdotalDoc({
+        studentData: this.studentData,
+        anecdotalData: this.anecReport,
+        associatedReports: this.adminViewStore.anecdoteReports
+      })).download(fileName);
     },
 
     printDocument() {
-      pdfMake.createPdf(this.defineAnecdotalDoc).print({
+      pdfMake.createPdf(defineAnecdotalDoc({
+        studentData: this.studentData,
+        anecdotalData: this.anecReport,
+        associatedReports: this.adminViewStore.anecdoteReports
+      })).print({
         silent: false,
         printBackground: true
       });

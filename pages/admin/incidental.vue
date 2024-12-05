@@ -129,20 +129,19 @@ function handleSearch() {
     if (adminViewStore.incidentalStatusFilter !== 'all') {
         results = results.filter((report: any) => report.data.status === adminViewStore.incidentalStatusFilter);
     }
-
     // Sort results
     switch (adminViewStore.incidentalSelectedSort) {
         case 'ascDate':
-            results.sort((a: any, b: any) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
+            results = results.sort((a: any, b: any) => new Date(a.data.dateOfIncident) - new Date(b.data.dateOfIncident));
             break;
         case 'descDate':
-            results.sort((a: any, b: any) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
+            results = results.sort((a: any, b: any) => new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident));
             break;
         case 'reportID':
-            results.sort((a: any, b: any) => a.id.localeCompare(b.id));
+            results = results.sort((a: any, b: any) => a.id.localeCompare(b.id));
             break;
         case 'studentName':
-            results.sort((a: any, b: any) => {
+            results = results.sort((a: any, b: any) => {
                 const nameA = getStudentNamesFromReport(a.data.peopleInvolved);
                 const nameB = getStudentNamesFromReport(b.data.peopleInvolved);
                 return nameA.localeCompare(nameB);
@@ -152,6 +151,7 @@ function handleSearch() {
             break;
     }
 
+    // console.log(results)
     adminViewStore.incidentalSearchResults = results;
     return results;
 }

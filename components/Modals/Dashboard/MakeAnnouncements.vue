@@ -125,7 +125,7 @@ const handleSubmit = async () => {
       }
     }
   })
-  await adminViewStore.updateDashboard();
+  // console.log(result)
 
   form.value.title = '';
   form.value.content = '';
@@ -138,11 +138,15 @@ const handleSubmit = async () => {
     date: new Date().toISOString(),
     isDraft: false
   });
+  localStorage.setItem('announcementDraft', JSON.stringify({
+    title: '',
+    content: '',
+    lastSaved: new Date().toLocaleTimeString()
+  }));
 
   // Show success alert before closing
   showSuccessAlert.value = true;
   setTimeout(() => {
-    emit('submit', announcementData); // Changed from reportData to announcementData
     showSuccessAlert.value = false;
     emit('close');
   }, 2000);
@@ -153,6 +157,10 @@ const clearForm = () => {
     title: '',
     content: ''
   };
+  localStorage.setItem('announcementDraft', JSON.stringify({
+    ...form.value,
+    lastSaved: new Date().toLocaleTimeString()
+  }));
   isDraft.value = false;
   autoSaved.value = false;
 };

@@ -13,6 +13,8 @@ export default defineEventHandler(async (event) => {
       student.data['age'] = (new Date().getFullYear() - new Date(student.data.birthDate).getFullYear());
       student.data['incidentalReports'] = incidentReports.filter((incidentReport: any) => {
         return incidentReport.data.studentId === student.id;
+      }).sort((a: any, b: any) => {
+        return new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident)
       });
     }
     for (const section of sections) {

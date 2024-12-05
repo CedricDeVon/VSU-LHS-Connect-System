@@ -78,7 +78,7 @@
                 <!-- Conference Actions -->
                 <div class="space-y-3">
                   <!-- Schedule Conference - Show if unresolved and no pending conferences -->
-                  <button v-if="!isResolved && !hasScheduledConferences"
+                  <button v-if="!isResolved"
                     @click="openScheduleDialog"
                     class="w-full px-4 py-3 rounded-lg bg-[#265630] hover:bg-[#728B78] text-white">
                     <div class="flex items-center justify-center space-x-2">
@@ -254,7 +254,7 @@ import { defineIncidentDoc } from '~/utils/documentDefinitions';
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const navigateToCreateConference = () => {
-  useRouter().push(`/admin/conferences/create?incidentId=${useRoute().params.id}`);
+  return navigateTo(`/admin/conferences/create?incidentId=${useRoute().params.id}`, { replace: true });
 };
 
 export default {
@@ -285,6 +285,8 @@ export default {
   },
 
   async created() {
+    // alert('Please Reload the Page')
+
     const incidentId = this.$route.params.incidentId;
     await this.initIncidentByID(incidentId);
     // console.log(this.incdReport)
@@ -394,17 +396,19 @@ export default {
 
   methods: {
     async confirmResolve() {
-      const result = await $fetch('/api/incident/update', {
+      const result = await $fetch('/api/incident/updateStatusToResolved', {
         method: 'POST',
         body: {
-          id: this.incdReport.id,
-          data: {
-            status: 'Resolved'
-          }
+          initialId: this.incdReport.data.reportId,
+          incidentId: this.incdReport.id
         }
       })
-      await this.adminViewStore.updateIncident(useRoute().params.incidentId);
+      alert('Incident Made Resolved Successfully')
+      await this.adminViewStore.updateIncident(this.incdReport.id);
       await this.adminViewStore.updateSidebar();
+      await this.initIncidentByID(this.incdReport.id);
+      await this.getReporter(this.incdReport.id);
+      this.displayPDF();
     },
 
     async initIncidentByID(id) {
@@ -475,10 +479,13 @@ export default {
       const result = await $fetch('/api/incident/update', {
         method: 'POST',
         body: {
-          id: this.incdReport.id,
+          incidentId: this.incdReport.id,
+          initialId: this.incdReport.data.reportId,
+          dateReported: TimeConverters.dateConverter.convert(Date.now()).data,
           data: updatedData
         }
       })
+      // console.log(result)
       const incidentId = this.$route.params.incidentId;
       await this.adminViewStore.updateIncident(incidentId);
       await this.adminViewStore.updateSidebar();
@@ -517,15 +524,15 @@ export default {
         
         // Update incident with new conference reference
         // const updatedData = {
-        //   hasCaseConference: [...(Array.isArray(this.incidentData.data.hasCaseConference) 
-        //     ? this.incidentData.data.hasCaseConference 
-        //     : []), newConferenceId]
+        //  hasCaseConference: [
+        //    ...this.incidentData.data.hasCaseConference,
+        //    ]
         // };
 
-        await this.handleUpdate(updatedData);
+        // await this.handleUpdate(updatedData);
+        alert('Case Conference Scheduled Successfully');
         this.showScheduleModal = false;
 
-        alert('Case conference scheduled successfully');
       } catch (error) {
         console.error('Error scheduling conference:', error);
         alert('Failed to schedule case conference');
@@ -559,11 +566,12 @@ export default {
         alert('Case conference document created successfully');
         
         // Clear the draft after successful creation
-        // localStorage.removeItem(`draft_conference_${this.incdReport.incidentDocID}`);
+        // localStorage.removeItem(`${this.incdReport.id}`);
         this.savedConferenceDoc = null;
 
         // Refresh the conference list if needed
         await this.loadCaseConferences();
+
       } catch (error) {
         console.error('Error creating conference document:', error);
         alert('Failed to create case conference document');
@@ -574,7 +582,7 @@ export default {
       try {
         // In a real app, save to backend/localStorage
         this.savedConferenceDoc = draftData;
-        // localStorage.setItem(`draft_conference_${this.incdReport.incidentDocID}`, JSON.stringify(draftData));
+        // localStorage.setItem(`${this.incdReport.id}`, JSON.stringify(draftData));
         
         this.showCreateConfDocModal = false;
         alert('Document saved as draft successfully');
@@ -602,7 +610,7 @@ export default {
     },
 
     downloadPDF() {
-      const fileName = `INC_${this.incdReport.id}_${new Date().toISOString().split('T')[0]}.pdf`;
+      const fileName = `${this.incdReport.id}.pdf`;
       const docDefinition = defineIncidentDoc({
         reportType: this.reportType,
         incidentData: this.incdReport,

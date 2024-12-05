@@ -1,13 +1,13 @@
 <template>
   <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic" >
         <div class="bg-[#FFFEF1] rounded-2xl w-[800px] max-h-[90vh] flex flex-col relative" >
-            <!-- Sticky Header Section -->
+            Header Section -->
             <div class="sticky top-0 z-10">
 
                 <!-- Close button -->
 
               <button @click="handleClose" 
-                        class="absolute top-4 right-4 text-white hover:text-gray-200 z-20">
+                  class="absolute top-4 right-4 text-white hover:text-gray-200 z-20">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
@@ -147,7 +147,7 @@ const sendEmail = async () => {
 };
 </script>
 
-<style scoped>
+<style>
 h1 {
   margin-bottom: 20px;
 }
@@ -161,12 +161,11 @@ h1 {
 }
 
 .font-century-gothic {
-    font-family: 'Century Gothic', sans-serif;
+    font-family: 'Century Gothic';
 }
+
 textarea:focus, input[type="email"]:focus {
   border-color: #728B78; /* Change border color on focus */
   outline: none; /* Ensure the focus outline is removed */
 }
-
-
 </style>

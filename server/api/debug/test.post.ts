@@ -6,9 +6,9 @@ import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { IFile } from '~/library/files/iFile';
 
 export default defineEventHandler(async (event) => {
-  console.log("TEST POST");
+  // console.log("TEST POST");
   const { files } = await readBody<{ files: IFile[] }>(event);
-  console.log(files[0]);
+  // console.log(files[0]);
   // const auth = useFirebaseAuth()!;
   // await signInWithEmailAndPassword(auth, 'admin.cs@vsuihs.com', '326_TheWorldIsFlat');
   

@@ -34,27 +34,27 @@ export class PasswordValidator extends Validator {
 
     const { minLength, maxLength, minNumbers, minSymbols, minLowercase, minUppercase } = this._configurations;
     if (value.length < minLength) {
-      return new FailedResult(`Passwords must contain at least '${minLength}' characters`);
+      return new FailedResult(`Passwords must contain at least '${minLength}' character(s)`);
     }
 
     if (value.length > maxLength) {
-      return new FailedResult(`Passwords must contain at most '${maxLength}' characters`);
+      return new FailedResult(`Passwords must contain at most '${maxLength}' character(s)`);
     }
 
     if (!validator.isStrongPassword(value, { minNumbers })) {
-      return new FailedResult(`Passwords must contain at least '${minNumbers}' numbers`);
+      return new FailedResult(`Passwords must contain at least '${minNumbers}' number(s)`);
     }
 
     if (!validator.isStrongPassword(value, { minSymbols })) {
-      return new FailedResult(`Passwords must contain at least '${minSymbols}' symbols`);
+      return new FailedResult(`Passwords must contain at least '${minSymbols}' symbol(s)`);
     }
 
     if (!validator.isStrongPassword(value, { minLowercase })) {
-      return new FailedResult(`Passwords must contain at least '${minLowercase}' lowercased characters`);
+      return new FailedResult(`Passwords must contain at least '${minLowercase}' lowercased character(s)`);
     }
 
     if (!validator.isStrongPassword(value, { minUppercase })) {
-      return new FailedResult(`Passwords must contain at least '${minUppercase}' uppercased characters`);
+      return new FailedResult(`Passwords must contain at least '${minUppercase}' uppercased character(s)`);
     }
     
     return new SuccessfulResult(value);

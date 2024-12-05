@@ -14,10 +14,6 @@
                 :readonly="!isEditing" 
                 v-model="username"/> 
               </div> 
-              <!-- <div class="m-3">Password: <input :type="passwordInputType" class="ml-10 border-2 border-gray-200 rounded-md p-2 w-3/5"
-                :readonly="!isEditing"
-                v-model="password"/> 
-              </div> -->
               <div class="m-3">First Name: <input type="text" class="ml-8 border-2 border-gray-200 rounded-md p-2 w-3/5" 
                 :readonly="!isEditing"
                 v-model="firstName"/> 
@@ -30,22 +26,32 @@
                 :readonly="!isEditing" 
                 v-model="lastName"/> 
               </div>
-                <div v-if="isEditing" class="flex justify-end">
-                  <button @click="cancelChanges"
-                    class="flex justify-center m-3 w-1/5 px-4 py-2 rounded-lg bg-white border-2 border-[#B52B2B] text-[#B52B2B] hover:bg-[#b15c5cf1] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
-                    <span>Cancel</span>
-                  </button>
-                  <button @click="saveChanges"
-                    class="flex justify-center m-3 w-1/5 px-4 py-2 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
-                    <span>Save</span>
-                  </button>
-                </div>
-                <div v-else class="flex justify-center">
-                  <button @click="edit"
-                    class="flex justify-self-end justify-center  px-7 py-1 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
-                    <span>Edit</span>
-                  </button>
-                </div>
+              <div class="m-3">
+                Password: <input type="password" :type="passwordInputType" class="ml-10 border-2 border-gray-200 rounded-md p-2 w-3/5 mr-5" :readonly="!isEditing" v-model="password"/> 
+                <button v-if="isEditing" @click="updateNewPassword"
+                  class=" px-4 py-1 rounded-lg bg-white border-2 border-[#B52B2B] text-[#B52B2B] hover:bg-[#b15c5cf1] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
+                  <span>Reset</span>
+                </button>
+              </div>
+              <div class="m-3">
+                Confirmation: <input type="password" :type="passwordInputType" class="ml-4 border-2 border-gray-200 rounded-md p-2 w-3/5 mr-5" :readonly="!isEditing" v-model="confirmPassword"/> 
+              </div>
+              <div v-if="isEditing" class="flex justify-end">
+                <button @click="cancelChanges"
+                  class="flex justify-center m-3 w-1/5 px-4 py-2 rounded-lg bg-white border-2 border-[#B52B2B] text-[#B52B2B] hover:bg-[#b15c5cf1] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
+                  <span>Cancel</span>
+                </button>
+                <button @click="saveChanges"
+                  class="flex justify-center m-3 w-1/5 px-4 py-2 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
+                  <span>Save</span>
+                </button>
+              </div>
+              <div v-else class="flex justify-center">
+                <button @click="edit"
+                  class="flex justify-self-end justify-center  px-7 py-1 rounded-lg bg-white border-2 border-[#265630] text-[#265630] hover:bg-[#728B78] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
+                  <span>Edit</span>
+                </button>
+              </div>
             </div>
             <div class=" shadow-inner rounded-md">
               <div class = "profile-container">
@@ -67,8 +73,8 @@
             <div class="border-gray-200 mt-7 mb-2">
               <h1 class="text-3xl font-bold text-green-900 ">System Settings</h1>
             </div>
-            <div class="border w-1/2 rounded-md shadow-sm text-sm">
-              <div class="py-5 ">Reset Academic Year <input type="text" class="mx-5 border-2 border-gray-200 rounded-md p-2 py-1 w-1/3" v-model="academicYear"/>
+            <div class="grid col-span-1 p-5 border rounded-md shadow-sm text-sm w-1/2">
+              <div class="m-3">Reset A.Y. <input type="text" class="ml-10 border-2 border-gray-200 rounded-md p-2 w-3/5 mr-5" v-model="academicYear"/>
                 <button @click="resetAcademicYear"
                   class=" px-4 py-1 rounded-lg bg-white border-2 border-[#B52B2B] text-[#B52B2B] hover:bg-[#b15c5cf1] hover:text-white hover:border-[#728B78] transition-colors duration-200 ">
                   <span>Reset</span>
@@ -78,7 +84,6 @@
           </div>
         </div>
       </div>
-
 </template>
 
 <script>
@@ -92,6 +97,8 @@ import ConfirmReset from '~/components/Modals/AdminSettings/ConfirmReset.vue';
 import Verification from '~/components/Modals/AdminSettings/Verification.vue';
 import { UserSecurity } from "~/library/security/userSecurity";
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
+import { signOut, updatePassword, signInWithEmailAndPassword, createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { Validators } from "~/library/validators/validators";
 
 export default {
     name: 'SettingsPage',
@@ -118,6 +125,7 @@ export default {
         const verifyReset = ref(false);
         const profilePicture = ref('');
         const fileInput = ref(null);
+        const confirmPassword = ref('');
 
         const { handleFileInput, files } = useFileStorage();
 
@@ -144,7 +152,38 @@ export default {
           })
           profilePicture.value = result.data;
           alert('Profile Picture Updated')
-    };
+        };
+
+    const updateNewPassword = async () => {
+        try {
+            await UserSecurity.logInViaToken();
+            let user = await getCurrentUser();
+            if (password.value !== confirmPassword.value) {
+              alert('Both Password Must Match')    
+              return;
+            }
+
+            // console.log(password.value)
+            let result = await Validators.passwordValidator.validate(password.value);
+            if (result.isNotSuccessful) {
+                alert(result.message)    
+                return;
+            }
+            result = await UserSecurity.updateUserPassword({
+                auth: getAuth(), newPassword: password.value
+            });
+            if (result.isNotSuccessful) {
+                alert(result.message)    
+                return;
+            }
+
+            alert('Password Updated Successfully, Returning back to Log-in page.')
+            return navigateTo('/auth/login', { replace: true });
+        
+        } catch (error) {
+            alert(error.message)
+        }
+    }
 
     const handleClose = () => {
           verify.value = !verify.value;
@@ -202,7 +241,7 @@ export default {
             isEditing.value = !isEditing.value;
         };
 
-        const resetAcademicYear = () => {
+        const resetAcademicYear = async () => {
           try{
             if (academicYear.value !== props.academicYear) {
                 verify.value = !verify.value;
@@ -212,14 +251,24 @@ export default {
                 alert('Academic Year is already set to ' + academicYear.value);
               }
           }catch(error){
-            console.error('Error resetting academic year:', error);
+            console.error('Error resetting academic year: ', error);
           }
             
         };
 
-        const handleReset = () => {
+        const handleReset = async () => {
             academicYear.AY = academicYear.value;
-            alert('Academic Year has been reset');
+            const result = await $fetch('/api/timeline/create', {
+              method: 'POST',
+              body: {
+                data: {
+                  schoolYear: academicYear.value,
+                  semester: 1
+                }
+              }
+            })
+            // console.log(result);
+            alert('New Academic Year Reset Successfully. Returning Back to Login Page')
             confirmReset.value = !confirmReset.value;
         };
 
@@ -246,7 +295,9 @@ export default {
           lastName,
           academicYear,
           handleFileInput,
-          files
+          files,
+          updateNewPassword,
+          confirmPassword
         };
     },
 }

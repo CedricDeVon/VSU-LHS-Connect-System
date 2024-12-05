@@ -14,16 +14,16 @@
         </div>
         
         <div v-else class="space-y-4">
-          <div v-for="report in reports" :key="report.initialDocID" 
+          <div v-for="report in reports" :key="report.id" 
             class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow">
             <div class="flex justify-between items-start">
               <div class="space-y-2">
-                <h4 class="font-medium text-gray-900">{{ report.narrativeReport }}</h4>
-                <p class="text-sm text-gray-600">Students: {{ report.peopleInvolved.join(', ') }}</p>
-                <p class="text-sm text-gray-600">Reported by: {{ getAdviserName(report.reportedBY) }}</p>
+                <h4 class="font-medium text-gray-900">{{ report.data.narrativeReport }}</h4>
+                <p class="text-sm text-gray-600">Students: {{ report.data.peopleInvolved.join(', ') }}</p>
+                <p class="text-sm text-gray-600">Reported by: {{ getAdviserName(report) }}</p>
                 <p class="text-sm text-gray-500">{{ report.dateFormatted }}</p>
               </div>
-              <div class="flex flex-col gap-2">
+              <!-- <div class="flex flex-col gap-2">
                 <button
                   @click="handleDocumentIncident(report)"
                   class="px-4 py-2 bg-[#265630] text-white rounded-lg hover:bg-[#1a3d21] transition-colors flex items-center gap-2"
@@ -38,7 +38,7 @@
                   <Icon name="lucide:x-circle" class="h-4 w-4" />
                   Ignore Report
                 </button>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -91,7 +91,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import CreateReportFromDashboard from './CreateReportFromDashboard.vue';
-import { adviser } from '~/data/adviser';
 
 const props = defineProps({
   reports: {
@@ -117,14 +116,15 @@ const closeCreateReportModal = () => {
 
 const handleReportSubmit = (data) => {
   // Handle the report submission
-  console.log('Report submitted:', data);
+  // console.log('Report submitted:', data);
   closeCreateReportModal();
   emit('close');
 };
 
-const getAdviserName = (adviserId) => {
-  const adviserData = adviser.find(a => a.id === adviserId);
-  return adviserData ? `${adviserData.firstName} ${adviserData.lastName}` : 'Unknown Adviser';
+const getAdviserName = (report) => {
+  // console.log(report)
+  const adviserData = report.data.reportedAdviser;
+  return adviserData.data ? `${adviserData.data.firstName} ${adviserData.data.lastName}` : 'Unknown Adviser';
 };
 
 const showIgnoreDialog = ref(false);
@@ -137,7 +137,7 @@ const confirmIgnore = (report) => {
 
 const handleIgnoreConfirm = () => {
   // Here you would typically update your database or state
-  console.log('Ignoring report:', reportToIgnore.value);
+  // console.log('Ignoring report:', reportToIgnore.value);
   
   // Remove the report from the list
   const index = props.reports.findIndex(r => r.initialDocID === reportToIgnore.value.initialDocID);

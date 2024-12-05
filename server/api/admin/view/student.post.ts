@@ -7,19 +7,14 @@ export default defineEventHandler(async (event) => {
     const { studentId } = await readBody(event);
     const students = (await Databases.getAllStudents()).data;
     const incidentalReports = (await Databases.getAllIncidentalReports()).data;
-    const incidentalReportDividers = (await Databases.getAllIncidentalReportDividers()).data;
     for (const student of students) {
       student.data.profilePicture = (await Databases.userIconsFirebaseStorage.readFileLink(student.data.profilePicture)).data;
       student.data['age'] = (new Date().getFullYear() - new Date(student.data.birthDate).getFullYear());
-      let dividers = incidentalReportDividers.filter((incidentalReportDivider: any) => {
-        return student.id === incidentalReportDivider.data.studentId;
+      student.data['incidentalReports'] = incidentalReports.filter((report: any) => {
+        return student.id === report.data.studentId;
+      }).sort((a: any, b: any) => {
+        return new Date(b.data.dateOfIncident) - new Date(a.data.dateOfIncident)
       });
-      student.data['incidentalReports'] = [];
-      for (const divider of dividers) {
-        student.data['incidentalReports'].push(incidentalReports.find((incidentalReport: any) => {
-          return divider.data.incidentId === incidentalReport.id;
-        }));
-      }
     }
     
     const sections = (await Databases.getAllSections()).data;
@@ -35,7 +30,7 @@ export default defineEventHandler(async (event) => {
     }
 
     return new SuccessfulResult({
-      students, sections, incidentalReports, incidentalReportDividers, studentData, studentSection, allSectionStudents
+      students, sections, incidentalReports, studentData, studentSection, allSectionStudents
     }).cloneToObject();
 
   } catch (error: any) {

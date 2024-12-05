@@ -39,110 +39,121 @@
                     </div>
                 </div>
 
-                 <div v-if="selectedStudentType === 'newStudent'" class="pt-5">
-                  <label>Type of Adding Student/s:</label>
-                  <div class="flex justify-center pt-3">
-                    <div class="selection-box rounded-lg m-1 p-2" :class="{selected: selectedAddingType === 'singleAdding'}"
-                      @click ="selectAddingType('singleAdding')"
-                      @mousehover = "hoverAddingType('singleAdding')"
-                      @mouseleave="hoverAddingType('')">
-                      Individual Adding
+                <!-- Adding Type Selection (shown only for new students) -->
+                <div v-if="selectedStudentType === 'newStudent'" class="space-y-4">
+                    <label class="text-lg font-semibold text-gray-700">Method of Adding:</label>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button 
+                            @click="selectAddingType('singleAdding')"
+                            :class="[
+                                'p-4 rounded-lg border-2 transition-all duration-200',
+                                selectedAddingType === 'singleAdding'
+                                    ? 'border-green-600 bg-green-50 text-green-700'
+                                    : 'border-gray-200 hover:border-green-400 hover:bg-green-50'
+                            ]"
+                        >
+                            <div class="font-semibold">Individual Adding</div>
+                            <div class="text-sm text-gray-500">Add one student at a time</div>
+                        </button>
+                        <button 
+                            @click="selectAddingType('bulkAdding')"
+                            :class="[
+                                'p-4 rounded-lg border-2 transition-all duration-200',
+                                selectedAddingType === 'bulkAdding'
+                                    ? 'border-green-600 bg-green-50 text-green-700'
+                                    : 'border-gray-200 hover:border-green-400 hover:bg-green-50'
+                            ]"
+                        >
+                            <div class="font-semibold">Bulk Adding</div>
+                            <div class="text-sm text-gray-500">Upload multiple students via CSV</div>
+                        </button>
                     </div>
-                    <div class="selection-box rounded-lg m-1 p-2" :class="{selected: selectedAddingType === 'bulkAdding'}"
-                      @click ="selectAddingType('bulkAdding')"
-                      @mousehover = "hoverAddingType('bulkAdding')"
-                      @mouseleave="hoverAddingType('')">
-                      Bulk Adding
-                    </div>
-                  </div>
-                 </div>
+                </div>
 
-                  <div class="flex justify-end mt-14 ">
-                    <button @click="$emit('close')" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Cancel">
-                      Cancel
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button @click="$emit('close')" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                        Cancel
                     </button>
-                    <button @click ="nextClick" class=" button2 px-11 py-2 m-2 rounded-lg focus:outline-none" aria-label="Next">
-                      Next
+                    <button 
+                        @click="nextClick"
+                        class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                    >
+                        Next
                     </button>
-                  </div>
-              </div>
-              
-              <!--Body if singleAdding of new student-->
-              <div v-if="showSingleNewStudentForm" class=" body2 flex justify-center h-fit w-full">
-                <form @submit.prevent="addStudentClick">
-                  <div class=" w-11/12 h-fit">
+                </div>
+            </div>
 
-                  <div class="flex justify-center pt-5">
-                    <img src="~/assets/icons/default-user.png" alt="user profile" class=" h-52">
-                  </div>
-
-                  <div>
-                    <div class="p-2 pb-0 ">
-                      <div class="pb-1">Student ID:</div>
-                      <label>
-                        <input v-model="store.studentId" type="text" class="input px-2 py-2 rounded-sm w-1/2 focus outline-green-400 " placeholder="Enter Student ID">
-                      </label>
-                    </div>
-                    <div class="p-2 ">
-                      <div class="pb-1">Student's Full Name: </div>
-                      <label>
-                        <input v-model="store.firstName" type="text" class=" inputName px-2 py-2 rounded-sm focus outline-green-400 " placeholder="Enter First Name">
-                        <input v-model="store.lastName" type="text" class=" inputName px-2 py-2 rounded-sm  ml-2 focus outline-green-400" placeholder="Enter Last Name">
-                        <input v-model="store.suffix" type="text" class=" input px-2 py-2 rounded-sm w-1/5 ml-2 focus outline-green-400" placeholder="Suffix">
-                      </label>
+            <!-- Single New Student Form -->
+            <div v-if="showSingleNewStudentForm" class="p-6">
+              <form @submit.prevent="addStudentClick">
+                <div class="max-w-2xl mx-auto space-y-6">
+                    <!-- Profile Image -->
+                    <div class="flex justify-center">
+                        <img src="~/assets/icons/default-user.png" alt="user profile" class="h-32 w-32 rounded-full border-4 border-gray-200">
                     </div>
 
-                  <div class="grid grid-flow-col p-2">
-                      <label>Birtdate: </label>
-                      <UiVeeDatepicker v-model="store.birthDate" placeholder="MM/DD/YYYY"/>     
+                    <!-- Form Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">Student ID</label>
+                            <input required v-model="store.studentId" type="text" class="form-input w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200">
+                        </div>
 
-                      <label class="mx-5">Sex at Birth:
-                      <select
-                               class="  lg:mr-5 lg:pr-2 py-2 input border-2 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-green-400"
-                               v-model="store.gender">
-                               <option value="" disabled selected hidden>Gender</option>
-                               <option value="male">Male</option>
-                               <option value="female">Female</option>
-                      </select>
-                    </label> 
-                    
+                        <!-- Name Fields -->
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-sm font-medium text-gray-700">Student's Full Name</label>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                <input required v-model="store.firstName" type="text" placeholder="First Name" class="form-input rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200">
+                                <input required v-model="store.lastName" type="text" placeholder="Last Name" class="form-input rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200">
+                                <input required v-model="store.suffix" type="text" placeholder="Suffix" class="form-input rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200">
+                            </div>
+                        </div>
+
+                        <!-- Other Fields -->
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">Birthdate</label>
+                            <UiVeeDatepicker v-model="store.birthDate" placeholder="MM/DD/YYYY" class="form-input w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200"/>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-medium text-gray-700">Sex at Birth</label>
+                            <select required v-model="store.gender" class="form-select w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200">
+                                <option value="" disabled selected hidden>Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-sm font-medium text-gray-700">Permanent Address</label>
+                            <input required v-model="store.address" type="text" class="form-input w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200" placeholder="Enter Student Address">
+                        </div>
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-sm font-medium text-gray-700">Contact Number</label>
+                            <input required v-model="store.contactNumber" type="text" class="form-input w-full rounded-lg border-gray-300 focus:border-green-500 focus:ring focus:ring-green-200" placeholder="Enter Contact Number">
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="md:col-span-2 flex justify-end space-x-3 pt-4">
+                            <button @click="handleBack" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
+                                Back
+                            </button>
+                            <button type="addStudentClick" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                Add Student
+                            </button>
+                        </div>
                     </div>
-                    <div class="p-1 px-2 pb-0 ">
-                      Address:
-                      <label>
-                        <input v-model="store.address" type="text" class="input px-2 py-2 ml-3 rounded-sm w-2/3 focus outline-green-400 " placeholder="Enter Student Address">
-                      </label>
-                    </div>
-                    <div class=" mt-2 p-1 px-2 pb-0 ">
-                      Contact Number/s:
-                      <label>
-                        <input v-model="store.contactNumber" type="text" class="input px-2 py-2 ml-3 rounded-sm w-1/3 focus outline-green-400" placeholder="Enter Contact Number">
-                        <button class="pl-5 wordbutton ">Add +</button>
-                      </label>
-                    </div>
-                    <div class="flex justify-end mt-7 mb-7 ">
-                      <button @click ="handleBack" class=" button3 px-8 py-2 m-2 rounded-lg  focus:outline-none" aria-label="Back">
-                        Back
-                      </button>
-                      <button type="addStudentClick" class=" button2 px-11 py-2 m-2 rounded-lg focus:outline-none" aria-label="Add Student">
-                        Add Student
-                      </button>
-                    </div>
-                  </div>
                 </div>
                 </form>
-              </div>
-              <div v-if="showSingleContStudentForm" class="w-full">
-                <div class="smallText flex justify-center m-4">
-                  <UnEnrolledStudents @close = "$emit('close')"/>
+            </div>
+
+            <!-- Other Forms -->
+            <div v-if="showSingleContStudentForm || adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm" class="relative h-[600px] overflow-visible">
+                <div v-if="showSingleContStudentForm">
+                    <UnEnrolledStudents @close="$emit('close')"/>
                 </div>
-               
-              </div>
-              <div v-if="adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm">
-                <div class="smallText flex justify-center m-4">
-                  <StudentCSVUploadModal @close = "$emit('close')"/>
+                <div v-if="adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm">
+                    <StudentCSVUploadModal @close="$emit('close')"/>
                 </div>
-              </div>
             </div>
         </div>
     </div>
@@ -206,6 +217,7 @@ export default{
       adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = false;
       showBulkContStudentForm.value = false;
       initPreparation.value = true;
+      alert('Student Form Cached')
     };
 
     const selectStudentType = (box) => {
@@ -225,11 +237,17 @@ export default{
     };
 
     const addStudentClick = async () => {
-      const user = await getCurrentUser();
-      await adviserViewStore.addNewStudent(user, store.getAllData());
-      await adviserViewStore.updateAdvisoryView(user);
+      await adviserViewStore.addNewStudent(store.getAllData());
+      await adviserViewStore.updateAdvisoryView();
 
-      handleBack();
+      showSingleNewStudentForm.value = false;
+      showSingleContStudentForm.value = false;
+      adviserViewStore.studentCSVUpdateModalSuccessBulkContStudentForm = false;
+      showBulkContStudentForm.value = false;
+      initPreparation.value = true;
+
+      alert('Student Created Successfully')
+
       store.resetAllData();
     };
 
@@ -258,137 +276,6 @@ export default{
 </script>
 
 <style scoped>
-.wordbutton{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    color: #414E44;
-    border: none;
-    cursor: pointer;
-}
-.wordbutton:hover{
-  color:#265630;
-  font-weight: 700;
-}
-
-.header{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    text-align: center;
-    color: white;
-    background-color: #728B78;
-    width: 100%;
-    height: 10%;
-}
-
-.body{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 25px;
-    font-weight: 700;
-    color:#414E44;
-    background-color: white;
-    width: 90%;
-    height: 80%;
-}
-.body2{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color:#414E44;
-
-}
-
-.selection-box{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    color:#414E44;
-    background-color: white;
-    width: 90%;
-    height: 100%;
-    border: 1px solid #728B78;
-    display: flex;
-    justify-content: center;
-    align-items: center;  
-    cursor:pointer;
-    transition: background-color 0.3s;
-}
-
-.selection-box:hover{
-    background-color: #728B78;
-    color: white;
-}
-
-.selection-box.selected{
-    background-color: #728B78;
-    color: white;
-}
-
-.button1{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-    background-color: #728B78;
-    border: none;
-    cursor: pointer;
-}
-.button1:hover{
-    background-color: #677c6c;
-}
-
-.button2{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-    background-color: #728B78;
-    border: none;
-    cursor: pointer;
-}
-.button2:hover{
-    background-color: #265630;
-}
-
-.button3{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    color: white;
-    background-color: #969696;
-    border: none;
-    cursor: pointer;
-}
-.button3:hover{
-    background-color:#7a7979;
-}
-
-.input{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 15px;
-    font-weight: 300;
-    color:black;
-    background-color: white;
-    border: 1px solid gray;
-    border-radius: 5px;
-
-    
-}
-.inputName{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 15px;
-    font-weight: 300;
-    color:black;
-    background-color: white;
-    width: 35%;
-    border: 1px solid gray;
-}
-.smallText{
-    font-family: "Century Gothic", sans-serif;
-    font-size: 17px;
-    font-weight: 300;
-    color:#414E44;
 .form-input {
     @apply w-full px-4 py-2 text-gray-700 transition duration-200 ease-in-out;
 }

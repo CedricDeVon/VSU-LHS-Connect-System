@@ -6,7 +6,8 @@ export default defineEventHandler(async (event) => {
   try {
     const { data } = await readBody(event);
 
-    await Databases.timelineFirebaseDatabase.createOneDocumentWithId(data.schoolYear, {
+    await Databases.timelineFirebaseDatabase.createOneDocument({
+        schoolYear: data.schoolYear,
         semester: data.semester
     });
 

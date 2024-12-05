@@ -12,13 +12,13 @@
         <div v-if="incidents.length === 0" class="text-center text-gray-500 py-8">
           No pending cases found.
         </div>
-        <div v-else v-for="(incs, date) in groupedIncidents" :key="date" class="mb-8">
+        <div v-else v-for="result in groupedIncidents" :key="result.date" class="mb-8">
           <div class="flex items-center gap-2 mb-4">
             <Icon name="lucide:alert-circle" class="h-5 w-5 text-yellow-600" />
-            <h4 class="text-lg font-semibold text-gray-800">{{ date }}</h4>
+            <h4 class="text-lg font-semibold text-gray-800">{{ result.date }}</h4>
           </div>
           <div class="space-y-4">
-            <div v-for="incident in incs" :key="incident.id" 
+            <div v-for="incident in result.cases" :key="incident.id" 
               class="bg-white p-4 rounded-lg border border-gray-200 hover:border-yellow-300 transition-colors">
               <div class="flex justify-between items-start gap-4">
                 <div class="space-y-2">
@@ -66,18 +66,26 @@ const emit = defineEmits(['close']);
 const router = useRouter();
 
 const viewIncidentDetails = (incidentId: string) => {
+  navigateTo(`/admin/incident/${incidentId}`, { replace: true });
   emit('close');
-  router.push(`/admin/incident/${incidentId}`, { replace: true });
 };
 
 const groupedIncidents = computed(() => {
-  return props.incidents.reduce((groups, incident) => {
+  const b = props.incidents.reduce((groups, incident) => {
     if (!groups[incident.dateFormatted]) {
       groups[incident.dateFormatted] = [];
     }
     groups[incident.dateFormatted].push(incident);
     return groups;
   }, {} as Record<string, []>);
+  const a = [];
+  for (const aa in b) {
+    a.push({
+      date: aa,
+      cases: b[aa]
+    })
+  }
+  return a.sort((aa: any, ab: any) => { return new Date(ab.date) - new Date(aa.date) })
 });
 </script>
 

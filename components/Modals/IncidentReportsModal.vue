@@ -1,5 +1,5 @@
 <template>
-    <div v-if="adminViewStore.studentShowIncidentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic">
+    <div v-if="show" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-century-gothic" @click="handleOverlayClick">
         <div class="bg-[#FFFEF1] rounded-2xl w-[800px] max-h-[90vh] flex flex-col relative" @click.stop>
             <!-- Sticky Header Section -->
             <div class="sticky top-0 z-10">
@@ -21,7 +21,7 @@
             <div class="overflow-y-auto flex-1">
                 <!-- Incident Reports List -->
                 <div class="p-6 space-y-4">
-                    <div v-for="incident in adminViewStore.studentStudentData.data.incidentalReports" 
+                    <div v-for="incident in studentData.data.incidentalReports" 
                          :key="incident.id"
                          class="border border-gray-200 rounded-lg p-4 transition-all duration-200 hover:border-[#265630] hover:shadow-lg hover:bg-white cursor-pointer"
                          @click="viewIncidentDetails(incident.id)">
@@ -33,12 +33,12 @@
                                         ({{ incident.data.status }})
                                     </span>
                                 </h3>
-                                <p class="text-gray-600 italic">{{ new Date().toDateString() }}</p>
+                                <p class="text-gray-600 italic">{{ incident.data.dateOfIncident }}</p>
                             </div>
                         </div>
                         <p class="mt-2 text-gray-700">
                             <span class="font-semibold">Name of People Involved:</span> 
-                            {{ incident.data.peopleInvolved }}
+                            {{ incident.data.peopleInvolved.join(', ') }}
                         </p>
                         <p class="mt-1 text-gray-600 italic text-sm">
                             ({{ incident.data.narrativeReport.substring(0, 100) }}...)
@@ -58,13 +58,38 @@
     </div>
 </template>
 
-<script setup lang='ts'>
+<script>
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
-const adminViewStore = useAdminViewStore();
-
-const viewIncidentDetails = (incidentId: any) => {
-    useRouter().push(`/admin/incident/${incidentId}`);
+export default {
+    name: 'IncidentReportsModal',
+    props: {
+        show: {
+            type: Boolean,
+            default: false
+        },
+        studentData: {
+            type: Object,
+            required: true
+        },
+    },
+    data() {
+        return {
+            adminViewStore: useAdminViewStore()
+        }
+    },
+    emits: ['close'],
+    methods: {
+        handleOverlayClick(event) {
+            if (event.target === event.currentTarget) {
+                this.$emit('close');
+            }
+        },
+        viewIncidentDetails(incidentId) {
+            this.$emit('close');
+            return navigateTo(`/admin/incident/${incidentId}`, { replace: true });
+        }
+    }
 }
 </script>
 
@@ -104,5 +129,4 @@ const viewIncidentDetails = (incidentId: any) => {
     scrollbar-width: thin;
     scrollbar-color: #728B78 #f1f1f1;
 }
-
 </style> 

@@ -74,11 +74,15 @@
                         <span v-else class="text-gray-500">N/A</span>
                       </td>
                       <td class="px-6 py-4">
-                        <button
+                        <button v-if="section.data.adviser && section.data.adviser.data.facultyId"
                           @click="viewSection(section.id)"
-                          :class="(section.data.adviser && section.data.adviser.data.facultyId) ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'"
-                          class="px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
-                          {{ (section.data.adviser && section.data.adviser.data.facultyId) ? 'View Details' : 'Add Adviser' }}
+                          class="bg-green-200 text-green-800 px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
+                          View Details
+                        </button>
+                        <button v-else
+                          @click="assignSection(section)"
+                          class="bg-yellow-200 text-yellow-800 px-4 py-2 rounded-md hover:opacity-80 transition-opacity duration-200 text-sm">
+                          Assign Adviser
                         </button>
                       </td>
                     </tr>
@@ -110,6 +114,11 @@
         :studentData="adminViewStore.searchSelectedStudent"
         @close="adminViewStore.searchSelectedStudent = null"
     />
+    <AssignSectionToAdviser
+      v-if="showAssignToSection"
+      :section="assignedSection"
+      @close="closeAssignToSection"
+      @handle-submit-close="handleAssignToSectionCloseSubmit"/>
   </div>
 </template>
 
@@ -124,6 +133,7 @@ const adminViewStore = useAdminViewStore();
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import AddSectionForm from '~/components/Modals/AddSectionForm.vue';
+import AssignSectionToAdviser from '~/components/Modals/AssignSectionToAdviser.vue';
 import debounce from 'lodash/debounce';
 import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 
@@ -144,6 +154,21 @@ import StudentDetailsModal from '~/components/Modals/StudentDetailsModal.vue';
 //   });
 //   await adminViewStore.updateSearch();
 // }
+
+const showAssignToSection = ref(false)
+const assignedSection = useState('assignedSection')
+const assignSection = (section: any) => {
+  assignedSection.value = section;
+  showAssignToSection.value = true;
+}
+
+const handleAssignToSectionCloseSubmit = async () => {
+  await adminViewStore.updateSearch();
+}
+
+const closeAssignToSection = () => {
+  showAssignToSection.value = false;
+}
 
 const getSectionByStudentId = (id: any) => {
   for (const section of adminViewStore.searchSections) {
@@ -225,7 +250,7 @@ const viewStudentProfile = (studentId: any) => {
 
   adminViewStore.searchSelectedStudent = student;
   adminViewStore.searchShowStudentDetailsModal = true;
-  console.log(adminViewStore.searchSelectedStudent)
+  // console.log(adminViewStore.searchSelectedStudent)
 }
 
 const viewSection = (sectionId: any) => {

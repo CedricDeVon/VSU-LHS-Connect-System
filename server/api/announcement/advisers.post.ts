@@ -8,19 +8,22 @@ export default defineEventHandler(async (event) => {
     const { userId, data } = await readBody(event);
 
     const admin = (await Databases.getOneAdminViaUserId(userId)).data;
-    const advisers = (await Databases.getAllAdvisers()).data;
+    const advisers = (await Databases.getAllAdvisers()).data.filter((a: any) => {
+      return a.data.status === 'active';
+    });
     for (const adviser of advisers) {
-        await Databases.announcementFirebaseDatabase.createOneDocument({
+        const result = await Databases.announcementFirebaseDatabase.createOneDocument({
             ...data,
             adminId: admin.id,
             adviserId: adviser.id,
-            date: (new Date()).toISOString(),
+            date: TimeConverters.dateConverter.convert((new Date()).toISOString()).data,
             isActive: true,
             isRead: false
         });
     }
 
-    return new SuccessfulResult();
+
+    return new SuccessfulResult().cloneToObject();
 
   } catch (error: any) {
     return new FailedResult(error.message).cloneToObject();

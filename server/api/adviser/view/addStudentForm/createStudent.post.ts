@@ -4,7 +4,11 @@ import { SuccessfulResult } from '~/library/results/successfulResult';
 
 export default defineEventHandler(async (event) => {
   try {
-    const { userId, studentData } = await readBody(event);
+    const { userId, studentData, anecdoteId } = await readBody(event);
+    // timeline
+    // initialReport
+    // anecdotalReport
+  
     const adviser = (await Databases.getOneAdviserViaUserId(userId)).data;
     await Databases.studentFirebaseDatabase.createOneDocumentWithId(
       studentData.studentId, {
@@ -12,6 +16,7 @@ export default defineEventHandler(async (event) => {
         sectionId: adviser.data.sectionId,
         firstName: studentData.firstName,
         lastName: studentData.lastName,
+        anecdotalReportId: anecdoteId,
         middleName: studentData.middleName,
         suffix: studentData.suffix,
         gender: studentData.gender,

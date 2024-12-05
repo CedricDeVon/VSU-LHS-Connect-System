@@ -104,7 +104,7 @@
         @close="adminViewStore.accountsShowUploadModal = false"
       /> 
       <!-- Modal for Approved Account -->
-      <ApprovedAccountModal
+      <ApproveAccountModal
       v-if="showApprovalModal"
       @close="showApprovalModal = false"
       :approvedEmail="propAdviser.email"
@@ -124,7 +124,7 @@ definePageMeta({
 import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
 import AdminHeader from '@/components/Blocks/AdminHeader.vue';
 import AdviserCSVUploadModal from '@/components/Modals/AdviserCSVUploadModal.vue';
-import ApprovedAccountModal from '@/components/Modals/AdminEmailing/ApprovedAccountModal.vue';
+import ApproveAccountModal from '@/components/Modals/AdminConfirmations/ApproveAccountModal.vue';
 import ConfirmAddAdviser from '~/components/Modals/AdminConfirmations/ConfirmAddAdviser.vue';
 import { useAdminViewStore } from '~/stores/views/adminViewStore'
 import { componentNames } from '#build/components';

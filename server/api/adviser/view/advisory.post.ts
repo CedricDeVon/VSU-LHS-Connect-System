@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
     const timeline = (await Databases.getMostRecentTimeline()).data[0].data;
     for (const student of students) {
       const section = sections.find((section: any) => section.id === student.data.sectionId);
-      student.data['gradeAndSection'] = (section) ? `Grade ${section.data.level}, ${section.data.name}` : 'N/A';
+      student.data['gradeAndSection'] = (section) ? `Grade ${section.data.level} - ${section.data.name}` : 'N/A';
       student.data['age'] = (new Date().getFullYear() - new Date(student.data.birthDate).getFullYear())
       student.data['anecdotalReport'] = (await Databases.getOneAnecdotalReportViaId(student.data.anecdotalReportId)).data;
       

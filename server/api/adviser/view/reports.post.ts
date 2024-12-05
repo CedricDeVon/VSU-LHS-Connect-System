@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
       report.data['student'] = (await Databases.getOneStudentViaId(report.data.studentId)).data;
     }
     return new SuccessfulResult({
-      timeline, incidentalReports, anecdotalReports
+      adviser, timeline, incidentalReports, anecdotalReports
     }).cloneToObject();
 
   } catch (error: any) {

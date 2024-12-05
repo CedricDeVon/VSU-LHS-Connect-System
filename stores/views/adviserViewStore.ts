@@ -1,4 +1,5 @@
 import { UserSecurity } from "~/library/security/userSecurity";
+import { TimeConverters } from "~/library/timeConverters/timeConverters";
 
 export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     const advisorySelectedSort = ref('');
@@ -32,10 +33,12 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
 
     const reportsIncidentalReports = useState('reportsIncidentalReports');
     const reportsAnecdotalReports = useState('reportsAnecdotalReports');
+    const reportsShowIncidentalUpdateReport = ref(false);
     const reportsTimeline = useState('reportsTimeline');
     const reportsReport = useState('reportsReport');
     const reportsReportIsDraft = ref(true);
     const reportsShowCreateReport = ref(false);
+    const reportsShowViewIncidentalReport = ref(false);
     const reportsIsDraft = ref(true);
     const reportsShowNotification = ref(false);
     const reportsContainWidth = ref('89%');
@@ -53,6 +56,7 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
     const reportsDateReported = ref((new Date()).toISOString());
     const reportsStatus = ref('Unread');
     const reportsAcademicYear = ref('');
+    const reportsAdviser = ref('');
 
     const settingsShowNotification = ref(false);
     const settingsContainWidth = ref('89%');
@@ -178,6 +182,7 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
         reportsIncidentalReports.value = result.data.incidentalReports || [];
         reportsAnecdotalReports.value = result.data.anecdotalReports || [];
         reportsTimeline.value = result.data.timeline;
+        reportsAdviser.value = result.data.adviser;
 
         await updateAdviserNotificationModal();
     }
@@ -221,11 +226,26 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
         return `Academic Year ${timeline.data.schoolYear}`;
     }
 
-    const addNewStudent = async (user: any, studentData: any) => {
-        const result: any = await $fetch('/api/adviser/view/addStudentForm/createStudent', {
+    const addNewStudent = async (studentData: any) => {
+        await UserSecurity.logInViaToken();
+        let user = await getCurrentUser();
+        const anecdoteId =  generateAnecdoteId();
+        let result: any = await $fetch('/api/anecdote/create', {
             method: 'POST', body: {
                 userId: user.uid,
-                studentData
+                studentId: studentData.studentId,
+                initialId: generateReportId(),
+                anecdoteId,
+                dateReported: TimeConverters.dateConverter.convert(Date.now()).data,
+                data: {}
+            }
+        });
+
+        result = await $fetch('/api/adviser/view/addStudentForm/createStudent', {
+            method: 'POST', body: {
+                userId: user.uid,
+                studentData,
+                anecdoteId
             }
         });
     }
@@ -264,7 +284,42 @@ export const useAdviserViewStore = defineStore('useAdviserViewStore', () => {
         advisoryShowAddStudentForm.value = false;
     }
 
+    const generateCaseConferenceId = () => {
+        const prefix = 'CONF';
+        const timestamp = Date.now().toString().slice(-6);
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        return `${prefix}-${timestamp}-${random}`;
+      };
+    
+      const generateIncidentId = () => {
+        const prefix = 'INC';
+        const timestamp = Date.now().toString().slice(-6);
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        return `${prefix}-${timestamp}-${random}`;
+      };
+    
+      const generateReportId = () => {
+        const prefix = 'REP';
+        const timestamp = Date.now().toString().slice(-6);
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        return `${prefix}-${timestamp}-${random}`;
+      };
+    
+      const generateAnecdoteId = () => {
+        const prefix = 'ANE';
+        const timestamp = Date.now().toString().slice(-6);
+        const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+        return `${prefix}-${timestamp}-${random}`;
+      };
+      
     return {
+        reportsShowViewIncidentalReport,
+        reportsShowIncidentalUpdateReport,
+        generateCaseConferenceId,
+        generateIncidentId,
+        generateReportId,
+        generateAnecdoteId,
+        reportsAdviser,
         removeStudent,
         getAcademicYear,
         notificationShowAdminModalAnnouncements,

@@ -8,6 +8,7 @@ import { Chart, registerables } from 'chart.js';
 import AdminHeader from '~/components/Blocks/AdminHeader.vue';
 import AdminSidebar from '~/components/Blocks/AdminSidebar.vue';
 import PendingCases from '~/components/Modals/Dashboard/PendingCases.vue';
+import PendingInitialReports from '~/components/Modals/Dashboard/PendingInitialReports.vue';
 import ScheduledCaseConferences from '~/components/Modals/Dashboard/ScheduledCaseConferences.vue'; // Import the modal component
 import UnreadReportSubmissions from '~/components/Modals/Dashboard/UnreadReportSubmissions.vue';
 import MakeAnnouncements from '~/components/Modals/Dashboard/MakeAnnouncements.vue'; // Add import
@@ -47,16 +48,16 @@ const loadDashboardData = async () => {
   // await adminViewStore.updateDashboard();
 
   // Get pending cases count
-  pendingCases.value = adminViewStore.dashBoardIncidentReports.filter((inc: any) => inc.data.status === 'NotResolved').length;
-  console.log('Pending Cases:', pendingCases.value);
+  pendingCases.value = adminViewStore.dashBoardIncidentReports.map(a => { return a }).filter((inc: any) => inc.data.status === 'NotResolved').length;
+  // console.log('Pending Cases:', pendingCases.value);
 
   // Get scheduled conferences count
   scheduledConferences.value = adminViewStore.dashBoardCaseConferences.filter((conf: any) => new Date(conf.data.conferenceDate) > new Date() && conf.data.incident.data.status === 'NotResolved').length;
-  console.log('Scheduled Conferences:', scheduledConferences.value);
+  // console.log('Scheduled Conferences:', scheduledConferences.value);
 
   // Get total incidents for current AY
   totalIncidents.value = adminViewStore.dashBoardIncidentReports.length;
-  console.log('Total Incidents:', totalIncidents.value);
+  // console.log('Total Incidents:', totalIncidents.value);
 
   // Get recent submissions 
   recentSubmissions.value = adminViewStore.dashBoardInitialReports
@@ -64,6 +65,7 @@ const loadDashboardData = async () => {
     .sort((a: any, b: any) => new Date(b.data.dateReported).getTime() - new Date(a.data.dateReported).getTime())
     .slice(0, 5)
     .map((report: any) => ({
+      id: report.id,
       title: report.data.narrativeReport.substring(0, 60) + '...',
       people: report.data.peopleInvolved.join(', '),
       date: new Date(report.data.dateReported).toLocaleDateString('en-US', {
@@ -73,10 +75,10 @@ const loadDashboardData = async () => {
       }),
       status: report.data.status
     }));
-  console.log('Recent Submissions:', recentSubmissions.value);
+  // console.log('Recent Submissions:', recentSubmissions.value);
 
   unreadReports.value = adminViewStore.dashBoardInitialReports.filter((report: any) => report.data.status === 'Unread' && !report.data.isDraft).length;
-  console.log('Unread Reports:', unreadReports.value);
+  // console.log('Unread Reports:', unreadReports.value);
 
   // Ensure the chart is updated when data changes
   if (trendsChart) {
@@ -139,7 +141,7 @@ const academicYearMonths = computed(() => {
 
 // Update monthlyIncidentCounts computed
 const monthlyIncidentCounts = computed(() => {
-  const [startYear, endYear] = adminViewStore.dashBoardTimeline.split('-');
+  const [startYear, endYear] = adminViewStore.dashBoardTimeline.data.schoolYear.split('-');
   const months = [
     { month: 6, year: parseInt(startYear) },  // June
     { month: 7, year: parseInt(startYear) },  // July
@@ -154,15 +156,17 @@ const monthlyIncidentCounts = computed(() => {
     { month: 4, year: parseInt(endYear) },    // April
     { month: 5, year: parseInt(endYear) }     // May
   ];
-
-  return months.map(({ month, year }) => {
+  const result = months.map(({ month, year }) => {
     return adminViewStore.dashBoardIncidentReports.filter(inc => {
       const incidentDate = new Date(inc.data.dateOfIncident);
+      // console.log(incidentDate.getMonth(), incidentDate.getFullYear())
       return incidentDate.getMonth() + 1 === month && 
              incidentDate.getFullYear() === year &&
-             inc.data.schoolYear === adminViewStore.dashBoardTimeline;
+             inc.data.academicYear === adminViewStore.dashBoardTimeline.data.schoolYear;
     }).length;
   });
+  return result;
+  
 });
 
 const dashboardStats = computed<DashboardStat[]>(() => ([
@@ -263,8 +267,8 @@ const openPendingModal = () => {
       })
     }));
   showPendingModal.value = true;
-  console.log(adminViewStore.dashBoardIncidentReports)
-  console.log(selectedPendingCases.value)
+  // console.log(adminViewStore.dashBoardIncidentReports)
+  // console.log(selectedPendingCases.value)
 };
 
 const closePendingModal = () => {
@@ -275,8 +279,8 @@ const closePendingModal = () => {
 const showPendingReportsModal = ref(false);
 const selectedPendingReports = ref<any[]>([]);
 
-const openUnreadModal = () => {
-  selectedUnreadReports.value = adminViewStore.dashBoardInitialReports
+const openPendingReportsModal = () => {
+  selectedPendingReports.value = adminViewStore.dashBoardInitialReports
     .filter((report: any) => report.data.status === 'Unread' && !report.data.isDraft)
     .map((report: any) => ({
       ...report,
@@ -285,10 +289,8 @@ const openUnreadModal = () => {
         month: 'long',
         day: 'numeric'
       })
-    }));
-  showUnreadModal.value = true;
-  console.log(adminViewStore.dashBoardInitialReports)
-  console.log(selectedUnreadReports.value)
+    })).sort((a: any, b: any) => { return new Date(b.dateFormatted) - new Date(a.dateFormatted) });
+  showPendingReportsModal.value = true;
 };
 
 const closePendingReportsModal = () => {
@@ -305,19 +307,21 @@ const openAnnouncementsModal = () => {
   showAnnouncementsModal.value = true;
 };
 
-const closeAnnouncementsModal = () => {
+const closeAnnouncementsModal = () => {  
   showAnnouncementsModal.value = false;
 };
 
 const handleAnnouncementSubmit = (announcement: any) => {
   // Handle the announcement submission here
-  console.log('New announcement:', announcement);
+  // // console.log('New announcement:', announcement);
   // You can add the announcement to your state/database here
+  localStorage.setItem('announcementDraft', null)
+  
   closeAnnouncementsModal();
 };
 
 const handleAnnouncementDraft = (draft: any) => {
-  console.log('Saved draft:', draft);
+  // console.log('Saved draft:', draft);
   // Save to localStorage or your drafts state
   localStorage.setItem('announcementDraft', JSON.stringify({
     ...draft,
@@ -332,16 +336,16 @@ const showScheduleModal = ref(false);
 
 const openScheduleModal = () => {
   showScheduleModal.value = true;
-  console.log(showScheduleModal.value)
+  // console.log(showScheduleModal.value)
 };
 
 const closeScheduleModal = () => {
   showScheduleModal.value = false;
-  console.log(showScheduleModal.value)
+  // console.log(showScheduleModal.value)
 };
 
 const handleScheduleSubmit = (data: any) => {
-  console.log('Schedule conference:', data);
+  // console.log('Schedule conference:', data);
   // Handle the scheduling logic here
   closeScheduleModal();
 };
@@ -358,11 +362,42 @@ const closeCreateReportModal = () => {
 };
 
 const handleReportSubmit = (data: any) => {
-  console.log('New report:', data);
+  // console.log('New report:', data);
   // Handle the report submission here
   // create new document in incident collections later
   closeCreateReportModal();
 };
+
+const makeSubmissionRead = async (report: any) => {
+  // console.log(report);
+  const result = await $fetch('/api/initialReport/updateData', {
+    method: 'POST',
+    body: {
+      id: report.id,
+      data: {
+        status: 'Read'
+      }
+    }
+  })
+  // console.log(result);
+  await adminViewStore.updateDashboard();
+  recentSubmissions.value = adminViewStore.dashBoardInitialReports
+    .filter((report: any) => !report.data.isDraft)
+    .sort((a: any, b: any) => new Date(b.data.dateReported).getTime() - new Date(a.data.dateReported).getTime())
+    .slice(0, 5)
+    .map((report: any) => ({
+      id: report.id,
+      title: report.data.narrativeReport.substring(0, 60) + '...',
+      people: report.data.peopleInvolved.join(', '),
+      date: new Date(report.data.dateReported).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }),
+      status: report.data.status
+  }));
+  alert('Notification Read');
+}
 
 </script>
 
@@ -454,13 +489,13 @@ const handleReportSubmit = (data: any) => {
               </div>
               <div class="p-2 flex flex-col gap-2">
                 <!-- Replace 'New Report' link with button -->
-                <button
+                <!-- <button
                   @click="openCreateReportModal"
                   class="flex items-center gap-3 p-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors w-full text-left"
                 >
                   <Icon name="lucide:file-plus" class="w-5 h-5" />
                   <span class="font-small">New Report</span>
-                </button>
+                </button> -->
                 <NuxtLink v-for="(action, idx) in [
                   { text: 'View Incident Reports', link: '/admin/incidental', icon: 'lucide:clipboard-list' },
                   { text: 'View Anecdotal Reports', link: '/admin/anecdotal', icon: 'lucide:book-open' },
@@ -473,13 +508,13 @@ const handleReportSubmit = (data: any) => {
                   <span class="font-small">{{ action.text }}</span>
                 </NuxtLink>
                 <!-- Add Schedule Conference button -->
-                <button
+                <!-- <button
                   @click="openScheduleModal"
                   class="flex items-center gap-3 p-2 rounded-lg hover:bg-green-50 text-gray-700 hover:text-green-700 transition-colors w-full text-left"
                 >
                   <Icon name="lucide:calendar-plus" class="w-5 h-5" />
                   <span class="font-small">Schedule Conference</span>
-                </button>
+                </button> -->
                 <!-- Add Make Announcements button -->
                 <button
                   @click="openAnnouncementsModal"

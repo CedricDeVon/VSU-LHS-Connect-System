@@ -240,7 +240,7 @@ const filteredStudents = computed(() => {
   const result = availableStudents.value.filter((student: any) => 
     student.name.toLowerCase().includes(searchTerm)
   );
-  console.log(result);
+  // console.log(result);
   return result;
 });
 
@@ -339,7 +339,7 @@ const handleSubmit = async () => {
   })
   await adminViewStore.updateDashboard();
 
-  console.log(reportData);
+  // console.log(reportData);
 
   showSuccessAlert.value = true;
   setTimeout(() => {

@@ -51,7 +51,7 @@ const updateUnreadCount = () => {
 
 const handleNotificationClick = (notification: Notification) => {
   if (notification.incidentId) {
-    router.push(`/admin/incident/${notification.incidentId}`);
+    return navigateTo(`/admin/incident/${notification.incidentId}`, { replace: true });
   }
   notification.read = true;
   updateUnreadCount();
@@ -152,7 +152,6 @@ const handleClickOutside = (event: Event) => {
 
 <template>
   <header class="flex justify-between items-center p-4 shadow-sm">
-
     <div></div>
     <div class="flex items-center gap-6"> <!-- Increased gap from gap-4 to gap-6 -->
       <!-- Notification Bell -->
@@ -188,7 +187,6 @@ const handleClickOutside = (event: Event) => {
                 </button>
               </div>
             </div>
-            </div>
             <div class="max-h-[480px] overflow-y-auto">
               <div v-if="notifications.length === 0" 
                 class="p-8 text-center text-gray-500 flex flex-col items-center">
@@ -217,9 +215,9 @@ const handleClickOutside = (event: Event) => {
                   </div>
                 </div>
               </div>
-            </div>
-            </Transition>
-          </div>
+              </div>
+              </div>
+          </Transition>
       </div>
 
       <!-- User Profile and Logout -->

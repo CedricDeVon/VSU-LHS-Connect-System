@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
     const { id, data } = await readBody(event);
     
     const result: Result = await Databases.updateOneCaseConferenceViaId(id, data);
+    // console.log(result)
     if (result.isNotSuccessful) {
         throw new Error(result.message);
     }

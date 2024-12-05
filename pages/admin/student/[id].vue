@@ -11,6 +11,7 @@ import CreateIncidentReportModal from '~/components/Modals/Incident Management/C
 import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const adminViewStore = useAdminViewStore();
+await adminViewStore.updateStudentPageData(useRoute().params.id);
 
 const sortedStudents = () => {
     let sorted = adminViewStore.studentAllSectionStudents;
@@ -35,12 +36,12 @@ const incidentButtonText = () => {
 const viewStudent = (student: any) => {
     if (student.id !== adminViewStore.studentStudentData.id) {
         adminViewStore.studentStudentData = student;
-        useRouter().push(`/admin/student/${student.id}`);
+        return navigateTo(`/admin/student/${student.id}`, { replace: true });
     }
 }
 
 const viewAnecdotalReport = (student: any) => {
-    return navigateTo(`/admin/anecdote/${student.id}`);
+    return navigateTo(`/admin/anecdote/${student.id}`, { replace: true });
 }
 
 </script>
@@ -149,14 +150,14 @@ const viewAnecdotalReport = (student: any) => {
                                                 class="bg-[#9B2C2C] hover:bg-[#7B1D1D] w-full text-white px-4 py-2 rounded-md transition-colors">
                                             {{ incidentButtonText() }}
                                         </button>
-                                        <button @click="createIncidentReport"
+                                        <!-- <button @click="createIncidentReport"
                                             class="w-full px-4 py-2 rounded-md bg-[#265630] hover:bg-[#728B78] text-white transition-colors duration-200 flex items-center justify-center space-x-2">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                     d="M12 4v16m8-8H4" />
                                             </svg>
                                             <span>Create Incident Report</span>
-                                        </button>
+                                        </button> -->
                                     </div>
                                 </div>
                             </div>

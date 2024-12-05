@@ -12,9 +12,9 @@ AND an incident cannot have more than one on-going conference that is why sa inc
                     <nav class="flex" aria-label="Breadcrumb">
                         <ol class="inline-flex items-center space-x-1 md:space-x-3">
                             <li>
-                                <NuxtLink :to="`/admin/incident/${incidentId}`" class="text-[#265630] hover:text-gray-700">
+                                <button @click="navigateBackToIncident" class="text-[#265630] hover:text-gray-700">
                                     Incident Document
-                                </NuxtLink>
+                                </button>
                             </li>
                             <li>/</li>
                             <li class="text-[#265630]">
@@ -46,6 +46,10 @@ AND an incident cannot have more than one on-going conference that is why sa inc
                                 </p>
                             </div>
                             <div class="flex space-x-3">
+                                <button @click="makeComplete"
+                                    class="px-4 py-2 text-sm bg-[#265630] text-white rounded-md hover:bg-[#728B78]">
+                                    Mark As Complete
+                                </button>
                                 <button @click="downloadPDF"
                                     class="px-4 py-2 text-sm bg-[#265630] text-white rounded-md hover:bg-[#728B78]">
                                     Download PDF
@@ -67,7 +71,7 @@ AND an incident cannot have more than one on-going conference that is why sa inc
                             <div>
                                 <h3 class="text-sm font-medium text-gray-500">Conference Schedule</h3>
                                 <p class="mt-1 text-sm text-gray-900">
-                                    {{ formatDate(conferenceData.data.conferenceDate) }}
+                                    {{ formatDate(conferenceData.data.conferenceDate) }} - {{ conferenceData.data.time }}
                                 </p>
                             </div>
                         </div>
@@ -103,8 +107,32 @@ const route = useRoute()
 const loading = ref(true)
 const error = ref(null)
 const conferenceData = ref(null);
-let incidentId = '';
+const incidentId = ref('');
 const conferenceId = ref('');
+
+const makeComplete = async () => {
+    await $fetch('/api/caseConference/update', {
+        method: 'POST',
+        body: {
+            id: adminViewStore.caseConferenceCaseConferenceReport.id,
+            data: {
+                status: 'Completed'
+            }
+        }
+    })
+    alert('Case Conference Made Complete')
+    await adminViewStore.updateCaseConference(adminViewStore.caseConferenceCaseConferenceReport.id);
+    await adminViewStore.updateSidebar();
+    const data = adminViewStore.caseConferenceCaseConferenceReport;
+    conferenceData.value = data
+    loading.value = false
+    displayPDF()
+}
+
+const navigateBackToIncident = () => {
+    // console.log(adminViewStore.caseConferenceIncidentReport.data.incidentId)
+    return navigateTo(`/admin/incident/${adminViewStore.caseConferenceIncidentReport.id}`, { replace: true })
+}
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -259,7 +287,7 @@ const displayPDF = () => {
 const downloadPDF = () => {
     if (!conferenceData.value) return
     const docDefinition = defineConferenceDoc(conferenceData.value)
-    pdfMake.createPdf(docDefinition).download(`Conference_${conferenceData.value.id}.pdf`)
+    pdfMake.createPdf(docDefinition).download(`${conferenceData.value.id}.pdf`)
 }
 
 const printDocument = () => {
@@ -275,13 +303,11 @@ onBeforeMount(async () => {
         await adminViewStore.updateCaseConference(useRoute().params.conferenceId);
         await adminViewStore.updateSidebar();
         const data = adminViewStore.caseConferenceCaseConferenceReport;
-        console.log(data)
         if (!data) {
             throw new Error('Conference not found')
         }
 
-        // Update the incidentId if needed
-        incidentId = adminViewStore.caseConferenceIncidentReport.data.incidentId
+        // Update the adminViewStore.caseConferenceIncidentReport.data.incidentId if needed
         conferenceData.value = data
         loading.value = false
         displayPDF()

@@ -97,7 +97,7 @@ export default {
   computed: {
     sortedConferences() {
       return [...this.conferences].sort((a, b) => 
-        new Date(b.data.conferenceDate) - new Date(a.data.conferenceDate)
+        new Date(a.data.conferenceDate) - new Date(b.data.conferenceDate)
       );
     }
   },
@@ -112,7 +112,7 @@ export default {
     navigateToConference(conferenceId) {
       this.$emit('close');
       // Simplified navigation with correct params
-      this.$router.push(`/admin/incident/${this.incidentId}/conference/${conferenceId}`);
+      return navigateTo(`/admin/incident/${this.incidentId}/conference/${conferenceId}`, { replace: true });
     }
   }
 }

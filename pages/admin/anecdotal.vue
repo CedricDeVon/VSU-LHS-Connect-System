@@ -53,7 +53,7 @@
                                                 <td class="p-4 w-[20%]">{{ report.id }}</td>
                                                 <td class="p-4 w-[20%]">{{ getStudentName(report.data.studentId) }}</td>
                                                 <td class="p-4 w-[20%]">{{ getAdviserName(report.data.adviserId) }}</td>
-                                                <td class="p-4 w-[20%]">{{ report.data.schoolYear }}</td>
+                                                <td class="p-4 w-[20%]">{{ report.data.academicYear }}</td>
                                                 <td class="p-4 w-[20%]">
                                                     <button 
                                                         @click="viewReport(report.id)"

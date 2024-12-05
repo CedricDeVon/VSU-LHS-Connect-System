@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-      <!-- <select
+      <select
               class="  lg:mr-5 lg:pr-2 py-2 input border-b-1 ml-3 border-gray-400 bg-gray-10 text-black inline-flex whitespace-nowrap hover:bg-gray-15 focus:outline-none"
               v-model="selectedLevel">
               <option value="" disabled selected hidden>Prev Level</option>
@@ -8,11 +8,11 @@
               <option value="8">Grade 8</option>
               <option value="9">Grade 9</option>
               <option value="10">Grade 10</option>
-      </select> -->
+      </select>
       <input type="text" placeholder="Search Student"
             class=" w-2/5 px-4 py-2 m-4 mt-2  border border-gray-300 rounded-md focus:outline-none mr-3"
             v-model="searchQuery" />
-      <button @click ="search" class=" button2 px-7 p-1 m-2 rounded-lg focus:outline-none" aria-label="search">
+      <button @click="search" class=" button2 px-7 p-1 m-2 rounded-lg focus:outline-none" aria-label="search">
       Search
       </button>
   
@@ -110,7 +110,7 @@ export default {
       };
 
       const enrollStudent = async (student: any) => {
-        console.log(student)
+        // console.log(student)
         await adviserViewStore.enrollStudent(student);
 
         searchQuery.value = '';

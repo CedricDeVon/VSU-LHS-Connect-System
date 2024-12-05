@@ -16,6 +16,9 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
     const status = ref('Unread');
     const isDraft = ref(true);
     const academicYear = ref('');
+    const others = ref('');
+    const reasonOfAction = ref('');
+    const actionTaken = ref('');
 
     const getAllData = () => {
         return {
@@ -31,7 +34,10 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
             dateReported : TimeConverters.dateConverter.convert(dateReported.value).data,
             status : status.value,
             isDraft :isDraft.value,
-            academicYear : academicYear.value
+            academicYear : academicYear.value,
+            others : others.value,
+            reasonOfAction : reasonOfAction.value,
+            actionTaken: actionTaken.value
         };
     }
 
@@ -49,10 +55,15 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
          status.value = 'Unread',
          isDraft.value = true,
          academicYear.value = ''
+         others.value = ''
+         reasonOfAction.value = ''
+         actionTaken.value = ''
     }
 
 
     return{
+        actionTaken,
+        reasonOfAction,
         initialDocID,
         reportIDRef,
         reportedBY,
@@ -68,7 +79,8 @@ export const adviserReportStore  = defineStore('adviserReportStore', () => {
         isDraft,
         academicYear,
         getAllData,
-        resetAllData
+        resetAllData,
+        others
     }
 })
 

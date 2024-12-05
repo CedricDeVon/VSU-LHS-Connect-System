@@ -62,7 +62,7 @@
                     <div class="w-full space-y-4 mt-6">
                         <!-- Primary Actions -->
                         <div class="space-y-2">
-                            <button @click="viewFullDetails" 
+                            <button v-if="adminViewStore.searchSelectedStudent.data.sectionId" @click="viewFullDetails" 
                                     class="w-full px-4 py-3 rounded-md bg-[#265630] hover:bg-[#1a3d21] text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -71,13 +71,13 @@
                                 <span>View Section Details</span>
                             </button>
 
-                            <button @click="createIncidentReport"
+                            <!-- <button @click="createIncidentReport"
                                     class="w-full px-4 py-3 rounded-md border-2 border-[#265630] text-[#265630] hover:bg-[#265630] hover:text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                                 </svg>
                                 <span>Create Incident Report</span>
-                            </button>
+                            </button> -->
                         </div>
 
                         <!-- Secondary Actions -->
@@ -86,7 +86,7 @@
                             <div :class="[
                                 hasIncidents ? 'grid grid-cols-2 gap-3' : 'w-full'
                             ]">
-                                <button @click="viewAnecdotalReport"
+                                <button v-if="adminViewStore.searchSelectedStudent.data.anecdotalReportId" @click="viewAnecdotalReport"
                                         :class="[
                                             'px-4 py-3 rounded-md bg-[#728B78] hover:bg-[#536757] text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2',
                                             hasIncidents ? '' : 'w-full'
@@ -99,7 +99,7 @@
 
                                 <!-- View Incidents - Only show if has incidents -->
                                 <button v-if="hasIncidents" 
-                                        @click="showIncidentModal = true"
+                                        @click="viewIncidents"
                                         class="px-4 py-3 rounded-md bg-white border-2 border-[#728B78] text-[#728B78] hover:bg-[#728B78] hover:text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9.5a2 2 0 00-.586-1.414l-3.5-3.5a2 2 0 00-1.414-.586h-1"/>
@@ -116,9 +116,9 @@
 
     <!-- Add Modal -->
     <IncidentReportsModal 
-        :show="showIncidentModal"
-        :student-data="studentData"
-        @close="showIncidentModal = false"
+        :show="adminViewStore.studentShowIncidentModal"
+        :student-data="adminViewStore.searchSelectedStudent"
+        @close="adminViewStore.studentShowIncidentModal = false" />
     />
 
     <!-- Add Create Incident Modal -->
@@ -163,6 +163,14 @@ export default {
     },
     emits: ['close'],
     methods: {
+        handleCloseIncidentModal() {
+            this.adminViewStore.studentShowIncidentModal = false;
+            this.adminViewStore.searchShowStudentDetailsModal = true;
+        },
+        async handleShowIncidentModal() {
+            this.adminViewStore.studentShowIncidentModal = true;
+            this.adminViewStore.searchShowStudentDetailsModal = false;
+        },
         handleOverlayClick(event) {
             if (event.target === event.currentTarget) {
                 this.$emit('close');
@@ -172,7 +180,7 @@ export default {
             const studentSectionId = this.adminViewStore.searchSelectedStudent.data.sectionId;
             if (studentSectionId) {
                 this.adminViewStore.searchShowStudentDetailsModal = false;
-                return navigateTo(`/admin/section/${studentSectionId}`);
+                return navigateTo(`/admin/section/${studentSectionId}`, { replace: true });
 
             } else {
                 alert('Student is not assigned to any section');
@@ -183,7 +191,7 @@ export default {
             const anecdotalId = this.adminViewStore.searchSelectedStudent.data.anecdotalReportId;
             if (anecdotalId) {
                 this.adminViewStore.searchShowStudentDetailsModal = false;
-                return navigateTo(`/admin/anecdote/${studentId}`);
+                return navigateTo(`/admin/anecdote/${studentId}`, { replace: true });
 
             } else {
                 alert('No anecdotal report available for this student');
@@ -191,10 +199,9 @@ export default {
         },
         viewIncidents() {
             this.adminViewStore.studentShowIncidentModal = true
-            this.adminViewStore.studentStudentData = this.adminViewStore.searchSelectedStudent;
         },
         createIncidentReport() {
-            console.log('Opening create incident modal');
+            // console.log('Opening create incident modal');
             this.showCreateIncidentModal = true;
         },
         handleClose() {
@@ -230,7 +237,7 @@ export default {
     },
     data() {
         return {
-            showIncidentModal: false,
+            showIncidentModal: ref(false),
             adminViewStore: useAdminViewStore()
         }
     }

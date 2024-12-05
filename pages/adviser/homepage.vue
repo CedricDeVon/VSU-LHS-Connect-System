@@ -106,7 +106,7 @@
                                                 <div class="flex items-center">
                                                     <span class="text-gray-600 w-24 text-sm">Population</span>
                                                     <span class="font-medium">{{ adviserViewStore.homepageSection.data.population }}
-                                                        students</span>
+                                                        Students</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -209,23 +209,25 @@
                                 <div v-for="notification of getActiveNotifications()" :key="notification.id"
                                     class="bg-white rounded-xl p-4 mb-4 shadow-md transition-all duration-200 hover:shadow-lg"
                                     :class="{
-                                        'border-r-4 border-[#265630] bg-gradient-to-r from-[#e1fde7] to-white': notification.data.isActive,
-                                        'hover:-translate-y-1': true
+                                        'border-r-4 border-[#265630] bg-gradient-to-r from-[#e1fde7] to-white': !notification.data.isRead,
+                                        'hover:-translate-y-1': false
                                     }">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <h2 class="text-[#265630] font-semibold text-lg">
-                                            {{ notification.data.title }}
-                                        </h2>
-                                        <span v-if="notification.data.isActive"
-                                            class="bg-[#265630] text-white text-xs px-2 py-1 rounded-full">
-                                            New
-                                        </span>
-                                    </div>
-                                    <p class="text-sm text-gray-600 mb-2">{{ notification.data.content }}</p>
-                                    <div
-                                        class="flex items-center justify-between text-xs text-gray-500 mt-2 pt-2 border-t border-gray-100">
-                                        <span>{{ adviserViewStore.getFullName(notification.data.by) }}</span>
-                                        <span>{{ notification.data.date }}</span>
+                                    <div @click="announcementClicked">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h2 class="text-[#265630] font-semibold text-lg">
+                                                {{ notification.data.title }}
+                                            </h2>
+                                            <span v-if="!notification.data.isRead"
+                                                class="bg-[#265630] text-white text-xs px-2 py-1 rounded-full">
+                                                New
+                                            </span>
+                                        </div>
+                                        <p class="text-sm text-gray-600 mb-2">{{ notification.data.content }}</p>
+                                        <div
+                                            class="flex items-center justify-between text-xs text-gray-500 mt-2 pt-2 border-t border-gray-100">
+                                            <span>{{ adviserViewStore.getFullName(notification.data.by) }}</span>
+                                            <span>{{ notification.data.date }}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -239,7 +241,7 @@
 
 <script setup lang='ts'>
 definePageMeta({
-  middleware: ['authenticate-and-authorize-adviser']
+    middleware: ['authenticate-and-authorize-adviser']
 });
 
 import AdviserHeader from "~/components/Blocks/AdviserHeader.vue";
@@ -255,9 +257,20 @@ const showNotification = ref(false);
 const adviserViewStore = useAdviserViewStore();
 await adviserViewStore.updateHomePage();
 
-// onBeforeMount(async () => {
-//     await adviserViewStore.updateHomePage();
-// })
+const announcementClicked = async (notification: any) => {
+  const result = await $fetch('/api/announcement/update', {
+    method: 'POST',
+    body: {
+      id: notification.id,
+      data: {
+        isRead: true
+      }
+    }
+  })
+
+  await adviserViewStore.updateHomePage();
+  alert('Notification Read');
+}
 
 const notifyClick = () => {
     showNotification.value = !showNotification.value;
@@ -353,19 +366,6 @@ const getActiveNotifications = () => {
 /* Add opacity to main content containers */
 .bg-white {
     background-color: rgba(255, 255, 255, 0.9) !important;
-}
-
-.black-text{
-    color: black;
-    font-size: 20px;
-    font-weight: 600;
-    font-family: century-gothic, sans-serif;
-}
-.black-small{
-    color: black;
-    font-size: 19px;
-    font-weight: 500;
-    font-family: century-gothic, sans-serif;
 }
 
 /* Custom Scrollbar */

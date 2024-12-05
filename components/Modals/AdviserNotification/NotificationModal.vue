@@ -10,9 +10,10 @@
         <div class=" overflow-x-auto overflow-y-auto max-h ">
           <div 
           v-for="notification of getActiveNotifications()"
-          :key="notification.id"   
+          :key="notification.id"
+          @click="announcementClicked(notification)"
           class="bg-white rounded-lg p-4 m-5  shadow-2xl "
-          :class="{' new-announcement ': notification.data.isActive }"
+          :class="{' new-announcement ': !notification.data.isRead }"
           >
           <h1 class="subHeader">{{ notification.data.title }}</h1>
           <p class="text-xs font-bold ">{{ notification.data.date }}<span class="text-xs">  : {{ adviserViewStore.getFullName(notification.data.by) }}</span></p> 
@@ -31,13 +32,28 @@ import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
 const user = await getCurrentUser();
 const adviserViewStore = useAdviserViewStore();
 
+const announcementClicked = async (notification: any) => {
+  const result = await $fetch('/api/announcement/update', {
+    method: 'POST',
+    body: {
+      id: notification.id,
+      data: {
+        isRead: true
+      }
+    }
+  })
+
+  await adviserViewStore.updateAdviserNotificationModal();
+  alert('Notification Read');
+}
+
 const getActiveNotifications = () => {
   return adviserViewStore.notificationAdviserModalAnnouncements
   .filter((notification: any) => notification.data.isActive)
   .sort((a: any, b: any) => {
-      if (a.data.isActive && !b.data.isActive) {
+      if (!a.data.isRead && b.data.isRead) {
           return -1;
-      } else if (!a.data.isActive && b.data.isActive) {
+      } else if (a.data.isRead && !b.data.isRead) {
           return 1;
       } else {
           return new Date(b.data.date) - new Date(a.data.date);

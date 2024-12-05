@@ -257,7 +257,7 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
         studentId
       }
     });
-    // console.log(data.studentData)
+    // console.log(data)
     studentStudentData.value = data.studentData;
     studentStudentSection.value = data.studentSection;
     studentAllSectionStudents.value = data.allSectionStudents;
@@ -273,15 +273,15 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
       }
 
       const { data }: any = studentStudentSection.value;
-      return `Grade ${data.level}, ${data.name}`;
+      return `Grade ${data.level} - ${data.name}`;
   }
 
   const studentGetGradeAndSection = (student: any) => {
-    return (student.data.section) ? `Grade ${student.data.section.data.level}, ${student.data.section.data.name}` : 'N/A';
+    return (student.data.section) ? `Grade ${student.data.section.data.level} - ${student.data.section.data.name}` : 'N/A';
   }
 
   const getGradeSection = (item: any) => {
-    return `Grade ${item.data.level}, ${item.data.name}`;
+    return `Grade ${item.data.level} - ${item.data.name}`;
   }
 
   const sectionGetGrade = (section: any) => {
@@ -293,6 +293,8 @@ export const useAdminViewStore = defineStore('useAdminViewStore', () => {
     accountsFile.value = null;
     accountsMessage.value = '';
   }
+
+
 
   const updateAll = async () => {
     await UserSecurity.logInViaToken();

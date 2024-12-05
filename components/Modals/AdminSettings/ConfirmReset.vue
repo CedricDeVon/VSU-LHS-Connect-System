@@ -30,7 +30,7 @@ export default {
             this.$emit('close');
         },
        async proceedReset() {
-            console.log('Resetting Academic Year');
+            // console.log('Resetting Academic Year');
             alert('Academic Year has been reset');
             this.$emit('reset-academic-year');  
            

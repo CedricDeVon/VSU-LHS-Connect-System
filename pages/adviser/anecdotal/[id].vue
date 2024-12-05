@@ -1,6 +1,8 @@
 <template>
     <div>
-      <adviser-header/>
+      <AdviserHeader />
+      <NotificationModal v-if="adviserViewStore.notificationShowAdviserModalAnnouncements" />
+
     <div class="flex inset-0 h-screen bg-gray-100">
       <div class="flex-1 overflow-hidden">
         <div class="p-8 pt-8 overflow-y-auto h-[calc(100vh-64px)]">
@@ -74,7 +76,7 @@
                 </div>
                 
                 <div class="p-4 space-y-8">
-                  <div v-for="(report, index) in sortedReports" :key="report.reportID" class="relative">
+                  <div v-for="(report, index) in sortedReports" :key="report.id" class="relative">
                     <!-- Timeline connector -->
                     <div v-if="index !== sortedReports.length - 1" 
                       class="absolute left-4 top-8 bottom-0 w-0.5 bg-gray-200"></div>
@@ -93,16 +95,16 @@
                       <div class="flex-1">
                         <div class="flex items-center justify-between">
                           <h3 class="text-sm font-medium text-gray-900">
-                            {{ report.purpose }}
+                            {{ report.data.purpose }}
                           </h3>
-                          <time class="text-xs text-gray-500">{{ formatDate(report.datePrepared) }}</time>
+                          <time class="text-xs text-gray-500">{{ report.data.datePrepared }}</time>
                         </div>
                         <div class="mt-2 text-sm text-gray-700 space-y-2">
-                          <p><span class="font-medium">Incident Date:</span> {{ formatDate(report.date) }}</p>
-                          <p><span class="font-medium">Place:</span> {{ report.placeOfIncident }}</p>
-                          <p><span class="font-medium">Witnesses:</span> {{ report.witnesses.join(', ') }}</p>
-                          <p class="mt-2">{{ report.details }}</p>
-                          <p class="mt-2 text-gray-600 italic">{{ report.remarks }}</p>
+                          <p><span class="font-medium">Incident Date:</span> {{ report.data.dateOfIncident }}</p>
+                          <p><span class="font-medium">Place:</span> {{ report.data.placeOfIncident }}</p>
+                          <p><span class="font-medium">Witnesses:</span> {{ report.data.witnesses.join(', ') }}</p>
+                          <p class="mt-2">{{ report.data.details }}</p>
+                          <p class="mt-2 text-gray-600 italic">{{ report.data.remarks }}</p>
                         </div>
                       </div>
                     </div>
@@ -121,25 +123,28 @@
     </div>
     </div>
 </template>
-  
+
 <script>
 definePageMeta({
   middleware: ['authenticate-and-authorize-adviser']
 });
 
+import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
+import NotificationModal from '~/components/Modals/AdviserNotification/NotificationModal.vue';
+import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
 import pdfMake from 'pdfmake/build/pdfmake';
 import { headerImage } from '~/assets/images/sample-header';
 import { footer } from '~/assets/images/footer';
-import UpdateAnecdotalModal from '~/components/Modals/UpdateAnecdotalModal.vue'
 import { formatDate } from '@vueuse/core';
-import AdviserHeader from '~/components/Blocks/AdviserHeader.vue';
 import { useAdviserViewStore } from '~/stores/views/adviserViewStore';
+import { defineAnecdotalDoc } from '~/utils/documentDefinitions';
+import { TimeConverters } from "~/library/timeConverters/timeConverters";
 
 export default {
   components: {
     UpdateAnecdotalModal,
       AdviserHeader,
-      AdviserHeader,
+      NotificationModal,
   },
 
   props: {
@@ -156,159 +161,13 @@ export default {
       showUpdateModal: false,
       selectedReport: null,
       adviserViewStore: useAdviserViewStore(),
+      sortedReports: []
     };
   },
 
   async mounted() {
-    await this.adviserViewStore.updateAnecdote(useRoute().params.id);
     await this.initData();
     this.displayPDF();
-  },
-
-  computed: {
-    defineAnecdotalDoc() {
-      if (!this.anecReport || this.anecReport === '' || !this.studentData) return null;
-
-      const associatedReports = this.adviserViewStore.anecdoteReports.filter(r => this.anecReport.data.reportIds.includes(r.id));
-
-      // Sort reports by date prepared
-      associatedReports.sort((a, b) => new Date(a.data.datePrepared) - new Date(b.data.datePrepared));
-
-      const content = [
-        { text: 'ANECDOTAL REPORT', style: 'header', margin: [0, 0, 0, 0] },
-        {
-          table: {
-            widths: ['30%', '70%'],
-            headerRows: 0,
-            body: [
-              [
-                { text: 'Student Name:', style: 'label', border: [false, false, false, false] },
-                { text: this.adviserViewStore.getFullName(this.studentData), style: 'content', border: [false, false, false, false] }
-              ],
-              [
-                { text: 'Student ID:', style: 'label', border: [false, false, false, false] },
-                { text: this.studentData.id, style: 'content', border: [false, false, false, false] }
-              ],
-              [
-                { text: 'Academic Year:', style: 'label', border: [false, false, false, false] },
-                { text: this.anecReport.data.schoolYear, style: 'content', border: [false, false, false, false] }
-              ]
-            ]
-          }
-        }
-      ];
-
-      associatedReports.forEach((rep) => {
-        // Format the date using the Date object
-        const preparedDate = new Date(rep.data.datePrepared);
-        const formattedDate = preparedDate.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-
-        const incidentDate = new Date(rep.data.dateOfIncident);
-        const formattedIncidentDate = incidentDate.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        });
-
-        content.push(
-          {
-            text: formattedDate,
-            style: 'subheader',
-            margin: [0, 20, 0, 10],
-            color: '#1f2937'
-          },
-          {
-            table: {
-              widths: ['30%', '70%'],
-              headerRows: 0,
-              body: [
-                [
-                  { text: 'Date of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: formattedIncidentDate, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Purpose:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.data.purpose, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Witnesses:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.data.witnesses.join(', '), style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Place of Incident:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.data.placeOfIncident, style: 'content', border: [false, false, false, false] }
-                ],
-                [
-                  { text: 'Things Involved:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.data.thingsInvolved, style: 'content', border: [false, false, false, false] }
-                ],
-              ]
-            }
-          },
-
-          { text: 'Details:', style: 'label', margin: [0, 15, 0, 5] },
-          { text: rep.data.details, style: 'content', margin: [30, 0, 30, 15] },
-
-          { text: rep.data.isReportedByGuidance ? 'Remarks from the Guidance Office:' : 'Adviser\'s Remarks:', style: 'label', margin: [0, 15, 0, 5] },
-          { text: rep.data.remarks, style: 'content', margin: [30, 0, 30, 15] },
-
-          {
-            table: {
-              widths: ['30%', '70%'],
-              headerRows: 0,
-              body: [
-                [
-                  { text: 'Prepared By:', style: 'label', border: [false, false, false, false] },
-                  { text: rep.data.isReportedByGuidance ? 'Guidance' : this.anecReport.data.preparedBy, style: 'content', border: [false, false, false, false] }
-                ]
-              ]
-            }
-          }
-        );
-      });
-
-      return {
-        pageMargins: [72, 120, 72, 90],
-        header: {
-          image: headerImage,
-          width: 600,
-          height: 100,
-          alignment: 'center',
-          margin: [0, 10, 0, 0],
-        },
-        content: content,
-        styles: {
-          header: {
-            fontSize: 20,
-            bold: true,
-            alignment: 'center',
-          },
-          subheader: {
-            fontSize: 15,
-            bold: true,
-          },
-          label: {
-            bold: true,
-            fontSize: 11,
-            margin: [0, 10, 0, 10],
-          },
-          content: {
-            fontSize: 11,
-            margin: [0, 10, 0, 10],
-          }
-        },
-        footer: {
-          image: footer,
-          width: 480,
-          alignment: 'center',
-          margin: [0, 10, 0, 0]
-        }
-      };
-    }
   },
 
   methods: {
@@ -319,16 +178,23 @@ export default {
       if (!this.studentData) return;
 
       this.anecReport = this.adviserViewStore.anecdoteAnecdotalReport;
+      this.sortedReports = this.adviserViewStore.anecdoteReports
+        .sort((a, b) => new Date(a.data.datePrepared) - new Date(b.data.datePrepared));
     },
 
     displayPDF() {
-      if (!this.defineAnecdotalDoc) {
+      if (!defineAnecdotalDoc) {
         console.error('No document definition available');
         return;
       }
 
       try {
-        pdfMake.createPdf(this.defineAnecdotalDoc).getBlob((blob) => {
+        const docDefinition = defineAnecdotalDoc({
+          studentData: this.studentData,
+          anecdotalData: this.anecReport,
+          associatedReports: this.adviserViewStore.anecdoteReports
+        });
+        pdfMake.createPdf(docDefinition).getBlob((blob) => {
           const url = URL.createObjectURL(blob);
           const viewer = document.getElementById('pdf-viewer');
           if (viewer) {
@@ -359,7 +225,7 @@ export default {
         isReportedByGuidance: true
       };
       this.showUpdateModal = true;
-      console.log('Modal should open', this.showUpdateModal); // Debug log
+      // console.log('Modal should open', this.showUpdateModal); // Debug log
     },
 
     closeUpdateModal() {
@@ -374,8 +240,8 @@ export default {
         const reportId = `REP-${datePrepared.replace(/-/g, '')}-${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`;
 
         const newReport = {
-          dateOfIncident: updatedData.dateOfIncident,
-          datePrepared: datePrepared,
+          dateOfIncident: TimeConverters.dateConverter.convert(updatedData.dateOfIncident).data,
+          datePrepared: TimeConverters.dateConverter.convert(datePrepared).data,
           purpose: updatedData.purpose,
           witnesses: updatedData.witnesses,
           placeOfIncident: updatedData.placeOfIncident,
@@ -392,25 +258,35 @@ export default {
         });
         await this.adviserViewStore.updateAnecdote(this.adviserViewStore.anecdoteStudent.id);
         this.anecReport = this.adviserViewStore.anecdoteAnecdotalReport;
+        this.sortedReports = this.adviserViewStore.anecdoteReports
+        .sort((a, b) => new Date(a.data.datePrepared) - new Date(b.data.datePrepared));
         
         this.displayPDF();
         this.showUpdateModal = false;
 
-        alert('Report added successfully');
+        alert('Report Created Successfully');
 
       } catch (error) {
         console.error('Error updating report:', error);
-        alert('Failed to update report');
+        alert('Failed To Update Report');
       }
     },
 
     downloadPDF() {
-      const fileName = `Anecdotal_Report_${this.anecReport.id}_${new Date().toISOString().split('T')[0]}.pdf`;
-      pdfMake.createPdf(this.defineAnecdotalDoc).download(fileName);
+      const fileName = `${this.adviserViewStore.anecdoteAnecdotalReport.id}.pdf`;
+      pdfMake.createPdf(defineAnecdotalDoc({
+          studentData: this.studentData,
+          anecdotalData: this.anecReport,
+          associatedReports: this.adviserViewStore.anecdoteReports
+        })).download(fileName);
     },
 
     printDocument() {
-      pdfMake.createPdf(this.defineAnecdotalDoc).print({
+      pdfMake.createPdf(defineAnecdotalDoc({
+          studentData: this.studentData,
+          anecdotalData: this.anecReport,
+          associatedReports: this.adviserViewStore.anecdoteReports
+        })).print({
         silent: false,
         printBackground: true
       });

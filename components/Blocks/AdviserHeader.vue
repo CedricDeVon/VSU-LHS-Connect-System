@@ -1,24 +1,6 @@
 <template>
   <div class="admin-header h-14 w-screen flex items-center">
     <div class="px-5 w-full flex justify-between items-center">
-      <div class="flex space-x-4">
-        <button @click="goToHomepage" 
-          class="button px-7 py-2 rounded-lg focus:outline-none"
-          aria-label="Homepage">
-          Homepage
-        </button>  
-        <button @click="goToAdvisory" 
-          class="button px-7 py-2 rounded-lg focus:outline-none"
-          aria-label="Advisory">
-          Advisory
-        </button> 
-        <button @click="goToReports" 
-          class="button px-7 py-2 rounded-lg focus:outline-none"
-          aria-label="Reports">
-          Reports
-        </button> 
-      </div>
-
         <div class="px-5 w-full flex justify-between items-center">
             <div class="flex space-x-4">
             <button @click="goToHomepage" 
@@ -54,7 +36,6 @@
             </div>
             </header>
         </div>
-      </header>
     </div>
   </div>
 </template>
@@ -69,23 +50,23 @@ const adviserViewStore = useAdviserViewStore();
 
 const signOutUser = async () => {
   const result: Result = await UserSecurity.signOutUser(auth);
-  return navigateTo('/auth/login');
+  return navigateTo('/auth/login', { replace: true });
 }
 
 const goToHomepage = () => {
-    return navigateTo('/adviser/homepage');
+    return navigateTo('/adviser/homepage', { replace: true });
 }
 
 const goToAdvisory = () => {
-    return navigateTo('/adviser/advisory');
+    return navigateTo('/adviser/advisory', { replace: true });
 }
 
 const goToReports = () => {
-    return navigateTo('/adviser/reports');
+    return navigateTo('/adviser/reports', { replace: true });
 }
 
 const goToSettings = () => {
-    return navigateTo('/adviser/settings');
+    return navigateTo('/adviser/settings', { replace: true });
 }
 
 const notifClick = () => {

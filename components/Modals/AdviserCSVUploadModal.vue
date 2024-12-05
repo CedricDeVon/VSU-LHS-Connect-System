@@ -131,7 +131,7 @@ const handleFileChange = (event: any) => {
 }
 
 const uploadFile = async () => {
-  console.log(files.value);
+  // console.log(files.value);
   if (file) {
     const result: Result = await UserSecurity.signUpManyUsersViaCSVFile(files.value);
     if (result.isNotSuccessful) {

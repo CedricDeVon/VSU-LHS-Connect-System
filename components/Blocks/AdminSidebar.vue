@@ -6,15 +6,15 @@ import { useAdminViewStore } from '~/stores/views/adminViewStore';
 
 const auth = useFirebaseAuth()
 const adminViewStore = useAdminViewStore();
-// await adminViewStore.updateDashboard();
+await adminViewStore.updateSidebar();
 
 // onBeforeMount(async () => {
-//   await adminViewStore.updateDashboard();
+//   await adminViewStore.updateSidebar();
 // })
 
 const signOutUser = async () => {
   const result: Result = await UserSecurity.signOutUser(auth);
-  return navigateTo('/auth/login');
+  return navigateTo('/auth/login', { replace: true });
 }
 
 const topNav = [
@@ -35,7 +35,7 @@ const bottomNav = [
   {
     title: "Settings",
     icon: "lucide:settings-2",
-    link: "settings",
+    link: "/admin/settings",
   },
 ];
 </script>
@@ -45,7 +45,7 @@ const bottomNav = [
     <UiScrollArea class="size-full">
       <div class="flex h-screen flex-col pt-7">
         <NuxtLink to="#" class="flex w-full items-center gap-3 px-5">
-          <img src="@/assets/images/vsu-ihs-connect-system-icon-greenbg.png">
+          <img src="@/assets/images/vsu-ihs-connect-system-icon-2-greenbg.png">
         </NuxtLink>
 
         <div class="flex h-full grow flex-col px-5 pb-8">

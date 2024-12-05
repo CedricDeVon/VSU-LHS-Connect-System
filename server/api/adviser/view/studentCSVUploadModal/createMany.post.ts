@@ -21,8 +21,8 @@ export default defineEventHandler(async (event) => {
 
         const adviser = (await Databases.getOneAdviserViaUserId(userId)).data;
         for (const student in studentsResult.data.values) {
-            console.log(student)
-            console.log(studentsResult.data.values)
+            // console.log(student)
+            // console.log(studentsResult.data.values)
             await Databases.studentFirebaseDatabase.createOneDocumentWithId(student, {
                 lastName: studentsResult.data.values[student][0],
                 firstName: studentsResult.data.values[student][1],

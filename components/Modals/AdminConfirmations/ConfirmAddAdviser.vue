@@ -49,7 +49,7 @@ export default {
         },
 
         async proceedAdd() {
-            console.log('Adding adviser to section');
+            // console.log('Adding adviser to section');
             this.$emit('add');  
         },
 

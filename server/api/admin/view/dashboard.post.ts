@@ -27,6 +27,10 @@ export default defineEventHandler(async (event) => {
             caseConference.data.student = student;
             caseConference.data.section = section;
         }
+        for (const initialReport of initialReports) {
+            initialReport.data.reportedAdviser = (await Databases.getOneAdviserViaId(initialReport.data.reportedBY)).data;
+        }
+        console.log(initialReports)
 
         return new SuccessfulResult({
             adminUser,

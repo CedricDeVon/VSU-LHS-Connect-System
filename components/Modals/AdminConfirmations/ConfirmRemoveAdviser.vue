@@ -8,7 +8,7 @@
                         <button @click="cancelRemove" class="text-lg font-bold">X</button>
                     </div>
                     <div class="flex flex-col items-center justify-center">
-                        <p class="text-lg pt-8 p-5">Are you sure you want to remove <span class="font-bold">{{`${adviser.firstName} ${adviser.lastName}`}}</span> as an adviser of <span class="font-bold">Grade {{ `${section.sectionLevel} - ${section.sectionName}` }}</span> ?</p>
+                        <p class="text-lg pt-8 p-5">Are you sure you want to remove <span class="font-bold">{{`${adviser.data.firstName} ${adviser.data.lastName}`}}</span> as an adviser of <span class="font-bold">Grade {{ `${section.data.level} - ${section.data.name}` }}</span> ?</p>
                         <div class="flex justify-center items-center my-7">
                             <button @click="proceedRemove" class="bg-red-500 text-white px-10 py-2 rounded-lg">Yes</button>
                             <button @click="cancelRemove" class="bg-green-500 text-white px-10 py-2 rounded-lg ml-5">No</button>
@@ -20,8 +20,6 @@
       </div>
   </template>
 <script>
-import { section } from '~/data/section';
-
 
 export default {
     props: {

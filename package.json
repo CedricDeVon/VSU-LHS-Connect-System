@@ -60,7 +60,7 @@
     "nuxt-vuefire": "^1.0.4",
     "pdfmake": "^0.2.14",
     "pinia": "^2.2.6",
-    "postcss": "^8.4.47",
+    "postcss": "^8.5.0",
     "primeicons": "^7.0.0",
     "puppeteer": "^23.8.0",
     "pure-rand": "^6.1.0",

@@ -7,15 +7,7 @@ import statueImage from '~/assets/images/vsu-main-the-search-for-truth-statue.pn
 const store = userSignUpStore()
 
 const submit = async () => {
-  const result: any = await $fetch('/api/user/signUpBase', {
-    method: 'POST', body: store.getUserData()
-  });
-  if (result.isSuccessful) {
-    return navigateTo("/SignupPage2", { replace: true });
-
-  } else {
-    store.errorMessage = result.message;
-  }
+  navigateTo("/SignupPage2", { replace: true });
 };
 
 const goBack = () => {

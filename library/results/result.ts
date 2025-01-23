@@ -27,4 +27,13 @@ export abstract class Result {
     public get message(): string {
         return this._message;
     }
+
+    public cloneToObject(): { data: any, isSuccessful: boolean, isNotSuccessful: boolean, message: string } {
+        return {
+            data: this.data,
+            isSuccessful: this.isSuccessful,
+            isNotSuccessful: !this.isSuccessful,
+            message: this.message
+        }
+    }
 }

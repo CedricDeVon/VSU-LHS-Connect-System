@@ -1,6 +1,6 @@
-import { getApp } from 'firebase/app';
-import type { FirebaseApp } from 'firebase/app';
+// import { getApp } from 'firebase/app';
+// import type { FirebaseApp } from 'firebase/app';
 
-export abstract class Database {
+// export abstract class Database {
    
-}
+// }

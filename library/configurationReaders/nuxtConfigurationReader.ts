@@ -64,13 +64,6 @@ export class NuxtConfigurationReader extends ConfigurationReader {
         return result.data;
     }
 
-    public get FIREBASE_STORAGE_URL(): string {
-        const result: Result = this.getPrivateValue('firebaseStorageUrl');
-        this._throwErrorIfResultIsUnsuccessful(result);
-
-        return result.data;
-    }
-
     public get ENVIRONMENT_NAME(): string {
         const result: Result = this.getPublicValue('environmentName');
         this._throwErrorIfResultIsUnsuccessful(result);
@@ -125,6 +118,14 @@ export class NuxtConfigurationReader extends ConfigurationReader {
         this._throwErrorIfResultIsUnsuccessful(result);
         
         return parseInt(result.data);
+    }
+
+    public get NUXT_SUPABASE_URL(): string {
+        return "https://gbmnasaejywnevhkyxcn.supabase.co";
+    }
+
+    public get NUXT_SUPABASE_API_KEY(): string {
+        return "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdibW5hc2Flanl3bmV2aGt5eGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUxODEzMDQsImV4cCI6MjA1MDc1NzMwNH0.nOJ-cwHVXrx1aV6PJ_dsQ2CB_zkQ7goBl9yJ4FqUnC4";
     }
 
     private _throwErrorIfResultIsUnsuccessful(result: Result): void {

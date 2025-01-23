@@ -1,37 +1,11 @@
 <script setup lang="ts">
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import DatePickerInput from '@/components/used-components/DatePickerInput.vue';
 import { userSignUpStore } from '~/stores/userSignUp'
 import statueImage from '~/assets/images/vsu-main-the-search-for-truth-statue.png'
 
 const store = userSignUpStore()
-const auth = getAuth();
 
 const submit = async () => {  
-  let result: any = await $fetch('/api/user/signUpSpecifics', {
-    method: 'POST', body: store.getAdviserData()
-  });
-  if (result.isNotSuccessful) {
-    store.errorMessage = result.message;
-    return;
-  }
-  try {
-    createUserWithEmailAndPassword(auth, store.email, store.password);
-  } catch (error: any) {
-    store.errorMessage = error.message;
-  }
-
-  result = await $fetch('/api/user/signUp', { method: 'POST', body: {
-    id: auth.currentUser?.uid,
-    ...store.getAllData()
-  }});
-  if (result.isNotSuccessful) {
-    store.errorMessage = result.message;
-    return;
-  }
-  
-
-  store.resetAllData();
   return navigateTo("/RegistrationSuccessful", { replace: true });
 };
 

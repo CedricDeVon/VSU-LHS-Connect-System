@@ -14,7 +14,6 @@ export default defineNuxtConfig({
     "@vee-validate/nuxt",
     "@morev/vue-transitions/nuxt",
     "@samk-dev/nuxt-vcalendar",
-    "nuxt-vuefire",
     "nuxt-file-storage",
     "@nuxt/image",
     "@pinia/nuxt"
@@ -54,21 +53,6 @@ export default defineNuxtConfig({
     ],
   },
 
-  vuefire: {
-    auth: {
-      enabled: true,
-    },
-    config: {
-      apiKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_API_KEY"),
-      authDomain: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_AUTH_DOMAIN"),
-      projectId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_PROJECT_ID"),
-      storageBucket: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_STORAGE_BUCKET"),
-      messagingSenderId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_MESSAGING_SENDER_ID"),
-      appId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_APP_ID"),
-      measurementId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_PUBLIC_MEASUREMENT_ID"),
-    },
-  },
-
   build: {
     transpile: ["vue-sonner"],
   },
@@ -91,11 +75,12 @@ export default defineNuxtConfig({
   runtimeConfig: {
     cryptographyKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_CRYPTOGRAPHY_KEY"),
     cryptographyNonce: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_CRYPTOGRAPHY_NONCE"),
-    firebaseStorageUrl: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_FIREBASE_STORAGE_URL"),
     emailServiceId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_SERVICE_ID"),
     emailTemplateId: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_TEMPLATE_ID"),
     emailTemplateIdForApproval: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_TEMPLATE2_ID"),
     emailPublicKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_EMAIL_PUBLIC_KEY"),
+    supabaseUrl: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_SUPABASE_URL"),
+    supabaseApiKey: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_SUPABASE_API_KEY"),
     userTokenDurationInSeconds: 60,
     public: {
       environmentName: ConfigurationReaders.environmentConfigurationReader.getValueDirectly("NUXT_ENVIRONMENT_NAME"),

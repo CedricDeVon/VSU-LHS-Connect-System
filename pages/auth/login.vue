@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { userLoginStore } from '@/stores/userLogin'
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { FailedResult } from '~/library/results/failedResult';
 import type { Result } from '~/library/results/result';
 import { SuccessfulResult } from '~/library/results/successfulResult';
@@ -9,37 +8,13 @@ import statueImage from '~/assets/images/vsu-main-the-search-for-truth-statue.pn
 import { navigateTo } from '#app'
 
 const store = userLoginStore()
-const auth = useFirebaseAuth()!;
 
 const username = ref('')
 const password = ref('')
 
 const submit = async () => {  
-  const body = store.getAllData();
-  const apiResult: any = await $fetch('/api/user/logIn', { method: 'POST', body });
-  if (!apiResult.isSuccessful) {
-    store.errorMessage = apiResult.message;
-    return;
-  }
-  const firebaseResult = await validateUserPassword();
-  if (firebaseResult.isNotSuccessful) {
-    store.errorMessage = firebaseResult.message;
-    return;
-  }
-
-  store.resetAllData();
-  if (apiResult.isAdmin) { // Admin
-    return navigateTo("/admin/dashboard", { replace: true });
-  }
-  else if (!apiResult.status) { // Unverified Adviser
-    return navigateTo("/adviser/pending", { replace: true });
-  }
-  else { // Verified Adviser
-    return navigateTo("/adviser/dashboard", { replace: true });
-  }
+  return navigateTo("/adviser/dashboard", { replace: true });
 };
-
-
 
 async function validateUserPassword(): Promise<Result> {
   try {

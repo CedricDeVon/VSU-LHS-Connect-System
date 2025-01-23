@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { signOut } from "firebase/auth";
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 
-const auth = useFirebaseAuth()!;
 const showNotifications = ref(false);
 const notifications = ref<Notification[]>([]);
 const unreadCount = ref(0);
@@ -21,7 +19,6 @@ interface Notification {
 const router = useRouter();
 
 const logout = async () => {
-  await signOut(auth);
   navigateTo("/LoginPage"); 
 };
 

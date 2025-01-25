@@ -1,17 +1,19 @@
 <script lang="ts" setup>
-import { cn } from '@/lib/utils'
-import { RangeCalendarGrid, type RangeCalendarGridProps, useForwardProps } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+  import { cn } from "@/lib/utils";
+  import { RangeCalendarGrid, useForwardProps } from "radix-vue";
+  import { computed } from "vue";
+  import type { RangeCalendarGridProps } from "radix-vue";
+  import type { HTMLAttributes } from "vue";
 
-const props = defineProps<RangeCalendarGridProps & { class?: HTMLAttributes['class'] }>()
+  const props = defineProps<RangeCalendarGridProps & { class?: HTMLAttributes["class"] }>();
 
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const delegatedProps = computed(() => {
+    const { class: _, ...delegated } = props;
 
-  return delegated
-})
+    return delegated;
+  });
 
-const forwardedProps = useForwardProps(delegatedProps)
+  const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>

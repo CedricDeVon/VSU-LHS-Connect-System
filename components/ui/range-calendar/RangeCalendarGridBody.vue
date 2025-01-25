@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { RangeCalendarGridBody, type RangeCalendarGridBodyProps } from 'radix-vue'
+  import { RangeCalendarGridBody } from "radix-vue";
+  import type { RangeCalendarGridBodyProps } from "radix-vue";
 
-const props = defineProps<RangeCalendarGridBodyProps>()
+  const props = defineProps<RangeCalendarGridBodyProps>();
 </script>
 
 <template>

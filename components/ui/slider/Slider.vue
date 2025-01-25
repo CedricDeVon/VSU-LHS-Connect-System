@@ -1,31 +1,42 @@
 <script setup lang="ts">
-import type { SliderRootEmits, SliderRootProps } from 'radix-vue'
-import { cn } from '@/lib/utils'
-import { SliderRange, SliderRoot, SliderThumb, SliderTrack, useForwardPropsEmits } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+  import { cn } from "@/lib/utils";
+  import {
+    SliderRange,
+    SliderRoot,
+    SliderThumb,
+    SliderTrack,
+    useForwardPropsEmits,
+  } from "radix-vue";
+  import { computed } from "vue";
+  import type { SliderRootEmits, SliderRootProps } from "radix-vue";
+  import type { HTMLAttributes } from "vue";
 
-const props = defineProps<SliderRootProps & { class?: HTMLAttributes['class'] }>()
-const emits = defineEmits<SliderRootEmits>()
+  const props = defineProps<SliderRootProps & { class?: HTMLAttributes["class"] }>();
+  const emits = defineEmits<SliderRootEmits>();
 
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const delegatedProps = computed(() => {
+    const { class: _, ...delegated } = props;
 
-  return delegated
-})
+    return delegated;
+  });
 
-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+  const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>
   <SliderRoot
-    :class="cn(
-      'relative flex w-full touch-none select-none items-center data-[orientation=vertical]:flex-col data-[orientation=vertical]:w-2 data-[orientation=vertical]:h-full',
-      props.class,
-    )"
+    :class="
+      cn(
+        'relative flex w-full touch-none select-none items-center data-[orientation=vertical]:h-full data-[orientation=vertical]:w-2 data-[orientation=vertical]:flex-col',
+        props.class
+      )
+    "
     v-bind="forwarded"
   >
-    <SliderTrack class="relative h-2 w-full data-[orientation=vertical]:w-2 grow overflow-hidden rounded-full bg-secondary">
-      <SliderRange class="absolute h-full data-[orientation=vertical]:w-full bg-primary" />
+    <SliderTrack
+      class="relative h-2 w-full grow overflow-hidden rounded-full bg-secondary data-[orientation=vertical]:w-2"
+    >
+      <SliderRange class="absolute h-full bg-primary data-[orientation=vertical]:w-full" />
     </SliderTrack>
     <SliderThumb
       v-for="(_, key) in modelValue"

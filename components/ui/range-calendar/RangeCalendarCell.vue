@@ -1,22 +1,29 @@
 <script lang="ts" setup>
-import { cn } from '@/lib/utils'
-import { RangeCalendarCell, type RangeCalendarCellProps, useForwardProps } from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
+  import { cn } from "@/lib/utils";
+  import { RangeCalendarCell, useForwardProps } from "radix-vue";
+  import { computed } from "vue";
+  import type { RangeCalendarCellProps } from "radix-vue";
+  import type { HTMLAttributes } from "vue";
 
-const props = defineProps<RangeCalendarCellProps & { class?: HTMLAttributes['class'] }>()
+  const props = defineProps<RangeCalendarCellProps & { class?: HTMLAttributes["class"] }>();
 
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const delegatedProps = computed(() => {
+    const { class: _, ...delegated } = props;
 
-  return delegated
-})
+    return delegated;
+  });
 
-const forwardedProps = useForwardProps(delegatedProps)
+  const forwardedProps = useForwardProps(delegatedProps);
 </script>
 
 <template>
   <RangeCalendarCell
-    :class="cn('relative h-9 w-9 p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([data-selected])]:bg-accent first:[&:has([data-selected])]:rounded-l-md last:[&:has([data-selected])]:rounded-r-md [&:has([data-selected][data-outside-view])]:bg-accent/50 [&:has([data-selected][data-selection-end])]:rounded-r-md [&:has([data-selected][data-selection-start])]:rounded-l-md', props.class)"
+    :class="
+      cn(
+        'relative h-9 w-9 p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([data-selected])]:bg-accent first:[&:has([data-selected])]:rounded-l-md last:[&:has([data-selected])]:rounded-r-md [&:has([data-selected][data-outside-view])]:bg-accent/50 [&:has([data-selected][data-selection-end])]:rounded-r-md [&:has([data-selected][data-selection-start])]:rounded-l-md',
+        props.class
+      )
+    "
     v-bind="forwardedProps"
   >
     <slot />

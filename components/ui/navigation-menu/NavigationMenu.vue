@@ -1,25 +1,23 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
-import {
-  NavigationMenuRoot,
-  type NavigationMenuRootEmits,
-  type NavigationMenuRootProps,
-  useForwardPropsEmits,
-} from 'radix-vue'
-import { computed, type HTMLAttributes } from 'vue'
-import NavigationMenuViewport from './NavigationMenuViewport.vue'
+  import { cn } from "@/lib/utils";
+  import { NavigationMenuRoot, useForwardPropsEmits } from "radix-vue";
+  import { computed } from "vue";
+  import type { NavigationMenuRootEmits, NavigationMenuRootProps } from "radix-vue";
+  import type { HTMLAttributes } from "vue";
 
-const props = defineProps<NavigationMenuRootProps & { class?: HTMLAttributes['class'] }>()
+  import NavigationMenuViewport from "./NavigationMenuViewport.vue";
 
-const emits = defineEmits<NavigationMenuRootEmits>()
+  const props = defineProps<NavigationMenuRootProps & { class?: HTMLAttributes["class"] }>();
 
-const delegatedProps = computed(() => {
-  const { class: _, ...delegated } = props
+  const emits = defineEmits<NavigationMenuRootEmits>();
 
-  return delegated
-})
+  const delegatedProps = computed(() => {
+    const { class: _, ...delegated } = props;
 
-const forwarded = useForwardPropsEmits(delegatedProps, emits)
+    return delegated;
+  });
+
+  const forwarded = useForwardPropsEmits(delegatedProps, emits);
 </script>
 
 <template>

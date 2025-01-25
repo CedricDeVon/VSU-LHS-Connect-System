@@ -1,27 +1,35 @@
 <script setup lang="ts">
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { type Component, computed } from 'vue'
-import SidebarMenuButtonChild, { type SidebarMenuButtonProps } from './SidebarMenuButtonChild.vue'
-import { useSidebar } from './utils'
+  import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+  import { computed } from "vue";
+  import type { SidebarMenuButtonProps } from "./SidebarMenuButtonChild.vue";
+  import type { Component } from "vue";
 
-defineOptions({
-  inheritAttrs: false,
-})
+  import SidebarMenuButtonChild from "./SidebarMenuButtonChild.vue";
+  import { useSidebar } from "./utils";
 
-const props = withDefaults(defineProps<SidebarMenuButtonProps & {
-  tooltip?: string | Component
-}>(), {
-  as: 'button',
-  variant: 'default',
-  size: 'default',
-})
+  defineOptions({
+    inheritAttrs: false,
+  });
 
-const { isMobile, state } = useSidebar()
+  const props = withDefaults(
+    defineProps<
+      SidebarMenuButtonProps & {
+        tooltip?: string | Component;
+      }
+    >(),
+    {
+      as: "button",
+      variant: "default",
+      size: "default",
+    }
+  );
 
-const delegatedProps = computed(() => {
-  const { tooltip, ...delegated } = props
-  return delegated
-})
+  const { isMobile, state } = useSidebar();
+
+  const delegatedProps = computed(() => {
+    const { tooltip, ...delegated } = props;
+    return delegated;
+  });
 </script>
 
 <template>
@@ -35,11 +43,7 @@ const delegatedProps = computed(() => {
         <slot />
       </SidebarMenuButtonChild>
     </TooltipTrigger>
-    <TooltipContent
-      side="right"
-      align="center"
-      :hidden="state !== 'collapsed' || isMobile"
-    >
+    <TooltipContent side="right" align="center" :hidden="state !== 'collapsed' || isMobile">
       <template v-if="typeof tooltip === 'string'">
         {{ tooltip }}
       </template>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { createClient } from "@supabase/supabase-js";
 
-const { supabaseUrl, supabaseKey } = useRuntimeConfig().public;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const { VITE_SUPABASE_URL, VITE_SUPABASE_KEY } = useRuntimeConfig().public;
+const supabase = createClient(VITE_SUPABASE_URL, VITE_SUPABASE_KEY);
 console.log(supabase);
 
 useHead({
@@ -19,7 +19,5 @@ useHead({
 </script>
 
 <template>
-  <div>
-    
-  </div>
+  <NuxtPage />
 </template>

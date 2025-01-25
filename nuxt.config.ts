@@ -17,8 +17,8 @@ export default defineNuxtConfig({
   pages: true,
   runtimeConfig: {
     public: {
-      supabaseUrl: process.env.SUPABASE_URL,
-      supabaseKey: process.env.SUPABASE_KEY,
+      VITE_SUPABASE_URL: process.env.VITE_SUPABASE_URL,
+      VITE_SUPABASE_KEY: process.env.VITE_SUPABASE_KEY,
     }
   },  
 })

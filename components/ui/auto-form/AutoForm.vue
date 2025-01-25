@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends ZodObjectOrWrapped">
-  import { Form } from "@/components/ui/form";
+  import { Form } from "~/components/Ui/form";
   import { toTypedSchema } from "@vee-validate/zod";
   import { computed, toRefs } from "vue";
   import type { Config, ConfigItem, Dependency, Shape } from "./interface";

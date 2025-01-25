@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+  import { Card, CardContent, CardHeader, CardTitle } from "~/components/Ui/card";
 
   defineProps<{
     title?: string;

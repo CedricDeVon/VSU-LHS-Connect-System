@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import { Button } from "@/components/ui/button";
+  import { Button } from "~/components/Ui/button";
   import {
     FormControl,
     FormDescription,
     FormField,
     FormItem,
     FormMessage,
-  } from "@/components/ui/form";
-  import { Input } from "@/components/ui/input";
+  } from "~/components/Ui/form";
+  import { Input } from "~/components/Ui/input";
   import { TrashIcon } from "lucide-vue-next";
   import { ref } from "vue";
   import type { FieldProps } from "./interface";

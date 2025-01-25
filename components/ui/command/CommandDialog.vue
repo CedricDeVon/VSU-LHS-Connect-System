@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { Dialog, DialogContent } from "@/components/ui/dialog";
+  import { Dialog, DialogContent } from "~/components/Ui/dialog";
   import { useForwardPropsEmits } from "radix-vue";
   import type { DialogRootEmits, DialogRootProps } from "radix-vue";
 

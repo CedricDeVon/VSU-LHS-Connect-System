@@ -4,10 +4,10 @@
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-  } from "@/components/ui/accordion";
-  import { Button } from "@/components/ui/button";
-  import { FormItem, FormMessage } from "@/components/ui/form";
-  import { Separator } from "@/components/ui/separator";
+  } from "~/components/Ui/accordion";
+  import { Button } from "~/components/Ui/button";
+  import { FormItem, FormMessage } from "~/components/Ui/form";
+  import { Separator } from "~/components/Ui/separator";
   import { PlusIcon, TrashIcon } from "lucide-vue-next";
   import { FieldArray, FieldContextKey, useField } from "vee-validate";
   import { computed, provide } from "vue";

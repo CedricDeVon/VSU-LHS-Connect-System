@@ -5,16 +5,16 @@
     FormField,
     FormItem,
     FormMessage,
-  } from "@/components/ui/form";
-  import { Label } from "@/components/ui/label";
-  import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+  } from "~/components/Ui/form";
+  import { Label } from "~/components/Ui/label";
+  import { RadioGroup, RadioGroupItem } from "~/components/Ui/radio-group";
   import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-  } from "@/components/ui/select";
+  } from "~/components/Ui/select";
   import type { FieldProps } from "./interface";
 
   import AutoFormLabel from "./AutoFormLabel.vue";

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { buttonVariants } from "@/components/ui/button";
+  import { buttonVariants } from "~/components/Ui/button";
   import { cn } from "@/lib/utils";
   import { ChevronLeft } from "lucide-vue-next";
   import { RangeCalendarPrev, useForwardProps } from "radix-vue";

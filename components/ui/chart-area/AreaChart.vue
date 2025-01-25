@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-  import { ChartCrosshair, ChartLegend, defaultColors } from "@/components/ui/chart";
+  import { ChartCrosshair, ChartLegend, defaultColors } from "~/components/Ui/chart";
   import { cn } from "@/lib/utils";
   import { Area, Axis, CurveType, Line } from "@unovis/ts";
   import { VisArea, VisAxis, VisLine, VisXYContainer } from "@unovis/vue";

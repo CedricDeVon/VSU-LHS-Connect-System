@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { buttonVariants } from "@/components/ui/button";
+  import { buttonVariants } from "~/components/Ui/button";
   import { cn } from "@/lib/utils";
   import { AlertDialogAction } from "radix-vue";
   import { computed } from "vue";

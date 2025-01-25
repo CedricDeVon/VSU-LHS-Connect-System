@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { toggleVariants } from "@/components/ui/toggle";
+  import { toggleVariants } from "~/components/Ui/toggle";
   import { cn } from "@/lib/utils";
   import { ToggleGroupItem, useForwardProps } from "radix-vue";
   import { computed, inject } from "vue";

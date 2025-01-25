@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { Sheet, SheetContent } from "@/components/ui/sheet";
+  import { Sheet, SheetContent } from "~/components/Ui/sheet";
   import { cn } from "@/lib/utils";
   import type { SidebarProps } from ".";
 

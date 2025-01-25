@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { Button } from "@/components/ui/button";
+  import { Button } from "~/components/Ui/button";
   import { cn } from "@/lib/utils";
   import { ArrowRight } from "lucide-vue-next";
   import type { WithClassAsProps } from "./interface";

@@ -4,8 +4,8 @@
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-  } from "@/components/ui/accordion";
-  import { FormItem } from "@/components/ui/form";
+  } from "~/components/Ui/accordion";
+  import { FormItem } from "~/components/Ui/form";
   import { FieldContextKey, useField } from "vee-validate";
   import { computed, provide } from "vue";
   import type { Config, ConfigItem, Shape } from "./interface";

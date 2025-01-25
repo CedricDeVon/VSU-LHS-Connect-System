@@ -1,14 +1,14 @@
 <script setup lang="ts">
-  import { Button } from "@/components/ui/button";
-  import { Calendar } from "@/components/ui/calendar";
+  import { Button } from "~/components/Ui/button";
+  import { Calendar } from "~/components/Ui/calendar";
   import {
     FormControl,
     FormDescription,
     FormField,
     FormItem,
     FormMessage,
-  } from "@/components/ui/form";
-  import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+  } from "~/components/Ui/form";
+  import { Popover, PopoverContent, PopoverTrigger } from "~/components/Ui/popover";
   import { cn } from "@/lib/utils";
   import { DateFormatter, getLocalTimeZone } from "@internationalized/date";
   import { CalendarIcon } from "lucide-vue-next";

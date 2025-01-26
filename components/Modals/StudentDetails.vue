@@ -1,10 +1,8 @@
-
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import IncidentReports from '@/components/Modals/IncidentReports.vue';
 import CreateIncidentReport from '@/components/Modals/Incident Management/CreateIncidentReport.vue';
-
 import { incidentReport } from '~/data/incident.js';
 
 const props = defineProps({
@@ -176,9 +174,7 @@ const handleCreateIncident = async (newIncident: any) => {
                         <!-- Secondary Actions -->
                         <div class="pt-4 border-t border-gray-200 space-y-2">
                             <!-- Record Actions -->
-                            <div :class="[
-                                hasIncidents ? 'grid grid-cols-2 gap-3' : 'w-full'
-                            ]">
+                            <div :class="[hasIncidents ? 'grid grid-cols-2 gap-3' : 'w-full']">
                                 <button @click="viewAnecdotalReport"
                                         :class="[
                                             'px-4 py-3 rounded-md bg-[#728B78] hover:bg-[#536757] text-white transition-all duration-200 font-medium flex items-center justify-center space-x-2',

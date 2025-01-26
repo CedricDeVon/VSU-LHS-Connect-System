@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { cn } from "@/lib/utils";
   import { useEventListener, useMediaQuery, useVModel } from "@vueuse/core";
-  import { TooltipProvider } from "radix-vue";
+  //import { TooltipProvider } from "radix-vue";
   import { computed, ref } from "vue";
   import type { HTMLAttributes, Ref } from "vue";
 
@@ -77,7 +77,7 @@
 </script>
 
 <template>
-  <TooltipProvider :delay-duration="0">
+
     <div
       :style="{
         '--sidebar-width': SIDEBAR_WIDTH,
@@ -93,5 +93,6 @@
     >
       <slot />
     </div>
-  </TooltipProvider>
+ 
+
 </template>

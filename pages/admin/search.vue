@@ -8,7 +8,7 @@ import AddSectionForm from '@/components/Modals/AddSectionForm.vue';
 import StudentDetails from '@/components/Modals/StudentDetails.vue';
 import { section } from '~/data/section.js';
 import { student } from '~/data/student.js';
-import { TooltipProvider } from "radix-vue";
+//import { TooltipProvider } from "radix-vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -121,12 +121,15 @@ onMounted(() => {
   const searchType = route.query.searchType as string;
   if (searchType) {
     selectedSearch.value = searchType;
+  } else {
+    selectedSearch.value = 'student';
   }
+  sortBy.value = 'surnameSort';
 });
 </script>
 
 <template>
-  <TooltipProvider>
+
     <div class="flex h-screen bg-[#FFFEF1]">
       <AdminSidebar />
       <div class="general flex-grow">
@@ -173,7 +176,10 @@ onMounted(() => {
   
           <div v-else class="flex justify-center w-full">
             <div class="rounded-lg w-full max-w-5xl">
-              <div class="overflow-y-auto max-h-[80vh]">
+              <div class="text-2xl text-green-900 font-bold mb-4">
+                {{ selectedSearch === 'student' ? 'Student Search' : 'Section Search' }}
+              </div>
+              <div class="overflow-y-auto max-h-[75vh]">
                 <table class="min-w-full text-left">
                   <thead class="bg-head text-white sticky top-0">
                     <tr v-if="selectedSearch === 'section'">
@@ -239,7 +245,6 @@ onMounted(() => {
           @close="selectedStudent = null"
       />
     </div>
-  </TooltipProvider>
 </template>
    
   <style scoped>

@@ -12,7 +12,7 @@ import PendingInitialReports from '@/components/Modals/Dashboard/PendingInitialR
 import MakeAnnouncements from '@/components/Modals/Dashboard/MakeAnnouncements.vue';
 import ScheduleConferenceFromDashboard from '@/components/Modals/Dashboard/ScheduleConferenceFromDashboard.vue';
 import CreateReportFromDashboard from '@/components/Modals/Dashboard/CreateReportFromDashboard.vue';
-import TooltipProvider from '@/components/Ui/tooltip/TooltipProvider.vue'; // Import TooltipProvider
+//import TooltipProvider from '@/components/Ui/tooltip/TooltipProvider.vue'; // Import TooltipProvider
 import { useRouter } from 'vue-router'; // Import useRouter
 
 const router = useRouter(); // Initialize router
@@ -117,7 +117,7 @@ const closeModal = () => {
 };
 
 const navigateToIncidents = () => {
-  router.push('/admin/incidental'); // Use router.push for navigation
+  router.push('/admin/incident-reports'); // Use router.push for navigation
 };
 
 
@@ -373,7 +373,7 @@ const handleReportSubmit = (data: any) => {
 </script>
 
 <template>
-  <TooltipProvider>
+ 
     <div class="flex h-screen bg-[#FFFEF1]">
       <AdminSidebar />
       <div class="flex-1 overflow-hidden">
@@ -469,8 +469,8 @@ const handleReportSubmit = (data: any) => {
                     <span class="font-small">New Report</span>
                   </button>
                   <NuxtLink v-for="(action, idx) in [
-                    { text: 'View Incident Reports', link: '/admin/incidental', icon: 'lucide:clipboard-list' },
-                    { text: 'View Anecdotal Reports', link: '/admin/anecdotal', icon: 'lucide:book-open' },
+                    { text: 'View Incident Reports', link: '/admin/incident-reports', icon: 'lucide:clipboard-list' },
+                    { text: 'View Anecdotal Reports', link: '/admin/anecdotal-reports', icon: 'lucide:book-open' },
                     { text: 'Manage Adviser Accounts', link: '/admin/accounts', icon: 'lucide:users' }
                   ]" 
                     :key="idx" 
@@ -569,7 +569,6 @@ const handleReportSubmit = (data: any) => {
       @close="closeCreateReportModal"
       @submit="handleReportSubmit"
     />
-  </TooltipProvider>
 </template>
 
 <style scoped>

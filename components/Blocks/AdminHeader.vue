@@ -145,7 +145,7 @@ const handleClickOutside = (event: Event) => {
 </script>
 
 <template>
-  <header class="flex justify-between items-center p-4 shadow-sm">
+  <header class="flex justify-between items-center p-4 shadow-sm bg-[#FFFEF1]">
 
     <div></div>
     <div class="flex items-center gap-6"> <!-- Increased gap from gap-4 to gap-6 -->

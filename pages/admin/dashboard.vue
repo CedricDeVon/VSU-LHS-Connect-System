@@ -13,6 +13,9 @@ import MakeAnnouncements from '@/components/Modals/Dashboard/MakeAnnouncements.v
 import ScheduleConferenceFromDashboard from '@/components/Modals/Dashboard/ScheduleConferenceFromDashboard.vue';
 import CreateReportFromDashboard from '@/components/Modals/Dashboard/CreateReportFromDashboard.vue';
 import TooltipProvider from '@/components/Ui/tooltip/TooltipProvider.vue'; // Import TooltipProvider
+import { useRouter } from 'vue-router'; // Import useRouter
+
+const router = useRouter(); // Initialize router
 
 Chart.register(...registerables);
 
@@ -114,7 +117,7 @@ const closeModal = () => {
 };
 
 const navigateToIncidents = () => {
-  navigateTo('/admin/incidents');
+  router.push('/admin/incidental'); // Use router.push for navigation
 };
 
 
@@ -330,7 +333,7 @@ const handleAnnouncementDraft = (draft: any) => {
   }));
 };
 
-const existingDraft = ref(null);
+const existingDraft = ref<{ title: string; content: string; lastSaved?: string } | undefined>(undefined);
 
 // Add state for schedule conference modal
 const showScheduleModal = ref(false);

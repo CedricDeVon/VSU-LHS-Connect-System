@@ -3,7 +3,7 @@
 </script>
 
 <template>
-    <div class="relative flex items-center justify-center min-h-screen bg-gray-100 overflow-hidden">
+    <div class="relative flex items-center justify-center min-h-screen bg-[#FFFEF1] overflow-hidden">
         <!-- Background Image -->
         <div class="fixed right-[5%] top-[15%] h-screen w-1/2 bg-cover bg-left opacity-30 z-10 scale-[1.03]
              animate-statue-entrance mix-blend-multiply" :style="{

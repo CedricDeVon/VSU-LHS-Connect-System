@@ -22,6 +22,9 @@ export default defineNuxtConfig({
     public: {
       supabaseUrl: process.env.SUPABASE_URL,
       supabaseKey: process.env.SUPABASE_KEY,
+      emailServiceId: process.env.EMAIL_SERVICE_ID,
+      emailTemplateId: process.env.EMAIL_TEMPLATE_ID,
+      emailPublicKey: process.env.EMAIL_PUBLIC_KEY,
       testPublicConfiguration: 'testPublicConfiguration'
     },
     testPrivateConfiguration: 'testPrivateConfiguration'

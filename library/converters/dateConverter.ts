@@ -4,7 +4,7 @@ import { SuccessfulResult } from "../results/successfulResult";
 import { Converter } from "./converter";
 
 export class DateConverter extends Converter {
-    private static _months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+    private static readonly _months: string[] = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
     public static get months(): string[] {
         return [...DateConverter._months];

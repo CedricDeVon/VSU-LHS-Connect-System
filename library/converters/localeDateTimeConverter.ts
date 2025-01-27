@@ -4,7 +4,7 @@ import { SuccessfulResult } from "../results/successfulResult";
 import { Converter } from "./converter";
 
 export class LocaleDateTimeConverter extends Converter {
-    public convert(value: string | number): Result {
+    public convert(value: string | number | Date): Result {
         try {
             const date = new Date(value);
             

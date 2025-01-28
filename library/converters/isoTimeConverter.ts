@@ -9,7 +9,7 @@ export class ISOTimeConverter extends Converter {
             const date = new Date(value);
             
             if (date.toString() === 'Invalid Date') {
-                return new FailedResult();
+                return new FailedResult(date.toString());
             }
             
             return new SuccessfulResult(new Date(value).toISOString());

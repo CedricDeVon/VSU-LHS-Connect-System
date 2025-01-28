@@ -16,7 +16,7 @@ export class EmailValidator extends Validator {
 
     public async validate(value: string): Promise<Result> {
         if (value === undefined || value === null || typeof value !== 'string') {
-            return new FailedResult(`Arguments must be of type string`);
+            return new FailedResult(`Argument(s) must be of type string`);
         }
 
         return (EmailValidator._pattern.test(value)) ? new SuccessfulResult() : new FailedResult('Invalid email format');

@@ -15,10 +15,10 @@ export class GenderValidator extends Validator {
     }
 
     public async validate(value: any): Promise<Result> {
-        if (value === undefined || value === null) {
-            return new FailedResult(`Arguments must neither be undefined or null`);
+        if (value === undefined || value === null || typeof value !== 'string') {
+            return new FailedResult(`Argument(s) must be of type string`);
         }
 
-        return (GenderValidator._validOptions.has(value)) ? new SuccessfulResult() : new FailedResult(`'${value}' is not a valid gender type`);
+        return (GenderValidator._validOptions.has(value)) ? new SuccessfulResult() : new FailedResult(`'${value}' is neither of these valid types: '${GenderValidator._validOptions}'`);
     }
 }

@@ -9,10 +9,11 @@ export class FutureDateValidator extends Validator {
     }
 
     public async validate(value: string | number | Date): Promise<Result> {
-        if (value === undefined || value === null) {
-            return new FailedResult(`Arguments must neither be undefined nor null`);
+        if (value === undefined || value === null ||
+            (typeof value !== 'string' && typeof value !== 'number' && !(value instanceof Date))) {
+            return new FailedResult(`Argument(s) must be of type string`);
         }
 
-        return (new Date() < new Date(value)) ? new SuccessfulResult() : new FailedResult('Date is not within the future');
+        return (new Date() < new Date(value)) ? new SuccessfulResult() : new FailedResult('Value is not a valid future date');
     }
 }

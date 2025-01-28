@@ -4,21 +4,36 @@ import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
 
 export class PasswordValidator extends Validator {
-    private static readonly _pattern: RegExp = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    public static readonly lessThanMinimumLengthPattern: RegExp = /^.{0,7}$/;;
 
-    public static get pattern(): RegExp {
-        return PasswordValidator._pattern;
-    }
-    
+    public static readonly noNumberPattern: RegExp = /^(?!.*\d).*$/;
+
+    public static readonly noSymbolPattern: RegExp = /^(?!.*[!@#$%^&*(),.?":{}|<>]).*$/;
+
+    public static readonly hasWhitespacePattern: RegExp = /.*\s.*/;
+
     public constructor() {
         super();
     }
 
     public async validate(value: string): Promise<Result> {
         if (value === undefined || value === null || typeof value !== 'string') {
-            return new FailedResult(`Arguments must be of type string`);
+            return new FailedResult(`Argument(s) must be of type string`);
         }
 
-        return (PasswordValidator._pattern.test(value)) ? new SuccessfulResult() : new FailedResult('Invalid password format');
+        if (PasswordValidator.lessThanMinimumLengthPattern.test(value)) {
+            return new FailedResult(`Passwords must contain at least 8 characters`);
+
+        } else if (PasswordValidator.noNumberPattern.test(value)) {
+            return new FailedResult(`Passwords must contain at least 1 number`);
+
+        } else if (PasswordValidator.noSymbolPattern.test(value)) {
+            return new FailedResult(`Passwords must contain at least 1 symbol`);
+
+        } else if (PasswordValidator.hasWhitespacePattern.test(value)) {
+            return new FailedResult(`Passwords must not contain spaces`);
+        }
+
+        return new SuccessfulResult();
     }
 }

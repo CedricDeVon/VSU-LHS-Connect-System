@@ -9,10 +9,11 @@ export class StudentGradeValidator extends Validator {
     }
 
     public async validate(value: number): Promise<Result> {
-        if (value === undefined || value === null) {
-            return new FailedResult(`Arguments must neither be undefined or null`);
+        if (value === undefined || value === null || typeof value !== 'number') {
+            return new FailedResult(`Argument(s) must be of type number`);
         }
 
+        // The K-to-12 system will be used to ensure backwards compatability
         return (0 < value && value < 13) ? new SuccessfulResult() : new FailedResult(`Student grades must be in-between 1 to 12`);
     }
 }

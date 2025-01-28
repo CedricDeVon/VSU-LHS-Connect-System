@@ -15,10 +15,10 @@ export class IncidentStatusValidator extends Validator {
     }
 
     public async validate(value: string): Promise<Result> {
-        if (value === undefined || value === null) {
-            return new FailedResult(`Arguments must neither be undefined nor null`);
+        if (value === undefined || value === null || typeof value !== 'string') {
+            return new FailedResult(`Argument(s) must be of type string`);
         }
 
-        return (IncidentStatusValidator._validOptions.has(value)) ? new SuccessfulResult() : new FailedResult(`'${value}' is not a valid gender type`);
+        return (IncidentStatusValidator._validOptions.has(value)) ? new SuccessfulResult() : new FailedResult(`'${value}' is neither of these valid types: '${IncidentStatusValidator._validOptions}'`);
     }
 }

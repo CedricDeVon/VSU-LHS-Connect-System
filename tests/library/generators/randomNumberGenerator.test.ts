@@ -12,5 +12,5 @@ describe("RandomNumberGenerator", () => {
       expect(randomNumber).toBeGreaterThanOrEqual(1);
       expect(randomNumber).toBeLessThanOrEqual(100);
     });
-  });
+});
   

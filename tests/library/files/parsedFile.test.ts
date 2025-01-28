@@ -56,7 +56,7 @@ describe('ParsedFile', () => {
 
     const parsedFile = new ParsedFile(mockFile);
     parsedFile.name = 'newfile';
-    expect(parsedFile.name).toBe('newfile.txt');
+    expect(parsedFile.name).toBe('newfile');
   });
 
   it('should handle edge cases for content', () => {

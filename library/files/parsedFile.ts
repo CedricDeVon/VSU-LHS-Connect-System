@@ -42,7 +42,7 @@ export class ParsedFile {
   }
 
   public set name(value: string) {
-    this._name = `${value}.${this._extension}`;
+    this._name = `${value}`;
   }
 
   public get size(): number {

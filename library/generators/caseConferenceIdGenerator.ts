@@ -5,9 +5,11 @@ import { SuccessfulResult } from "../results/successfulResult";
 
 export class CaseConferenceIdGenerator extends Generator {
     public generate(id: string | number): Result {
-        if (id === undefined || id === null)
-        {
-            return new FailedResult('Arguments must neither be undefined or null');
+        if (id === undefined || id === null) {
+            return new FailedResult('Argument(s) must neither be undefined nor null');
+        
+        } else if (typeof id !== 'string' && typeof id !== 'number') {
+            return new FailedResult('Argument(s) must either be of type string or number');
         }
 
         return new SuccessfulResult(`CASE_CONF-${id}`);

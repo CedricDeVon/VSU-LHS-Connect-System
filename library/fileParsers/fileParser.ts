@@ -27,7 +27,7 @@ export abstract class FileParser {
     }
 
     protected _isFileExtensionValid(fileExtension: string): boolean {
-        for (let validFileExtension of this._validFileExtensions) {
+        for (const validFileExtension of this._validFileExtensions) {
             if (fileExtension === validFileExtension) {
                 return true;
             }

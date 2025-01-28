@@ -10,7 +10,7 @@ export class DelimitedStringToArrayConverter extends Converter {
             if (data === undefined || data === null ||
                 value === undefined || value === null ||
                 delimeter === undefined || delimeter === null) {
-                throw new Error('Arguments must neither be undefined nor null');
+                throw new Error('Argument(s) must neither be undefined nor null');
             }
 
             return new SuccessfulResult(data.value.split(data.delimeter));

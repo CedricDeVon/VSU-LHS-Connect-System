@@ -8,10 +8,9 @@ describe('DateConverter', () => {
     const converter = new DateConverter();
 
     it('should return a FailedResult for invalid input', () => {
-    const result = converter.convert('invalid-date');
-    expect(result).toBeInstanceOf(FailedResult);
+      const result = converter.convert('invalid-date');
+      expect(result).toBeInstanceOf(FailedResult);
     });
-
   
     it('should convert a valid date value to a formatted date string', () => {
       const result = converter.convert('2025-01-01');

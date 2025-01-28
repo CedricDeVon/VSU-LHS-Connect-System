@@ -10,7 +10,7 @@ export class ArrayToDelimitedStringConverter extends Converter {
             if (data === undefined || data === null ||
                 items === undefined || items === null ||
                 delimeter === undefined || delimeter === null) {
-                throw new Error('Arguments must neither be undefined nor null');
+                throw new Error('Argument(s) must neither be undefined nor null');
             }
 
             let delimitedString: string = '';

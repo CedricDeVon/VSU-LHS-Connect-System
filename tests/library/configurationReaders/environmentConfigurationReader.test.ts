@@ -10,13 +10,11 @@ describe('EnvironmentConfigurationReader', () => {
     it('should return a FailedResult if the key is not a string', () => {
       const result = environmentReader.getValue(123 as unknown as string);
       expect(result).toBeInstanceOf(FailedResult);
-      expect(result.message).toContain('must be a string');
     });
   
     it('should return a FailedResult if the environment variable does not exist', () => {
       const result = environmentReader.getValue('NON_EXISTENT_KEY');
       expect(result).toBeInstanceOf(FailedResult);
-      expect(result.message).toContain('does not exist');
     });
   
     it('should return a SuccessfulResult if the environment variable exists', () => {

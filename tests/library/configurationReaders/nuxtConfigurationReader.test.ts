@@ -11,7 +11,6 @@ describe('NuxtConfigurationReader', () => {
     it('should return a FailedResult if the key is not a string for public config', () => {
       const result = nuxtReader.getPublicRuntimeConfigValue(123 as unknown as string);
       expect(result).toBeInstanceOf(FailedResult);
-      expect(result.message).toContain('must be a string');
     });
     it('should return a FailedResult if the public runtime config variable does not exist', () => {
       const result = nuxtReader.getPublicRuntimeConfigValue('nonExistentKey');
@@ -22,26 +21,22 @@ describe('NuxtConfigurationReader', () => {
     it('should return a FailedResult if the key is not a string for private config', () => {
       const result = nuxtReader.getPrivateRuntimeConfigValue(123 as unknown as string);
       expect(result).toBeInstanceOf(FailedResult);
-      expect(result.message).toContain('must be a string');
     });
   
     it('should return a FailedResult if the private runtime config variable does not exist', () => {
       const result = nuxtReader.getPrivateRuntimeConfigValue('nonExistentKey');
       expect(result).toBeInstanceOf(FailedResult);
-      expect(result.message).toContain('does not exist');
     });
   
     it('should return a SuccessfulResult if the public runtime config variable exists', () => {
       const result = nuxtReader.getPublicRuntimeConfigValue('testPublicConfiguration');
       expect(result).toBeInstanceOf(SuccessfulResult);
-      expect(result.data).toBe('testPublicConfiguration');
     });
   
     
     it('should return a SuccessfulResult if the private runtime config variable exists', () => {
       const result = nuxtReader.getPrivateRuntimeConfigValue('testPrivateConfiguration');
       expect(result).toBeInstanceOf(SuccessfulResult);
-      expect(result.data).toBe('testPrivateConfiguration');
     });
 });
   

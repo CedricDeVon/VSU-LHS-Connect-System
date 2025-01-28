@@ -12,5 +12,5 @@ describe("UUIDV4Generator", () => {
       expect(generator.generate()).toBeInstanceOf(SuccessfulResult);
       expect(uuid).toMatch(uuidRegex);
     });
-  });
+});
   

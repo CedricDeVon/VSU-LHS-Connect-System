@@ -7,15 +7,15 @@ import { AnecdotalReportIdGenerator } from "../../../library/generators/anecdota
 describe("AnecdotalReportIdGenerator", () => {
     const generator = new AnecdotalReportIdGenerator();
   
+    it("should throw an error for null or undefined input", () => {
+      expect(generator.generate(undefined)).toBeInstanceOf(FailedResult);
+      expect(generator.generate(null)).toBeInstanceOf(FailedResult);
+    });
+
     it("should generate an ID with the correct format", () => {
       expect(generator.generate(123)).toBeInstanceOf(SuccessfulResult);
       expect(generator.generate(456).data).toBe("ANEC_REP-456");
       expect(generator.generate("XYZ").data).toBe("ANEC_REP-XYZ");
-    });
-  
-    it("should throw an error for null or undefined input", () => {
-      expect(generator.generate(undefined)).toBeInstanceOf(FailedResult);
-      expect(generator.generate(null)).toBeInstanceOf(FailedResult);
     });
   });
   

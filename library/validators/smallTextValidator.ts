@@ -12,9 +12,9 @@ export class SmallTextValidator extends Validator {
 
     public async validate(value: string): Promise<Result> {
         if (value === undefined || value === null || typeof value !== 'string') {
-            return new FailedResult(`Arguments must be of type string`);
+            return new FailedResult(`Argument(s) must be of type string`);
         }
 
-        return (value.length < SmallTextValidator.maximumLimit) ? new SuccessfulResult() : new FailedResult('Character limit reached');;
+        return (value.length < SmallTextValidator.maximumLimit) ? new SuccessfulResult() : new FailedResult(`The given text must contain at most ${SmallTextValidator.maximumLimit} characters`);
     }
 }

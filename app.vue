@@ -3,7 +3,15 @@ import { createClient } from "@supabase/supabase-js";
 
 const { supabaseUrl, supabaseKey } = useRuntimeConfig().public;
 const supabase = createClient(supabaseUrl, supabaseKey);
-console.log(supabase);
+
+async function test() {
+  console.log(supabase)
+  
+  const { data } = await supabase.schema('production').from('admin_status').select();
+  console.log(data)
+}
+
+await test();
 
 useHead({
     title: "VSU-LHS Connect System",

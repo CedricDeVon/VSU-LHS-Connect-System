@@ -6,7 +6,7 @@ describe('SuccessfulResult', () => {
       const successResult = new SuccessfulResult();
       expect(successResult.data).toEqual(undefined);
       expect(successResult.isSuccessful).toBe(true);
-      expect(successResult.message).toBe('');
+      expect(successResult.error).toBe('');
     });
   
     it('should allow setting custom data and message', () => {
@@ -16,6 +16,6 @@ describe('SuccessfulResult', () => {
   
       expect(successResult.data).toEqual(data);
       expect(successResult.isSuccessful).toBe(true);
-      expect(successResult.message).toBe(message);
+      expect(successResult.error).toBe(message);
     });
   });

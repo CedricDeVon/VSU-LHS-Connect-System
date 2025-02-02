@@ -6,7 +6,7 @@ describe('FailedResult', () => {
       const failedResult = new FailedResult();
       expect(failedResult.data).toEqual({});
       expect(failedResult.isSuccessful).toBe(false);
-      expect(failedResult.message).toBe('');
+      expect(failedResult.error).toBe('');
     });
   
     it('should allow setting a custom failure message', () => {
@@ -15,7 +15,7 @@ describe('FailedResult', () => {
   
       expect(failedResult.data).toEqual({});
       expect(failedResult.isSuccessful).toBe(false);
-      expect(failedResult.message).toBe(message);
+      expect(failedResult.error).toBe(message);
     });
   });
   

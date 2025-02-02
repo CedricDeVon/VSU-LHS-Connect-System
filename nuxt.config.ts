@@ -5,8 +5,13 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/tailwindcss',
     '@nuxt/test-utils/module',
+    '@nuxtjs/supabase',
     'shadcn-nuxt',
   ],
+  supabase: {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
+  },
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -20,8 +25,6 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      supabaseUrl: process.env.SUPABASE_URL,
-      supabaseKey: process.env.SUPABASE_KEY,
       emailServiceId: process.env.EMAIL_SERVICE_ID,
       emailTemplateId: process.env.EMAIL_TEMPLATE_ID,
       emailPublicKey: process.env.EMAIL_PUBLIC_KEY,

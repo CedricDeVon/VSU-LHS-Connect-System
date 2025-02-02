@@ -54,7 +54,7 @@ const viewFullDetails = () => {
 const viewAnecdotalReport = () => {
   if (props.studentData.anecdotalDocID) {
     emit('close');
-    router.push(`/admin/anecdote/${props.studentData.studentId}`);
+    router.push(`/admin/anecdotal-report/${props.studentData.studentId}`);
   } else {
     alert('No anecdotal report available for this student');
   }

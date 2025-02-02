@@ -72,13 +72,6 @@ export const anecdotalReport = [
     AY: "2024-2025",
   },
   {
-    anecdotalDocID: "ANEC-2024-10089",
-    studentId: "sample22-1-10089",
-    reportIDs: ["REP-20240330-026", "REP-20240415-027", "REP-20240425-028"],
-    preparedBy: "Mr. Smith",
-    AY: "2024-2025",
-  },
-  {
     anecdotalDocID: "ANEC-2024-10090",
     studentId: "sample22-1-10090",
     reportIDs: ["REP-20240402-029", "REP-20240418-030"],
@@ -216,13 +209,6 @@ export const anecdotalReport = [
     studentId: "sample22-1-10109",
     reportIDs: ["REP-20240522-078", "REP-20240608-079"],
     preparedBy: "Ms. Anderson",
-    AY: "2024-2025",
-  },
-  {
-    anecdotalDocID: "ANEC-2024-10110",
-    studentId: "22-1-10110",
-    reportIDs: ["REP-20240525-080", "REP-20240610-081"],
-    preparedBy: "Mr. Martinez",
     AY: "2024-2025",
   },
   {

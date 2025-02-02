@@ -1,3 +1,91 @@
+<script lang="ts" setup>
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
+import AdminHeader from '@/components/Blocks/AdminHeader.vue';
+import { anecdotalReport } from '~/data/anecdotal';
+import { student } from '~/data/student';
+import { section } from '~/data/section';
+
+const searchQuery = ref('');
+const selectedSort = ref('');
+const searchResults = ref(anecdotalReport);
+const router = useRouter();
+
+const handleSearch = () => {
+    let results = anecdotalReport;
+
+    // Apply search filter
+    if (searchQuery.value) {
+        const query = searchQuery.value.toLowerCase();
+        results = results.filter(report => {
+            const studentName = getStudentName(report.studentId).toLowerCase();
+            const sectionName = getSectionName(report.studentId).toLowerCase();
+            return report.anecdotalDocID.toLowerCase().includes(query) ||
+                   studentName.includes(query) ||
+                   sectionName.includes(query) ||
+                   report.AY.toLowerCase().includes(query);
+        });
+    }
+
+    // Apply sorting
+    switch (selectedSort.value) {
+        case 'sectionLevel':
+            results.sort((a, b) => {
+                const sectionA = getSectionLevel(a.studentId);
+                const sectionB = getSectionLevel(b.studentId);
+                return sectionA - sectionB;
+            });
+            break;
+        case 'studentName':
+            results.sort((a, b) => getStudentName(a.studentId).localeCompare(getStudentName(b.studentId)));
+            break;
+    }
+
+    searchResults.value = results;
+};
+
+const viewReport = (anecdotalDocID: string) => {
+    const studentWithReport = student.find(s => s.anecdotalDocID === anecdotalDocID);
+    if (studentWithReport) {
+        router.push(`/admin/anecdotal-report/${studentWithReport.studentId}`);
+    } else {
+        console.warn('No student found with this anecdotal report');
+    }
+};
+
+const getStudentName = (studentId: string) => {
+    const studentWithReport = student.find(s => s.studentId === studentId);
+    return studentWithReport ? `${studentWithReport.lastName}, ${studentWithReport.firstName}` : 'Unknown';
+};
+
+const getSectionName = (studentId: string) => {
+    const studentWithReport = student.find(s => s.studentId === studentId);
+    if (studentWithReport) {
+        const studentSection = section.find(sec => sec.id === studentWithReport.sectionID);
+        if (studentSection) {
+            return `${studentSection.sectionLevel} - ${studentSection.sectionName}`;
+        }
+    }
+    return 'Unknown';
+};
+
+const getSectionLevel = (studentId: string) => {
+    const studentWithReport = student.find(s => s.studentId === studentId);
+    if (studentWithReport) {
+        const studentSection = section.find(sec => sec.id === studentWithReport.sectionID);
+        if (studentSection) {
+            return parseInt(studentSection.sectionLevel, 10);
+        }
+    }
+    return 0;
+};
+
+watch([searchQuery, selectedSort], handleSearch);
+
+onMounted(handleSearch);
+</script>
+
 <template>
     <div class="flex h-screen">
         <AdminSidebar />
@@ -23,7 +111,7 @@
                             >
                                 <option value="">Sort By</option>
                                 <option value="studentName">Student Name</option>
-                                <option value="purpose">Purpose</option>
+                                <option value="sectionLevel">Section Level</option>
                             </select>
                         </div>
 
@@ -36,7 +124,7 @@
                                         <tr>
                                             <th class="p-3 text-left w-[20%]">Document ID</th>
                                             <th class="p-3 text-left w-[20%]">Student Name</th>
-                                            <th class="p-3 text-left w-[20%]">Adviser</th>
+                                            <th class="p-3 text-left w-[20%]">Section</th>
                                             <th class="p-3 text-left w-[20%]">Academic Year</th>
                                             <th class="p-3 text-left w-[20%]">Action</th>
                                         </tr>
@@ -52,7 +140,7 @@
                                                 class="border-b hover:bg-[#FFFAD3] cursor-pointer transition-colors">
                                                 <td class="p-4 w-[20%]">{{ report.anecdotalDocID }}</td>
                                                 <td class="p-4 w-[20%]">{{ getStudentName(report.studentId) }}</td>
-                                                <td class="p-4 w-[20%]">{{ getAdviserName(report.studentId) }}</td>
+                                                <td class="p-4 w-[20%]">{{ getSectionName(report.studentId) }}</td>
                                                 <td class="p-4 w-[20%]">{{ report.AY }}</td>
                                                 <td class="p-4 w-[20%]">
                                                     <button 
@@ -85,100 +173,6 @@
     </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue';
-import AdminSidebar from '@/components/Blocks/AdminSidebar.vue';
-import AdminHeader from '@/components/Blocks/AdminHeader.vue';
-import { anecdotalReport } from '~/data/anecdotal';
-import { student } from '~/data/student';
-import { section } from '~/data/section';
-import { adviser } from '~/data/adviser';
-
-export default defineComponent({
-    name: 'admin-anecdotal',
-    components: { AdminSidebar, AdminHeader },
-    data() {
-        return {
-            searchQuery: '',
-            selectedSort: '',
-            searchResults: [],
-            anecdotalReports: anecdotalReport
-        };
-    },
-    methods: {
-        handleSearch() {
-            let results = anecdotalReport;
-
-            // Apply search filter
-            if (this.searchQuery) {
-                const query = this.searchQuery.toLowerCase();
-                results = results.filter(report => {
-                    const studentName = this.getStudentName(report.studentId).toLowerCase();
-                    const adviserName = this.getAdviserName(report.studentId).toLowerCase();
-                    return report.anecdotalDocID.toLowerCase().includes(query) ||
-                           studentName.includes(query) ||
-                           adviserName.includes(query) ||
-                           report.AY.toLowerCase().includes(query);
-                });
-            }
-
-            // Apply sorting
-            switch (this.selectedSort) {
-                case 'ascDate':
-                    results.sort((a, b) => new Date(a.dateOfIncident) - new Date(b.dateOfIncident));
-                    break;
-                case 'descDate':
-                    results.sort((a, b) => new Date(b.dateOfIncident) - new Date(a.dateOfIncident));
-                    break;
-                case 'studentName':
-                    results.sort((a, b) => this.getStudentName(a.studentId).localeCompare(this.getStudentName(b.studentId)));
-                    break;
-                case 'purpose':
-                    results.sort((a, b) => a.purpose.localeCompare(b.purpose));
-                    break;
-            }
-
-            this.searchResults = results;
-        },
-
-        viewReport(anecdotalDocID) {
-            // Find the student with this anecdotal report
-            const studentWithReport = student.find(s => s.anecdotalDocID === anecdotalDocID);
-            if (studentWithReport) {
-                this.$router.push(`/admin/anecdote/${studentWithReport.studentId}`);
-            } else {
-                console.warn('No student found with this anecdotal report');
-            }
-        },
-        getStudentName(studentId) {
-            const studentWithReport = student.find(s => s.studentId === studentId);
-            return studentWithReport ? `${studentWithReport.lastName}, ${studentWithReport.firstName}` : 'Unknown';
-        },
-        getAdviserName(studentId) {
-            const studentWithReport = student.find(s => s.studentId === studentId);
-            if (studentWithReport) {
-                const studentSection = section.find(sec => sec.id === studentWithReport.sectionID);
-                if (studentSection) {
-                    const adviserInfo = adviser.find(a => a.id === studentSection.adviserId);
-                    return adviserInfo ? `${adviserInfo.lastName}, ${adviserInfo.firstName}` : 'Unknown';
-                }
-            }
-            return 'Unknown';
-        }
-    },
-    watch: {
-        searchQuery() {
-            this.handleSearch();
-        },
-        selectedSort() {
-            this.handleSearch();
-        }
-    },
-    mounted() {
-        this.handleSearch();
-    }
-});
-</script>
 
 <style scoped>
 /* Scrollbar styles */

@@ -49,12 +49,12 @@ const unprocessedReports = computed(() => {
     .sort((a, b) => new Date(b.dateReported).getTime() - new Date(a.dateReported).getTime());
 });
 
-const formatReportOption = (report) => {
+const formatReportOption = (report: any) => {
   const adviser = getAdviserName(report.reportedBY);
   return `${report.dateReported} - ${adviser} - ${report.thingsInvolved}`;
 };
 
-const getAdviserName = (adviserId) => {
+const getAdviserName = (adviserId: any) => {
   const adviserData = adviser.find(a => a.id === adviserId);
   return adviserData ? `${adviserData.firstName} ${adviserData.lastName}` : 'Unknown Adviser';
 };
@@ -93,7 +93,7 @@ onMounted(() => {
     };
 
     // Auto-select involved students
-    selectedStudents.value = props.initialReportData.peopleInvolved.map(name => {
+    selectedStudents.value = props.initialReportData.peopleInvolved.map((name: string) => {
       const studentData = student.find(s => 
         `${s.firstName} ${s.lastName}` === name ||
         s.firstName === name
@@ -164,12 +164,13 @@ const handleSubmit = () => {
     initialReportId: selectedReportId.value || null // Include reference to initial report
   };
 
-  selectedStudents.value.forEach(stud => {
-      //query through API the student collection Here I am querying in the mock
-      const object = student.find((studObj) => (studObj.studentId === stud.id));
-      object?.incidentDocIDs.push(generatedID.value);
-      console.log('check object student: ', object);
-  });
+  //function that adds report instance to the student collection
+  // selectedStudents.value.forEach(stud => {
+  //     //query through API the student collection Here I am querying in the mock
+  //     const object = student.find((studObj) => (studObj.studentId === stud.id));
+  //     object?.incidentDocIDs.push(generatedID.value);
+  //     console.log('check object student: ', object);
+  // });
 
   showSuccessAlert.value = true;
   setTimeout(() => {
@@ -217,7 +218,7 @@ const emit = defineEmits(['close', 'submit']);
         </button>
       </header>
 
-      <main class="p-6 max-h-[80vh] overflow-y-auto">
+      <main class="p-6 max-h-80vh overflow-y-auto">
         <!-- Add Report Selection at the top -->
         <div class="mb-6 bg-white p-6 rounded-xl border border-gray-200">
           <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -369,8 +370,8 @@ const emit = defineEmits(['close', 'submit']);
 </template>
 
 
-<style scoped>
-.max-h-[80vh] {
+<style >
+.max-h-80vh {
   max-height: 80vh;
 }
 

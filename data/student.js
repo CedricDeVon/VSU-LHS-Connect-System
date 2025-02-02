@@ -8,7 +8,7 @@ export function calculateAge(birthDate) {
   let age = today.getFullYear() - birth.getFullYear();
   const monthDiff = today.getMonth() - birth.getMonth();
   if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
-    age--;
+    age--; 
   }
   return age;
 }
@@ -700,7 +700,7 @@ export const student = [
     profilePic: null,
     age: calculateAge("2003-07-12"),
     sectionID: "sectionid26",
-    anecdotalDocID: "ANEC-2024-10110",
+    anecdotalDocID: null,
   },
   {
     studentId: "sample22-1-10111",

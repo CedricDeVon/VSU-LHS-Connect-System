@@ -14,6 +14,20 @@ export default defineNuxtConfig({
      */
     componentDir: './components/ui'
   },
+  app: {
+    head: {
+      script: [
+        {
+          src: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/pdfmake.min.js",
+          defer: true,
+        },
+        {
+          src: "https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.9/vfs_fonts.min.js",
+          defer: true,
+        },
+      ],
+    },
+  },
   runtimeConfig: {
     public: {
       supabaseUrl: process.env.SUPABASE_URL,

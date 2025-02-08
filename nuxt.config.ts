@@ -24,11 +24,17 @@ export default defineNuxtConfig({
     componentDir: './components/ui'
   },
   runtimeConfig: {
+    supabaseSchema1: process.env.SUPABASE_SCHEMA_1,
+    jsonWebTokenPrivateKey: process.env.JSONWEBTOKEN_PRIVATE_KEY,
+    jsonWebTokenDurationInSeconds: process.env.JSONWEBTOKEN_DURATION_IN_SECONDS,
+    debugAdminJsonWebToken: process.env.DEBUG_ADMIN_JSONWEBTOKEN,
+    debugAdviserJsonWebToken: process.env.DEBUG_ADVISER_JSONWEBTOKEN,
     public: {
       emailServiceId: process.env.EMAIL_SERVICE_ID,
       emailTemplateId: process.env.EMAIL_TEMPLATE_ID,
       emailPublicKey: process.env.EMAIL_PUBLIC_KEY,
-      testPublicConfiguration: 'testPublicConfiguration'
+      testPublicConfiguration: 'testPublicConfiguration',
+      isConsoleLoggingEnabled: process.env.IS_CONSOLE_LOGGING_ENABLED
     },
     testPrivateConfiguration: 'testPrivateConfiguration'
   },

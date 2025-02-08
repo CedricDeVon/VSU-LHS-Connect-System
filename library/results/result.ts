@@ -31,4 +31,13 @@ export abstract class Result {
             error: this.error
         }
     }
+
+    public toObjectWithMerge(dataToMerge: any = {}): { data: any, isSuccessful: boolean, error: any } {
+        return {
+            data: this.data,
+            isSuccessful: this.isSuccessful,
+            error: this.error,
+            ...dataToMerge
+        };
+    }
 }

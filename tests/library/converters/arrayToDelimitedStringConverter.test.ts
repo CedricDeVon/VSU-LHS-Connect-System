@@ -27,13 +27,13 @@ describe('ArrayToDelimitedStringConverter', () => {
     it('should throw an error when items are undefined', () => {
         const result = converter.convert({ items: undefined as any, delimeter: ',' });
         expect(result).toBeInstanceOf(FailedResult);
-        expect(result.message).toBe('Argument(s) must neither be undefined nor null');
+        expect(result.error).toBe('Argument(s) must neither be undefined nor null');
     });
 
     it('should throw an error when delimiter is undefined', () => {
         const result = converter.convert({ items: ['a', 'b', 'c'], delimeter: undefined as any });
         expect(result).toBeInstanceOf(FailedResult);
-        expect(result.message).toBe('Argument(s) must neither be undefined nor null');
+        expect(result.error).toBe('Argument(s) must neither be undefined nor null');
     });
 
     it('should handle non-string items in the array', () => {

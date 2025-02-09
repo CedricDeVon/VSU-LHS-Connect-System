@@ -167,6 +167,7 @@ export class NuxtRestApi {
                 is_hidden: false
             });
             client = callback(client);
+            client = client.select();
             client = (await Databases.supabaseDatabase.executeServerClient(client)).data;
             if (client.status !== 204) {
                 return this._handleIdempotentResult(idempotencyKey, new FailedResult(client).toObjectWithMerge({ status: client.status }));
@@ -176,11 +177,6 @@ export class NuxtRestApi {
         } catch (error: any) {
             return this._handleIdempotentResult(idempotencyKey, new FailedResult(error.message).toObjectWithMerge({ status: 500 }));
         }
-    }
-
-    private _handleIdempotentResult(idempotencyKey: string, result: any): any {
-        this._idempotencyKeys.delete(idempotencyKey);
-        return result;
     }
 
     public async updateOne(
@@ -206,6 +202,7 @@ export class NuxtRestApi {
                 client = client.eq(routerParameter, routerParameters[routerParameter]);
             }
             client = callback(client);
+            client = client.select();
             client = (await Databases.supabaseDatabase.executeServerClient(client)).data;
             if (client.status !== 204) {
                 return new FailedResult(client).toObjectWithMerge({ status: client.status });
@@ -239,6 +236,7 @@ export class NuxtRestApi {
                 client = client.eq(routerParameter, routerParameters[routerParameter]);
             }
             client = callback(client);
+            client = client.select();
             client = (await Databases.supabaseDatabase.executeServerClient(client)).data;
             if (client.status !== 204) {
                 return new FailedResult(client).toObjectWithMerge({ status: client.status });
@@ -248,6 +246,11 @@ export class NuxtRestApi {
         } catch (error: any) {
             return new FailedResult(error.message).toObjectWithMerge({ status: 500 });
         }
+    }
+
+    private _handleIdempotentResult(idempotencyKey: string, result: any): any {
+        this._idempotencyKeys.delete(idempotencyKey);
+        return result;
     }
 
     private static _throwIfUndefinedOrNull(value: any): void {

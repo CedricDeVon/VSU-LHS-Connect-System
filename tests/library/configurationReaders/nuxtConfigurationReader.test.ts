@@ -15,7 +15,7 @@ describe('NuxtConfigurationReader', () => {
     it('should return a FailedResult if the public runtime config variable does not exist', () => {
       const result = nuxtReader.getPublicRuntimeConfigValue('nonExistentKey');
       expect(result).toBeInstanceOf(FailedResult);
-      expect(result.message).toContain('does not exist');
+      expect(result.error).toContain('does not exist');
     });
     
     it('should return a FailedResult if the key is not a string for private config', () => {

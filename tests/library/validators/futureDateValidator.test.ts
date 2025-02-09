@@ -27,22 +27,22 @@ describe('FutureDateValidator', () => {
     });
 
     it('should return failed result for past date string', async () => {
-        const result = await validator.validate(new Date(new Date().getTime() - 86400000).toString()); // 1 day in the past
+        const result = await validator.validate(new Date(new Date().getTime() - 86400000).toString());
         expect(result).toBeInstanceOf(FailedResult);
     });
 
     it('should return failed result for past date object', async () => {
-        const result = await validator.validate(new Date(new Date().getTime() - 86400000)); // 1 day in the past
+        const result = await validator.validate(new Date(new Date().getTime() - 86400000));
         expect(result).toBeInstanceOf(FailedResult);
     });
 
     it('should return successful result for valid future date string', async () => {
-        const result = await validator.validate(new Date(new Date().getTime() + 86400000).toString()); // 1 day in the future
+        const result = await validator.validate(new Date(new Date().getTime() + 86400000).toString());
         expect(result).toBeInstanceOf(SuccessfulResult);
     });
 
     it('should return successful result for valid future date object', async () => {
-        const result = await validator.validate(new Date(new Date().getTime() + 86400000)); // 1 day in the future
+        const result = await validator.validate(new Date(new Date().getTime() + 86400000));
         expect(result).toBeInstanceOf(SuccessfulResult);
     });
 });

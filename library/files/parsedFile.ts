@@ -21,7 +21,7 @@ export class ParsedFile {
     try {
       const result: Result = FileParsers.dataUrlFileParser.parse(file);
       if (!result.isSuccessful) {
-        throw new Error(result.message);
+        throw new Error(result.error);
       }
 
       this._name = file.name;

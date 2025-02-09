@@ -21,18 +21,18 @@ describe('DelimitedStringToArrayConverter', () => {
     it('should throw an error when input is undefined', () => {
         const result = converter.convert({ value: undefined as any, delimeter: ',' });
         expect(result).toBeInstanceOf(FailedResult);
-        expect(result.message).toBe('Argument(s) must neither be undefined nor null');
+        expect(result.error).toBe('Argument(s) must neither be undefined nor null');
     });
 
     it('should throw an error when delimiter is undefined', () => {
         const result = converter.convert({ value: 'a,b,c', delimeter: undefined as any });
         expect(result).toBeInstanceOf(FailedResult);
-        expect(result.message).toBe('Argument(s) must neither be undefined nor null');
+        expect(result.error).toBe('Argument(s) must neither be undefined nor null');
     });
 
     it('should throw an error when both value and delimiter are undefined', () => {
         const result = converter.convert({ value: undefined as any, delimeter: undefined as any });
         expect(result).toBeInstanceOf(FailedResult);
-        expect(result.message).toBe('Argument(s) must neither be undefined nor null');
+        expect(result.error).toBe('Argument(s) must neither be undefined nor null');
     });
 });

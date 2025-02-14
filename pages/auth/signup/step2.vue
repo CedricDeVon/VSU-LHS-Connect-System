@@ -1,16 +1,128 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import statueImage from '~/assets/images/asset-search-for-truth.webp';
-const showSuffixInput = ref(false);
-// const birthdate = ref<Date | null>(null);
 
-const goBack = () => {
+import statueImage from '~/assets/images/asset-search-for-truth.webp';
+import { ClientApis } from '@/library/apis/clientApis';
+import { Validators } from '@/library/validators/validators';
+import { useLoginStore } from '@/stores/auth/useLoginStore';
+import { useSignupStore } from '@/stores/auth/useSignupStore';
+import { Benchmarkers } from '@/library/benchmarkers/benchmarkers';
+
+const loginStore = useLoginStore();
+const signupStore = useSignupStore();
+
+const handleNavigatingToSignupStep1 = () => {
     return navigateTo("/auth/signup/step1", { replace: true });
 };
 
-onMounted(() => {
-    // Any additional setup logic
-});
+const handleSignup = async () => {
+    try {
+        let result = await Validators.personNameValidator.validate(signupStore.firstName);
+        if (!result.isSuccessful) {
+            alert(result.error);
+            return;
+        }
+        result = await Validators.personNameValidator.validate(signupStore.middleName);
+        if (!result.isSuccessful) {
+            alert(result.error);
+            return;
+        }
+        result = await Validators.personNameValidator.validate(signupStore.lastName);
+        if (!result.isSuccessful) {
+            alert(result.error);
+            return;
+        }
+        result = await Validators.personNameValidator.validate(signupStore.suffixName);
+        if (signupStore.hasSuffix && !result.isSuccessful) {
+            alert(result.error);
+            return;
+        }
+        result = await Validators.pastDateValidator.validate(signupStore.birthdate);
+        if (!result.isSuccessful) {
+            alert(result.error);
+            return;
+        }
+        result = await Validators.vsuIdValidator.validate(signupStore.facultyIdentificationNumber);
+        if (!result.isSuccessful) {
+            alert(result.error);
+            return;
+        }
+
+
+        const signupUserResult = await ClientApis.clientNuxtRestApi.createSupabaseUserViaEmailAndPassword(
+            signupStore.email, signupStore.password);
+        if (!signupUserResult.isSuccessful) {
+            alert(signupUserResult.error.message);
+            return;
+        }
+        const communicatorResult = await ClientApis.clientNuxtRestApi.createOne(
+            'sign-up-communicator-post',
+            'communicator',
+        );
+        if (!communicatorResult.isSuccessful) {
+            alert(communicatorResult.error.message);
+            return;
+        }
+        const personResult = await ClientApis.clientNuxtRestApi.createOne(
+            'sign-up-person-post',
+            'person', 
+            {
+                data: {
+                    gender_type: 'none',
+                    email: signupStore.email,
+                    first_name: signupStore.firstName,
+                    middle_name: signupStore.middleName,
+                    last_name: signupStore.lastName,
+                    suffix_name: signupStore.suffixName,
+                    birthdate: signupStore.birthdate
+                }
+            }
+        );
+        if (!personResult.isSuccessful) {
+            alert(personResult.error.message);
+            return;
+        }
+        const userResult = await ClientApis.clientNuxtRestApi.createOne(
+            'sign-up-user-post',
+            'user', 
+            {
+                data: {
+                    id: signupUserResult.data.user.id,
+                    communicator_id: communicatorResult.data[0].id,
+                    person_id: personResult.data[0].id,
+                    username: signupStore.username
+                }
+            }
+        );
+        if (!userResult.isSuccessful) {
+            alert(userResult.error.message);
+            return;
+        }
+        const adviserResult = await ClientApis.clientNuxtRestApi.createOne(
+            'sign-up-adviser-post',
+            'adviser', 
+            {
+                data: {
+                    id: signupStore.facultyIdentificationNumber,
+                    user_id: userResult.data[0].id,
+                    status_type: 'pending',
+                }
+            }
+        );
+        if (!adviserResult.isSuccessful) {
+            alert(adviserResult.error.message);
+            return;
+        }
+
+        alert('Signup Successful');
+        loginStore.resetAll();
+        signupStore.resetAll();
+        return navigateTo("/auth/signup/success", { replace: true });
+
+    } catch (error: any) {
+        alert(error.message);
+    }
+}
+
 </script>
 
 <template>
@@ -25,82 +137,84 @@ onMounted(() => {
         <!-- Left side with form -->
         <div class="w-1/2 flex items-center justify-center bg-left h-screen">
             <div class="w-[480px] animate-slide-in">
-                <form class="bg-white p-8 rounded-xl shadow-md space-y-5 max-h-[90vh] overflow-y-auto mb-8">
-                    <h2 class="text-[#2B5741] text-2xl font-semibold mb-8 animate-fade-in-delayed">Personal Details</h2>
+                <form @submit.prevent="handleSignup">
+                    <div class="bg-white p-8 rounded-xl shadow-md space-y-5 max-h-[90vh] overflow-y-auto mb-8">
+                        <h2 class="text-[#2B5741] text-2xl font-semibold mb-8 animate-fade-in-delayed">Personal Details</h2>
 
-                    <!-- First Name -->
-                    <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
-                        <label class="block text-[#2B5741] text-sm mb-1">First Name</label>
-                        <input type="text" placeholder="Enter first name" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
-                     transition-all duration-300
-                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
-                    </div>
-
-                    <!-- Middle Name -->
-                    <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
-                        <label class="block text-[#2B5741] text-sm mb-1">Middle Name</label>
-                        <input type="text" placeholder="Enter middle name" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
-                     transition-all duration-300
-                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" />
-                    </div>
-
-                    <!-- Last Name -->
-                    <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
-                        <label class="block text-[#2B5741] text-sm mb-1">Last Name</label>
-                        <input type="text" placeholder="Enter last name" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
-                     transition-all duration-300
-                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
-                    </div>
-
-                    <!-- Combined Suffix Checkbox and Input -->
-                    <div class="flex items-center space-x-4">
-                        <div class="flex items-center space-x-2">
-                            <input type="checkbox" v-model="showSuffixInput" class="h-4 w-4 text-[#2B5741] border-gray-200 rounded 
-                       focus:ring-[#2B5741] transition-all duration-300" />
-                            <label class="text-[#2B5741] text-sm">Add Suffix</label>
+                        <!-- First Name -->
+                        <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+                            <label class="block text-[#2B5741] text-sm mb-1">First Name</label>
+                            <input v-model="signupStore.firstName" type="text" placeholder="Enter first name" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                        transition-all duration-300
+                        focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
                         </div>
 
-                        <!-- Suffix Input (Conditional) -->
-                        <div v-if="showSuffixInput"
-                            class="flex-1 transform transition-all duration-300 hover:scale-[1.02] animate-fade-in">
-                            <input type="text" placeholder="e.g., Jr., Sr." class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
-                       transition-all duration-300
-                       focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" />
+                        <!-- Middle Name -->
+                        <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+                            <label class="block text-[#2B5741] text-sm mb-1">Middle Name</label>
+                            <input v-model="signupStore.middleName" type="text" placeholder="Enter middle name" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                        transition-all duration-300
+                        focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" />
+                        </div>
+
+                        <!-- Last Name -->
+                        <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+                            <label class="block text-[#2B5741] text-sm mb-1">Last Name</label>
+                            <input v-model="signupStore.lastName" type="text" placeholder="Enter last name" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                        transition-all duration-300
+                        focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
+                        </div>
+
+                        <!-- Combined Suffix Checkbox and Input -->
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <input v-model="signupStore.hasSuffix" type="checkbox" class="h-4 w-4 text-[#2B5741] border-gray-200 rounded 
+                        focus:ring-[#2B5741] transition-all duration-300" />
+                                <label class="text-[#2B5741] text-sm">Add Suffix</label>
+                            </div>
+
+                            <!-- Suffix Input (Conditional) -->
+                            <div v-if="signupStore.hasSuffix"
+                                class="flex-1 transform transition-all duration-300 hover:scale-[1.02] animate-fade-in">
+                                <input v-model="signupStore.suffixName" type="text" placeholder="e.g., Jr., Sr." class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                        transition-all duration-300
+                        focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" />
+                            </div>
+                        </div>
+
+                        <!-- Birthdate -->
+                        <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+                            <label class="block text-[#2B5741] text-sm mb-1">Birthdate</label>
+                            <input v-model="signupStore.birthdate" type="date" placeholder="Select birthdate" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                                transition-all duration-300
+                                focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" />
+
+                        </div>
+
+                        <!-- Faculty ID -->
+                        <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
+                            <label class="block text-[#2B5741] text-sm mb-1">Faculty Identification Number (If
+                                Applicable)</label>
+                            <input v-model="signupStore.facultyIdentificationNumber" type="text" placeholder="Enter faculty ID" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
+                        transition-all duration-300
+                        focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
                         </div>
                     </div>
-
-                    <!-- Birthdate -->
-                    <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
-                        <label class="block text-[#2B5741] text-sm mb-1">Birthdate</label>
-                        <input type="date" v-model="birthdate" placeholder="Select birthdate" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
-                             transition-all duration-300
-                             focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" />
-
-                    </div>
-
-                    <!-- Faculty ID -->
-                    <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
-                        <label class="block text-[#2B5741] text-sm mb-1">Faculty Identification Number (If
-                            Applicable)</label>
-                        <input type="text" placeholder="Enter faculty ID" class="w-full py-3 px-4 border border-gray-200 rounded-lg text-sm bg-white
-                     transition-all duration-300
-                     focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20" required />
-                    </div>
+                    <!-- Proceed Button -->
+                    <button type="submit" class="w-full py-3 bg-[#2B5741] text-white rounded-lg text-sm uppercase tracking-wider
+                    transform transition-all duration-300
+                    hover:bg-[#1e3d2d] hover:scale-[1.02] hover:shadow-lg
+                    active:scale-95">
+                        SUBMIT
+                    </button>
                 </form>
 
-                <!-- Proceed Button -->
-                <button type="submit" @click="navigateTo('/auth/signup/success', { replace: true });" class="w-full py-3 bg-[#2B5741] text-white rounded-lg text-sm uppercase tracking-wider
-                   transform transition-all duration-300
-                   hover:bg-[#1e3d2d] hover:scale-[1.02] hover:shadow-lg
-                   active:scale-95">
-                    SUBMIT
-                </button>
 
                 <!-- Divider -->
                 <div class="text-center text-gray-500 my-2">OR</div>
 
                 <!-- Back Button -->
-                <button type="button" @click="goBack" class="w-full py-3 bg-[#6B8E76] text-white rounded-lg text-sm uppercase tracking-wider
+                <button type="button" @click="handleNavigatingToSignupStep1" class="w-full py-3 bg-[#6B8E76] text-white rounded-lg text-sm uppercase tracking-wider
                    transform transition-all duration-300
                    hover:bg-[#5a7862] hover:scale-[1.02] hover:shadow-lg
                    active:scale-95">

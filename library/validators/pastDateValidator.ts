@@ -14,6 +14,6 @@ export class PastDateValidator extends Validator {
             return new FailedResult(`Argument(s) must be of type string`);
         }
 
-        return (new Date(value) < new Date()) ? new SuccessfulResult() : new FailedResult('Date is not from the past');
+        return (new Date(value) < new Date()) ? new SuccessfulResult() : new FailedResult('Date Is Not From The Past');
     }
 }

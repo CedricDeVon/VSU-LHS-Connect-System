@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     '@nuxt/test-utils/module',
     '@nuxtjs/supabase',
     'shadcn-nuxt',
+    '@pinia/nuxt',
   ],
   supabase: {
     url: process.env.SUPABASE_URL,
@@ -44,6 +45,7 @@ export default defineNuxtConfig({
     debugAdminJsonWebToken: process.env.DEBUG_ADMIN_JSONWEBTOKEN,
     debugAdviserJsonWebToken: process.env.DEBUG_ADVISER_JSONWEBTOKEN,
     public: {
+      supabaseSchema1: process.env.SUPABASE_SCHEMA_1,
       emailServiceId: process.env.EMAIL_SERVICE_ID,
       emailTemplateId: process.env.EMAIL_TEMPLATE_ID,
       emailPublicKey: process.env.EMAIL_PUBLIC_KEY,

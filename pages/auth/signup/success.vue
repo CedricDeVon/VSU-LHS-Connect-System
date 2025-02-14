@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import statueImage from "~/assets/images/asset-search-for-truth.webp";
+import statueImage from "~/assets/images/asset-search-for-truth.webp";
 </script>
 
 <template>

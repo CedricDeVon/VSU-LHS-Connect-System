@@ -1,37 +1,78 @@
 <script setup lang="ts">
-  import logoImage from "~/assets/images/asset-final-logo-1.webp";
-  // import { createClient } from '@supabase/supabase-js';
-  import statueImage from "~/assets/images/asset-search-for-truth-goal.webp";
-  import { onMounted, ref } from "vue";
+import { onMounted } from "vue";
 
-  const username = ref("");
-  const password = ref("");
+import logoImage from "~/assets/images/asset-final-logo-1.webp";
+import statueImage from "~/assets/images/asset-search-for-truth-goal.webp";
+import { ClientApis } from '@/library/apis/clientApis';
+import { useLoginStore } from '@/stores/auth/useLoginStore';
+import { useSignupStore } from '@/stores/auth/useSignupStore';
+import { Benchmarkers } from '@/library/benchmarkers/benchmarkers';
 
-  // const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  // const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
+const loginStore = useLoginStore();
+const signupStore = useSignupStore();
 
-  // if (!supabaseUrl || !supabaseKey) {
-  //   throw new Error('Supabase URL and Key are required');
-  // }
+onMounted(() => {
+  loginStore.resetAll();
+});
 
-  // const supabase = createClient(supabaseUrl, supabaseKey);
-
-  onMounted(() => {
-    // store.resetAllData();
-  });
-
-  const handleLogin = async () => {
-    try {
-      // const { user, error } = await supabase.auth.signIn({
-      //   email: username.value,
-      //   password: password.value
-      // });
-      // if (error) throw error;
-      // console.log('Login successful:', user);
-    } catch (error) {
-      console.error("Login error:", error);
+const handleLogin = async () => {
+  try {
+    if (!loginStore.email || !loginStore.password || !loginStore.userRole) {
+      alert('Enter your email, password, and select your role');
+      return;
     }
-  };
+
+    let result = await ClientApis.clientNuxtRestApi.getAuthenticateSupabaseUserViaEmailAndPassword(
+      loginStore.email, loginStore.password
+    );
+    if (!result.isSuccessful) {
+      alert(`Login Error: ${result.error.message}`);
+      return;
+    }
+
+    const logedInUser = await ClientApis.clientNuxtRestApi.getUser();
+    if (loginStore.userRole === 'admin') {
+      result = await ClientApis.clientNuxtRestApi.readOne(
+        'admin', { 'user_id': logedInUser.data.id }, { 'selected-columns': '*' }
+      );
+
+    } else if (loginStore.userRole === 'adviser') {
+      result = await ClientApis.clientNuxtRestApi.readOne(
+        'adviser', { 'user_id': logedInUser.data.id }, { 'selected-columns': '*' }
+      );
+
+    } else {
+      alert(`Login Error: Invalid User Role`);
+      return;
+    }
+
+    if (!result.isSuccessful) {
+      alert(`Login Error: ${result.error.message}`);
+      return;
+
+    } else if (result.data.length === 0) {
+      alert(`Login Error: Your ${loginStore.userRole} Account Does Not Exist`);
+      return;
+    }
+
+    alert('Login Successful, Please Wait');
+    loginStore.resetAll();
+    signupStore.resetAll();
+
+    if (loginStore.userRole === 'admin') {
+      return navigateTo("/admin/dashboard", { replace: true });
+
+    } else if (loginStore.userRole === 'adviser' && result.data[0].status_type !== 'active') {
+      return navigateTo("/auth/signup/success", { replace: true });
+
+    } else if (loginStore.userRole === 'adviser' && result.data[0].status_type === 'active') {
+      return navigateTo("/adviser/homepage", { replace: true });
+    }
+
+  } catch (error: any) {
+    alert("Login Error: ", error.message);
+  }
+};
 </script>
 
 <template>
@@ -60,8 +101,8 @@
         <div class="relative mb-5 transform transition-all duration-300 hover:scale-[1.02]">
           <input
             type="text"
-            v-model="username"
-            placeholder="Username"
+            v-model="loginStore.email"
+            placeholder="Email"
             class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm transition-all duration-300 focus:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20"
             required
           />
@@ -71,7 +112,7 @@
         <div class="relative mb-5 transform transition-all duration-300 hover:scale-[1.02]">
           <input
             type="password"
-            v-model="password"
+            v-model="loginStore.password"
             placeholder="Password"
             class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm transition-all duration-300 focus:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20"
             required
@@ -81,11 +122,11 @@
 
         <div class="relative mb-5 transform transition-all duration-300 hover:scale-[1.02]">
           <select
-            v-model="role"
+            v-model="loginStore.userRole"
             class="w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-3 text-sm transition-all duration-300 focus:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#6b8e76]/20"
             required
           >
-            <option value="" disabled selected>Select Role</option>
+            <option value="Select Role" disabled selected>Select Role</option>
             <option value="admin">Admin</option>
             <option value="adviser">Adviser</option>
           </select>

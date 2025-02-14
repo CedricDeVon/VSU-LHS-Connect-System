@@ -3,13 +3,9 @@ import { Result } from "../results/result";
 import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
 
-export class EmailValidator extends Validator {
-    private static readonly _pattern: RegExp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+export class VsuIdValidator extends Validator {
+    public static readonly pattern: RegExp = /^[0-9]{2}-[12]{1}-[0-9]{5}$/
 
-    public static get pattern(): RegExp {
-        return EmailValidator._pattern;
-    }
-    
     public constructor() {
         super();
     }
@@ -19,6 +15,6 @@ export class EmailValidator extends Validator {
             return new FailedResult(`Argument(s) must be of type string`);
         }
 
-        return (EmailValidator._pattern.test(value)) ? new SuccessfulResult() : new FailedResult('Email Format Is Inalid. Please Provide One Such As \'example@gmail.com\'');
+        return (VsuIdValidator.pattern.test(value)) ? new SuccessfulResult() : new FailedResult('VSU-issued Ids Must Follow This Format \'00-0-00000\'');
     }
 }

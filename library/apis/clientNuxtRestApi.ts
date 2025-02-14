@@ -1,19 +1,30 @@
-import { Databases } from '~/library/databases/databases';
 import { FailedResult } from '~/library/results/failedResult';
-import { SuccessfulResult } from '~/library/results/successfulResult';
-import { Cryptographers } from '~/library/cryptographers/cryptographers';
 import { Benchmarkers } from '../benchmarkers/benchmarkers';
+import { SuccessfulResult } from '~/library/results/successfulResult';
+import { ClientSupabaseDatabase } from '../databases/clientSupabaseDatabase';
 
-export class NuxtRestApi {
+export class ClientNuxtRestApi {
     private _idempotencyKeys: Set<string>;
+
+    public readonly clientSupabaseDatabase: ClientSupabaseDatabase;
 
     public constructor() {
         this._idempotencyKeys = new Set<string>();
+        this.clientSupabaseDatabase = new ClientSupabaseDatabase();;
     }
 
-    public async anonymousSupabaseUserClient(): Promise<any> {
+    public async getUser(): Promise<any> {
         try {
-            let client: any = await Databases.supabaseDatabase.getFrontEndClient();
+            return new SuccessfulResult(useSupabaseUser().value).toObjectWithMerge({ status: 200 });
+
+        } catch (error: any) {
+            return new FailedResult(error.message).toObjectWithMerge({ status: 500 });
+        }
+    }
+
+    public async getAnonymousSupabaseUserClient(): Promise<any> {
+        try {
+            let client: any = this.clientSupabaseDatabase.getClient();
             if (!client.isSuccessful) {            
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
@@ -25,38 +36,13 @@ export class NuxtRestApi {
         }   
     }
 
-    public async anonymousSupabaseUser(event: any): Promise<any> {
+    public async getAuthenticateSupabaseUserViaEmailAndPassword(email: any, password: any): Promise<any> {
         try {
-            NuxtRestApi._throwIfUndefinedOrNull(event);
-
-            let client: any = await Databases.supabaseDatabase.createServerClient(event);
+            let client: any = await this.clientSupabaseDatabase.getClient();
             if (!client.isSuccessful) {            
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
-
-            return new SuccessfulResult(client.data).toObjectWithMerge({ status: 200 });
-
-        } catch (error: any) {
-            return new FailedResult(error.message).toObjectWithMerge({ status: 500 });
-        }   
-    }
-
-    public async authenticateSupabaseUserViaJsonWebToken(
-        event: any, jsonWebToken: any ): Promise<any> {
-        try {
-            NuxtRestApi._throwIfUndefinedOrNull(event);
-
-            let client: any = await Databases.supabaseDatabase.createServerClient(event);
-            if (!client.isSuccessful) {            
-                return new FailedResult(client).toObjectWithMerge({ status: 400 });
-            }
-            const jsonWebTokenResult = Cryptographers.jsonWebTokenCryptographer.verify(jsonWebToken);
-            if (!jsonWebTokenResult.isSuccessful) {
-                return jsonWebTokenResult.toObjectWithMerge({ status: 401 });
-            }
-            const authenticationResult: any = await client.data.auth.signInWithPassword({
-                email: jsonWebTokenResult.data.email, password: jsonWebTokenResult.data.password,
-            })
+            const authenticationResult: any = await client.data.auth.signInWithPassword({ email, password })
             if (authenticationResult.error) {
                 return new FailedResult(authenticationResult.error).toObjectWithMerge({ status: authenticationResult.status || 500 });
             }
@@ -67,24 +53,42 @@ export class NuxtRestApi {
         }
     }
 
+    public async createSupabaseUserViaEmailAndPassword(email: any, password: any): Promise<any> {
+        try {
+            let client: any = await this.clientSupabaseDatabase.getClient();
+            if (!client.isSuccessful) {            
+                return new FailedResult(client).toObjectWithMerge({ status: 400 });
+            }
+            const { data: signUpData, error } = await client.data.auth.signUp({ email, password })
+            if (error) {
+                return new FailedResult(error).toObjectWithMerge({ status: error.status });
+            }
+            return new SuccessfulResult(signUpData).toObjectWithMerge({ status: 200 });
+
+        } catch (error: any) {
+            return new FailedResult(error.message).toObjectWithMerge({ status: 500 });
+        }
+    }
+
+
     public async readOne(
-        event: any,
-        client: any,
         databaseTableName: string,
         routerParameters: any,
         queryStringParameters: any,
         callback: any = (client: any): any => { return client; }): Promise<any> {
         try {
-            NuxtRestApi._throwIfUndefinedOrNull(event);
-            NuxtRestApi._throwIfUndefinedOrNull(client);
-            NuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
-            NuxtRestApi._throwIfUndefinedOrNull(routerParameters);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(routerParameters);
 
-            client = Databases.supabaseDatabase.fromBaseSchemaTable(client, databaseTableName);
+            let client: any = await this.clientSupabaseDatabase.getClient();
+            if (!client.isSuccessful) {            
+                return new FailedResult(client).toObjectWithMerge({ status: 400 });
+            }
+            client = this.clientSupabaseDatabase.fromBaseSchemaTable(client.data, databaseTableName);
             if (!client.isSuccessful) {
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
-            client = Databases.supabaseDatabase.parseQueryStringParameterSelectedColumns(client.data, queryStringParameters);
+            client = this.clientSupabaseDatabase.parseQueryStringParameterSelectedColumns(client.data, queryStringParameters);
             if (!client.isSuccessful) {
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
@@ -94,7 +98,7 @@ export class NuxtRestApi {
             }
             client = callback(client);
             client = client.eq('is_hidden', false);
-            client = (await Databases.supabaseDatabase.executeServerClient(client)).data;
+            client = (await this.clientSupabaseDatabase.executeClient(client)).data;
 
             if (!client.data) {
                 return new FailedResult(client).toObjectWithMerge({ status: client.status });
@@ -107,36 +111,36 @@ export class NuxtRestApi {
     }
 
     public async readMany(
-        event: any,
-        client: any,
         databaseTableName: string,
         queryStringParameters: any,
         callback: any = (client: any): any => { return client; }): Promise<any> {
         try {
-            NuxtRestApi._throwIfUndefinedOrNull(event);
-            NuxtRestApi._throwIfUndefinedOrNull(client);
-            NuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
 
-            client = Databases.supabaseDatabase.fromBaseSchemaTable(client, databaseTableName);
+            let client: any = this.clientSupabaseDatabase.getClient();
+            if (!client.isSuccessful) {            
+                return new FailedResult(client).toObjectWithMerge({ status: 400 });
+            }
+            client = this.clientSupabaseDatabase.fromBaseSchemaTable(client.data, databaseTableName);
             if (!client.isSuccessful) {
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
-            client = Databases.supabaseDatabase.parseQueryStringParameterSelectedColumns(client.data, queryStringParameters);
+            client = this.clientSupabaseDatabase.parseQueryStringParameterSelectedColumns(client.data, queryStringParameters);
             if (!client.isSuccessful) {
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
-            client = Databases.supabaseDatabase.parseQueryStringParameterOrderedColumns(client.data, queryStringParameters);
+            client = this.clientSupabaseDatabase.parseQueryStringParameterOrderedColumns(client.data, queryStringParameters);
             if (!client.isSuccessful) {
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
-            client = Databases.supabaseDatabase.parseQueryStringParameterSelectedRowRange(client.data, queryStringParameters);
+            client = this.clientSupabaseDatabase.parseQueryStringParameterSelectedRowRange(client.data, queryStringParameters);
             if (!client.isSuccessful) {
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
             client = callback(client);
             client = client.data;
             client = client.eq('is_hidden', false);
-            client = (await Databases.supabaseDatabase.executeServerClient(client)).data;
+            client = (await this.clientSupabaseDatabase.executeClient(client)).data;
             
             if (!client.data) {
                 return new FailedResult(client).toObjectWithMerge({ status: client.status });
@@ -150,11 +154,8 @@ export class NuxtRestApi {
 
     public async createOne(
         idempotencyKey: string,
-        event: any,
-        client: any,
         databaseTableName: string,
-        routerParameters: any,
-        bodyParameters: any,
+        bodyParameters: any = {},
         callback: any = (client: any): any => { return client; }): Promise<any> {
         try {
             if (this._idempotencyKeys.has(idempotencyKey)) {
@@ -162,19 +163,19 @@ export class NuxtRestApi {
             }
             this._idempotencyKeys.add(idempotencyKey);
 
-            NuxtRestApi._throwIfUndefinedOrNull(idempotencyKey);
-            NuxtRestApi._throwIfUndefinedOrNull(event);
-            NuxtRestApi._throwIfUndefinedOrNull(client);
-            NuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
-            NuxtRestApi._throwIfUndefinedOrNull(routerParameters);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(idempotencyKey);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
 
-            client = Databases.supabaseDatabase.fromBaseSchemaTable(client, databaseTableName);
+            let client: any = await this.clientSupabaseDatabase.getClient();
+            if (!client.isSuccessful) {            
+                return new FailedResult(client).toObjectWithMerge({ status: 400 });
+            }
+            client = this.clientSupabaseDatabase.fromBaseSchemaTable(client.data, databaseTableName);
             if (!client.isSuccessful) {
                 return this._handleIdempotentResult(idempotencyKey, new FailedResult(client).toObjectWithMerge({ status: 400 }));
             }
             client = client.data;
             client = client.insert({
-                ...routerParameters,
                 ...bodyParameters['data'],
                 timestamp_created: new Date().toISOString(),
                 timestamp_modified: new Date().toISOString(),
@@ -182,11 +183,11 @@ export class NuxtRestApi {
             });
             client = callback(client);
             client = client.select();
-            client = (await Databases.supabaseDatabase.executeServerClient(client)).data;
-            if (client.status !== 204) {
+            client = (await this.clientSupabaseDatabase.executeClient(client)).data;
+            if (client.status !== 201) {
                 return this._handleIdempotentResult(idempotencyKey, new FailedResult(client).toObjectWithMerge({ status: client.status }));
             }
-            return this._handleIdempotentResult(idempotencyKey, new SuccessfulResult(client.data).toObjectWithMerge({ status: 200 }));
+            return this._handleIdempotentResult(idempotencyKey, new SuccessfulResult(client.data).toObjectWithMerge({ status: 201 }));
 
         } catch (error: any) {
             return this._handleIdempotentResult(idempotencyKey, new FailedResult(error.message).toObjectWithMerge({ status: 500 }));
@@ -194,19 +195,19 @@ export class NuxtRestApi {
     }
 
     public async updateOne(
-        event: any,
-        client: any,
         databaseTableName: string,
         routerParameters: any,
         bodyParameters: any,
         callback: any = (client: any): any => { return client; }): Promise<any> {
         try {
-            NuxtRestApi._throwIfUndefinedOrNull(event);
-            NuxtRestApi._throwIfUndefinedOrNull(client);
-            NuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
-            NuxtRestApi._throwIfUndefinedOrNull(routerParameters);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(routerParameters);
 
-            client = Databases.supabaseDatabase.fromBaseSchemaTable(client, databaseTableName);
+            let client: any = await this.clientSupabaseDatabase.getClient();
+            if (!client.isSuccessful) {            
+                return new FailedResult(client).toObjectWithMerge({ status: 400 });
+            }
+            client = this.clientSupabaseDatabase.fromBaseSchemaTable(client.data, databaseTableName);
             if (!client.isSuccessful) {
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
@@ -217,7 +218,7 @@ export class NuxtRestApi {
             }
             client = callback(client);
             client = client.select();
-            client = (await Databases.supabaseDatabase.executeServerClient(client)).data;
+            client = (await this.clientSupabaseDatabase.executeClient(client)).data;
             if (client.status !== 204) {
                 return new FailedResult(client).toObjectWithMerge({ status: client.status });
             }
@@ -229,18 +230,18 @@ export class NuxtRestApi {
     }
 
     public async deleteOne(
-        event: any,
-        client: any,
         databaseTableName: string,
         routerParameters: any,
         callback: any = (client: any): any => { return client; }): Promise<any> {
         try {
-            NuxtRestApi._throwIfUndefinedOrNull(event);
-            NuxtRestApi._throwIfUndefinedOrNull(client);
-            NuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
-            NuxtRestApi._throwIfUndefinedOrNull(routerParameters);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(databaseTableName);
+            ClientNuxtRestApi._throwIfUndefinedOrNull(routerParameters);
 
-            client = Databases.supabaseDatabase.fromBaseSchemaTable(client, databaseTableName);
+            let client: any = await this.clientSupabaseDatabase.getClient();
+            if (!client.isSuccessful) {            
+                return new FailedResult(client).toObjectWithMerge({ status: 400 });
+            }
+            client = this.clientSupabaseDatabase.fromBaseSchemaTable(client.data, databaseTableName);
             if (!client.isSuccessful) {
                 return new FailedResult(client).toObjectWithMerge({ status: 400 });
             }
@@ -251,7 +252,7 @@ export class NuxtRestApi {
             }
             client = callback(client);
             client = client.select();
-            client = (await Databases.supabaseDatabase.executeServerClient(client)).data;
+            client = (await this.clientSupabaseDatabase.executeClient(client)).data;
             if (client.status !== 204) {
                 return new FailedResult(client).toObjectWithMerge({ status: client.status });
             }

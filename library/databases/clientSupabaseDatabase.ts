@@ -1,12 +1,10 @@
-import { serverSupabaseClient } from '#supabase/server'
-
 import { Result } from '~/library/results/result';
 import { FailedResult } from '~/library/results/failedResult';
 import { SuccessfulResult } from '~/library/results/successfulResult';
 import { ConfigurationReaders } from '~/library/configurationReaders/configurationReaders';
 
-export class SupabaseDatabase {
-    public getFrontEndClient(): Result {
+export class ClientSupabaseDatabase {
+    public getClient(): Result {
         try {
             const supabaseClient: any = useSupabaseClient();
             return new SuccessfulResult(supabaseClient);
@@ -15,22 +13,10 @@ export class SupabaseDatabase {
             return new FailedResult(error.message);
         }
     }
-    
-    public async createServerClient(event: any): Promise<Result> {
+
+    public async executeClient(supabaseClient: any): Promise<any> {
         try {
-            SupabaseDatabase._throwIfUndefinedOrNull(event);
-
-            const supabaseClient: any = await serverSupabaseClient(event);
-            return new SuccessfulResult(supabaseClient);
-
-        } catch (error: any) {
-            return new FailedResult(error.message);
-        }
-    }
-
-    public async executeServerClient(supabaseClient: any): Promise<any> {
-        try {
-            SupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
+            ClientSupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
 
             supabaseClient = await supabaseClient;
             supabaseClient = { ...supabaseClient, ...supabaseClient.error };
@@ -44,11 +30,11 @@ export class SupabaseDatabase {
 
     public fromBaseSchemaTable(supabaseClient: any, tableName: string): Result {
         try {
-            SupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
-            SupabaseDatabase._throwIfUndefinedOrNull(tableName);
+            ClientSupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
+            ClientSupabaseDatabase._throwIfUndefinedOrNull(tableName);
 
             supabaseClient = supabaseClient
-                .schema(ConfigurationReaders.nuxtConfigurationReader.getPrivateRuntimeConfigValue('supabaseSchema1').data)
+                .schema(ConfigurationReaders.nuxtConfigurationReader.getPublicRuntimeConfigValue('supabaseSchema1').data)
                 .from(tableName)
                 
             return new SuccessfulResult(supabaseClient);
@@ -60,7 +46,7 @@ export class SupabaseDatabase {
 
     public parseQueryStringParameterSelectedColumns(supabaseClient: any, queryParameters: any): Result {
         try {
-            SupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
+            ClientSupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
             
             queryParameters = queryParameters['selected-columns'] || '*';
             supabaseClient = supabaseClient
@@ -75,7 +61,7 @@ export class SupabaseDatabase {
 
     public parseQueryStringParameterOrderedColumns(supabaseClient: any, queryParameters: any): Result {
         try {
-            SupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
+            ClientSupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
 
             const orderedColumns: string[] = (queryParameters['ordered-columns']) ?
                 queryParameters['ordered-columns'].split(',') : [];
@@ -112,7 +98,7 @@ export class SupabaseDatabase {
 
     public parseQueryStringParameterSelectedRowRange(supabaseClient: any, queryParameters: any): Result {
         try {
-            SupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
+            ClientSupabaseDatabase._throwIfUndefinedOrNull(supabaseClient);
 
             const selectedRowRange: any[] = (queryParameters['selected-row-range']) ? queryParameters['selected-row-range'].split(':') : [-1, -1];
             const selectedRowStartingRange: number = parseInt(selectedRowRange[0]);

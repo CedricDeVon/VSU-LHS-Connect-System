@@ -4,7 +4,7 @@ import { FailedResult } from "../results/failedResult";
 import { SuccessfulResult } from "../results/successfulResult";
 
 export class PersonNameValidator extends Validator {
-    private static readonly _pattern: RegExp = /^[a-zA-Z\s'-]{2,255}$/
+    private static readonly _pattern: RegExp = /^[a-zA-Z\s'-.]{2,255}$/
 
     public static get pattern(): RegExp {
         return PersonNameValidator._pattern;
@@ -19,6 +19,6 @@ export class PersonNameValidator extends Validator {
             return new FailedResult(`Argument(s) must be of type string`);
         }
 
-        return (PersonNameValidator._pattern.test(value)) ? new SuccessfulResult() : new FailedResult('Invalid person name format');
+        return (PersonNameValidator._pattern.test(value)) ? new SuccessfulResult() : new FailedResult('First Names, Middle Names, And Last Names Must Neither Contain Symbols Nor Numbers');
     }
 }

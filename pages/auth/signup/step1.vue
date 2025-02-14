@@ -1,10 +1,52 @@
 <script setup lang="ts">
-  import statueImage from "~/assets/images/asset-search-for-truth.webp";
-  import { handleBackClick } from "~/composables/navigation";
 
-  const goBack = () => {
+import statueImage from '~/assets/images/asset-search-for-truth.webp';
+import { handleBackClick } from '~/composables/navigation';
+import { Validators } from '@/library/validators/validators';
+import { useSignupStore } from '@/stores/auth/useSignupStore';
+import { Benchmarkers } from '@/library/benchmarkers/benchmarkers';
+
+const signupStore = useSignupStore();
+
+const handleNavigatingToLogin = () => {
+  try {
     handleBackClick();
-  };
+
+  } catch (error: any) {
+    alert(error.message);
+  }
+};
+
+const handleStep1SignUp = async () => {
+  try {
+    let result = await Validators.usernameValidator.validate(signupStore.username);
+    if (!result.isSuccessful) {
+      alert(result.error);
+      return;
+    }
+    result = await Validators.emailValidator.validate(signupStore.email);
+    if (!result.isSuccessful) {
+      alert(result.error);
+      return;
+    }
+    result = await Validators.passwordValidator.validate(signupStore.password);
+    if (!result.isSuccessful) {
+      alert(result.error);
+      return;
+    }
+    result = await Validators.confirmPasswordValidator.validate({ password: signupStore.password, confirmPassword: signupStore.confirmPassword });
+    if (!result.isSuccessful) {
+      alert(result.error);
+      return;
+    }
+
+    navigateTo('/auth/signup/step2', { replace: true })
+
+  } catch (error: any) {
+    alert(error.message);
+  }
+}
+
 </script>
 
 <template>
@@ -18,7 +60,7 @@
     ></div>
     <div class="flex h-screen w-1/2 items-center justify-center bg-left">
       <div class="animate-slide-in w-[380px]">
-        <form class="max-h-[90vh] space-y-5 overflow-y-auto rounded-xl bg-white p-8 shadow-md">
+        <form @submit.prevent="handleStep1SignUp" class="max-h-[90vh] space-y-5 overflow-y-auto rounded-xl bg-white p-8 shadow-md">
           <h2 class="animate-fade-in-delayed mb-8 text-2xl font-semibold text-[#2B5741]">
             Login Details
           </h2>
@@ -28,6 +70,7 @@
             <label class="mb-1 block text-sm text-[#2B5741]">Username</label>
             <input
               type="text"
+              v-model="signupStore.username"
               placeholder="Username"
               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20"
               required
@@ -40,6 +83,7 @@
             <label class="mb-1 block text-sm text-[#2B5741]">Email Address</label>
             <input
               type="email"
+              v-model="signupStore.email"
               placeholder="Enter email"
               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20"
               required
@@ -53,6 +97,7 @@
           <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
             <input
               type="password"
+              v-model="signupStore.password"
               placeholder="Password"
               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20"
               required
@@ -64,6 +109,7 @@
           <div class="relative transform transition-all duration-300 hover:scale-[1.02]">
             <input
               type="password"
+              v-model="signupStore.confirmPassword"
               placeholder="Confirm Password"
               class="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-[#2B5741]/20"
               required
@@ -74,7 +120,6 @@
           <!-- Proceed Button -->
           <button
             type="submit"
-            @click="navigateTo('/auth/signup/step2', { replace: true })"
             class="w-full rounded-lg bg-[#2B5741] py-3 text-sm uppercase tracking-wider text-white transition-all duration-300 hover:bg-[#1e3d2d]"
           >
             PROCEED
@@ -86,7 +131,7 @@
           <!-- Back Button -->
           <button
             type="button"
-            @click="goBack"
+            @click="handleNavigatingToLogin"
             class="w-full rounded-lg bg-[#6B8E76] py-3 text-sm uppercase tracking-wider text-white transition-all duration-300 hover:bg-[#5a7862]"
           >
             BACK

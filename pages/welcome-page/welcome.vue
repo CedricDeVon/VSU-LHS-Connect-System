@@ -33,8 +33,8 @@
 
         <!-- Message Container -->
     <div class="relative z-10  px-4 animate-fade-in ">
-        <h3 class=" text-6xl font-extrabold text-yellow-50 mb-32">Welcome to VSU-LHS Connect! </h3>
-        <h3 class="text-4xl font-semibold text-yellow-50 mb-6">Your personalized portal to stay connected, collaborate, and enhance the guidance process for your students.</h3>
+        <h3 class=" text-6xl font-extrabold text-yellow-50 mb-20">Welcome to VSU-LHS Connect! </h3>
+        <h3 class="text-4xl font-semibold text-yellow-50 mb-16">Your personalized portal to stay connected, collaborate, and enhance the guidance process for your students.</h3>
         <p class="text-yellow-50 text-2xl font-light mb-4">
             This platform is designed to help teachers at VSU-LHS provide more effective and efficient guidance to their students. Stay informed, manage tasks, and collaborate with ease—all in one place!
         </p>

@@ -16,7 +16,8 @@
 
   const router = useRouter();
 
-  router.replace("/auth/login");
+  // router.replace("/auth/login");
+  router.replace("/welcome-page/welcome");
 </script>
 
 <template>
